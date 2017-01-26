@@ -73,6 +73,7 @@ body {
 
 .main {
     padding: 20px;
+    background-color: #1b6d85;
 }
 @media (min-width: 768px) {
     .main {

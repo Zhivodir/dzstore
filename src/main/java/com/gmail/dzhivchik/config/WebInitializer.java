@@ -1,4 +1,4 @@
-package com.gmail.dzhivchik.web;
+package com.gmail.dzhivchik.config;
 
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;

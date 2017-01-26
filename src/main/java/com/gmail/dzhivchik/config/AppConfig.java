@@ -1,17 +1,18 @@
-package com.gmail.dzhivchik.web;
+package com.gmail.dzhivchik.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 @Configuration
-@ComponentScan("ua.kiev.prog")
+@ComponentScan("com.gmail.dzhivchik")
 @EnableWebMvc
-public class AppConfig {
+public class AppConfig extends WebMvcConfigurerAdapter {
     @Bean
     public UrlBasedViewResolver setupViewResolver() {
         UrlBasedViewResolver resolver = new UrlBasedViewResolver();
@@ -22,8 +23,14 @@ public class AppConfig {
         return resolver;
     }
 
-    @Bean
-    public CommonsMultipartResolver multipartResolver() {
-        return new CommonsMultipartResolver();
+//    @Bean
+//    public CommonsMultipartResolver multipartResolver() {
+//        return new CommonsMultipartResolver();
+//    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/css/**").addResourceLocations("/WEB-INF/css/");
+        registry.addResourceHandler("/js/**").addResourceLocations("/WEB-INF/js/");
     }
 }
