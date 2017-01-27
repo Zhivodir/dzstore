@@ -57,36 +57,6 @@
     </div>
 </nav>
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-        <!-- start of Modal -->
-            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">
-                                <span aria-hidden="true">&times;</span>
-                                <span class="sr-only">Close</span>
-                            </button>
-                            <h4 class="modal-title" id="myModalLabel">Create new folder</h4>
-                        </div>
-                        <div class="modal-body">
-                            <form class="form-inline" action="create_folder" method="post">
-                                <div class="form-group">
-                                    <label class="sr-only" for="newFolder">newFolder</label>
-                                    <input type="text" class="form-control" id="newFolder" name="nameOfFolder" placeholder="Enter new folder name">
-                                </div>
-                                <button type="submit" class="btn btn-primary">Create</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        <!-- end of Modal -->
-        </div>
-    </div>
-</div>
 
 <div class="container-fluid">
     <div class="row">
@@ -96,9 +66,9 @@
                     New <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a href="#" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">New Folder</a></li>
-                    <li><a href="#">Folder upload</a></li>
-                    <li><a href="#">File upload</a></li>
+                    <li><a href="#" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modalForNewFolder">New Folder</a></li>
+                    <li><a href="#" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modalForFileUpload">File upload</a></li>
+                    <li><a href="#" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modalForFolderUpload">Folder upload</a></li>
                 </ul>
             </div>
 
@@ -137,110 +107,107 @@
                         <td>adipiscing</td>
                         <td>elit</td>
                     </tr>
-                    <tr>
-                        <td>1,003</td>
-                        <td>Integer</td>
-                        <td>nec</td>
-                        <td>odio</td>
-                        <td>Praesent</td>
-                    </tr>
-                    <tr>
-                        <td>1,003</td>
-                        <td>libero</td>
-                        <td>Sed</td>
-                        <td>cursus</td>
-                        <td>ante</td>
-                    </tr>
-                    <tr>
-                        <td>1,004</td>
-                        <td>dapibus</td>
-                        <td>diam</td>
-                        <td>Sed</td>
-                        <td>nisi</td>
-                    </tr>
-                    <tr>
-                        <td>1,005</td>
-                        <td>Nulla</td>
-                        <td>quis</td>
-                        <td>sem</td>
-                        <td>at</td>
-                    </tr>
-                    <tr>
-                        <td>1,006</td>
-                        <td>nibh</td>
-                        <td>elementum</td>
-                        <td>imperdiet</td>
-                        <td>Duis</td>
-                    </tr>
-                    <tr>
-                        <td>1,007</td>
-                        <td>sagittis</td>
-                        <td>ipsum</td>
-                        <td>Praesent</td>
-                        <td>mauris</td>
-                    </tr>
-                    <tr>
-                        <td>1,008</td>
-                        <td>Fusce</td>
-                        <td>nec</td>
-                        <td>tellus</td>
-                        <td>sed</td>
-                    </tr>
-                    <tr>
-                        <td>1,009</td>
-                        <td>augue</td>
-                        <td>semper</td>
-                        <td>porta</td>
-                        <td>Mauris</td>
-                    </tr>
-                    <tr>
-                        <td>1,010</td>
-                        <td>massa</td>
-                        <td>Vestibulum</td>
-                        <td>lacinia</td>
-                        <td>arcu</td>
-                    </tr>
-                    <tr>
-                        <td>1,011</td>
-                        <td>eget</td>
-                        <td>nulla</td>
-                        <td>Class</td>
-                        <td>aptent</td>
-                    </tr>
-                    <tr>
-                        <td>1,012</td>
-                        <td>taciti</td>
-                        <td>sociosqu</td>
-                        <td>ad</td>
-                        <td>litora</td>
-                    </tr>
-                    <tr>
-                        <td>1,013</td>
-                        <td>torquent</td>
-                        <td>per</td>
-                        <td>conubia</td>
-                        <td>nostra</td>
-                    </tr>
-                    <tr>
-                        <td>1,014</td>
-                        <td>per</td>
-                        <td>inceptos</td>
-                        <td>himenaeos</td>
-                        <td>Curabitur</td>
-                    </tr>
-                    <tr>
-                        <td>1,015</td>
-                        <td>sodales</td>
-                        <td>ligula</td>
-                        <td>in</td>
-                        <td>libero</td>
-                    </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- start of Modal -->
+            <div class="modal fade" id="modalForNewFolder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span aria-hidden="true">&times;</span>
+                                <span class="sr-only">Close</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">Create new folder</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-inline" action="create_folder" method="post">
+                                <div class="form-group">
+                                    <label class="sr-only" for="newFolder">newFolder</label>
+                                    <input type="text" class="form-control" id="newFolder" name="nameOfFolder" placeholder="Enter new folder name">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Create</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end of Modal -->
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- start of Modal -->
+            <div class="modal fade" id="modalForFileUpload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span aria-hidden="true">&times;</span>
+                                <span class="sr-only">Close</span>
+                            </button>
+                            <h4 class="modal-title">Upload file</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-inline" enctype="multipart/form-data"  action="upload_file" method="post">
+                                <div class="form-group">
+                                    <input type="file" name="file" placeholder="Choice file">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Upload</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end of Modal -->
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- start of Modal -->
+            <div class="modal fade" id="modalForFolderUpload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span aria-hidden="true">&times;</span>
+                                <span class="sr-only">Close</span>
+                            </button>
+                            <h4 class="modal-title">Upload folder</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-inline" enctype="multipart/form-data" action="upload_folder" method="post">
+                                <div class="form-group">
+                                    <input type="file" name="photo" placeholder="Choice photo">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Upload</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end of Modal -->
+        </div>
+    </div>
+</div>
+
+
 
 <!-- Bootstrap core JavaScript
 ================================================== -->
