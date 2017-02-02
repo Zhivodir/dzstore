@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -85,28 +86,19 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Header</th>
-                        <th>Header</th>
-                        <th>Header</th>
-                        <th>Header</th>
+                        <th>Name</th>
+                        <th>Size</th>
+                        <th>Type</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>1,001</td>
-                        <td>Lorem</td>
-                        <td>ipsum</td>
-                        <td>dolor</td>
-                        <td>sit</td>
-                    </tr>
-                    <tr>
-                        <td>1,002</td>
-                        <td>amet</td>
-                        <td>consectetur</td>
-                        <td>adipiscing</td>
-                        <td>elit</td>
-                    </tr>
+                    <c:forEach items="${listOfFiles}" var="currentFile">
+                        <tr>
+                            <td>${currentFile.name}</td>
+                            <td>${currentFile.size}</td>
+                            <td>${currentFile.type}</td>
+                        </tr>
+                    </c:forEach>
                     </tbody>
                 </table>
             </div>
@@ -192,11 +184,11 @@
                             <h4 class="modal-title">Upload folder</h4>
                         </div>
                         <div class="modal-body">
-                            <form class="form-inline" enctype="multipart/form-data" action="upload_folder" method="post">
-                                <div class="form-group">
-                                    <input type="file" name="photo" placeholder="Choice photo">
-                                </div>
-                                <button type="submit" class="btn btn-primary">Upload</button>
+                            <form class="form-inline" enctype="multipart/form-data"  action="upload_folder" method="post">
+                                <input type="hidden" name="uploaded" value="1" />
+                                <label>Выберите директорию:</label>
+                                <input type="file" name="files" webkitdirectory directory multiple/>
+                                <input type="submit" value="Загрузить" />
                             </form>
                         </div>
                     </div>
