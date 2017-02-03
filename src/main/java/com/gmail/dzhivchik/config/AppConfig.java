@@ -1,5 +1,6 @@
 package com.gmail.dzhivchik.config;
 
+import com.gmail.dzhivchik.service.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +9,7 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -86,5 +88,11 @@ public class AppConfig extends WebMvcConfigurerAdapter {
         ds.setPassword("admin");
 
         return ds;
+    }
+
+    //initialising of UserDetailsService
+    @Bean
+    public UserDetailsService getUserDetailsService(){
+        return new UserDetailsServiceImpl();
     }
 }
