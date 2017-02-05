@@ -27,7 +27,6 @@ public class FileDAOImpl implements FileDAO {
         for (File file : files) {
             entityManager.merge(file);
         }
-
     }
 
     @Override

@@ -21,6 +21,12 @@ import java.io.IOException;
 @Controller
 @RequestMapping("/")
 public class IndexController {
+//
+//
+//    @RequestMapping(method = RequestMethod.GET)
+//    public String start(Model model){
+//        return "index";
+//    }
 
     @Autowired
     private ContentService contentService;

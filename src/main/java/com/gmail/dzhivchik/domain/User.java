@@ -1,17 +1,13 @@
 package com.gmail.dzhivchik.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
 /**
  * Created by User on 24.01.2017.
  */
 
-@Entity
+//@Entity
 public class User {
-    @Id
-    @GeneratedValue
+  //  @Id
+    //@GeneratedValue
     private int id;
     private String login;
     private String email;
