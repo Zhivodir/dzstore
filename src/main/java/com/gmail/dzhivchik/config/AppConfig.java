@@ -1,5 +1,5 @@
 package com.gmail.dzhivchik.config;
-//import com.gmail.dzhivchik.service.UserDetailsServiceImpl;
+import com.gmail.dzhivchik.service.UserDetailsServiceImpl;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -17,6 +17,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -91,8 +92,8 @@ public class AppConfig extends WebMvcConfigurerAdapter {
     }
 
     //initialising of UserDetailsService
-//    @Bean
-//    public UserDetailsService getUserDetailsService(){
-//        return new UserDetailsServiceImpl();
-//    }
+    @Bean
+    public UserDetailsService getUserDetailsService(){
+        return new UserDetailsServiceImpl();
+    }
 }
