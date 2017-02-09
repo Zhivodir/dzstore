@@ -10,4 +10,10 @@ public enum UserRoleEnum {
 
     UserRoleEnum() {
     }
+
+
+    @Override
+    public String toString() {
+        return "ROLE_" + name();
+    }
 }

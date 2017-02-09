@@ -29,7 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userService.getUser("colibri");
         // указываем роли для этого пользователя
         Set<GrantedAuthority> roles = new HashSet();
-        roles.add(new SimpleGrantedAuthority(UserRoleEnum.USER.name()));
+        roles.add(new SimpleGrantedAuthority("ROLE_" + UserRoleEnum.USER.name()));
 
         // на основании полученныйх даных формируем объект UserDetails
         // который позволит проверить введеный пользователем логин и пароль
@@ -38,6 +38,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 new org.springframework.security.core.userdetails.User(user.getLogin(),
                         user.getPassword(),
                         roles);
+        System.out.println(userDetails);
 
         return userDetails;
     }

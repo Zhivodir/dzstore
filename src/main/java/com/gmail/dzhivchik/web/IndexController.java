@@ -31,7 +31,7 @@ public class IndexController {
     @Autowired
     private ContentService contentService;
 
-    @RequestMapping("/")
+    @RequestMapping("/index")
     public String onIndex(Model model) {
         model.addAttribute("listOfFiles", contentService.listOfFiles());
         return "index";

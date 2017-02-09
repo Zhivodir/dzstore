@@ -96,4 +96,5 @@ public class AppConfig extends WebMvcConfigurerAdapter {
     public UserDetailsService getUserDetailsService(){
         return new UserDetailsServiceImpl();
     }
+
 }
