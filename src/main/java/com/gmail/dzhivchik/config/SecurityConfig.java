@@ -49,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // указываем правила запросов
                 // по которым будет определятся доступ к ресурсам и остальным данным
                 .authorizeRequests()
-//                .antMatchers("/resources/**", "/**").permitAll()
+                .antMatchers("/resources/**", "/**").permitAll()
                 .antMatchers("/index/**").hasAnyRole("USER","ADMIN")
                 .anyRequest().permitAll()
                 .and();

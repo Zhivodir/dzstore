@@ -22,7 +22,6 @@ import java.io.IOException;
 @RequestMapping("/")
 public class IndexController {
 //
-//
 //    @RequestMapping(method = RequestMethod.GET)
 //    public String start(Model model){
 //        return "index";
@@ -66,11 +65,11 @@ public class IndexController {
                 e.printStackTrace();
             }
         }
-        return "index";
+        return "redirect:/index";
     }
 
     @RequestMapping(value = "/upload_folder", method = RequestMethod.POST)
-    public String uploadFile(@RequestParam MultipartFile[] files){
+    public String uploadFolder(@RequestParam MultipartFile[] files){
         System.out.println();
         if(files.length != 0){
 
@@ -89,6 +88,6 @@ public class IndexController {
                 }
             }
         }
-        return "index";
+        return "redirect:/index";
     }
 }
