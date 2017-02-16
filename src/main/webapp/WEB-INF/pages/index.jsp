@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!-- taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>-->
 
 <html lang="en">
@@ -50,7 +51,7 @@
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#">Dashboard</a></li>
                 <li><a href="#">Settings</a></li>
-                <li><a href="#">Profile</a></li>
+                <li><a href="#"><sec:authentication property="principal.username"/></a></li>
                 <li><a href="#">Help</a></li>
             </ul>
             <form class="navbar-form navbar-right">
@@ -84,6 +85,7 @@
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
             <h2 class="sub-header">Section title</h2>
+
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>

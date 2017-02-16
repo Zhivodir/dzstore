@@ -1,5 +1,5 @@
 package com.gmail.dzhivchik.config;
-import com.gmail.dzhivchik.service.UserDetailsServiceImpl;
+import com.gmail.dzhivchik.service.Impl.UserDetailsServiceImpl;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

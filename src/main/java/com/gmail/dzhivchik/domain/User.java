@@ -2,10 +2,7 @@ package com.gmail.dzhivchik.domain;
 
 import com.gmail.dzhivchik.domain.enums.UserRoleEnum;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by User on 24.01.2017.
@@ -17,9 +14,12 @@ public class User {
     @Id
     @GeneratedValue
     private long id;
+
     private String login;
     private String password;
     private String email;
+
+    @Enumerated(EnumType.STRING)
     private UserRoleEnum role;
 
     //private List<File> files;
@@ -58,6 +58,5 @@ public class User {
     public void setRole(UserRoleEnum role) { this.role = role; }
 
     public long getId() { return id; }
-
     public void setId(long id) { this.id = id; }
 }

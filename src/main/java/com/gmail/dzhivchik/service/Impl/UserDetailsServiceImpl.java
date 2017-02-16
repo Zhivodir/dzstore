@@ -1,7 +1,7 @@
-package com.gmail.dzhivchik.service;
+package com.gmail.dzhivchik.service.Impl;
 
 import com.gmail.dzhivchik.domain.User;
-import com.gmail.dzhivchik.domain.enums.UserRoleEnum;
+import com.gmail.dzhivchik.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,21 +24,21 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UserService userService;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         // с помощью нашего сервиса UserService получаем User
-        User user = userService.getUser("colibri");
+        User user = userService.getUser(login);
+        if(user == null){
+            System.out.println("---------------Takogo usera net v base----------------");
+        }
         // указываем роли для этого пользователя
         Set<GrantedAuthority> roles = new HashSet();
-        roles.add(new SimpleGrantedAuthority("ROLE_" + UserRoleEnum.USER.name()));
+        roles.add(new SimpleGrantedAuthority(user.getRole().toString()));
 
         // на основании полученныйх даных формируем объект UserDetails
         // который позволит проверить введеный пользователем логин и пароль
         // и уже потом аутентифицировать пользователя
-        UserDetails userDetails =
-                new org.springframework.security.core.userdetails.User(user.getLogin(),
-                        user.getPassword(),
-                        roles);
-        System.out.println(userDetails);
+        UserDetails userDetails = new org.springframework.security.core.userdetails
+                .User(user.getLogin(), user.getPassword(), roles);
 
         return userDetails;
     }

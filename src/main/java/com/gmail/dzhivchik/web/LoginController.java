@@ -5,11 +5,9 @@ import com.gmail.dzhivchik.domain.enums.UserRoleEnum;
 import com.gmail.dzhivchik.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
 /**
  * Created by User on 03.02.2017.
  */
@@ -22,12 +20,12 @@ public class LoginController {
     private UserService userService;
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String loginPage(Model model){
+    public String loginPage(){
         return "login";
     }
 
     @RequestMapping(value = "/registration")
-    public String registration(Model model){
+    public String registration(){
         return "registration";
     }
 
@@ -37,6 +35,6 @@ public class LoginController {
                                 @RequestParam("email") String email){
         User user = new User(login, password, email, UserRoleEnum.USER);
         userService.addUser(user);
-        return "redirect:/index";
+        return "redirect:/login";
     }
 }
