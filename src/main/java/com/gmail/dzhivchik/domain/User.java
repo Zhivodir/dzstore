@@ -3,17 +3,20 @@ package com.gmail.dzhivchik.domain;
 import com.gmail.dzhivchik.domain.enums.UserRoleEnum;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by User on 24.01.2017.
  */
 
 @Entity
-@Table(name = "user")
+@Table(name = "user_test")
 public class User {
     @Id
     @GeneratedValue
-    private long id;
+    @Column(name = "id")
+    private int id;
 
     private String login;
     private String password;
@@ -22,14 +25,16 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRoleEnum role;
 
-    //private List<File> files;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<File> files = new ArrayList<>();
 
     public User() {
     }
 
-    public User(String login, String password) {
+    public User(String login, String password, UserRoleEnum role) {
         this.login = login;
         this.password = password;
+        this.role = role;
     }
 
     public User(String login, String password, String email, UserRoleEnum role) {
@@ -38,6 +43,7 @@ public class User {
         this.email = email;
         this.role = role;
     }
+
 
     public String getLogin() { return login; }
     public void setLogin(String login) {
@@ -58,5 +64,21 @@ public class User {
     public void setRole(UserRoleEnum role) { this.role = role; }
 
     public long getId() { return id; }
-    public void setId(long id) { this.id = id; }
+    public void setId(int id) { this.id = id; }
+
+    public List<File> getFiles() { return files; }
+
+    public void setFiles(List<File> files) { this.files = files; }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", role=" + role +
+                ", files=" + files +
+                '}';
+    }
 }

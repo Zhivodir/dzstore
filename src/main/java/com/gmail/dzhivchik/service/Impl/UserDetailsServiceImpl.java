@@ -37,6 +37,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // на основании полученныйх даных формируем объект UserDetails
         // который позволит проверить введеный пользователем логин и пароль
         // и уже потом аутентифицировать пользователя
+
         UserDetails userDetails = new org.springframework.security.core.userdetails
                 .User(user.getLogin(), user.getPassword(), roles);
 

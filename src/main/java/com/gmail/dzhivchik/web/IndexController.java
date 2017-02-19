@@ -1,7 +1,9 @@
 package com.gmail.dzhivchik.web;
 
+import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.service.ContentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,11 +23,6 @@ import java.io.IOException;
 @Controller
 @RequestMapping("/")
 public class IndexController {
-//
-//    @RequestMapping(method = RequestMethod.GET)
-//    public String start(Model model){
-//        return "index";
-//    }
 
     @Autowired
     private ContentService contentService;
@@ -49,11 +46,16 @@ public class IndexController {
             String fileName = file.getOriginalFilename();
             long size = file.getSize();
             String type = "test";
-            com.gmail.dzhivchik.domain.File fileForDAO = new com.gmail.dzhivchik.domain.File(fileName, size, type);
+            Object user_test = SecurityContextHolder.getContext().getAuthentication();
+            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            User user = (User) user_test;
+            //UsernamePasswordAuthenticationToken.
+            //User user = (User) SecurityContextHolder.getContext().getAuthentication();
+
+            com.gmail.dzhivchik.domain.File fileForDAO = new com.gmail.dzhivchik.domain.File(fileName, size, type, user);
             File convFile = new File(fileName);
             contentService.uploadFile(fileForDAO);
             try {
-                //model.addAttribute("file", fileForDAO);
                 convFile.createNewFile();
                 FileOutputStream fos = new FileOutputStream("c:/DevKit/Temp/test/" + convFile);
                 fos.write(file.getBytes());

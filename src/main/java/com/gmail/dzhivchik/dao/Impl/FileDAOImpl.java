@@ -2,6 +2,8 @@ package com.gmail.dzhivchik.dao.Impl;
 
 import com.gmail.dzhivchik.dao.FileDAO;
 import com.gmail.dzhivchik.domain.File;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -42,6 +44,8 @@ public class FileDAOImpl implements FileDAO {
 
     @Override
     public List<File> getList() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
         Query query;
         query = entityManager.createQuery("SELECT c FROM File c", File.class);
         return (List<File>)query.getResultList();

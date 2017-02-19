@@ -1,16 +1,13 @@
 package com.gmail.dzhivchik.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by User on 24.01.2017.
  */
 
 @Entity
-@Table(name = "file")
+@Table(name = "file_test")
 public class File {
     @Id
     @GeneratedValue
@@ -19,19 +16,25 @@ public class File {
     private long size;
     private String type;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     public File() {
+        //user = (User)SecurityContextHolder.getContext().getAuthentication();
     }
 
-    public File(String name, long size, String type) {
+    public File(String name, long size, String type, User user) {
         this.name = name;
         this.size = size;
         this.type = type;
+        this.user = user;
+        //this.user = (User)SecurityContextHolder.getContext().getAuthentication();
     }
 
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }
@@ -39,7 +42,6 @@ public class File {
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -47,7 +49,6 @@ public class File {
     public long getSize() {
         return size;
     }
-
     public void setSize(long size) {
         this.size = size;
     }
@@ -55,8 +56,21 @@ public class File {
     public String getType() {
         return type;
     }
-
     public void setType(String type) {
         this.type = type;
+    }
+
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+
+    @Override
+    public String toString() {
+        return "File{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", size=" + size +
+                ", type='" + type + '\'' +
+                ", user=" + user +
+                '}';
     }
 }
