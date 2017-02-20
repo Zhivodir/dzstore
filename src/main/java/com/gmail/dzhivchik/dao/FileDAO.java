@@ -1,6 +1,7 @@
 package com.gmail.dzhivchik.dao;
 
 import com.gmail.dzhivchik.domain.File;
+import com.gmail.dzhivchik.domain.User;
 
 import java.util.List;
 
@@ -12,5 +13,5 @@ public interface FileDAO {
     void uploadGroup(File[] files);
     void delete(File file);
     void deleteGroup(File[] files);
-    List<File> getList();
+    List<File> getList(User user);
 }

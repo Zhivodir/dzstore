@@ -2,6 +2,7 @@ package com.gmail.dzhivchik.web;
 
 import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.service.ContentService;
+import com.gmail.dzhivchik.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -27,9 +28,14 @@ public class IndexController {
     @Autowired
     private ContentService contentService;
 
+    @Autowired
+    private UserService userService;
+
     @RequestMapping("/index")
     public String onIndex(Model model) {
-        model.addAttribute("listOfFiles", contentService.listOfFiles());
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUser(login);
+        model.addAttribute("listOfFiles", contentService.listOfFiles(user));
         return "index";
     }
 
@@ -46,11 +52,9 @@ public class IndexController {
             String fileName = file.getOriginalFilename();
             long size = file.getSize();
             String type = "test";
-            Object user_test = SecurityContextHolder.getContext().getAuthentication();
-            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-            User user = (User) user_test;
-            //UsernamePasswordAuthenticationToken.
-            //User user = (User) SecurityContextHolder.getContext().getAuthentication();
+
+            String login = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userService.getUser(login);
 
             com.gmail.dzhivchik.domain.File fileForDAO = new com.gmail.dzhivchik.domain.File(fileName, size, type, user);
             File convFile = new File(fileName);
@@ -72,7 +76,6 @@ public class IndexController {
 
     @RequestMapping(value = "/upload_folder", method = RequestMethod.POST)
     public String uploadFolder(@RequestParam MultipartFile[] files){
-        System.out.println();
         if(files.length != 0){
 
             for (MultipartFile file : files) {

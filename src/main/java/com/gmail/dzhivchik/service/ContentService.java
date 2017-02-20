@@ -2,6 +2,7 @@ package com.gmail.dzhivchik.service;
 
 import com.gmail.dzhivchik.dao.FileDAO;
 import com.gmail.dzhivchik.domain.File;
+import com.gmail.dzhivchik.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +24,7 @@ public class ContentService {
     }
 
     @Transactional(readOnly=true)
-    public List<File> listOfFiles() {
-        return fileDAO.getList();
+    public List<File> listOfFiles(User user) {
+        return fileDAO.getList(user);
     }
 }

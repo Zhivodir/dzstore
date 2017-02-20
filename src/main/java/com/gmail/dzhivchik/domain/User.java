@@ -25,7 +25,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRoleEnum role;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<File> files = new ArrayList<>();
 
     public User() {
@@ -38,6 +38,14 @@ public class User {
     }
 
     public User(String login, String password, String email, UserRoleEnum role) {
+        this.login = login;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+    }
+
+    public User(int id, String login, String password, String email, UserRoleEnum role) {
+        this.id = id;
         this.login = login;
         this.password = password;
         this.email = email;
@@ -63,7 +71,7 @@ public class User {
     public UserRoleEnum getRole() { return role; }
     public void setRole(UserRoleEnum role) { this.role = role; }
 
-    public long getId() { return id; }
+    public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
     public List<File> getFiles() { return files; }
