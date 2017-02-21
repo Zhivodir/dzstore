@@ -77,12 +77,19 @@ public class IndexController {
     @RequestMapping(value = "/upload_folder", method = RequestMethod.POST)
     public String uploadFolder(@RequestParam MultipartFile[] files){
         if(files.length != 0){
+            String login = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userService.getUser(login);
 
             for (MultipartFile file : files) {
-                File convFile = new File(file.getOriginalFilename());
+                long size = file.getSize();
+                String type = "test";
+                String fileName = file.getOriginalFilename();
+                File convFile = new File(fileName);
+                com.gmail.dzhivchik.domain.File fileForDAO = new com.gmail.dzhivchik.domain.File(fileName, size, type, user);
+                contentService.uploadFile(fileForDAO);
                 try {
                     convFile.createNewFile();
-                    FileOutputStream fos = new FileOutputStream("c:/DevKit/Temp/" + convFile);
+                    FileOutputStream fos = new FileOutputStream("c:/DevKit/Temp/test/" + convFile);
                     fos.write(file.getBytes());
                     fos.close();
                 }catch(FileNotFoundException e){

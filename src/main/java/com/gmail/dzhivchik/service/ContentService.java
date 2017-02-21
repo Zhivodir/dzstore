@@ -23,6 +23,10 @@ public class ContentService {
         fileDAO.upload(file);
     }
 
+    @Transactional
+    public  void uploadFolder(File[] files){
+        fileDAO.uploadGroup(files);
+    }
     @Transactional(readOnly=true)
     public List<File> listOfFiles(User user) {
         return fileDAO.getList(user);
