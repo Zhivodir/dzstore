@@ -41,7 +41,8 @@ public class IndexController {
 
     @RequestMapping(value = "/create_folder", method = RequestMethod.POST)
     public String createNewFolder(@RequestParam String nameOfFolder){
-        File myPath = new File("/" + nameOfFolder);
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        File myPath = new File("c:/DevKit/Temp/dzstore/" + login + "/" + nameOfFolder);
         myPath.mkdirs();
         return "index";
     }
@@ -61,7 +62,7 @@ public class IndexController {
             contentService.uploadFile(fileForDAO);
             try {
                 convFile.createNewFile();
-                FileOutputStream fos = new FileOutputStream("c:/DevKit/Temp/test/" + convFile);
+                FileOutputStream fos = new FileOutputStream("c:/DevKit/Temp/dzstore/" + login + "/" + convFile);
                 fos.write(file.getBytes());
                 fos.close();
             }catch(FileNotFoundException e){
@@ -89,7 +90,7 @@ public class IndexController {
                 contentService.uploadFile(fileForDAO);
                 try {
                     convFile.createNewFile();
-                    FileOutputStream fos = new FileOutputStream("c:/DevKit/Temp/test/" + convFile);
+                    FileOutputStream fos = new FileOutputStream("c:/DevKit/Temp/dzstore/" + login + "/" + convFile);
                     fos.write(file.getBytes());
                     fos.close();
                 }catch(FileNotFoundException e){

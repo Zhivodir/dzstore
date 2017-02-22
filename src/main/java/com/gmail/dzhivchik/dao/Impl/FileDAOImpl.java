@@ -38,9 +38,18 @@ public class FileDAOImpl implements FileDAO {
 
     }
 
+    //PROBLEM : Many query to DB
     @Override
-    public void deleteGroup(File[] files) {
-
+    public File[] deleteGroup(int[] checked_files_id) {
+        File[] files = new File[checked_files_id.length];
+        int num = 0;
+        for (Integer id : checked_files_id) {
+            File file = entityManager.find(File.class, id);
+            files[num] = file;
+            entityManager.remove(file);
+            num++;
+        }
+        return files;
     }
 
     @Override

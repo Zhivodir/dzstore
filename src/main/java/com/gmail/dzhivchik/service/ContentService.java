@@ -19,16 +19,23 @@ public class ContentService {
     private FileDAO fileDAO;
 
     @Transactional
-    public  void uploadFile(File file){
+    public void uploadFile(File file){
         fileDAO.upload(file);
     }
 
     @Transactional
-    public  void uploadFolder(File[] files){
+    public void uploadFolder(File[] files){
         fileDAO.uploadGroup(files);
     }
+
     @Transactional(readOnly=true)
     public List<File> listOfFiles(User user) {
         return fileDAO.getList(user);
+    }
+
+    @Transactional
+    public File[] deleteCheckedFiles(int[] checked_files_id) {
+        File[] files = fileDAO.deleteGroup(checked_files_id);
+        return files;
     }
 }

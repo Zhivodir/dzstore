@@ -12,6 +12,6 @@ public interface FileDAO {
     void upload(File file);
     void uploadGroup(File[] files);
     void delete(File file);
-    void deleteGroup(File[] files);
+    File[] deleteGroup(int[] checked_files_id);
     List<File> getList(User user);
 }

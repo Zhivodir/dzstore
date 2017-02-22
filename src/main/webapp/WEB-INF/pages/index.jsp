@@ -10,6 +10,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!-- taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>-->
 
+
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -51,7 +52,7 @@
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#">Dashboard</a></li>
                 <li><a href="#">Settings</a></li>
-                <li><a href="#"><sec:authentication property="principal.username"/></a></li>
+                <li><a href="#" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modalForAccount"><sec:authentication property="principal.username"/></a></li>
                 <li><a href="#">Help</a></li>
             </ul>
             <form class="navbar-form navbar-right">
@@ -66,7 +67,7 @@
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
             <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <button type="button" class="btn btn-default tyopdown-toggle" data-toggle="dropdown">
                     New <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
@@ -87,9 +88,12 @@
             <h2 class="sub-header">Section title</h2>
 
             <div class="table-responsive">
-                <table class="table table-striped">
+                <form action="/actions_above_checked_files" method="post">
+                    <input type="submit" value="Delete" />
+                <table class="table table-striped record_table">
                     <thead>
                     <tr>
+                        <th></th>
                         <th>Name</th>
                         <th>Size</th>
                         <th>Type</th>
@@ -98,6 +102,7 @@
                     <tbody>
                     <c:forEach items="${listOfFiles}" var="currentFile">
                         <tr>
+                            <td><input type="checkbox" name="checked_files_id" value="${currentFile.id}" /></td>
                             <td>${currentFile.name}</td>
                             <td>${currentFile.size}</td>
                             <td>${currentFile.type}</td>
@@ -105,6 +110,7 @@
                     </c:forEach>
                     </tbody>
                 </table>
+                </form>
             </div>
         </div>
     </div>
@@ -204,6 +210,29 @@
 </div>
 
 
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- start of Modal -->
+            <div class="modal fade" id="modalForAccount" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span aria-hidden="true">&times;</span>
+                                <span class="sr-only">Close</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <a class="btn btn-lg btn-danger" href="/logout" role="button">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end of Modal -->
+        </div>
+    </div>
+</div>
 
 <!-- Bootstrap core JavaScript
 ================================================== -->
@@ -215,5 +244,14 @@
 <script src="js/holder.min.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="js/ie10-viewport-bug-workaround.js"></script>
+<script>
+    $(document).ready(function() {
+    $('.record_table tr').click(function(event) {
+        if (event.target.type !== 'checkbox') {
+            $(':checkbox', this).trigger('click');
+        }
+    });
+});</script>
+
 </body>
 </html>
