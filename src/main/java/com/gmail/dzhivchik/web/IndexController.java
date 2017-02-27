@@ -1,5 +1,6 @@
 package com.gmail.dzhivchik.web;
 
+import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.service.ContentService;
 import com.gmail.dzhivchik.service.UserService;
@@ -31,20 +32,24 @@ public class IndexController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping("/index")
+    @RequestMapping(value = "/index")
     public String onIndex(Model model) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
         model.addAttribute("listOfFiles", contentService.listOfFiles(user));
+        model.addAttribute("listOfFolders", contentService.listOfFolders(user));
         return "index";
     }
 
     @RequestMapping(value = "/create_folder", method = RequestMethod.POST)
     public String createNewFolder(@RequestParam String nameOfFolder){
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUser(login);
         File myPath = new File("c:/DevKit/Temp/dzstore/" + login + "/" + nameOfFolder);
+        Folder folder = new Folder(nameOfFolder, user);
+        contentService.createFolder(folder);
         myPath.mkdirs();
-        return "index";
+        return "redirect:/index";
     }
 
     @RequestMapping(value = "/upload_file", method = RequestMethod.POST)
@@ -86,6 +91,7 @@ public class IndexController {
                 String type = "test";
                 String fileName = file.getOriginalFilename();
                 File convFile = new File(fileName);
+
                 com.gmail.dzhivchik.domain.File fileForDAO = new com.gmail.dzhivchik.domain.File(fileName, size, type, user);
                 contentService.uploadFile(fileForDAO);
                 try {

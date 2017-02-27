@@ -21,7 +21,6 @@ public class File {
     private User user;
 
     public File() {
-        //user = (User)SecurityContextHolder.getContext().getAuthentication();
     }
 
     public File(String name, long size, String type, User user) {
@@ -29,7 +28,6 @@ public class File {
         this.size = size;
         this.type = type;
         this.user = user;
-        //this.user = (User)SecurityContextHolder.getContext().getAuthentication();
     }
 
     public int getId() {

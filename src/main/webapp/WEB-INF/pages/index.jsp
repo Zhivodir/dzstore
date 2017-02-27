@@ -100,6 +100,14 @@
                     </tr>
                     </thead>
                     <tbody>
+                    <c:forEach items="${listOfFolders}" var="currentFolder">
+                        <tr>
+                            <td><input type="checkbox" name="checked_folders_id" value="${currentFolder.id}" /></td>
+                            <td>${currentFolder.name}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </c:forEach>
                     <c:forEach items="${listOfFiles}" var="currentFile">
                         <tr>
                             <td><input type="checkbox" name="checked_files_id" value="${currentFile.id}" /></td>
@@ -197,7 +205,7 @@
                             <form class="form-inline" enctype="multipart/form-data"  action="upload_folder" method="post">
                                 <input type="hidden" name="uploaded" value="1" />
                                 <label>Выберите директорию:</label>
-                                <input type="file" name="files" webkitdirectory directory multiple/>
+                                <input type="file" name="files" webkitdirectory directory multiple mozdirectory/>
                                 <input type="submit" value="Загрузить" />
                             </form>
                         </div>

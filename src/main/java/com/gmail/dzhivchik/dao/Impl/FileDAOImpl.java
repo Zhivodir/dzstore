@@ -54,8 +54,8 @@ public class FileDAOImpl implements FileDAO {
 
     @Override
     public List<File> getList(User user) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        //String login = SecurityContextHolder.getContext().getAuthentication().getName();
         int user_id = user.getId();
 
         Query query;

@@ -1,7 +1,9 @@
 package com.gmail.dzhivchik.service;
 
 import com.gmail.dzhivchik.dao.FileDAO;
+import com.gmail.dzhivchik.dao.FolderDAO;
 import com.gmail.dzhivchik.domain.File;
+import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,14 @@ public class ContentService {
     @Autowired
     private FileDAO fileDAO;
 
+    @Autowired
+    private FolderDAO folderDAO;
+
+    @Transactional
+    public void createFolder(Folder folder){
+        folderDAO.createFolder(folder);
+    }
+
     @Transactional
     public void uploadFile(File file){
         fileDAO.upload(file);
@@ -32,6 +42,9 @@ public class ContentService {
     public List<File> listOfFiles(User user) {
         return fileDAO.getList(user);
     }
+
+    @Transactional(readOnly=true)
+    public List<Folder> listOfFolders(User user) { return folderDAO.getList(user); }
 
     @Transactional
     public File[] deleteCheckedFiles(int[] checked_files_id) {
