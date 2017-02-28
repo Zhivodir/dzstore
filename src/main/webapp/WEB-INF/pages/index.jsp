@@ -103,7 +103,7 @@
                     <c:forEach items="${listOfFolders}" var="currentFolder">
                         <tr>
                             <td><input type="checkbox" name="checked_folders_id" value="${currentFolder.id}" /></td>
-                            <td>${currentFolder.name}</td>
+                            <td><a href = "/index/folder?f=${currentFolder.name}">${currentFolder.name}</a></td>
                             <td></td>
                             <td></td>
                         </tr>
