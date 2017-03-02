@@ -12,5 +12,7 @@ public interface FolderDAO {
     void createFolder(Folder folder);
     //void delete(Folder folder);
     //Folder[] deleteGroup(int[] checked_files_id);
+
+    Folder getFolder(int id);
     List<Folder> getList(User user);
 }

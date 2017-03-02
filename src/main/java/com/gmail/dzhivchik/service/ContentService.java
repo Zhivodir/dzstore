@@ -29,6 +29,9 @@ public class ContentService {
     }
 
     @Transactional
+    public Folder getFolder(Integer id){ return folderDAO.getFolder(id); }
+
+    @Transactional
     public void uploadFile(File file){
         fileDAO.upload(file);
     }
@@ -48,7 +51,6 @@ public class ContentService {
 
     @Transactional
     public File[] deleteCheckedFiles(int[] checked_files_id) {
-        File[] files = fileDAO.deleteGroup(checked_files_id);
-        return files;
+        return fileDAO.deleteGroup(checked_files_id);
     }
 }

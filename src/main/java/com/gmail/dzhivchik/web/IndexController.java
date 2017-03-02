@@ -1,6 +1,5 @@
 package com.gmail.dzhivchik.web;
 
-import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.service.ContentService;
 import com.gmail.dzhivchik.service.UserService;
@@ -39,17 +38,6 @@ public class IndexController {
         model.addAttribute("listOfFiles", contentService.listOfFiles(user));
         model.addAttribute("listOfFolders", contentService.listOfFolders(user));
         return "index";
-    }
-
-    @RequestMapping(value = "/create_folder", method = RequestMethod.POST)
-    public String createNewFolder(@RequestParam String nameOfFolder){
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
-        File myPath = new File("c:/DevKit/Temp/dzstore/" + login + "/" + nameOfFolder);
-        Folder folder = new Folder(nameOfFolder, user);
-        contentService.createFolder(folder);
-        myPath.mkdirs();
-        return "redirect:/index";
     }
 
     @RequestMapping(value = "/upload_file", method = RequestMethod.POST)

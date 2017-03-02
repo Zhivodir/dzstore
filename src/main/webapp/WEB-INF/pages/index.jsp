@@ -85,39 +85,37 @@
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
-            <h2 class="sub-header">Section title</h2>
-
             <div class="table-responsive">
                 <form action="/actions_above_checked_files" method="post">
                     <input type="submit" value="Delete" />
-                <table class="table table-striped record_table">
-                    <thead>
-                    <tr>
-                        <th></th>
-                        <th>Name</th>
-                        <th>Size</th>
-                        <th>Type</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <c:forEach items="${listOfFolders}" var="currentFolder">
-                        <tr>
-                            <td><input type="checkbox" name="checked_folders_id" value="${currentFolder.id}" /></td>
-                            <td><a href = "/index/folder?f=${currentFolder.name}">${currentFolder.name}</a></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </c:forEach>
-                    <c:forEach items="${listOfFiles}" var="currentFile">
-                        <tr>
-                            <td><input type="checkbox" name="checked_files_id" value="${currentFile.id}" /></td>
-                            <td>${currentFile.name}</td>
-                            <td>${currentFile.size}</td>
-                            <td>${currentFile.type}</td>
-                        </tr>
-                    </c:forEach>
-                    </tbody>
-                </table>
+                    <table class="table table-striped record_table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Size</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach items="${listOfFolders}" var="currentFolder">
+                                <tr>
+                                    <td><input type="checkbox" name="checked_folders_id" value="${currentFolder.id}" /></td>
+                                    <td><a href = "/folder?f=${currentFolder.id}">${currentFolder.name}</a></td>
+                                    <td><span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span></td>
+                                    <td></td>
+                                </tr>
+                            </c:forEach>
+                            <c:forEach items="${listOfFiles}" var="currentFile">
+                                <tr>
+                                    <td><input type="checkbox" name="checked_files_id" value="${currentFile.id}" /></td>
+                                    <td>${currentFile.name}</td>
+                                    <td>${currentFile.type}</td>
+                                    <td>${currentFile.size}</td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
                 </form>
             </div>
         </div>
@@ -143,6 +141,7 @@
                             <form class="form-inline" action="create_folder" method="post">
                                 <div class="form-group">
                                     <label class="sr-only" for="newFolder">newFolder</label>
+                                    <input type="hidden" name="currentFolder" value="-1">
                                     <input type="text" class="form-control" id="newFolder" name="nameOfFolder" placeholder="Enter new folder name">
                                 </div>
                                 <button type="submit" class="btn btn-primary">Create</button>

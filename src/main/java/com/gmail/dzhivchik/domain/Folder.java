@@ -18,12 +18,17 @@ public class Folder {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private Folder parentFolder;
+
     public Folder() {
     }
 
-    public Folder(String name, User user) {
+    public Folder(String name, User user, Folder parentFolder) {
         this.name = name;
         this.user = user;
+        this.parentFolder = parentFolder;
     }
 
     public int getId() { return id; }
@@ -35,12 +40,16 @@ public class Folder {
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
 
+    public Folder getParentFolder() { return parentFolder; }
+    public void setParentFolder(Folder parentFolder) { this.parentFolder = parentFolder; }
+
     @Override
     public String toString() {
         return "Folder{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", user=" + user +
+                ", parentFolder=" + parentFolder +
                 '}';
     }
 }

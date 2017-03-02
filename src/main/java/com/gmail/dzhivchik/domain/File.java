@@ -20,6 +20,10 @@ public class File {
     @JoinColumn(name = "user_id")
     private User user;
 
+//    @ManyToOne
+//    @JoinColumn(name = "parent_id")
+//    private Folder parentFolder;
+
     public File() {
     }
 
@@ -28,6 +32,7 @@ public class File {
         this.size = size;
         this.type = type;
         this.user = user;
+//        this.parentFolder = parentFolder;
     }
 
     public int getId() {
@@ -60,6 +65,9 @@ public class File {
 
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
+
+//    public Folder getParentFolder() { return parentFolder; }
+//    public void setParentFolder(Folder parentFolder) { this.parentFolder = parentFolder; }
 
     @Override
     public String toString() {

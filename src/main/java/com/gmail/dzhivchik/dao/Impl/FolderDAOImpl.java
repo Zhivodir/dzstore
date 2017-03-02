@@ -34,4 +34,13 @@ public class FolderDAOImpl implements FolderDAO{
         query.setParameter("user_id", user_id);
         return (List<Folder>)query.getResultList();
     }
+
+    @Override
+    public Folder getFolder(int id) {
+        Query query;
+        query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.id = :id", Folder.class);
+        query.setParameter("id", id);
+        List<Folder> temp = (List<Folder>)query.getResultList();
+        return temp.get(0);
+    }
 }
