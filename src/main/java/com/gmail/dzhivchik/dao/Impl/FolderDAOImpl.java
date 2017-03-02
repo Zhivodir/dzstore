@@ -26,12 +26,18 @@ public class FolderDAOImpl implements FolderDAO{
     }
 
     @Override
-    public List<Folder> getList(User user) {
+    public List<Folder> getList(User user, Folder parentFolder) {
         int user_id = user.getId();
-
         Query query;
-        query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user.id = :user_id", Folder.class);
-        query.setParameter("user_id", user_id);
+        if(parentFolder == null){
+            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user.id = :user_id AND c.parentFolder.id IS NULL", Folder.class);
+            query.setParameter("user_id", user_id);
+        }else{
+            Integer parent_id = parentFolder.getId();
+            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user.id = :user_id AND c.parentFolder.id = :parent_id", Folder.class);
+            query.setParameter("user_id", user_id);
+            query.setParameter("parent_id", parent_id);
+        }
         return (List<Folder>)query.getResultList();
     }
 

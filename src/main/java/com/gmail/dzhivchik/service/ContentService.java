@@ -47,7 +47,7 @@ public class ContentService {
     }
 
     @Transactional(readOnly=true)
-    public List<Folder> listOfFolders(User user) { return folderDAO.getList(user); }
+    public List<Folder> listOfFolders(User user, Folder parentFolder) { return folderDAO.getList(user, parentFolder); }
 
     @Transactional
     public File[] deleteCheckedFiles(int[] checked_files_id) {

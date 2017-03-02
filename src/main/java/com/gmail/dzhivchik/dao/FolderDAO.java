@@ -14,5 +14,5 @@ public interface FolderDAO {
     //Folder[] deleteGroup(int[] checked_files_id);
 
     Folder getFolder(int id);
-    List<Folder> getList(User user);
+    List<Folder> getList(User user, Folder parentFolder);
 }

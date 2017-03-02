@@ -36,7 +36,7 @@ public class IndexController {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
         model.addAttribute("listOfFiles", contentService.listOfFiles(user));
-        model.addAttribute("listOfFolders", contentService.listOfFolders(user));
+        model.addAttribute("listOfFolders", contentService.listOfFolders(user, null));
         return "index";
     }
 
