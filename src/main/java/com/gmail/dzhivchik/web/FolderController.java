@@ -32,6 +32,11 @@ public class FolderController {
     public String inFolder(Model model, @RequestParam Integer f){
         //id-shnik folder vnutr' kotoroy zaxodim
         model.addAttribute("f", f);
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUser(login);
+        Folder currentFolder = contentService.getFolder(f);
+        //model.addAttribute("listOfFiles", contentService.listOfFiles(user));
+        model.addAttribute("listOfFolders", contentService.listOfFolders(user, currentFolder));
         return "folder";
     }
 

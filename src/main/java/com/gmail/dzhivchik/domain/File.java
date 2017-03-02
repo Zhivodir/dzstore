@@ -69,14 +69,14 @@ public class File {
 //    public Folder getParentFolder() { return parentFolder; }
 //    public void setParentFolder(Folder parentFolder) { this.parentFolder = parentFolder; }
 
-    @Override
-    public String toString() {
-        return "File{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", size=" + size +
-                ", type='" + type + '\'' +
-                ", user=" + user +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "File{" +
+//                "id=" + id +
+//                ", name='" + name + '\'' +
+//                ", size=" + size +
+//                ", type='" + type + '\'' +
+//                ", user=" + user +
+//                '}';
+//    }
 }

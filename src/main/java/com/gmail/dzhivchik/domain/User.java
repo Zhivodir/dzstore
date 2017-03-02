@@ -78,15 +78,15 @@ public class User {
 
     public void setFiles(List<File> files) { this.files = files; }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", role=" + role +
-                ", files=" + files +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "User{" +
+//                "id=" + id +
+//                ", login='" + login + '\'' +
+//                ", password='" + password + '\'' +
+//                ", email='" + email + '\'' +
+//                ", role=" + role +
+//                ", files=" + files +
+//                '}';
+//    }
 }
