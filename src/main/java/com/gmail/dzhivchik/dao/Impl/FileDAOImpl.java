@@ -2,6 +2,7 @@ package com.gmail.dzhivchik.dao.Impl;
 
 import com.gmail.dzhivchik.dao.FileDAO;
 import com.gmail.dzhivchik.domain.File;
+import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -53,14 +54,19 @@ public class FileDAOImpl implements FileDAO {
     }
 
     @Override
-    public List<File> getList(User user) {
-        //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        //String login = SecurityContextHolder.getContext().getAuthentication().getName();
+    public List<File> getList(User user, Folder parentFolder) {
         int user_id = user.getId();
 
         Query query;
-        query = entityManager.createQuery("SELECT c FROM File c WHERE c.user.id = :user_id", File.class);
-        query.setParameter("user_id", user_id);
+        if(parentFolder == null){
+            query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id AND f.parentFolder.id IS NULL", File.class);
+            query.setParameter("user_id", user_id);
+        }else{
+            Integer parent_id = parentFolder.getId();
+            query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id AND f.parentFolder.id = :parent_id", File.class);
+            query.setParameter("user_id", user_id);
+            query.setParameter("parent_id", parent_id);
+        }
         return (List<File>)query.getResultList();
     }
 }

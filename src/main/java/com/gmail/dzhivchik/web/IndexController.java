@@ -1,5 +1,6 @@
 package com.gmail.dzhivchik.web;
 
+import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.service.ContentService;
 import com.gmail.dzhivchik.service.UserService;
@@ -35,22 +36,27 @@ public class IndexController {
     public String onIndex(Model model) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
-        model.addAttribute("listOfFiles", contentService.listOfFiles(user));
+        model.addAttribute("listOfFiles", contentService.listOfFiles(user, null));
         model.addAttribute("listOfFolders", contentService.listOfFolders(user, null));
         return "index";
     }
 
     @RequestMapping(value = "/upload_file", method = RequestMethod.POST)
-    public String uploadFile(@RequestParam MultipartFile file, Model model){
+    public String uploadFile(Model model, @RequestParam MultipartFile file, @RequestParam Integer currentFolder){
         if(!file.isEmpty()){
             String fileName = file.getOriginalFilename();
             long size = file.getSize();
             String type = "test";
 
+            Folder curFolder = null;
+            if(currentFolder != -1) {
+                curFolder = contentService.getFolder(currentFolder);
+            }
+
             String login = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.getUser(login);
 
-            com.gmail.dzhivchik.domain.File fileForDAO = new com.gmail.dzhivchik.domain.File(fileName, size, type, user);
+            com.gmail.dzhivchik.domain.File fileForDAO = new com.gmail.dzhivchik.domain.File(fileName, size, type, user, curFolder);
             File convFile = new File(fileName);
             contentService.uploadFile(fileForDAO);
             try {
@@ -69,10 +75,15 @@ public class IndexController {
     }
 
     @RequestMapping(value = "/upload_folder", method = RequestMethod.POST)
-    public String uploadFolder(@RequestParam MultipartFile[] files){
+    public String uploadFolder(@RequestParam MultipartFile[] files, @RequestParam Integer currentFolder){
         if(files.length != 0){
             String login = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.getUser(login);
+            Folder curFolder = null;
+            if(currentFolder != -1) {
+                curFolder = contentService.getFolder(currentFolder);
+            }
+
 
             for (MultipartFile file : files) {
                 long size = file.getSize();
@@ -80,7 +91,7 @@ public class IndexController {
                 String fileName = file.getOriginalFilename();
                 File convFile = new File(fileName);
 
-                com.gmail.dzhivchik.domain.File fileForDAO = new com.gmail.dzhivchik.domain.File(fileName, size, type, user);
+                com.gmail.dzhivchik.domain.File fileForDAO = new com.gmail.dzhivchik.domain.File(fileName, size, type, user, curFolder);
                 contentService.uploadFile(fileForDAO);
                 try {
                     convFile.createNewFile();

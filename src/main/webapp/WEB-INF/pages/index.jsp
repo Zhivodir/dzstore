@@ -172,6 +172,7 @@
                         <div class="modal-body">
                             <form class="form-inline" enctype="multipart/form-data"  action="upload_file" method="post">
                                 <div class="form-group">
+                                    <input type="hidden" name="currentFolder" value="-1">
                                     <input type="file" name="file" placeholder="Choice file">
                                 </div>
                                 <button type="submit" class="btn btn-primary">Upload</button>
@@ -202,6 +203,7 @@
                         </div>
                         <div class="modal-body">
                             <form class="form-inline" enctype="multipart/form-data"  action="upload_folder" method="post">
+                                <input type="hidden" name="currentFolder" value="-1">
                                 <input type="hidden" name="uploaded" value="1" />
                                 <label>Выберите директорию:</label>
                                 <input type="file" name="files" webkitdirectory directory multiple mozdirectory/>

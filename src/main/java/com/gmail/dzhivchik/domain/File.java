@@ -7,7 +7,7 @@ import javax.persistence.*;
  */
 
 @Entity
-@Table(name = "file_test")
+@Table(name = "file")
 public class File {
     @Id
     @GeneratedValue
@@ -20,19 +20,19 @@ public class File {
     @JoinColumn(name = "user_id")
     private User user;
 
-//    @ManyToOne
-//    @JoinColumn(name = "parent_id")
-//    private Folder parentFolder;
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private Folder parentFolder;
 
     public File() {
     }
 
-    public File(String name, long size, String type, User user) {
+    public File(String name, long size, String type, User user, Folder parentFolder) {
         this.name = name;
         this.size = size;
         this.type = type;
         this.user = user;
-//        this.parentFolder = parentFolder;
+        this.parentFolder = parentFolder;
     }
 
     public int getId() {
@@ -59,15 +59,13 @@ public class File {
     public String getType() {
         return type;
     }
-    public void setType(String type) {
-        this.type = type;
-    }
+    public void setType(String type) { this.type = type; }
 
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
 
-//    public Folder getParentFolder() { return parentFolder; }
-//    public void setParentFolder(Folder parentFolder) { this.parentFolder = parentFolder; }
+    public Folder getParentFolder() { return parentFolder; }
+    public void setParentFolder(Folder parentFolder) { this.parentFolder = parentFolder; }
 
 //    @Override
 //    public String toString() {

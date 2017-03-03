@@ -42,8 +42,8 @@ public class ContentService {
     }
 
     @Transactional(readOnly=true)
-    public List<File> listOfFiles(User user) {
-        return fileDAO.getList(user);
+    public List<File> listOfFiles(User user, Folder parentFolder) {
+        return fileDAO.getList(user, parentFolder);
     }
 
     @Transactional(readOnly=true)
