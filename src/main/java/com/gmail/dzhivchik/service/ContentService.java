@@ -42,12 +42,12 @@ public class ContentService {
     }
 
     @Transactional(readOnly=true)
-    public List<File> listOfFiles(User user, Folder parentFolder) {
-        return fileDAO.getList(user, parentFolder);
+    public List[] getContent(User user, Folder parentFolder){
+        List[] content = new List[2];
+        content[0] = fileDAO.getList(user, parentFolder);
+        content[1] = folderDAO.getList(user, parentFolder);
+        return content;
     }
-
-    @Transactional(readOnly=true)
-    public List<Folder> listOfFolders(User user, Folder parentFolder) { return folderDAO.getList(user, parentFolder); }
 
     @Transactional
     public File[] deleteCheckedFiles(int[] checked_files_id) {

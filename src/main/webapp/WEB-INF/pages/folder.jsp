@@ -104,7 +104,7 @@
                                 <th></th>
                                 <th></th>
                             </tr>
-                            <c:forEach items="${listOfFolders}" var="currentFolder">
+                            <c:forEach items="${content[1]}" var="currentFolder">
                                 <tr>
                                     <td><input type="checkbox" name="checked_folders_id" value="${currentFolder.id}" /></td>
                                     <td><a href = "/folder?f=${currentFolder.id}">${currentFolder.name}</a></td>
@@ -112,7 +112,7 @@
                                     <td></td>
                                 </tr>
                             </c:forEach>
-                            <c:forEach items="${listOfFiles}" var="currentFile">
+                            <c:forEach items="${content[0]}" var="currentFile">
                                 <tr>
                                     <td><input type="checkbox" name="checked_files_id" value="${currentFile.id}" /></td>
                                     <td>${currentFile.name}</td>
