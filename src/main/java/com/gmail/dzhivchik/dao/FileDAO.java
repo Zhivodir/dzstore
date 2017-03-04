@@ -12,7 +12,6 @@ import java.util.List;
 public interface FileDAO {
     void upload(File file);
     void uploadGroup(File[] files);
-    void delete(File file);
     File[] deleteGroup(int[] checked_files_id);
     List<File> getList(User user, Folder parentFolder);
 }

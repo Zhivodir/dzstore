@@ -53,4 +53,9 @@ public class ContentService {
     public File[] deleteCheckedFiles(int[] checked_files_id) {
         return fileDAO.deleteGroup(checked_files_id);
     }
+
+    @Transactional
+    public Folder[] deleteCheckedFolders(int[] checked_folders_id) {
+        return folderDAO.deleteGroup(checked_folders_id);
+    }
 }

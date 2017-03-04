@@ -35,7 +35,7 @@ public class FolderController {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
         Folder currentFolder = contentService.getFolder(f);
-        model.addAttribute("content", contentService.getContent(user, currentFolder));//
+        model.addAttribute("content", contentService.getContent(user, currentFolder));
         return "folder";
     }
 

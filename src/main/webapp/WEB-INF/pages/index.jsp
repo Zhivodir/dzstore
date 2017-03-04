@@ -87,6 +87,7 @@
 
             <div class="table-responsive">
                 <form action="/actions_above_checked_files" method="post">
+                    <input type="hidden" name="currentFolder" value="-1">
                     <input type="submit" value="Delete" />
                     <table class="table table-striped record_table">
                         <thead>

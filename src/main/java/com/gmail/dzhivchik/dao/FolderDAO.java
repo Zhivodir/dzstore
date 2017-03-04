@@ -10,8 +10,8 @@ import java.util.List;
  */
 public interface FolderDAO {
     void createFolder(Folder folder);
-    //void delete(Folder folder);
-    //Folder[] deleteGroup(int[] checked_files_id);
+
+    Folder[] deleteGroup(int[] checked_folders_id);
 
     Folder getFolder(int id);
     List<Folder> getList(User user, Folder parentFolder);

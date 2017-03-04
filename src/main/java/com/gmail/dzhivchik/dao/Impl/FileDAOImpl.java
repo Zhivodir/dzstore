@@ -34,11 +34,6 @@ public class FileDAOImpl implements FileDAO {
         }
     }
 
-    @Override
-    public void delete(File file) {
-
-    }
-
     //PROBLEM : Many query to DB
     @Override
     public File[] deleteGroup(int[] checked_files_id) {
