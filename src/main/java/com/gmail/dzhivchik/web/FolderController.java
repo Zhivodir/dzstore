@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by User on 28.02.2017.
@@ -35,6 +36,10 @@ public class FolderController {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
         Folder currentFolder = contentService.getFolder(f);
+        List<Folder> list = currentFolder.getFolders();
+        for (Folder folder:list) {
+            System.out.println(folder.getName());
+        }
         model.addAttribute("content", contentService.getContent(user, currentFolder));
         return "folder";
     }
@@ -48,10 +53,8 @@ public class FolderController {
         if(currentFolder != -1) {
             curFolder = contentService.getFolder(currentFolder);
         }
-        System.out.println("Получаем обьект текущей папки: " + curFolder);
         File myPath = new File("c:/DevKit/Temp/dzstore/" + login + "/" + nameOfFolder);
         Folder folder = new Folder(nameOfFolder, user, curFolder);
-        System.out.println("Получаем обьект новой папки: " + folder);
         contentService.createFolder(folder);
         myPath.mkdirs();
         if(currentFolder != -1){

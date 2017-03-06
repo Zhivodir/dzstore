@@ -1,6 +1,7 @@
 package com.gmail.dzhivchik.domain;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by User on 27.02.2017.
@@ -21,6 +22,12 @@ public class Folder {
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private Folder parentFolder;
+
+    @OneToMany(mappedBy = "parentFolder", cascade = CascadeType.ALL)
+    private List<File> files;
+
+    @OneToMany(mappedBy = "parentFolder", cascade = CascadeType.ALL)
+    private List<Folder> folders;
 
     public Folder() {
     }
@@ -43,13 +50,25 @@ public class Folder {
     public Folder getParentFolder() { return parentFolder; }
     public void setParentFolder(Folder parentFolder) { this.parentFolder = parentFolder; }
 
-    @Override
-    public String toString() {
-        return "Folder{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", user=" + user +
-                ", parentFolder=" + parentFolder +
-                '}';
-    }
+    public List<File> getFiles() { return files; }
+    public void setFiles(List<File> files) { this.files = files; }
+
+    public List<Folder> getFolders() { return folders; }
+    public void setFolders(List<Folder> folders) { this.folders = folders; }
+
+//    @Override
+//    public String toString() {
+//        StringBuilder sb = new StringBuilder();
+//        for (Folder folder:folders) {
+//            sb.append(folder);
+//        }
+//
+//        return "Folder{" +
+//                "id=" + id +
+//                ", name='" + name + '\'' +
+//                ", user=" + user +
+//                ", parentFolder=" + parentFolder +
+//                ", content[" + sb.toString() + "]" +
+//                '}';
+//    }
 }
