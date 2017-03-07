@@ -88,7 +88,8 @@
             <div class="table-responsive">
                 <form action="/actions_above_checked_files" method="post">
                     <input type="hidden" name="currentFolder" value="${f}">
-                    <input type="submit" value="Delete" />
+                    <input type="submit" name="delete" value="Delete" />
+                    <input type="submit" name="download" value="Download" />
                     <table class="table table-striped record_table">
                         <thead>
                         <tr>
@@ -177,7 +178,7 @@
                             <h4 class="modal-title">Upload file</h4>
                         </div>
                         <div class="modal-body">
-                            <form class="form-inline" enctype="multipart/form-data"  action="upload_file" method="post">
+                            <form class="form-inline" enctype="multipart/form-data"  action="upload" method="post">
                                 <div class="form-group">
                                     <input type="hidden" name="currentFolder" value="${f}">
                                     <input type="file" name="file" placeholder="Choice file">
@@ -209,7 +210,7 @@
                             <h4 class="modal-title">Upload folder</h4>
                         </div>
                         <div class="modal-body">
-                            <form class="form-inline" enctype="multipart/form-data"  action="upload_folder" method="post">
+                            <form class="form-inline" enctype="multipart/form-data"  action="upload" method="post">
                                 <input type="hidden" name="currentFolder" value="${f}">
                                 <input type="hidden" name="uploaded" value="1" />
                                 <label>Выберите директорию:</label>
