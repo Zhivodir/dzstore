@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -62,6 +63,22 @@ public class FileDAOImpl implements FileDAO {
             query.setParameter("user_id", user_id);
             query.setParameter("parent_id", parent_id);
         }
+        return (List<File>)query.getResultList();
+    }
+
+    @Override
+    public List<File> getListById(int[] listOfId) {
+        //uncomplete here
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT f FROM File f WHERE ");
+        for (int i = 0; i < listOfId.length; i++) {
+            if(i == 0) {
+                sb.append("f.id = " + listOfId[0]);
+            }else{
+                sb.append(" OR f.id = " + listOfId[i]);
+            }
+        }
+        Query query = entityManager.createQuery(sb.toString(), File.class);
         return (List<File>)query.getResultList();
     }
 }
