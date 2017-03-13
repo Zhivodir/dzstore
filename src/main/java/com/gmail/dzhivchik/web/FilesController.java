@@ -18,6 +18,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Created by User on 21.02.2017.
@@ -86,7 +88,7 @@ public class FilesController {
         }
 
         if(download != null){
-            download(user, login, currentFolder, checked_files_id, checked_folders_id);
+            downloadContent(user, login, currentFolder, checked_files_id, checked_folders_id);
         }
 
         if(currentFolder != -1){
@@ -133,74 +135,77 @@ public class FilesController {
     }
 
 
-    public void download(User user, String login, Integer currentFolder, int[] checked_files_id, int[] checked_folders_id){
-        String filePath = null;
+    public void downloadContent(User user, String login, Integer currentFolder, int[] checked_files_id, int[] checked_folders_id){
+        String filesPath = null;
         if(currentFolder == null || currentFolder == -1){
-            filePath = "c:/DevKit/Temp/dzstore/" + login + "/";
+            filesPath = "c:/DevKit/Temp/dzstore/" + login + "/";
         }else{
-            filePath = "c:/DevKit/Temp/dzstore/" + login + "/" + currentFolder + "/";
+            filesPath = "c:/DevKit/Temp/dzstore/" + login + "/" + currentFolder + "/";
         }
-        int BUFFER_SIZE = 4096;
-        if(checked_files_id != null){
+        String filesPathForDownload = null;
+        if((checked_folders_id != null)||(checked_files_id != null && checked_files_id.length > 1)) {
+            filesPathForDownload = prepareToDownload(checked_files_id, checked_folders_id, filesPath);
+        }else if(checked_files_id.length == 1){
             List<File> forDownload = contentService.getListById(checked_files_id);
-            //File archiv = addInArchive(forDownload, filePath);
-            for (File file:forDownload) {
-                String fullPath = filePath + file.getName();
-                System.out.println(fullPath);
-                java.io.File downloadFile = new java.io.File(fullPath);
-                String mimeType = context.getMimeType(fullPath);
-                if (mimeType == null) {
-                    mimeType = "application/octet-stream";
-                }
-                try {
-                    FileInputStream inputStream = new FileInputStream(downloadFile);
-                    httpServletResponse.setContentType(mimeType);
-                    httpServletResponse.setContentLength((int) downloadFile.length());
-                    String headerKey = "Content-Disposition";
-                    String headerValue = String.format("attachment; filename=\"%s\"",
-                            downloadFile.getName());
-                    httpServletResponse.setHeader(headerKey, headerValue);
-                    OutputStream outStream = httpServletResponse.getOutputStream();
-
-                    byte[] buffer = new byte[BUFFER_SIZE];
-                    int bytesRead = -1;
-
-                    while ((bytesRead = inputStream.read(buffer)) != -1) {
-                        outStream.write(buffer, 0, bytesRead);
-                    }
-
-                    inputStream.close();
-                    outStream.close();
-                }catch (FileNotFoundException e){e.printStackTrace();}
-                catch (IOException e){e.printStackTrace();}
-            }
+            filesPathForDownload = forDownload.get(0).getName();
         }
+        downloadFunction(filesPathForDownload);
     }
 
-//    public ZipOutputStream addInArchive(List<File> forArchive, String filePath){
-//        ZipOutputStream out;
-//        try {
-//            out = new ZipOutputStream(new FileOutputStream("archive.zip"));
-//            if(forArchive != null){
-//                for (File file : forArchive) {
-//                    java.io.File fileForArchive = new java.io.File(filePath + file.getName());
-//                    out.putNextEntry(new ZipEntry(fileForArchive.getPath()));
-//                    write(new FileInputStream(fileForArchive), out);
-//                    out.close();
-//                }
-//            }
-//        }catch(FileNotFoundException e){e.printStackTrace();}
-//        catch (IOException e){e.printStackTrace();}
-//        return out;
-//    }
-//
-//    private static void write(InputStream in, OutputStream out) throws IOException {
-//        byte[] buffer = new byte[1024];
-//        int len;
-//        while ((len = in.read(buffer)) >= 0)
-//            out.write(buffer, 0, len);
-//        in.close();
-//    }
+    public String prepareToDownload(int[] checked_files_id, int[] checked_folders_id, String filesPath){
+        if(checked_files_id != null){
+            List<File> forDownload = contentService.getListById(checked_files_id);
+            try {
+                ZipOutputStream out = new ZipOutputStream(new FileOutputStream("c:/DevKit/Temp/dzstore/Temp/archive.zip"));
+                for (File file : forDownload) {
+                    int BUFFER_SIZE = 4096;
+                    String fullPath = filesPath + file.getName();
+                    //Нужен путь - скорее всего прийдеться хранить еще и относительный путь
+                    out.putNextEntry(new ZipEntry("Dims/" + file.getName()));
+                    FileInputStream fis = new FileInputStream(new java.io.File(fullPath));
+                    byte[] buffer = new byte[BUFFER_SIZE];
+                    int len;
+                    while ((len = fis.read(buffer)) >= 0)
+                        out.write(buffer, 0, len);
+                    fis.close();
+                }
+                out.close();
+            }catch (FileNotFoundException e){e.printStackTrace();}
+            catch (IOException e){e.printStackTrace();}
+        }
+        return "c:/DevKit/Temp/dzstore/Temp/archive.zip";
+    }
+
+    public void downloadFunction(String archivePath){
+        int BUFFER_SIZE = 4096;
+        java.io.File downloadFile = new java.io.File(archivePath);
+        String mimeType = context.getMimeType(archivePath);
+        if (mimeType == null) {
+            mimeType = "application/octet-stream";
+        }
+        try {
+            FileInputStream inputStream = new FileInputStream(downloadFile);
+            httpServletResponse.setContentType(mimeType);
+            httpServletResponse.setContentLength((int) downloadFile.length());
+            String headerKey = "Content-Disposition";
+            String headerValue = String.format("attachment; filename=\"%s\"",
+                    downloadFile.getName());
+            httpServletResponse.setHeader(headerKey, headerValue);
+            OutputStream outStream = httpServletResponse.getOutputStream();
+
+            byte[] buffer = new byte[BUFFER_SIZE];
+            int bytesRead = -1;
+
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outStream.write(buffer, 0, bytesRead);
+            }
+
+            inputStream.close();
+            outStream.close();
+        }catch (FileNotFoundException e){e.printStackTrace();}
+        catch (IOException e){e.printStackTrace();}
+        downloadFile.delete();
+    }
 }
 
 
