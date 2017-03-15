@@ -62,4 +62,19 @@ public class FolderDAOImpl implements FolderDAO{
         }
         return folders;
     }
+
+    @Override
+    public List<Folder> getListFolderById(int[] listOfId) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT f FROM Folder f WHERE ");
+        for (int i = 0; i < listOfId.length; i++) {
+            if(i == 0) {
+                sb.append("f.id = " + listOfId[0]);
+            }else{
+                sb.append(" OR f.id = " + listOfId[i]);
+            }
+        }
+        Query query = entityManager.createQuery(sb.toString(), Folder.class);
+        return (List<Folder>)query.getResultList();
+    }
 }

@@ -64,4 +64,9 @@ public class ContentService {
         return fileDAO.getListById(checked_files_id);
     }
 
+    @Transactional
+    public List<Folder> getListFolderById(int[] checked_folders_id) {
+        return folderDAO.getListFolderById(checked_folders_id);
+    }
+
 }

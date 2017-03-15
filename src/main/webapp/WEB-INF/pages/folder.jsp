@@ -78,9 +78,10 @@
             </div>
 
             <ul class="nav nav-sidebar">
-                <li><a href="#">Reports</a></li>
-                <li><a href="#">Analytics</a></li>
-                <li><a href="#">Export</a></li>
+                <li><a href="#">My store</a></li>
+                <li><a href="#">Shared with me</a></li>
+                <li><a href="#">Recent</a></li>
+                <li><a href="#">Starred</a></li>
             </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">

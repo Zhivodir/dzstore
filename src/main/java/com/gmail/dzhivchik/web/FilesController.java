@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -88,7 +89,16 @@ public class FilesController {
         }
 
         if(download != null){
-            downloadContent(user, login, currentFolder, checked_files_id, checked_folders_id);
+            List<File> listCheckedFiles = new ArrayList<>();
+            if(checked_files_id != null) {
+                listCheckedFiles = contentService.getListById(checked_files_id);
+            }
+
+            List<Folder> listCheckedFolder = new ArrayList<>();
+            if(checked_folders_id != null) {
+                listCheckedFolder = contentService.getListFolderById(checked_folders_id);
+            }
+            downloadContent(user, login, currentFolder, listCheckedFiles, listCheckedFolder);
         }
 
         if(currentFolder != -1){
@@ -135,45 +145,56 @@ public class FilesController {
     }
 
 
-    public void downloadContent(User user, String login, Integer currentFolder, int[] checked_files_id, int[] checked_folders_id){
+    public void downloadContent(User user, String login, Integer currentFolder, List<File> listCheckedFiles, List<Folder> listCheckedFolder){
         String filesPath = null;
+        Folder curFolder = null;
         if(currentFolder == null || currentFolder == -1){
             filesPath = "c:/DevKit/Temp/dzstore/" + login + "/";
         }else{
-            filesPath = "c:/DevKit/Temp/dzstore/" + login + "/" + currentFolder + "/";
+            curFolder = contentService.getFolder(currentFolder);
+            filesPath = "c:/DevKit/Temp/dzstore/" + login + "/" + curFolder + "/";
         }
         String filesPathForDownload = null;
-        if((checked_folders_id != null)||(checked_files_id != null && checked_files_id.length > 1)) {
-            filesPathForDownload = prepareToDownload(checked_files_id, checked_folders_id, filesPath);
-        }else if(checked_files_id.length == 1){
-            List<File> forDownload = contentService.getListById(checked_files_id);
-            filesPathForDownload = forDownload.get(0).getName();
+        if((listCheckedFolder.size() != 0)||(listCheckedFiles.size() > 1)) {
+            try {
+                StringBuilder structure = new StringBuilder();
+                ZipOutputStream out = new ZipOutputStream(new FileOutputStream("c:/DevKit/Temp/dzstore/Temp/archive.zip"));
+                prepareToDownload(user, out, listCheckedFiles, listCheckedFolder, filesPath, structure);
+                out.close();
+            }catch (FileNotFoundException e){e.printStackTrace();}
+            catch (IOException e){e.printStackTrace();}
+            filesPathForDownload = "c:/DevKit/Temp/dzstore/Temp/archive.zip";
+        }else if(listCheckedFiles.size() == 1){
+            filesPathForDownload = listCheckedFiles.get(0).getName();
         }
         downloadFunction(filesPathForDownload);
     }
 
-    public String prepareToDownload(int[] checked_files_id, int[] checked_folders_id, String filesPath){
-        if(checked_files_id != null){
-            List<File> forDownload = contentService.getListById(checked_files_id);
-            try {
-                ZipOutputStream out = new ZipOutputStream(new FileOutputStream("c:/DevKit/Temp/dzstore/Temp/archive.zip"));
-                for (File file : forDownload) {
-                    int BUFFER_SIZE = 4096;
-                    String fullPath = filesPath + file.getName();
-                    //Нужен путь - скорее всего прийдеться хранить еще и относительный путь
-                    out.putNextEntry(new ZipEntry("Dims/" + file.getName()));
-                    FileInputStream fis = new FileInputStream(new java.io.File(fullPath));
-                    byte[] buffer = new byte[BUFFER_SIZE];
-                    int len;
-                    while ((len = fis.read(buffer)) >= 0)
-                        out.write(buffer, 0, len);
-                    fis.close();
-                }
-                out.close();
-            }catch (FileNotFoundException e){e.printStackTrace();}
-            catch (IOException e){e.printStackTrace();}
+    public void prepareToDownload(User user, ZipOutputStream out, List<File> listCheckedFiles, List<Folder> listCheckedFolder, String filesPath, StringBuilder structure) throws FileNotFoundException, IOException{
+        int BUFFER_SIZE = 4096;
+        if(listCheckedFiles.size() != 0){
+            for (File file : listCheckedFiles) {
+                String fullPath = filesPath + file.getName();
+                out.putNextEntry(new ZipEntry(structure.toString() + file.getName()));
+                FileInputStream fis = new FileInputStream(new java.io.File(fullPath));
+                byte[] buffer = new byte[BUFFER_SIZE];
+                int len;
+                while ((len = fis.read(buffer)) >= 0)
+                    out.write(buffer, 0, len);
+                fis.close();
+            }
         }
-        return "c:/DevKit/Temp/dzstore/Temp/archive.zip";
+
+        if(listCheckedFolder.size() != 0){
+            for (Folder folder : listCheckedFolder) {
+                System.out.println(folder.getFiles().size() + "   " + folder.getFolders().size());
+                if(folder.getFiles().size() == 0 && folder.getFolders().size() == 0) {
+                    structure.append(folder.getName() + "/");
+                    out.putNextEntry(new ZipEntry(structure.toString() + "/"));
+                }
+                prepareToDownload(user, out, folder.getFiles(), folder.getFolders(), filesPath, structure);
+            }
+        }
     }
 
     public void downloadFunction(String archivePath){
@@ -207,6 +228,3 @@ public class FilesController {
         downloadFile.delete();
     }
 }
-
-
-
