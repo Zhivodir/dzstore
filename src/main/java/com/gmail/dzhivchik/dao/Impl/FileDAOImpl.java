@@ -68,7 +68,6 @@ public class FileDAOImpl implements FileDAO {
 
     @Override
     public List<File> getListById(int[] listOfId) {
-        //uncomplete here
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT f FROM File f WHERE ");
         for (int i = 0; i < listOfId.length; i++) {
@@ -80,5 +79,21 @@ public class FileDAOImpl implements FileDAO {
         }
         Query query = entityManager.createQuery(sb.toString(), File.class);
         return (List<File>)query.getResultList();
+    }
+
+    @Override
+    public void changeStar(int[] checked_files_id, boolean stateOfStar) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("UPDATE File f SET f.starred = :stateOfStar WHERE ");
+        for (int i = 0; i < checked_files_id.length; i++) {
+            if(i == 0) {
+                sb.append("f.id = " + checked_files_id[0]);
+            }else{
+                sb.append(" OR f.id = " + checked_files_id[i]);
+            }
+        }
+        Query query = entityManager.createQuery(sb.toString());
+        query.setParameter("stateOfStar", stateOfStar);
+        int result = query.executeUpdate();
     }
 }

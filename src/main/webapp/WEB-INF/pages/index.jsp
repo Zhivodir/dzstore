@@ -91,6 +91,8 @@
                     <input type="hidden" name="currentFolder" value="-1">
                     <input type="submit" name="delete" value="Delete" />
                     <input type="submit" name="download" value="Download" />
+                    <input type="submit" name="starred" value="Starred" />
+                    <input type="submit" name="removeStar" value="Remove star" />
                     <table class="table table-striped record_table">
                         <thead>
                             <tr>

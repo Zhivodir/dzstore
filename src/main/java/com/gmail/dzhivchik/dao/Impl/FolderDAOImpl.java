@@ -77,4 +77,21 @@ public class FolderDAOImpl implements FolderDAO{
         Query query = entityManager.createQuery(sb.toString(), Folder.class);
         return (List<Folder>)query.getResultList();
     }
+
+
+    @Override
+    public void changeStar(int[] checked_folders_id, boolean stateOfStar) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("UPDATE Folder f SET f.starred = :stateOfStar WHERE ");
+        for (int i = 0; i < checked_folders_id.length; i++) {
+            if(i == 0) {
+                sb.append("f.id = " + checked_folders_id[0]);
+            }else{
+                sb.append(" OR f.id = " + checked_folders_id[i]);
+            }
+        }
+        Query query = entityManager.createQuery(sb.toString());
+        query.setParameter("stateOfStar", stateOfStar);
+        int result = query.executeUpdate();
+    }
 }

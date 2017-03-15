@@ -69,4 +69,13 @@ public class ContentService {
         return folderDAO.getListFolderById(checked_folders_id);
     }
 
+    @Transactional
+    public void changeStar(int[] checked_files_id, int[] checked_folders_id, boolean stateOfStar) {
+        if(checked_files_id != null){
+            fileDAO.changeStar(checked_files_id, stateOfStar);
+        }
+        if(checked_folders_id != null){
+            folderDAO.changeStar(checked_folders_id, stateOfStar);
+        }
+    }
 }

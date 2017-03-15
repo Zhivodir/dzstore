@@ -14,6 +14,7 @@ public class Folder {
     @GeneratedValue
     private int id;
     private String name;
+    private boolean starred;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -32,10 +33,11 @@ public class Folder {
     public Folder() {
     }
 
-    public Folder(String name, User user, Folder parentFolder) {
+    public Folder(String name, User user, Folder parentFolder, boolean starred) {
         this.name = name;
         this.user = user;
         this.parentFolder = parentFolder;
+        this.starred = starred;
     }
 
     public int getId() { return id; }
@@ -56,19 +58,6 @@ public class Folder {
     public List<Folder> getFolders() { return folders; }
     public void setFolders(List<Folder> folders) { this.folders = folders; }
 
-//    @Override
-//    public String toString() {
-//        StringBuilder sb = new StringBuilder();
-//        for (Folder folder:folders) {
-//            sb.append(folder);
-//        }
-//
-//        return "Folder{" +
-//                "id=" + id +
-//                ", name='" + name + '\'' +
-//                ", user=" + user +
-//                ", parentFolder=" + parentFolder +
-//                ", content[" + sb.toString() + "]" +
-//                '}';
-//    }
+    public boolean isStarred() { return starred; }
+    public void setStarred(boolean starred) { this.starred = starred; }
 }

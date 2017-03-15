@@ -79,10 +79,20 @@ public class FilesController {
                                            @RequestParam(value="checked_folders_id", required=false) int[] checked_folders_id,
                                            @RequestParam(value="download", required=false) String download,
                                            @RequestParam(value="delete", required=false) String delete,
+                                           @RequestParam(value="starred", required=false) String starred,
+                                           @RequestParam(value="removeStar", required=false) String removeStar,
                                            @RequestParam Integer currentFolder){
 
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
+
+        if(starred != null){
+            changeStar(checked_files_id, checked_folders_id, true);
+        }
+
+        if(removeStar != null){
+            changeStar(checked_files_id, checked_folders_id, false);
+        }
 
         if(delete != null){
             deleteContent(model, checked_files_id, checked_folders_id, login);
@@ -112,7 +122,7 @@ public class FilesController {
         String fileName = file.getOriginalFilename();
         long size = file.getSize();
         String type = "test";
-        com.gmail.dzhivchik.domain.File fileForDAO = new com.gmail.dzhivchik.domain.File(fileName, size, type, user, curFolder);
+        com.gmail.dzhivchik.domain.File fileForDAO = new com.gmail.dzhivchik.domain.File(fileName, size, type, user, curFolder, false);
         java.io.File convFile = new java.io.File(fileName);
         contentService.uploadFile(fileForDAO);
         try {
@@ -226,5 +236,9 @@ public class FilesController {
         }catch (FileNotFoundException e){e.printStackTrace();}
         catch (IOException e){e.printStackTrace();}
         downloadFile.delete();
+    }
+
+    public void changeStar(int[] checked_files_id, int[] checked_folders_id, boolean stateOfStar){
+        contentService.changeStar(checked_files_id, checked_folders_id, stateOfStar);
     }
 }

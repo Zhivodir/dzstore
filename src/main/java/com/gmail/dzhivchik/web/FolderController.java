@@ -29,7 +29,9 @@ public class FolderController {
     private UserService userService;
 
     @RequestMapping(value = "/create_folder", method = RequestMethod.POST)
-    public String createNewFolder(Model model, @RequestParam String nameOfFolder, @RequestParam Integer currentFolder){
+    public String createNewFolder(Model model,
+                                  @RequestParam String nameOfFolder,
+                                  @RequestParam Integer currentFolder){
 
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
@@ -38,7 +40,7 @@ public class FolderController {
             curFolder = contentService.getFolder(currentFolder);
         }
         File myPath = new File("c:/DevKit/Temp/dzstore/" + login + "/" + nameOfFolder);
-        Folder folder = new Folder(nameOfFolder, user, curFolder);
+        Folder folder = new Folder(nameOfFolder, user, curFolder, false);
         contentService.createFolder(folder);
         myPath.mkdirs();
         if(currentFolder != -1){

@@ -15,6 +15,7 @@ public class File {
     private String name;
     private long size;
     private String type;
+    private boolean starred;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -27,12 +28,13 @@ public class File {
     public File() {
     }
 
-    public File(String name, long size, String type, User user, Folder parentFolder) {
+    public File(String name, long size, String type, User user, Folder parentFolder, boolean starred) {
         this.name = name;
         this.size = size;
         this.type = type;
         this.user = user;
         this.parentFolder = parentFolder;
+        this.starred = starred;
     }
 
     public int getId() {
@@ -67,14 +69,6 @@ public class File {
     public Folder getParentFolder() { return parentFolder; }
     public void setParentFolder(Folder parentFolder) { this.parentFolder = parentFolder; }
 
-//    @Override
-//    public String toString() {
-//        return "File{" +
-//                "id=" + id +
-//                ", name='" + name + '\'' +
-//                ", size=" + size +
-//                ", type='" + type + '\'' +
-//                ", user=" + user +
-//                '}';
-//    }
+    public boolean isStarred() { return starred; }
+    public void setStarred(boolean starred) { this.starred = starred; }
 }
