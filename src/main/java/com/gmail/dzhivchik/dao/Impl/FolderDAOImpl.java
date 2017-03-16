@@ -94,4 +94,12 @@ public class FolderDAOImpl implements FolderDAO{
         query.setParameter("stateOfStar", stateOfStar);
         int result = query.executeUpdate();
     }
+
+    @Override
+    public List<Folder> getStarredList(User user) {
+        int user_id = user.getId();
+        Query query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.user.id = :user_id AND f.starred = 1", Folder.class);
+        query.setParameter("user_id", user_id);
+        return (List<Folder>)query.getResultList();
+    }
 }

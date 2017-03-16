@@ -78,4 +78,11 @@ public class ContentService {
             folderDAO.changeStar(checked_folders_id, stateOfStar);
         }
     }
+
+    public List[] getStarredContent(User user){
+        List[] content = new List[2];
+        content[0] = fileDAO.getStarredList(user);
+        content[1] = folderDAO.getStarredList(user);
+        return content;
+    }
 }

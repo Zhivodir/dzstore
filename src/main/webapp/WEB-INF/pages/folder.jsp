@@ -50,7 +50,6 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">Dashboard</a></li>
                 <li><a href="#">Settings</a></li>
                 <li><a href="#" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modalForAccount"><sec:authentication property="principal.username"/></a></li>
                 <li><a href="#">Help</a></li>
@@ -78,10 +77,9 @@
             </div>
 
             <ul class="nav nav-sidebar">
-                <li><a href="#">My store</a></li>
+                <li><a href="/index">My store</a></li>
                 <li><a href="#">Shared with me</a></li>
-                <li><a href="#">Recent</a></li>
-                <li><a href="#">Starred</a></li>
+                <li><a href="/starred">Starred</a></li>
             </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">

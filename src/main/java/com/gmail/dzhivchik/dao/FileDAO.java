@@ -16,4 +16,5 @@ public interface FileDAO {
     List<File> getList(User user, Folder parentFolder);
     List<File> getListById(int[] listOfId);
     void changeStar(int[] checked_files_id, boolean stateOfStar);
+    List<File> getStarredList(User user);
 }

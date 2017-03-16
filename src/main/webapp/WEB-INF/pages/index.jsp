@@ -50,7 +50,6 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">Dashboard</a></li>
                 <li><a href="#">Settings</a></li>
                 <li><a href="#" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modalForAccount"><sec:authentication property="principal.username"/></a></li>
                 <li><a href="#">Help</a></li>
@@ -78,21 +77,20 @@
             </div>
 
             <ul class="nav nav-sidebar">
-                <li><a href="#">My store</a></li>
+                <li><a href="/index">My store</a></li>
                 <li><a href="#">Shared with me</a></li>
-                <li><a href="#">Recent</a></li>
-                <li><a href="#">Starred</a></li>
+                <li><a href="/starred">Starred</a></li>
             </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-
             <div class="table-responsive">
                 <form action="/actions_above_checked_files" method="post">
                     <input type="hidden" name="currentFolder" value="-1">
                     <input type="submit" name="delete" value="Delete" />
                     <input type="submit" name="download" value="Download" />
                     <input type="submit" name="starred" value="Starred" />
-                    <input type="submit" name="removeStar" value="Remove star" />
+                    <input type="submit" name="removestar" value="Remove star" />
+
                     <table class="table table-striped record_table">
                         <thead>
                             <tr>
@@ -265,7 +263,30 @@
             $(':checkbox', this).trigger('click');
         }
     });
-});</script>
+});
+</script>
+<script>
+//    var menu = document.querySelector('.menu');
+//    function showMenu(x, y){
+//        menu.style.left = x + 'px';
+//        menu.style.top = y + 'px';
+//        menu.classList.add('show-menu');
+//    }
+//    function hideMenu(){
+//        menu.classList.remove('show-menu');
+//    }
+//    function onContextMenu(e){
+//        e.preventDefault();
+//        showMenu(e.pageX, e.pageY);
+//        document.addEventListener('mousedown', onMouseDown, false);
+//    }
+//    function onMouseDown(e){
+//        hideMenu();
+//        document.removeEventListener('mousedown', onMouseDown);
+//    }
+//    document.addEventListener('contextmenu', onContextMenu, false);
+</script>
+
 
 </body>
 </html>

@@ -96,4 +96,12 @@ public class FileDAOImpl implements FileDAO {
         query.setParameter("stateOfStar", stateOfStar);
         int result = query.executeUpdate();
     }
+
+    @Override
+    public List<File> getStarredList(User user) {
+        int user_id = user.getId();
+        Query query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id AND f.starred = 1", File.class);
+        query.setParameter("user_id", user_id);
+        return (List<File>)query.getResultList();
+    }
 }

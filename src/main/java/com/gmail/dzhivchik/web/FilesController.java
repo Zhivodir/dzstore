@@ -82,36 +82,39 @@ public class FilesController {
                                            @RequestParam(value="starred", required=false) String starred,
                                            @RequestParam(value="removeStar", required=false) String removeStar,
                                            @RequestParam Integer currentFolder){
+        if(checked_files_id != null || checked_folders_id != null) {
+            String login = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userService.getUser(login);
 
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
-
-        if(starred != null){
-            changeStar(checked_files_id, checked_folders_id, true);
-        }
-
-        if(removeStar != null){
-            changeStar(checked_files_id, checked_folders_id, false);
-        }
-
-        if(delete != null){
-            deleteContent(model, checked_files_id, checked_folders_id, login);
-        }
-
-        if(download != null){
-            List<File> listCheckedFiles = new ArrayList<>();
-            if(checked_files_id != null) {
-                listCheckedFiles = contentService.getListById(checked_files_id);
+            if (starred != null) {
+                changeStar(checked_files_id, checked_folders_id, true);
             }
 
-            List<Folder> listCheckedFolder = new ArrayList<>();
-            if(checked_folders_id != null) {
-                listCheckedFolder = contentService.getListFolderById(checked_folders_id);
+            if (removeStar != null) {
+                changeStar(checked_files_id, checked_folders_id, false);
             }
-            downloadContent(user, login, currentFolder, listCheckedFiles, listCheckedFolder);
+
+            if (delete != null) {
+                deleteContent(model, checked_files_id, checked_folders_id, login);
+            }
+
+            if (download != null) {
+                List<File> listCheckedFiles = new ArrayList<>();
+                if (checked_files_id != null) {
+                    listCheckedFiles = contentService.getListById(checked_files_id);
+                }
+
+                List<Folder> listCheckedFolder = new ArrayList<>();
+                if (checked_folders_id != null) {
+                    listCheckedFolder = contentService.getListFolderById(checked_folders_id);
+                }
+                downloadContent(user, login, currentFolder, listCheckedFiles, listCheckedFolder);
+            }
         }
 
-        if(currentFolder != -1){
+        if(currentFolder == null){
+            return "redirect:/starred";
+        }else if(currentFolder != -1){
             model.addAttribute("f", currentFolder);
             return "redirect:/folder";}
         return "redirect:/index";

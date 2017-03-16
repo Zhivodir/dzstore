@@ -50,4 +50,12 @@ public class ViewController {
         return "folder";
     }
 
+    @RequestMapping(value = "/starred")
+    public String onStarred(Model model) {
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUser(login);
+        model.addAttribute("content", contentService.getStarredContent(user));
+        return "starred";
+    }
+
 }

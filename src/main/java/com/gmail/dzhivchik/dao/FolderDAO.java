@@ -15,4 +15,5 @@ public interface FolderDAO {
     List<Folder> getList(User user, Folder parentFolder);
     List<Folder> getListFolderById(int[] listOfId);
     void changeStar(int[] checked_folders_id, boolean stateOfStar);
+    List<Folder> getStarredList(User user);
 }
