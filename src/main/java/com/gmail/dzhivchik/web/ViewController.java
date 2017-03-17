@@ -58,4 +58,13 @@ public class ViewController {
         return "starred";
     }
 
+    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    public String search(Model model, @RequestParam(value="whatSearch", required=false) String whatSearch){
+        if(whatSearch != null) {
+            String login = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userService.getUser(login);
+            model.addAttribute("content", contentService.getListBySearch(whatSearch, user));
+        }
+        return "search";
+    }
 }

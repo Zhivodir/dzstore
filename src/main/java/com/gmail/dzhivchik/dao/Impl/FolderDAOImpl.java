@@ -102,4 +102,14 @@ public class FolderDAOImpl implements FolderDAO{
         query.setParameter("user_id", user_id);
         return (List<Folder>)query.getResultList();
     }
+
+    @Override
+    public List<Folder> getSearchList(String whatSearch, User user) {
+        int user_id = user.getId();
+        //whatSearch = "%" + whatSearch +"%";
+        Query query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.user.id = :user_id AND UPPER(f.name) LIKE :whatSearch", Folder.class);
+        query.setParameter("user_id", user_id);
+        query.setParameter("whatSearch", "%" + whatSearch.toUpperCase() + "%");
+        return (List<Folder>)query.getResultList();
+    }
 }

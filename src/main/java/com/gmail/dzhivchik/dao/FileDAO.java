@@ -17,4 +17,5 @@ public interface FileDAO {
     List<File> getListById(int[] listOfId);
     void changeStar(int[] checked_files_id, boolean stateOfStar);
     List<File> getStarredList(User user);
+    List<File> getSearchList(String whatSearch, User user);
 }

@@ -104,4 +104,13 @@ public class FileDAOImpl implements FileDAO {
         query.setParameter("user_id", user_id);
         return (List<File>)query.getResultList();
     }
+
+    @Override
+    public List<File> getSearchList(String whatSearch, User user) {
+        int user_id = user.getId();
+        Query query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id AND UPPER(f.name) LIKE :whatSearch", File.class);
+        query.setParameter("user_id", user_id);
+        query.setParameter("whatSearch", "%" + whatSearch.toUpperCase() + "%");
+        return (List<File>)query.getResultList();
+    }
 }

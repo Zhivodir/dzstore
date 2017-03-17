@@ -85,4 +85,11 @@ public class ContentService {
         content[1] = folderDAO.getStarredList(user);
         return content;
     }
+
+    public List[] getListBySearch(String whatSearch, User user){
+        List[] content = new List[2];
+        content[0] = fileDAO.getSearchList(whatSearch, user);
+        content[1] = folderDAO.getSearchList(whatSearch, user);
+        return content;
+    }
 }
