@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -43,10 +45,12 @@ public class ViewController {
         User user = userService.getUser(login);
         Folder currentFolder = contentService.getFolder(f);
         List<Folder> list = currentFolder.getFolders();
-        for (Folder folder:list) {
-            System.out.println(folder.getName());
-        }
+        List<Folder> forRelativePath = new ArrayList<>();
+        getListRelativePath(currentFolder, forRelativePath);
+        Collections.reverse(forRelativePath);
+        forRelativePath.add(currentFolder);
         model.addAttribute("content", contentService.getContent(user, currentFolder));
+        model.addAttribute("listForRelativePath", forRelativePath);
         return "folder";
     }
 
@@ -66,5 +70,13 @@ public class ViewController {
             model.addAttribute("content", contentService.getListBySearch(whatSearch, user));
         }
         return "search";
+    }
+
+    public void getListRelativePath(Folder currentFolder, List<Folder> forRelativePath){
+        Folder parentFolder = currentFolder.getParentFolder();
+        forRelativePath.add(parentFolder);
+        if(parentFolder != null) {
+            getListRelativePath(parentFolder, forRelativePath);
+        }
     }
 }
