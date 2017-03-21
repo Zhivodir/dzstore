@@ -44,45 +44,46 @@ public class FilesController {
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public String upload(Model model,
-                         @RequestParam(value="file", required=false) MultipartFile file,
-                         @RequestParam(value="files", required=false) MultipartFile[] files,
-                         @RequestParam Integer currentFolder){
+                         @RequestParam(value = "file", required = false) MultipartFile file,
+                         @RequestParam(value = "files", required = false) MultipartFile[] files,
+                         @RequestParam Integer currentFolder) {
 
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
 
         Folder curFolder = null;
-        if(currentFolder != -1) {
+        if (currentFolder != -1) {
             curFolder = contentService.getFolder(currentFolder);
         }
 
-        if(file != null){
+        if (file != null) {
             uploadFile(file, user, curFolder, login);
         }
 
-        if(files != null){
+        if (files != null) {
             for (MultipartFile currentFile : files) {
                 uploadFile(currentFile, user, curFolder, login);
             }
         }
 
-        if(currentFolder != -1){
+        if (currentFolder != -1) {
             model.addAttribute("f", currentFolder);
-            return "redirect:/folder";}
+            return "redirect:/folder";
+        }
         return "redirect:/index";
     }
 
 
     @RequestMapping(value = "/actions_above_checked_files", method = RequestMethod.POST)
     public String actionsAboveCheckedFiles(Model model,
-                                           @RequestParam(value="checked_files_id", required=false) int[] checked_files_id,
-                                           @RequestParam(value="checked_folders_id", required=false) int[] checked_folders_id,
-                                           @RequestParam(value="download", required=false) String download,
-                                           @RequestParam(value="delete", required=false) String delete,
-                                           @RequestParam(value="starred", required=false) String starred,
-                                           @RequestParam(value="removeStar", required=false) String removeStar,
-                                           @RequestParam Integer currentFolder){
-        if(checked_files_id != null || checked_folders_id != null) {
+                                           @RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
+                                           @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id,
+                                           @RequestParam(value = "download", required = false) String download,
+                                           @RequestParam(value = "delete", required = false) String delete,
+                                           @RequestParam(value = "starred", required = false) String starred,
+                                           @RequestParam(value = "removeStar", required = false) String removeStar,
+                                           @RequestParam Integer currentFolder) {
+        if (checked_files_id != null || checked_folders_id != null) {
             String login = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.getUser(login);
 
@@ -112,16 +113,17 @@ public class FilesController {
             }
         }
 
-        if(currentFolder == null){
+        if (currentFolder == null) {
             return "redirect:/starred";
-        }else if(currentFolder != -1){
+        } else if (currentFolder != -1) {
             model.addAttribute("f", currentFolder);
-            return "redirect:/folder";}
+            return "redirect:/folder";
+        }
         return "redirect:/index";
     }
 
 
-    public void uploadFile(MultipartFile file, User user, Folder curFolder, String login){
+    public void uploadFile(MultipartFile file, User user, Folder curFolder, String login) {
         String fileName = file.getOriginalFilename();
         long size = file.getSize();
         String type = "test";
@@ -133,17 +135,16 @@ public class FilesController {
             FileOutputStream fos = new FileOutputStream("c:/DevKit/Temp/dzstore/" + login + "/" + convFile);
             fos.write(file.getBytes());
             fos.close();
-        }catch(FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }
-        catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
 
-    public void deleteContent(Model model, int[] checked_files_id, int[] checked_folders_id, String login){
-        if(checked_files_id != null) {
+    public void deleteContent(Model model, int[] checked_files_id, int[] checked_folders_id, String login) {
+        if (checked_files_id != null) {
             File[] files = contentService.deleteCheckedFiles(checked_files_id);
 
             if (files.length != 0) {
@@ -152,40 +153,43 @@ public class FilesController {
                 }
             }
         }
-        if(checked_folders_id != null){
+        if (checked_folders_id != null) {
             Folder[] folders = contentService.deleteCheckedFolders(checked_folders_id);
         }
     }
 
 
-    public void downloadContent(User user, String login, Integer currentFolder, List<File> listCheckedFiles, List<Folder> listCheckedFolder){
+    public void downloadContent(User user, String login, Integer currentFolder, List<File> listCheckedFiles, List<Folder> listCheckedFolder) {
         String filesPath = null;
         Folder curFolder = null;
-        if(currentFolder == null || currentFolder == -1){
+        if (currentFolder == null || currentFolder == -1) {
             filesPath = "c:/DevKit/Temp/dzstore/" + login + "/";
-        }else{
+        } else {
             curFolder = contentService.getFolder(currentFolder);
             filesPath = "c:/DevKit/Temp/dzstore/" + login + "/" + curFolder + "/";
         }
         String filesPathForDownload = null;
-        if((listCheckedFolder.size() != 0)||(listCheckedFiles.size() > 1)) {
+        if ((listCheckedFolder.size() != 0) || (listCheckedFiles.size() > 1)) {
             try {
                 StringBuilder structure = new StringBuilder();
                 ZipOutputStream out = new ZipOutputStream(new FileOutputStream("c:/DevKit/Temp/dzstore/Temp/archive.zip"));
                 prepareToDownload(user, out, listCheckedFiles, listCheckedFolder, filesPath, structure);
                 out.close();
-            }catch (FileNotFoundException e){e.printStackTrace();}
-            catch (IOException e){e.printStackTrace();}
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             filesPathForDownload = "c:/DevKit/Temp/dzstore/Temp/archive.zip";
-        }else if(listCheckedFiles.size() == 1){
+        } else if (listCheckedFiles.size() == 1) {
             filesPathForDownload = listCheckedFiles.get(0).getName();
         }
         downloadFunction(filesPathForDownload);
     }
 
-    public void prepareToDownload(User user, ZipOutputStream out, List<File> listCheckedFiles, List<Folder> listCheckedFolder, String filesPath, StringBuilder structure) throws FileNotFoundException, IOException{
+    public void prepareToDownload(User user, ZipOutputStream out, List<File> listCheckedFiles, List<Folder> listCheckedFolder, String filesPath, StringBuilder structure) throws FileNotFoundException, IOException {
         int BUFFER_SIZE = 4096;
-        if(listCheckedFiles.size() != 0){
+        if (listCheckedFiles.size() != 0) {
             for (File file : listCheckedFiles) {
                 String fullPath = filesPath + file.getName();
                 out.putNextEntry(new ZipEntry(structure.toString() + file.getName()));
@@ -198,10 +202,10 @@ public class FilesController {
             }
         }
 
-        if(listCheckedFolder.size() != 0){
+        if (listCheckedFolder.size() != 0) {
             for (Folder folder : listCheckedFolder) {
                 System.out.println(folder.getFiles().size() + "   " + folder.getFolders().size());
-                if(folder.getFiles().size() == 0 && folder.getFolders().size() == 0) {
+                if (folder.getFiles().size() == 0 && folder.getFolders().size() == 0) {
                     structure.append(folder.getName() + "/");
                     out.putNextEntry(new ZipEntry(structure.toString() + "/"));
                 }
@@ -210,7 +214,7 @@ public class FilesController {
         }
     }
 
-    public void downloadFunction(String archivePath){
+    public void downloadFunction(String archivePath) {
         int BUFFER_SIZE = 4096;
         java.io.File downloadFile = new java.io.File(archivePath);
         String mimeType = context.getMimeType(archivePath);
@@ -236,12 +240,15 @@ public class FilesController {
 
             inputStream.close();
             outStream.close();
-        }catch (FileNotFoundException e){e.printStackTrace();}
-        catch (IOException e){e.printStackTrace();}
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         downloadFile.delete();
     }
 
-    public void changeStar(int[] checked_files_id, int[] checked_folders_id, boolean stateOfStar){
+    public void changeStar(int[] checked_files_id, int[] checked_folders_id, boolean stateOfStar) {
         contentService.changeStar(checked_files_id, checked_folders_id, stateOfStar);
     }
 }

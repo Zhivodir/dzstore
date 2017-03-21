@@ -23,7 +23,7 @@
     <title>DZstore</title>
 
     <!-- Bootstrap core CSS -->
-    <link  href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="css/index.css" rel="stylesheet">
@@ -40,7 +40,8 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -51,11 +52,13 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#">Settings</a></li>
-                <li><a href="#" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modalForAccount"><sec:authentication property="principal.username"/></a></li>
+                <li><a href="#" class="btn btn-primary btn-lg" data-toggle="modal"
+                       data-target="#modalForAccount"><sec:authentication property="principal.username"/></a></li>
                 <li><a href="#">Help</a></li>
             </ul>
-            <form class="navbar-form navbar-right">
-                <input type="text" class="form-control" placeholder="Search...">
+            <form class="navbar-form navbar-right" action="/search" method="post">
+                <input type="text" name="whatSearch" class="form-control" placeholder="Search...">
+                <input type="submit" name="search" value="Search"/>
             </form>
         </div>
     </div>
@@ -70,9 +73,12 @@
                     New <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a href="#" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modalForNewFolder">New Folder</a></li>
-                    <li><a href="#" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modalForFileUpload">File upload</a></li>
-                    <li><a href="#" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modalForFolderUpload">Folder upload</a></li>
+                    <li><a href="#" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modalForNewFolder">New
+                        Folder</a></li>
+                    <li><a href="#" class="btn btn-primary btn-lg" data-toggle="modal"
+                           data-target="#modalForFileUpload">File upload</a></li>
+                    <li><a href="#" class="btn btn-primary btn-lg" data-toggle="modal"
+                           data-target="#modalForFolderUpload">Folder upload</a></li>
                 </ul>
             </div>
 
@@ -94,10 +100,10 @@
             <div class="table-responsive">
                 <form action="/actions_above_checked_files" method="post">
                     <input type="hidden" name="currentFolder" value="${f}">
-                    <input type="submit" name="delete" value="Delete" />
-                    <input type="submit" name="download" value="Download" />
-                    <input type="submit" name="starred" value="Starred" />
-                    <input type="submit" name="removestar" value="Remove star" />
+                    <input type="submit" name="delete" value="Delete"/>
+                    <input type="submit" name="download" value="Download"/>
+                    <input type="submit" name="starred" value="Starred"/>
+                    <input type="submit" name="removestar" value="Remove star"/>
                     <table class="table table-striped record_table">
                         <thead>
                         <tr>
@@ -108,28 +114,28 @@
                         </tr>
                         </thead>
                         <tbody>
+                        <tr>
+                            <th><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <c:forEach items="${content[1]}" var="currentFolder">
                             <tr>
-                                <th><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
+                                <td><input type="checkbox" name="checked_folders_id" value="${currentFolder.id}"/></td>
+                                <td><a href="/folder?f=${currentFolder.id}">${currentFolder.name}</a></td>
+                                <td><span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span></td>
+                                <td></td>
                             </tr>
-                            <c:forEach items="${content[1]}" var="currentFolder">
-                                <tr>
-                                    <td><input type="checkbox" name="checked_folders_id" value="${currentFolder.id}" /></td>
-                                    <td><a href = "/folder?f=${currentFolder.id}">${currentFolder.name}</a></td>
-                                    <td><span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span></td>
-                                    <td></td>
-                                </tr>
-                            </c:forEach>
-                            <c:forEach items="${content[0]}" var="currentFile">
-                                <tr>
-                                    <td><input type="checkbox" name="checked_files_id" value="${currentFile.id}" /></td>
-                                    <td>${currentFile.name}</td>
-                                    <td>${currentFile.type}</td>
-                                    <td>${currentFile.size}</td>
-                                </tr>
-                            </c:forEach>
+                        </c:forEach>
+                        <c:forEach items="${content[0]}" var="currentFile">
+                            <tr>
+                                <td><input type="checkbox" name="checked_files_id" value="${currentFile.id}"/></td>
+                                <td>${currentFile.name}</td>
+                                <td>${currentFile.type}</td>
+                                <td>${currentFile.size}</td>
+                            </tr>
+                        </c:forEach>
                         </tbody>
                     </table>
                 </form>
@@ -143,7 +149,8 @@
     <div class="row">
         <div class="col-md-12">
             <!-- start of Modal -->
-            <div class="modal fade" id="modalForNewFolder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal fade" id="modalForNewFolder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -158,7 +165,8 @@
                                 <div class="form-group">
                                     <label class="sr-only" for="newFolder">newFolder</label>
                                     <input type="hidden" name="currentFolder" value="${f}">
-                                    <input type="text" class="form-control" id="newFolder" name="nameOfFolder" placeholder="Enter new folder name">
+                                    <input type="text" class="form-control" id="newFolder" name="nameOfFolder"
+                                           placeholder="Enter new folder name">
                                 </div>
                                 <button type="submit" class="btn btn-primary">Create</button>
                             </form>
@@ -175,7 +183,8 @@
     <div class="row">
         <div class="col-md-12">
             <!-- start of Modal -->
-            <div class="modal fade" id="modalForFileUpload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal fade" id="modalForFileUpload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -186,7 +195,7 @@
                             <h4 class="modal-title">Upload file</h4>
                         </div>
                         <div class="modal-body">
-                            <form class="form-inline" enctype="multipart/form-data"  action="upload" method="post">
+                            <form class="form-inline" enctype="multipart/form-data" action="upload" method="post">
                                 <div class="form-group">
                                     <input type="hidden" name="currentFolder" value="${f}">
                                     <input type="file" name="file" placeholder="Choice file">
@@ -207,7 +216,8 @@
     <div class="row">
         <div class="col-md-12">
             <!-- start of Modal -->
-            <div class="modal fade" id="modalForFolderUpload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal fade" id="modalForFolderUpload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -218,12 +228,12 @@
                             <h4 class="modal-title">Upload folder</h4>
                         </div>
                         <div class="modal-body">
-                            <form class="form-inline" enctype="multipart/form-data"  action="upload" method="post">
+                            <form class="form-inline" enctype="multipart/form-data" action="upload" method="post">
                                 <input type="hidden" name="currentFolder" value="${f}">
-                                <input type="hidden" name="uploaded" value="1" />
+                                <input type="hidden" name="uploaded" value="1"/>
                                 <label>Выберите директорию:</label>
                                 <input type="file" name="files" webkitdirectory directory multiple mozdirectory/>
-                                <input type="submit" value="Загрузить" />
+                                <input type="submit" value="Загрузить"/>
                             </form>
                         </div>
                     </div>
@@ -239,7 +249,8 @@
     <div class="row">
         <div class="col-md-12">
             <!-- start of Modal -->
-            <div class="modal fade" id="modalForAccount" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal fade" id="modalForAccount" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -270,8 +281,8 @@
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="js/ie10-viewport-bug-workaround.js"></script>
 <script>
-    $(document).ready(function() {
-        $('.record_table tr').click(function(event) {
+    $(document).ready(function () {
+        $('.record_table tr').click(function (event) {
             if (event.target.type !== 'checkbox') {
                 $(':checkbox', this).trigger('click');
             }

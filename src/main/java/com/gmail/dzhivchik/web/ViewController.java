@@ -38,7 +38,7 @@ public class ViewController {
     }
 
     @RequestMapping(value = "/folder", method = RequestMethod.GET)
-    public String inFolder(Model model, @RequestParam Integer f){
+    public String inFolder(Model model, @RequestParam Integer f) {
         //id-shnik folder vnutr' kotoroy zaxodim
         model.addAttribute("f", f);
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -63,8 +63,8 @@ public class ViewController {
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
-    public String search(Model model, @RequestParam(value="whatSearch", required=false) String whatSearch){
-        if(whatSearch != null) {
+    public String search(Model model, @RequestParam(value = "whatSearch", required = false) String whatSearch) {
+        if (whatSearch != null) {
             String login = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.getUser(login);
             model.addAttribute("content", contentService.getListBySearch(whatSearch, user));
@@ -72,10 +72,10 @@ public class ViewController {
         return "search";
     }
 
-    public void getListRelativePath(Folder currentFolder, List<Folder> forRelativePath){
+    public void getListRelativePath(Folder currentFolder, List<Folder> forRelativePath) {
         Folder parentFolder = currentFolder.getParentFolder();
         forRelativePath.add(parentFolder);
-        if(parentFolder != null) {
+        if (parentFolder != null) {
             getListRelativePath(parentFolder, forRelativePath);
         }
     }
