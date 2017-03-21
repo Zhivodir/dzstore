@@ -94,14 +94,8 @@
             <div class="table-responsive">
                 <form action="/actions_above_checked_files" method="post">
                     <input type="hidden" name="currentFolder" value="-1">
-                    <input type="submit" name="delete" value="Delete"/>
-                    <input type="submit" name="download" value="Download"/>
-                    <input type="submit" name="starred" value="Starred"/>
-                    <input type="submit" name="removestar" value="Remove star"/>
-                    <input type="submit" name="rename" value="Rename"/>
 
-
-                    <table class="table table-striped record_table">
+                    <table id="myTable" class="table table-striped record_table">
                         <thead>
                         <tr>
                             <th></th>
@@ -130,17 +124,15 @@
                         </tbody>
                     </table>
 
-
-                    <menu class="menu">
-                        <li class="menu-item">
-                            <button type="button" class="menu-btn" name="delete" value="Delete">
-                                <i class="fa fa-folder-open"></i>
-                                <span class="menu-text">Открыть</span>
-                            </button>
-                        </li>
-                        <input type="submit" name="rename" value="Rename" onclick="'/actions_above_checked_files'"/>
-                    </menu>
-
+                    <ul id="contextMenu" class="dropdown-menu" role="menu" style="display:none" >
+                        <li><input type="submit" name="delete" value="Delete"/></li>
+                        <li><input type="submit" name="download" value="Download"/></li>
+                        <li class="divider"></li>
+                        <li><input type="submit" name="starred" value="Starred"/></li>
+                        <li><input type="submit" name="removestar" value="Remove star"/></li>
+                        <li class="divider"></li>
+                        <li><input type="submit" name="rename" value="Rename"/></li>
+                    </ul>
 
                 </form>
             </div>
@@ -284,6 +276,7 @@
 <script src="js/holder.min.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="js/ie10-viewport-bug-workaround.js"></script>
+<script src="js/contextMenu.js"></script>
 <script>
     $(document).ready(function () {
         $('.record_table tr').click(function (event) {
@@ -293,34 +286,6 @@
         });
     });
 </script>
-<script>
-    var menu = document.querySelector('.menu');
-    function showMenu(x, y) {
-        menu.style.left = x + 'px';
-        menu.style.top = y + 'px';
-        menu.classList.add('show-menu');
-    }
-    function hideMenu() {
-        menu.classList.remove('show-menu');
-    }
-    function onContextMenu(e) {
-        e.preventDefault();
-        showMenu(e.pageX, e.pageY);
-        document.addEventListener('mousedown', onMouseDown, false);
-    }
-    function onMouseDown(e) {
-        hideMenu();
-        document.removeEventListener('mousedown', onMouseDown);
-    }
-    document.addEventListener('contextmenu', onContextMenu, false);
-
-    $( "form" ).on( "submit", function( event ) {
-        event.preventDefault();
-        console.log( $(this).serialize() );
-    });
-
-</script>
-
 
 </body>
 </html>

@@ -100,10 +100,7 @@
             <div class="table-responsive">
                 <form action="/actions_above_checked_files" method="post">
                     <input type="hidden" name="currentFolder" value="${f}">
-                    <input type="submit" name="delete" value="Delete"/>
-                    <input type="submit" name="download" value="Download"/>
-                    <input type="submit" name="starred" value="Starred"/>
-                    <input type="submit" name="removestar" value="Remove star"/>
+
                     <table class="table table-striped record_table">
                         <thead>
                         <tr>
@@ -138,6 +135,17 @@
                         </c:forEach>
                         </tbody>
                     </table>
+
+                    <ul id="contextMenu" class="dropdown-menu" role="menu" style="display:none" >
+                        <li><input type="submit" name="delete" value="Delete"/></li>
+                        <li><input type="submit" name="download" value="Download"/></li>
+                        <li class="divider"></li>
+                        <li><input type="submit" name="starred" value="Starred"/></li>
+                        <li><input type="submit" name="removestar" value="Remove star"/></li>
+                        <li class="divider"></li>
+                        <li><input type="submit" name="rename" value="Rename"/></li>
+                    </ul>
+
                 </form>
             </div>
         </div>
@@ -280,6 +288,7 @@
 <script src="js/holder.min.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="js/ie10-viewport-bug-workaround.js"></script>
+<script src="js/contextMenu.js"></script>
 <script>
     $(document).ready(function () {
         $('.record_table tr').click(function (event) {
