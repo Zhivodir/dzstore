@@ -2,6 +2,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <div>
+        <a href="/index">My store</a>
+        <c:if test="${f ne null}"></c:if>
+        <c:forEach items="${listForRelativePath}" var="folder">
+            <a href="/folder?f=${folder.id}">${folder.name}</a>
+            <span class="glyphicon glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        </c:forEach>
+    </div>
     <div class="table-responsive">
         <form action="/actions_above_checked_files" method="post">
             <input type="hidden" name="currentFolder" value="-1">

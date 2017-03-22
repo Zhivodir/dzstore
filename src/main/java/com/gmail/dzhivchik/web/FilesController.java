@@ -130,15 +130,24 @@ public class FilesController {
         com.gmail.dzhivchik.domain.File fileForDAO = new com.gmail.dzhivchik.domain.File(fileName, size, type, user, curFolder, false);
         java.io.File convFile = new java.io.File(fileName);
         contentService.uploadFile(fileForDAO);
+        StringBuilder sb = new StringBuilder();
         try {
             convFile.createNewFile();
-            FileOutputStream fos = new FileOutputStream("c:/DevKit/Temp/dzstore/" + login + "/" + convFile);
+            FileOutputStream fos = new FileOutputStream("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + "/" + convFile);
             fos.write(file.getBytes());
             fos.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void createPathForFile(StringBuilder sb, Folder parentFolder){
+        if(parentFolder != null){
+            sb.append(parentFolder.getName());
+            sb.append("/");
+            createPathForFile(sb, parentFolder.getParentFolder());
         }
     }
 
