@@ -131,6 +131,7 @@ public class FilesController {
         java.io.File convFile = new java.io.File(fileName);
         contentService.uploadFile(fileForDAO);
         StringBuilder sb = new StringBuilder();
+        createPathForFile(sb, curFolder);
         try {
             convFile.createNewFile();
             FileOutputStream fos = new FileOutputStream("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + "/" + convFile);
@@ -143,11 +144,11 @@ public class FilesController {
         }
     }
 
-    public void createPathForFile(StringBuilder sb, Folder parentFolder){
-        if(parentFolder != null){
-            sb.append(parentFolder.getName());
+    public void createPathForFile(StringBuilder sb, Folder curFolder){
+        if(curFolder != null){
+            sb.append(curFolder.getName());
             sb.append("/");
-            createPathForFile(sb, parentFolder.getParentFolder());
+            createPathForFile(sb, curFolder.getParentFolder());
         }
     }
 
