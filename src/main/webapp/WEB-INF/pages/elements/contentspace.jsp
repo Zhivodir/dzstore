@@ -61,6 +61,7 @@
                 <li><input type="submit" name="removestar" value="Remove star"/></li>
                 <li class="divider"></li>
                 <li><a href="#" data-toggle="modal" data-target="#modalForRename">Rename</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#modalForShare">Share</a></li>
             </ul>
 
             <div class="container-fluid">
@@ -112,6 +113,34 @@
                                                        placeholder="Enter new name">
                                             </div>
                                             <input type="submit" name="rename" value="Rename"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end of Modal -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <!-- start of Modal -->
+                        <div class="modal fade" id="modalForShare" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">
+                                            <span aria-hidden="true">&times;</span>
+                                            <span class="sr-only">Close</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <input type="hidden" name="currentFolder" value="${f}">
+                                        </div>
+                                        <input type="submit" name="share" value="Share"/>
                                     </div>
                                 </div>
                             </div>
