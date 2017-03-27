@@ -82,24 +82,40 @@ public class FilesController {
                                            @RequestParam(value = "delete", required = false) String delete,
                                            @RequestParam(value = "starred", required = false) String starred,
                                            @RequestParam(value = "removeStar", required = false) String removeStar,
+                                           @RequestParam(value = "rename", required = false) String rename,
+                                           @RequestParam(value = "name", required = false) String name,
                                            @RequestParam Integer currentFolder) {
         if (checked_files_id != null || checked_folders_id != null) {
             String login = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.getUser(login);
+            System.out.println(name);
+            System.out.println(currentFolder);
+
+            if (rename != null && name != null) {
+                System.out.println("RENAME");
+                if(((checked_files_id != null && checked_files_id.length == 1) && checked_folders_id == null )||
+                   ((checked_folders_id != null && checked_folders_id.length == 1) && checked_files_id == null )){
+                    rename(checked_files_id, checked_folders_id, name);
+                }
+            }
 
             if (starred != null) {
+                System.out.println("ADDSTAR");
                 changeStar(checked_files_id, checked_folders_id, true);
             }
 
             if (removeStar != null) {
+                System.out.println("REMOVESTAR");
                 changeStar(checked_files_id, checked_folders_id, false);
             }
 
             if (delete != null) {
+                System.out.println("DELETE");
                 deleteContent(model, checked_files_id, checked_folders_id, login);
             }
 
             if (download != null) {
+                System.out.println("DOWNLOAD");
                 List<File> listCheckedFiles = new ArrayList<>();
                 if (checked_files_id != null) {
                     listCheckedFiles = contentService.getListById(checked_files_id);
@@ -127,11 +143,12 @@ public class FilesController {
         String fileName = file.getOriginalFilename();
         long size = file.getSize();
         String type = "test";
-        com.gmail.dzhivchik.domain.File fileForDAO = new com.gmail.dzhivchik.domain.File(fileName, size, type, user, curFolder, false);
+        File fileForDAO = new File(fileName, size, type, user, curFolder, false);
         java.io.File convFile = new java.io.File(fileName);
         contentService.uploadFile(fileForDAO);
         StringBuilder sb = new StringBuilder();
         createPathForFile(sb, curFolder);
+        System.out.println(sb.toString());
         try {
             convFile.createNewFile();
             FileOutputStream fos = new FileOutputStream("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + "/" + convFile);
@@ -144,11 +161,11 @@ public class FilesController {
         }
     }
 
-    public void createPathForFile(StringBuilder sb, Folder curFolder){
-        if(curFolder != null){
+    public void createPathForFile(StringBuilder sb, Folder curFolder) {
+        if (curFolder != null) {
+            createPathForFile(sb, curFolder.getParentFolder());
             sb.append(curFolder.getName());
             sb.append("/");
-            createPathForFile(sb, curFolder.getParentFolder());
         }
     }
 
@@ -159,12 +176,34 @@ public class FilesController {
 
             if (files.length != 0) {
                 for (File file : files) {
-                    new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + file.getName()).delete();
+                    Folder temp = file.getParentFolder();
+                    if(temp != null) {
+                        StringBuilder sb = new StringBuilder();
+                        createPathForFile(sb, temp);
+                        new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + "/" + file.getName()).delete();
+                    }
+                    else {
+                        new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + file.getName()).delete();
+                    }
                 }
             }
         }
         if (checked_folders_id != null) {
             Folder[] folders = contentService.deleteCheckedFolders(checked_folders_id);
+
+            if (folders.length != 0) {
+                for (Folder folder : folders) {
+                    Folder temp = folder.getParentFolder();
+                    if(temp != null) {
+                        StringBuilder sb = new StringBuilder();
+                        createPathForFile(sb, temp);
+                        new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + "/" + folder.getName()).delete();
+                    }
+                    else {
+                        new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + folder.getName()).delete();
+                    }
+                }
+            }
         }
     }
 
@@ -214,7 +253,6 @@ public class FilesController {
 
         if (listCheckedFolder.size() != 0) {
             for (Folder folder : listCheckedFolder) {
-                System.out.println(folder.getFiles().size() + "   " + folder.getFolders().size());
                 if (folder.getFiles().size() == 0 && folder.getFolders().size() == 0) {
                     structure.append(folder.getName() + "/");
                     out.putNextEntry(new ZipEntry(structure.toString() + "/"));
@@ -260,5 +298,10 @@ public class FilesController {
 
     public void changeStar(int[] checked_files_id, int[] checked_folders_id, boolean stateOfStar) {
         contentService.changeStar(checked_files_id, checked_folders_id, stateOfStar);
+    }
+
+    public void rename(int[] checked_files_id, int[] checked_folders_id, String newName){
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        contentService.rename(login, checked_files_id, checked_folders_id, newName);
     }
 }

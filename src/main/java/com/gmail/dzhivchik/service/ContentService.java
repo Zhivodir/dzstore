@@ -79,6 +79,7 @@ public class ContentService {
         }
     }
 
+    @Transactional
     public List[] getStarredContent(User user){
         List[] content = new List[2];
         content[0] = fileDAO.getStarredList(user);
@@ -86,10 +87,52 @@ public class ContentService {
         return content;
     }
 
+    @Transactional
     public List[] getListBySearch(String whatSearch, User user){
         List[] content = new List[2];
         content[0] = fileDAO.getSearchList(whatSearch, user);
         content[1] = folderDAO.getStarredList(user);
         return content;
+    }
+
+    @Transactional
+    public void rename(String login, int[] checked_files_id, int[] checked_folders_id, String newName){
+        StringBuilder sb = new StringBuilder();
+        if(checked_files_id != null){
+            File fileForRename = fileDAO.getListById(checked_files_id).get(0);
+            fileDAO.renameFile(checked_files_id, newName);
+            createPathForFile(sb, fileForRename.getParentFolder(), 0);
+            java.io.File file = new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + fileForRename.getName());
+            if(file.exists()){
+                file.renameTo(new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + newName));
+            }
+            else{
+                System.out.println("File not found!");
+            }
+        }else if(checked_folders_id != null){
+            Folder folderForRename = folderDAO.getFolder(checked_folders_id[0]);
+            folderDAO.renameFolder(checked_folders_id, newName);
+            createPathForFile(sb, folderForRename, 0);
+            java.io.File file = new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + folderForRename.getName());
+            if(file.exists()){
+                file.renameTo(new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + newName));
+            }
+            else{
+                System.out.println("File not found!");
+            }
+        }
+    }
+
+    public void createPathForFile(StringBuilder sb, Folder curFolder, int deep) {
+        System.out.println(deep);
+        if (curFolder != null) {
+            deep++;
+            createPathForFile(sb, curFolder.getParentFolder(), deep);
+            if(deep != 1) {
+                sb.append(curFolder.getName());
+                sb.append("/");
+                deep--;
+            }
+        }
     }
 }

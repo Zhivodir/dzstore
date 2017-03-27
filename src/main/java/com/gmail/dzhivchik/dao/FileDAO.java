@@ -18,4 +18,5 @@ public interface FileDAO {
     void changeStar(int[] checked_files_id, boolean stateOfStar);
     List<File> getStarredList(User user);
     List<File> getSearchList(String whatSearch, User user);
+    void renameFile(int[] checked_files_id, String newName);
 }

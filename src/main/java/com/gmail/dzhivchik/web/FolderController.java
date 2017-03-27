@@ -39,13 +39,24 @@ public class FolderController {
         if(currentFolder != -1) {
             curFolder = contentService.getFolder(currentFolder);
         }
-        File myPath = new File("c:/DevKit/Temp/dzstore/" + login + "/" + nameOfFolder);
         Folder folder = new Folder(nameOfFolder, user, curFolder, false);
+        StringBuilder sb = new StringBuilder();
+        createPathForFile(sb, curFolder);
+        File myPath = new File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + "/" + nameOfFolder);
         contentService.createFolder(folder);
         myPath.mkdirs();
         if(currentFolder != -1){
             model.addAttribute("f", currentFolder);
             return "redirect:/folder";}
         return "redirect:/index";
+    }
+
+
+    public void createPathForFile(StringBuilder sb, Folder curFolder) {
+        if (curFolder != null) {
+            sb.append(curFolder.getName());
+            sb.append("/");
+            createPathForFile(sb, curFolder.getParentFolder());
+        }
     }
 }

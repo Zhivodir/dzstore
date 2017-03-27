@@ -11,8 +11,9 @@
         </c:forEach>
     </div>
     <div class="table-responsive">
+
         <form action="/actions_above_checked_files" method="post">
-            <input type="hidden" name="currentFolder" value="-1">
+            <input type="hidden" name="currentFolder" value="${f}">
 
             <table id="myTable" class="table table-striped record_table">
                 <thead>
@@ -52,16 +53,73 @@
             </table>
 
             <ul id="contextMenu" class="dropdown-menu" role="menu" style="display:none" >
-                <li><input type="submit" name="delete" value="Delete"/></li>
+                <!--<li><input type="submit" name="delete" value="Delete"/></li>-->
+                <li><a href="#" data-toggle="modal" data-target="#modalForDelete">Delete</a></li>
                 <li><input type="submit" name="download" value="Download"/></li>
                 <li class="divider"></li>
                 <li><input type="submit" name="starred" value="Starred"/></li>
                 <li><input type="submit" name="removestar" value="Remove star"/></li>
                 <li class="divider"></li>
-                <li><input type="submit" name="rename" value="Rename"/></li>
-
                 <li><a href="#" data-toggle="modal" data-target="#modalForRename">Rename</a></li>
             </ul>
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <!-- start of Modal -->
+                        <div class="modal fade" id="modalForDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">
+                                            <span aria-hidden="true">&times;</span>
+                                            <span class="sr-only">Close</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <input type="hidden" name="currentFolder" value="${f}">
+                                        </div>
+                                        <input type="submit" name="delete" value="Delete"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end of Modal -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <!-- start of Modal -->
+                        <div class="modal fade" id="modalForRename" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">
+                                            <span aria-hidden="true">&times;</span>
+                                            <span class="sr-only">Close</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                            <div class="form-group">
+                                                <input type="hidden" name="currentFolder" value="${f}">
+                                                <input type="text" class="form-control" id="newName" name="name"
+                                                       placeholder="Enter new name">
+                                            </div>
+                                            <input type="submit" name="rename" value="Rename"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end of Modal -->
+                    </div>
+                </div>
+            </div>
 
         </form>
     </div>

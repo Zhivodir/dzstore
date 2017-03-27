@@ -41,7 +41,7 @@
     <div class="row">
         <c:import url="elements/leftSideBar.jsp" />
         <c:set var="content" value="${content}" scope="request"/>
-        <c:import url="elements/contentspace.jsp" />
+            <c:import url="elements/contentspace.jsp" />
     </div>
 </div>
 

@@ -45,6 +45,7 @@
     <div class="row">
         <c:import url="elements/leftSideBar.jsp" />
         <c:set var="content" value="${content}" scope="request"/>
+        <c:set var="f" value="-1" scope="request"/>
             <c:import url="elements/contentspace.jsp" />
     </div>
 </div>
@@ -54,7 +55,6 @@
     <c:import url="modal/fileUpload.jsp"/>
     <c:import url="modal/folderUpload.jsp"/>
     <c:import url="modal/account.jsp"/>
-    <c:import url="modal/renameContent.jsp"/>
 
 <!-- Bootstrap core JavaScript
 ================================================== -->
@@ -67,6 +67,7 @@
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="js/ie10-viewport-bug-workaround.js"></script>
 <script src="js/contextMenu.js"></script>
+<script src="js/gatheringData.js"></script>
 <script>
     $(document).ready(function () {
         $('.record_table tr').click(function (event) {

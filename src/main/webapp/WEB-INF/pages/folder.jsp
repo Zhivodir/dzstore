@@ -42,7 +42,8 @@
     <div class="row">
         <c:import url="elements/leftSideBar.jsp" />
         <c:set var="content" value="${content}" scope="request"/>
-        <c:import url="elements/contentspace.jsp" />
+        <c:set var="f" value="${f}" scope="request"/>
+            <c:import url="elements/contentspace.jsp" />
     </div>
 </div>
 
@@ -51,7 +52,6 @@
     <c:import url="modal/fileUpload.jsp"/>
     <c:import url="modal/folderUpload.jsp"/>
     <c:import url="modal/account.jsp"/>
-    <c:import url="modal/renameContent.jsp"/>
 
 <!-- Bootstrap core JavaScript
 ================================================== -->

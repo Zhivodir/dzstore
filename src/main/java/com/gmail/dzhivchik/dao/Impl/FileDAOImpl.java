@@ -113,4 +113,13 @@ public class FileDAOImpl implements FileDAO {
         query.setParameter("whatSearch", "%" + whatSearch.toUpperCase() + "%");
         return (List<File>)query.getResultList();
     }
+
+    @Override
+    public void renameFile(int[] checked_files_id, String newName) {
+        System.out.println("FILE!!!!!!!!!!!!!!!!!!!!");
+        Query query = entityManager.createQuery("UPDATE File f SET f.name = :newName WHERE f.id = :id");
+        query.setParameter("newName", newName);
+        query.setParameter("id", checked_files_id[0]);
+        int result = query.executeUpdate();
+    }
 }
