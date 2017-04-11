@@ -8,7 +8,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<!-- taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>-->
 
 
 <html lang="en">
@@ -27,7 +26,7 @@
 
     <!-- Custom styles for this template -->
     <link href="css/index.css" rel="stylesheet">
-    <link href="css/context.css" rel="stylesheet">
+    <link href="css/forContextMenu.css" rel="stylesheet">
 
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -40,6 +39,7 @@
 <body>
 
 <c:import url="elements/navbar.jsp" />
+<c:import url="elements/contentMenu.jsp" />
 
 <div class="container-fluid">
     <div class="row">
@@ -51,10 +51,10 @@
 </div>
 
 <c:set var="f" value="-1" scope="request"/>
-    <c:import url="modal/createNewFolder.jsp" />
-    <c:import url="modal/fileUpload.jsp"/>
-    <c:import url="modal/folderUpload.jsp"/>
-    <c:import url="modal/account.jsp"/>
+    <c:import url="/WEB-INF/pages/modalForPages/createNewFolder.jsp" />
+    <c:import url="/WEB-INF/pages/modalForPages/fileUpload.jsp"/>
+    <c:import url="/WEB-INF/pages/modalForPages/folderUpload.jsp"/>
+    <c:import url="/WEB-INF/pages/modalForPages/account.jsp"/>
 
 <!-- Bootstrap core JavaScript
 ================================================== -->

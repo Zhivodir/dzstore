@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: User
-  Date: 16.03.2017
-  Time: 16:04
+  Date: 29.03.2017
+  Time: 9:41
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -22,11 +22,12 @@
     <title>DZstore</title>
 
     <!-- Bootstrap core CSS -->
-    <link  href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="css/index.css" rel="stylesheet">
     <link href="css/forContextMenu.css" rel="stylesheet">
+
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -36,6 +37,7 @@
 </head>
 
 <body>
+
 <c:import url="elements/navbar.jsp" />
 <c:import url="elements/contentMenu.jsp" />
 
@@ -43,12 +45,12 @@
     <div class="row">
         <c:import url="elements/leftSideBar.jsp" />
         <c:set var="content" value="${content}" scope="request"/>
-        <c:set var="f" value="${f}" scope="request"/>
+        <c:set var="f" value="-1" scope="request"/>
         <c:import url="elements/contentspace.jsp" />
     </div>
 </div>
 
-<c:set var="f" value="${f}" scope="request"/>
+<c:set var="f" value="-1" scope="request"/>
 <c:import url="/WEB-INF/pages/modalForPages/createNewFolder.jsp" />
 <c:import url="/WEB-INF/pages/modalForPages/fileUpload.jsp"/>
 <c:import url="/WEB-INF/pages/modalForPages/folderUpload.jsp"/>
@@ -64,16 +66,17 @@
 <script src="js/holder.min.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="js/ie10-viewport-bug-workaround.js"></script>
+<script src="js/contextMenu.js"></script>
+<script src="js/gatheringData.js"></script>
 <script>
-    $(document).ready(function() {
-        $('.record_table tr').click(function(event) {
+    $(document).ready(function () {
+        $('.record_table tr').click(function (event) {
             if (event.target.type !== 'checkbox') {
                 $(':checkbox', this).trigger('click');
             }
         });
     });
 </script>
-
 
 </body>
 </html>

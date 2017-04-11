@@ -26,6 +26,7 @@
 
     <!-- Custom styles for this template -->
     <link href="css/index.css" rel="stylesheet">
+    <link href="css/forContextMenu.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -36,6 +37,7 @@
 
 <body>
 <c:import url="elements/navbar.jsp" />
+<c:import url="elements/contentMenu.jsp" />
 
 <div class="container-fluid">
     <div class="row">
@@ -46,11 +48,11 @@
 </div>
 
 <c:set var="f" value="${f}" scope="request"/>
-    <c:import url="modal/createNewFolder.jsp" />
-    <c:import url="modal/fileUpload.jsp"/>
-    <c:import url="modal/createNewFolder.jsp" />
-    <c:import url="modal/account.jsp"/>
-    <c:import url="modal/renameContent.jsp"/>
+    <c:import url="/WEB-INF/pages/modalForPages/createNewFolder.jsp" />
+    <c:import url="/WEB-INF/pages/modalForPages/fileUpload.jsp"/>
+    <c:import url="/WEB-INF/pages/modalForPages/createNewFolder.jsp" />
+    <c:import url="/WEB-INF/pages/modalForPages/account.jsp"/>
+    <c:import url="/WEB-INF/pages/modalForPages/renameContent.jsp"/>
 
 <!-- Bootstrap core JavaScript
 ================================================== -->
