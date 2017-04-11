@@ -18,4 +18,6 @@ public interface FolderDAO {
     List<Folder> getStarredList(User user);
     List<Folder> getSearchList(String whatSearch, User user);
     void renameFolder(int[] checked_folders_id, String newName);
+    void share(List<Folder> targets);
+    List<Folder> getSharedList(User user);
 }

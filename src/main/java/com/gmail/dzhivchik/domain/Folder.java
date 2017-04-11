@@ -1,6 +1,7 @@
 package com.gmail.dzhivchik.domain;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,6 +30,13 @@ public class Folder {
 
     @OneToMany(mappedBy = "parentFolder", cascade = CascadeType.ALL)
     private List<Folder> folders;
+
+    @ManyToMany
+    @JoinTable(
+            name="share_folder_for_user",
+            joinColumns = {@JoinColumn(name = "id_folder", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "id_user", referencedColumnName = "id")})
+    private List<User> shareFor = new ArrayList<>();
 
     public Folder() {
     }
@@ -60,4 +68,14 @@ public class Folder {
 
     public boolean isStarred() { return starred; }
     public void setStarred(boolean starred) { this.starred = starred; }
+
+    public List<User> getShareFor() { return shareFor; }
+    public void setShareFor(List<User> shareFor) { this.shareFor = shareFor; }
+    public void addToShareFor(List<User> forAdd){
+        for(User newUser : forAdd){
+            if(!shareFor.contains(newUser)){
+                shareFor.add(newUser);
+            }
+        }
+    }
 }

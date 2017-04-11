@@ -116,10 +116,23 @@ public class FileDAOImpl implements FileDAO {
 
     @Override
     public void renameFile(int[] checked_files_id, String newName) {
-        System.out.println("FILE!!!!!!!!!!!!!!!!!!!!");
         Query query = entityManager.createQuery("UPDATE File f SET f.name = :newName WHERE f.id = :id");
         query.setParameter("newName", newName);
         query.setParameter("id", checked_files_id[0]);
         int result = query.executeUpdate();
+    }
+
+    @Override
+    public void share(List<File> targets) {
+        for (File file : targets) {
+            entityManager.merge(file);
+        }
+    }
+
+    @Override
+    public List<File> getSharedList(User user) {
+        Query query = entityManager.createQuery("SELECT f FROM File f INNER JOIN f.shareFor user WHERE user = :user", File.class);
+        query.setParameter("user", user);
+        return  (List<File>)query.getResultList();
     }
 }

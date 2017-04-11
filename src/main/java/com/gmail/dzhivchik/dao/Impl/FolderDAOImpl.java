@@ -119,4 +119,18 @@ public class FolderDAOImpl implements FolderDAO{
         query.setParameter("id", checked_folders_id[0]);
         int result = query.executeUpdate();
     }
+
+    @Override
+    public void share(List<Folder> targets) {
+        for (Folder folder : targets) {
+            entityManager.merge(folder);
+        }
+    }
+
+    @Override
+    public List<Folder> getSharedList(User user) {
+        Query query = entityManager.createQuery("SELECT f FROM Folder f INNER JOIN f.shareFor user WHERE user = :user", Folder.class);
+        query.setParameter("user", user);
+        return  (List<Folder>)query.getResultList();
+    }
 }

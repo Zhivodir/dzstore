@@ -1,6 +1,8 @@
 package com.gmail.dzhivchik.domain;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by User on 24.01.2017.
@@ -27,6 +29,13 @@ public class File {
 
     public File() {
     }
+
+    @ManyToMany
+    @JoinTable(
+            name="share_file_for_user",
+            joinColumns = {@JoinColumn(name = "id_file", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "id_user", referencedColumnName = "id")})
+    private List<User> shareFor = new ArrayList<>();
 
     public File(String name, long size, String type, User user, Folder parentFolder, boolean starred) {
         this.name = name;
@@ -71,4 +80,14 @@ public class File {
 
     public boolean isStarred() { return starred; }
     public void setStarred(boolean starred) { this.starred = starred; }
+
+    public List<User> getShareFor() { return shareFor; }
+    public void setShareFor(List<User> shareFor) { this.shareFor = shareFor; }
+    public void addToShareFor(List<User> forAdd){
+        for(User newUser : forAdd){
+            if(!shareFor.contains(newUser)){
+                shareFor.add(newUser);
+            }
+        }
+    }
 }

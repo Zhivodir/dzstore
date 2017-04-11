@@ -28,6 +28,12 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<File> files = new ArrayList<>();
 
+    @ManyToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<File> filesSharedWithMe;
+
+    @ManyToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Folder> foldersSharedWithMe;
+
     public User() {
     }
 
@@ -75,6 +81,5 @@ public class User {
     public void setId(int id) { this.id = id; }
 
     public List<File> getFiles() { return files; }
-
     public void setFiles(List<File> files) { this.files = files; }
 }

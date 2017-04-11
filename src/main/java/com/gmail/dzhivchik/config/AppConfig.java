@@ -47,7 +47,6 @@ public class AppConfig extends WebMvcConfigurerAdapter {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/css/**").addResourceLocations("/WEB-INF/css/");
         registry.addResourceHandler("/js/**").addResourceLocations("/WEB-INF/js/");
-        //registry.addResourceHandler("/pages/**").addResourceLocations("/WEB-INF/pages/");
     }
 
     @Bean

@@ -19,4 +19,6 @@ public interface FileDAO {
     List<File> getStarredList(User user);
     List<File> getSearchList(String whatSearch, User user);
     void renameFile(int[] checked_files_id, String newName);
+    void share(List<File> targets);
+    List<File> getSharedList(User user);
 }

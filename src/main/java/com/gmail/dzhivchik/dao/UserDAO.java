@@ -2,6 +2,8 @@ package com.gmail.dzhivchik.dao;
 
 import com.gmail.dzhivchik.domain.User;
 
+import java.util.List;
+
 /**
  * Created by User on 09.02.2017.
  */
@@ -10,4 +12,5 @@ public interface UserDAO {
     User getUser(String login);
     void editUser(User user);
     void delete(User user);
+    List<User> getShareReceivers(String shareFor);
 }
