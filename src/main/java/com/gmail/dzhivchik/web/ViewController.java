@@ -72,10 +72,19 @@ public class ViewController {
         return "search";
     }
 
+    @RequestMapping(value = "/shared")
+    public String shared(Model model) {
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUser(login);
+        model.addAttribute("content", contentService.getSharedContent(user));
+        return "shared";
+    }
+
     public void getListRelativePath(Folder currentFolder, List<Folder> forRelativePath) {
         Folder parentFolder = currentFolder.getParentFolder();
-        forRelativePath.add(parentFolder);
+
         if (parentFolder != null) {
+            forRelativePath.add(parentFolder);
             getListRelativePath(parentFolder, forRelativePath);
         }
     }

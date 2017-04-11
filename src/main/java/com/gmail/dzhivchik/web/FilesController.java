@@ -18,6 +18,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -81,20 +82,20 @@ public class FilesController {
                                            @RequestParam(value = "download", required = false) String download,
                                            @RequestParam(value = "delete", required = false) String delete,
                                            @RequestParam(value = "starred", required = false) String starred,
-                                           @RequestParam(value = "removeStar", required = false) String removeStar,
+                                           @RequestParam(value = "removestar", required = false) String removestar,
                                            @RequestParam(value = "rename", required = false) String rename,
                                            @RequestParam(value = "name", required = false) String name,
+                                           @RequestParam(value = "share", required = false) String share,
+                                           @RequestParam(value = "shareFor", required = false) String shareFor,
                                            @RequestParam Integer currentFolder) {
         if (checked_files_id != null || checked_folders_id != null) {
             String login = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.getUser(login);
-            System.out.println(name);
-            System.out.println(currentFolder);
 
             if (rename != null && name != null) {
                 System.out.println("RENAME");
                 if(((checked_files_id != null && checked_files_id.length == 1) && checked_folders_id == null )||
-                   ((checked_folders_id != null && checked_folders_id.length == 1) && checked_files_id == null )){
+                        ((checked_folders_id != null && checked_folders_id.length == 1) && checked_files_id == null )){
                     rename(checked_files_id, checked_folders_id, name);
                 }
             }
@@ -104,7 +105,7 @@ public class FilesController {
                 changeStar(checked_files_id, checked_folders_id, true);
             }
 
-            if (removeStar != null) {
+            if (removestar != null) {
                 System.out.println("REMOVESTAR");
                 changeStar(checked_files_id, checked_folders_id, false);
             }
@@ -127,6 +128,12 @@ public class FilesController {
                 }
                 downloadContent(user, login, currentFolder, listCheckedFiles, listCheckedFolder);
             }
+
+            if (share != null){
+                System.out.println("SHARE");
+                List<File> listEmailForShare = new ArrayList<>();
+                share(checked_files_id, checked_folders_id, shareFor);
+            }
         }
 
         if (currentFolder == null) {
@@ -147,7 +154,7 @@ public class FilesController {
         java.io.File convFile = new java.io.File(fileName);
         contentService.uploadFile(fileForDAO);
         StringBuilder sb = new StringBuilder();
-        createPathForFile(sb, curFolder);
+        createPathForElement(sb, curFolder);
         System.out.println(sb.toString());
         try {
             convFile.createNewFile();
@@ -161,9 +168,10 @@ public class FilesController {
         }
     }
 
-    public void createPathForFile(StringBuilder sb, Folder curFolder) {
+
+    public void createPathForElement(StringBuilder sb, Folder curFolder) {
         if (curFolder != null) {
-            createPathForFile(sb, curFolder.getParentFolder());
+            createPathForElement(sb, curFolder.getParentFolder());
             sb.append(curFolder.getName());
             sb.append("/");
         }
@@ -173,37 +181,11 @@ public class FilesController {
     public void deleteContent(Model model, int[] checked_files_id, int[] checked_folders_id, String login) {
         if (checked_files_id != null) {
             File[] files = contentService.deleteCheckedFiles(checked_files_id);
-
-            if (files.length != 0) {
-                for (File file : files) {
-                    Folder temp = file.getParentFolder();
-                    if(temp != null) {
-                        StringBuilder sb = new StringBuilder();
-                        createPathForFile(sb, temp);
-                        new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + "/" + file.getName()).delete();
-                    }
-                    else {
-                        new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + file.getName()).delete();
-                    }
-                }
-            }
+            deleteListOfFiles(Arrays.asList(files), login);
         }
         if (checked_folders_id != null) {
             Folder[] folders = contentService.deleteCheckedFolders(checked_folders_id);
-
-            if (folders.length != 0) {
-                for (Folder folder : folders) {
-                    Folder temp = folder.getParentFolder();
-                    if(temp != null) {
-                        StringBuilder sb = new StringBuilder();
-                        createPathForFile(sb, temp);
-                        new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + "/" + folder.getName()).delete();
-                    }
-                    else {
-                        new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + folder.getName()).delete();
-                    }
-                }
-            }
+            deleteFolder(Arrays.asList(folders), login);
         }
     }
 
@@ -236,6 +218,7 @@ public class FilesController {
         downloadFunction(filesPathForDownload);
     }
 
+
     public void prepareToDownload(User user, ZipOutputStream out, List<File> listCheckedFiles, List<Folder> listCheckedFolder, String filesPath, StringBuilder structure) throws FileNotFoundException, IOException {
         int BUFFER_SIZE = 4096;
         if (listCheckedFiles.size() != 0) {
@@ -261,6 +244,7 @@ public class FilesController {
             }
         }
     }
+
 
     public void downloadFunction(String archivePath) {
         int BUFFER_SIZE = 4096;
@@ -296,12 +280,64 @@ public class FilesController {
         downloadFile.delete();
     }
 
+
     public void changeStar(int[] checked_files_id, int[] checked_folders_id, boolean stateOfStar) {
+        System.out.println(stateOfStar);
         contentService.changeStar(checked_files_id, checked_folders_id, stateOfStar);
     }
+
 
     public void rename(int[] checked_files_id, int[] checked_folders_id, String newName){
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         contentService.rename(login, checked_files_id, checked_folders_id, newName);
+    }
+
+    public void share(int[] checked_files_id, int[] checked_folders_id, String shareFor){
+        contentService.share(checked_files_id, checked_folders_id, shareFor);
+    }
+
+    public void deleteListOfFiles(List<File> files, String login){
+        if (files.size() != 0) {
+            for (File file : files) {
+                Folder temp = file.getParentFolder();
+                if(temp != null) {
+                    StringBuilder sb = new StringBuilder();
+                    createPathForElement(sb, temp);
+                    new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + "/" + file.getName()).delete();
+                }
+                else {
+                    new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + file.getName()).delete();
+                }
+            }
+        }
+    }
+
+    public void deleteFolder(List<Folder> folders, String login){
+        for(Folder folder : folders) {
+            List<Folder> subfolder = folder.getFolders();
+            List<File> files = folder.getFiles();
+            if(subfolder.size() != 0){
+                deleteFolder(subfolder, login);
+                deleteListOfFiles(files, login);
+                Folder temp = folder.getParentFolder();
+                if (temp != null) {
+                    StringBuilder sb = new StringBuilder();
+                    createPathForElement(sb, temp);
+                    new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + "/" + folder.getName()).delete();
+                } else {
+                    new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + folder.getName()).delete();
+                }
+            }else {
+                deleteListOfFiles(files, login);
+                Folder temp = folder.getParentFolder();
+                if (temp != null) {
+                    StringBuilder sb = new StringBuilder();
+                    createPathForElement(sb, temp);
+                    new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + "/" + folder.getName()).delete();
+                } else {
+                    new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + folder.getName()).delete();
+                }
+            }
+        }
     }
 }

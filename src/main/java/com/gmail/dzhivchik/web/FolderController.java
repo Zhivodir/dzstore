@@ -54,9 +54,9 @@ public class FolderController {
 
     public void createPathForFile(StringBuilder sb, Folder curFolder) {
         if (curFolder != null) {
+            createPathForFile(sb, curFolder.getParentFolder());
             sb.append(curFolder.getName());
             sb.append("/");
-            createPathForFile(sb, curFolder.getParentFolder());
         }
     }
 }

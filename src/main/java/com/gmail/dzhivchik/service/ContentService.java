@@ -2,6 +2,7 @@ package com.gmail.dzhivchik.service;
 
 import com.gmail.dzhivchik.dao.FileDAO;
 import com.gmail.dzhivchik.dao.FolderDAO;
+import com.gmail.dzhivchik.dao.UserDAO;
 import com.gmail.dzhivchik.domain.File;
 import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
@@ -22,6 +23,10 @@ public class ContentService {
 
     @Autowired
     private FolderDAO folderDAO;
+
+    @Autowired
+    private UserDAO userDAO;
+
 
     @Transactional
     public void createFolder(Folder folder){
@@ -47,6 +52,11 @@ public class ContentService {
         content[0] = fileDAO.getList(user, parentFolder);
         content[1] = folderDAO.getList(user, parentFolder);
         return content;
+    }
+
+
+    public List[] deleteCheckedContent(int[] checked_files_id, int[] checked_folders_id){
+        return null;
     }
 
     @Transactional
@@ -91,7 +101,7 @@ public class ContentService {
     public List[] getListBySearch(String whatSearch, User user){
         List[] content = new List[2];
         content[0] = fileDAO.getSearchList(whatSearch, user);
-        content[1] = folderDAO.getStarredList(user);
+        content[1] = folderDAO.getSearchList(whatSearch, user);
         return content;
     }
 
@@ -121,6 +131,37 @@ public class ContentService {
                 System.out.println("File not found!");
             }
         }
+    }
+
+    @Transactional
+    public void share(int[] checked_files_id, int[] checked_folders_id, String shareFor){
+        List<User> receivers = userDAO.getShareReceivers(shareFor);
+
+        List<File> targetsFiles = null;
+        if(checked_files_id != null){
+            targetsFiles = fileDAO.getListById(checked_files_id);
+            for (File file : targetsFiles){
+                file.addToShareFor(receivers);
+            }
+            fileDAO.share(targetsFiles);
+        }
+
+        List<Folder> targetsFolder = null;
+        if(checked_folders_id != null){
+            targetsFolder = folderDAO.getListFolderById(checked_folders_id);
+            for (Folder folder : targetsFolder){
+                folder.addToShareFor(receivers);
+            }
+            folderDAO.share(targetsFolder);
+        }
+    }
+
+    @Transactional
+    public List[] getSharedContent(User user){
+        List[] content = new List[2];
+        content[0] = fileDAO.getSharedList(user);
+        content[1] = folderDAO.getSharedList(user);
+        return content;
     }
 
     public void createPathForFile(StringBuilder sb, Folder curFolder, int deep) {
