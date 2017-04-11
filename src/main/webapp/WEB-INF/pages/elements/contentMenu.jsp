@@ -15,11 +15,11 @@
                 New <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
-                <li><a href="#" class="btn btn-lg" data-toggle="modal" data-target="#modalForNewFolder">New
+                <li><a href="#" class="btn btn-lg href_for_sidebar" data-toggle="modal" data-target="#modalForNewFolder">New
                     Folder</a></li>
-                <li><a href="#" class="btn btn-lg" data-toggle="modal"
+                <li><a href="#" class="btn btn-lg href_for_sidebar" data-toggle="modal"
                        data-target="#modalForFileUpload">File upload</a></li>
-                <li><a href="#" class="btn btn-lg" data-toggle="modal"
+                <li><a href="#" class="btn btn-lg href_for_sidebar" data-toggle="modal"
                        data-target="#modalForFolderUpload">Folder upload</a></li>
             </ul>
         </div>

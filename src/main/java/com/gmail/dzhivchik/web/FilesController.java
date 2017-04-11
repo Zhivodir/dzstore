@@ -185,7 +185,7 @@ public class FilesController {
         }
         if (checked_folders_id != null) {
             Folder[] folders = contentService.deleteCheckedFolders(checked_folders_id);
-            deleteFolder(Arrays.asList(folders), login);
+            deleteListOfFolders(Arrays.asList(folders), login);
         }
     }
 
@@ -312,32 +312,28 @@ public class FilesController {
         }
     }
 
-    public void deleteFolder(List<Folder> folders, String login){
+    public void deleteListOfFolders(List<Folder> folders, String login){
         for(Folder folder : folders) {
             List<Folder> subfolder = folder.getFolders();
             List<File> files = folder.getFiles();
             if(subfolder.size() != 0){
-                deleteFolder(subfolder, login);
-                deleteListOfFiles(files, login);
-                Folder temp = folder.getParentFolder();
-                if (temp != null) {
-                    StringBuilder sb = new StringBuilder();
-                    createPathForElement(sb, temp);
-                    new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + "/" + folder.getName()).delete();
-                } else {
-                    new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + folder.getName()).delete();
-                }
-            }else {
-                deleteListOfFiles(files, login);
-                Folder temp = folder.getParentFolder();
-                if (temp != null) {
-                    StringBuilder sb = new StringBuilder();
-                    createPathForElement(sb, temp);
-                    new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + "/" + folder.getName()).delete();
-                } else {
-                    new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + folder.getName()).delete();
-                }
+                deleteListOfFolders(subfolder, login);
+                deleteContentOfFolder(files, login, folder);
+            } else {
+                deleteContentOfFolder(files, login, folder);
             }
+        }
+    }
+
+    public void deleteContentOfFolder(List<File> files, String login, Folder folder){
+        deleteListOfFiles(files, login);
+        Folder temp = folder.getParentFolder();
+        if (temp != null) {
+            StringBuilder sb = new StringBuilder();
+            createPathForElement(sb, temp);
+            new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + "/" + folder.getName()).delete();
+        } else {
+            new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + folder.getName()).delete();
         }
     }
 }

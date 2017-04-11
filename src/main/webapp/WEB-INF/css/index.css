@@ -165,6 +165,12 @@ body {
     color: black;
 }
 
+.href_for_sidebar:hover{
+    background-color: #449d44 !important;
+    color: #000000 !important;
+    border-radius: 0px !important;
+}
+
 /*
  * Content space
  */
