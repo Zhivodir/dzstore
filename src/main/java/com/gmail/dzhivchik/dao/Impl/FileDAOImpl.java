@@ -67,7 +67,7 @@ public class FileDAOImpl implements FileDAO {
     }
 
     @Override
-    public List<File> getListById(int[] listOfId) {
+    public List<File> getListFilesById(int[] listOfId) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT f FROM File f WHERE ");
         for (int i = 0; i < listOfId.length; i++) {

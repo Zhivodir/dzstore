@@ -18,7 +18,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -112,7 +111,7 @@ public class FilesController {
 
             if (delete != null) {
                 System.out.println("DELETE");
-                deleteContent(model, checked_files_id, checked_folders_id, login);
+                deleteContent(checked_files_id, checked_folders_id, login);
             }
 
             if (download != null) {
@@ -178,15 +177,8 @@ public class FilesController {
     }
 
 
-    public void deleteContent(Model model, int[] checked_files_id, int[] checked_folders_id, String login) {
-        if (checked_files_id != null) {
-            File[] files = contentService.deleteCheckedFiles(checked_files_id);
-            deleteListOfFiles(Arrays.asList(files), login);
-        }
-        if (checked_folders_id != null) {
-            Folder[] folders = contentService.deleteCheckedFolders(checked_folders_id);
-            deleteListOfFolders(Arrays.asList(folders), login);
-        }
+    public void deleteContent(int[] checked_files_id, int[] checked_folders_id, String login) {
+        contentService.deleteCheckedContent(checked_files_id, checked_folders_id, login);
     }
 
 
@@ -294,46 +286,5 @@ public class FilesController {
 
     public void share(int[] checked_files_id, int[] checked_folders_id, String shareFor){
         contentService.share(checked_files_id, checked_folders_id, shareFor);
-    }
-
-    public void deleteListOfFiles(List<File> files, String login){
-        if (files.size() != 0) {
-            for (File file : files) {
-                Folder temp = file.getParentFolder();
-                if(temp != null) {
-                    StringBuilder sb = new StringBuilder();
-                    createPathForElement(sb, temp);
-                    new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + "/" + file.getName()).delete();
-                }
-                else {
-                    new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + file.getName()).delete();
-                }
-            }
-        }
-    }
-
-    public void deleteListOfFolders(List<Folder> folders, String login){
-        for(Folder folder : folders) {
-            List<Folder> subfolder = folder.getFolders();
-            List<File> files = folder.getFiles();
-            if(subfolder.size() != 0){
-                deleteListOfFolders(subfolder, login);
-                deleteContentOfFolder(files, login, folder);
-            } else {
-                deleteContentOfFolder(files, login, folder);
-            }
-        }
-    }
-
-    public void deleteContentOfFolder(List<File> files, String login, Folder folder){
-        deleteListOfFiles(files, login);
-        Folder temp = folder.getParentFolder();
-        if (temp != null) {
-            StringBuilder sb = new StringBuilder();
-            createPathForElement(sb, temp);
-            new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + "/" + folder.getName()).delete();
-        } else {
-            new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + folder.getName()).delete();
-        }
     }
 }

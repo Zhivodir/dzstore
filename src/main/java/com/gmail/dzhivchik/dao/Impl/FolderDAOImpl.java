@@ -64,7 +64,7 @@ public class FolderDAOImpl implements FolderDAO{
     }
 
     @Override
-    public List<Folder> getListFolderById(int[] listOfId) {
+    public List<Folder> getListFoldersById(int[] listOfId) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT f FROM Folder f WHERE ");
         for (int i = 0; i < listOfId.length; i++) {

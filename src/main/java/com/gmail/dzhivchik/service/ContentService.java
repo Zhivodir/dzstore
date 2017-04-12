@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -54,29 +55,26 @@ public class ContentService {
         return content;
     }
 
-
-    public List[] deleteCheckedContent(int[] checked_files_id, int[] checked_folders_id){
-        return null;
-    }
-
     @Transactional
-    public File[] deleteCheckedFiles(int[] checked_files_id) {
-        return fileDAO.deleteGroup(checked_files_id);
-    }
-
-    @Transactional
-    public Folder[] deleteCheckedFolders(int[] checked_folders_id) {
-        return folderDAO.deleteGroup(checked_folders_id);
+    public void deleteCheckedContent(int[] checked_files_id, int[] checked_folders_id, String login){
+        if (checked_files_id != null) {
+            File[] files = fileDAO.deleteGroup(checked_files_id);;
+            deleteListOfFiles(Arrays.asList(files), login);
+        }
+        if (checked_folders_id != null) {
+            Folder[] folders = folderDAO.deleteGroup(checked_folders_id);
+            deleteListOfFolders(Arrays.asList(folders), login);
+        }
     }
 
     @Transactional
     public List<File> getListById(int[] checked_files_id) {
-        return fileDAO.getListById(checked_files_id);
+        return fileDAO.getListFilesById(checked_files_id);
     }
 
     @Transactional
     public List<Folder> getListFolderById(int[] checked_folders_id) {
-        return folderDAO.getListFolderById(checked_folders_id);
+        return folderDAO.getListFoldersById(checked_folders_id);
     }
 
     @Transactional
@@ -109,7 +107,7 @@ public class ContentService {
     public void rename(String login, int[] checked_files_id, int[] checked_folders_id, String newName){
         StringBuilder sb = new StringBuilder();
         if(checked_files_id != null){
-            File fileForRename = fileDAO.getListById(checked_files_id).get(0);
+            File fileForRename = fileDAO.getListFilesById(checked_files_id).get(0);
             fileDAO.renameFile(checked_files_id, newName);
             createPathForFile(sb, fileForRename.getParentFolder(), 0);
             java.io.File file = new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + fileForRename.getName());
@@ -139,7 +137,7 @@ public class ContentService {
 
         List<File> targetsFiles = null;
         if(checked_files_id != null){
-            targetsFiles = fileDAO.getListById(checked_files_id);
+            targetsFiles = fileDAO.getListFilesById(checked_files_id);
             for (File file : targetsFiles){
                 file.addToShareFor(receivers);
             }
@@ -148,7 +146,7 @@ public class ContentService {
 
         List<Folder> targetsFolder = null;
         if(checked_folders_id != null){
-            targetsFolder = folderDAO.getListFolderById(checked_folders_id);
+            targetsFolder = folderDAO.getListFoldersById(checked_folders_id);
             for (Folder folder : targetsFolder){
                 folder.addToShareFor(receivers);
             }
@@ -162,6 +160,55 @@ public class ContentService {
         content[0] = fileDAO.getSharedList(user);
         content[1] = folderDAO.getSharedList(user);
         return content;
+    }
+
+    public void deleteListOfFiles(List<File> files, String login){
+        if (files.size() != 0) {
+            for (File file : files) {
+                Folder temp = file.getParentFolder();
+                if(temp != null) {
+                    StringBuilder sb = new StringBuilder();
+                    createPathForElement(sb, temp);
+                    new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + "/" + file.getName()).delete();
+                }
+                else {
+                    new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + file.getName()).delete();
+                }
+            }
+        }
+    }
+
+    public void deleteListOfFolders(List<Folder> folders, String login){
+        for(Folder folder : folders) {
+            List<Folder> subfolder = folder.getFolders();
+            List<File> files = folder.getFiles();
+            if(subfolder.size() != 0){
+                deleteListOfFolders(subfolder, login);
+                deleteContentOfFolder(files, login, folder);
+            } else {
+                deleteContentOfFolder(files, login, folder);
+            }
+        }
+    }
+
+    public void deleteContentOfFolder(List<File> files, String login, Folder folder){
+        deleteListOfFiles(files, login);
+        Folder temp = folder.getParentFolder();
+        if (temp != null) {
+            StringBuilder sb = new StringBuilder();
+            createPathForElement(sb, temp);
+            new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + "/" + folder.getName()).delete();
+        } else {
+            new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + folder.getName()).delete();
+        }
+    }
+
+    public void createPathForElement(StringBuilder sb, Folder curFolder) {
+        if (curFolder != null) {
+            createPathForElement(sb, curFolder.getParentFolder());
+            sb.append(curFolder.getName());
+            sb.append("/");
+        }
     }
 
     public void createPathForFile(StringBuilder sb, Folder curFolder, int deep) {
