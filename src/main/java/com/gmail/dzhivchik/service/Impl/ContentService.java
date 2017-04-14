@@ -1,4 +1,4 @@
-package com.gmail.dzhivchik.service;
+package com.gmail.dzhivchik.service.Impl;
 
 import com.gmail.dzhivchik.dao.FileDAO;
 import com.gmail.dzhivchik.dao.FolderDAO;
@@ -68,7 +68,7 @@ public class ContentService {
     }
 
     @Transactional
-    public List<File> getListById(int[] checked_files_id) {
+    public List<File> getListFilesById(int[] checked_files_id) {
         return fileDAO.getListFilesById(checked_files_id);
     }
 
@@ -109,7 +109,7 @@ public class ContentService {
         if(checked_files_id != null){
             File fileForRename = fileDAO.getListFilesById(checked_files_id).get(0);
             fileDAO.renameFile(checked_files_id, newName);
-            createPathForFile(sb, fileForRename.getParentFolder(), 0);
+            createPathForElement(sb, fileForRename.getParentFolder());
             java.io.File file = new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + fileForRename.getName());
             if(file.exists()){
                 file.renameTo(new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + newName));
@@ -120,10 +120,10 @@ public class ContentService {
         }else if(checked_folders_id != null){
             Folder folderForRename = folderDAO.getFolder(checked_folders_id[0]);
             folderDAO.renameFolder(checked_folders_id, newName);
-            createPathForFile(sb, folderForRename, 0);
-            java.io.File file = new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + folderForRename.getName());
+            createPathForElement(sb, folderForRename);
+            java.io.File file = new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString().substring(0,sb.toString().length()-1));
             if(file.exists()){
-                file.renameTo(new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + newName));
+                file.renameTo(new java.io.File(file.getPath().substring(0, file.getPath().lastIndexOf("\\")+1) + newName));
             }
             else{
                 System.out.println("File not found!");
@@ -208,19 +208,6 @@ public class ContentService {
             createPathForElement(sb, curFolder.getParentFolder());
             sb.append(curFolder.getName());
             sb.append("/");
-        }
-    }
-
-    public void createPathForFile(StringBuilder sb, Folder curFolder, int deep) {
-        System.out.println(deep);
-        if (curFolder != null) {
-            deep++;
-            createPathForFile(sb, curFolder.getParentFolder(), deep);
-            if(deep != 1) {
-                sb.append(curFolder.getName());
-                sb.append("/");
-                deep--;
-            }
         }
     }
 }

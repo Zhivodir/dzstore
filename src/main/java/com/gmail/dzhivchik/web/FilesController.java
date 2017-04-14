@@ -3,7 +3,7 @@ package com.gmail.dzhivchik.web;
 import com.gmail.dzhivchik.domain.File;
 import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
-import com.gmail.dzhivchik.service.ContentService;
+import com.gmail.dzhivchik.service.Impl.ContentService;
 import com.gmail.dzhivchik.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -118,7 +118,7 @@ public class FilesController {
                 System.out.println("DOWNLOAD");
                 List<File> listCheckedFiles = new ArrayList<>();
                 if (checked_files_id != null) {
-                    listCheckedFiles = contentService.getListById(checked_files_id);
+                    listCheckedFiles = contentService.getListFilesById(checked_files_id);
                 }
 
                 List<Folder> listCheckedFolder = new ArrayList<>();
@@ -154,7 +154,6 @@ public class FilesController {
         contentService.uploadFile(fileForDAO);
         StringBuilder sb = new StringBuilder();
         createPathForElement(sb, curFolder);
-        System.out.println(sb.toString());
         try {
             convFile.createNewFile();
             FileOutputStream fos = new FileOutputStream("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + "/" + convFile);
@@ -274,7 +273,6 @@ public class FilesController {
 
 
     public void changeStar(int[] checked_files_id, int[] checked_folders_id, boolean stateOfStar) {
-        System.out.println(stateOfStar);
         contentService.changeStar(checked_files_id, checked_folders_id, stateOfStar);
     }
 

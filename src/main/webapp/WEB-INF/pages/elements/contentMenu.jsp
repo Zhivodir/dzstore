@@ -8,6 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<div class="top-part">
 <div class="navbar navbar-inverse navbar-fixed-top contentmenu-place">
     <div class="col-sm-3 col-md-2">
         <div class="btn-group">
@@ -35,4 +36,5 @@
             </c:if>
         </div>
     </div>
+</div>
 </div>

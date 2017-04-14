@@ -7,7 +7,6 @@
 --%>
 
 <ul id="contextMenu" class="dropdown-menu" role="menu" style="display:none" >
-    <!--<li><input type="submit" name="delete" value="Delete"/></li>-->
     <li><a class="contextHref" href="#" data-toggle="modal" data-target="#modalForDelete">Delete</a></li>
     <li class="contextHref"><input type="submit" class="contextInput" name="download" value="Download"/></li>
     <li class="divider"></li>
