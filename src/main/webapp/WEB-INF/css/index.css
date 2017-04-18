@@ -210,3 +210,59 @@ body {
 .contextHref:hover {
     background-color: #449d44 !important;
 }
+
+/**
+ * Profile image component
+ */
+
+
+.profile-header-container{
+    text-align: center;
+}
+
+.profile-header-img {
+    width: 100px;
+}
+
+.profile-header-img > img.img-circle {
+    width: 80px;
+    border: 2px solid #51D2B7;
+}
+
+/**
+ * Ranking component
+ */
+.rank-label-container {
+    margin-top: -19px;
+    margin-left: 7px;
+    width: 100px;
+}
+
+.label.label-default.rank-label {
+    width:100%;
+    height: 30px;
+    background-color: rgb(81, 210, 183);
+    /*padding: 5px 10px 5px 10px;*/
+    border-radius: 27px;
+    font-size: 100% !important;
+}
+
+.modal-header{
+    background-color:#255625 ;
+}
+
+/**
+ * Size of modal windows
+ */
+
+.modal-NewFolder {
+    width: 320px !important;
+}
+
+.modal-FileUpload {
+    width: 380px !important;
+}
+
+.modal-Account{
+    width: 320px !important;
+}

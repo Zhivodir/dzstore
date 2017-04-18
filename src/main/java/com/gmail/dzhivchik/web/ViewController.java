@@ -34,6 +34,7 @@ public class ViewController {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
         model.addAttribute("content", contentService.getContent(user, null));
+        model.addAttribute("user", user);
         return "index";
     }
 
@@ -51,6 +52,7 @@ public class ViewController {
         forRelativePath.add(currentFolder);
         model.addAttribute("content", contentService.getContent(user, currentFolder));
         model.addAttribute("listForRelativePath", forRelativePath);
+        model.addAttribute("user", user);
         return "folder";
     }
 
@@ -59,6 +61,7 @@ public class ViewController {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
         model.addAttribute("content", contentService.getStarredContent(user));
+        model.addAttribute("user", user);
         return "starred";
     }
 
@@ -68,6 +71,7 @@ public class ViewController {
             String login = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.getUser(login);
             model.addAttribute("content", contentService.getListBySearch(whatSearch, user));
+            model.addAttribute("user", user);
         }
         return "search";
     }
@@ -77,6 +81,7 @@ public class ViewController {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
         model.addAttribute("content", contentService.getSharedContent(user));
+        model.addAttribute("user", user);
         return "shared";
     }
 
