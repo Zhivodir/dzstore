@@ -14,6 +14,7 @@
                 <li><a href="#" class="btn btn-lg account" data-toggle="modal"
                        data-target="#modalForAccount"><sec:authentication property="principal.username"/></a></li>
             </ul>
+
             <form class="navbar-form navbar-right" action="/search" method="post">
                 <input type="text" name="whatSearch" class="form-control" placeholder="Search...">
                 <input type="submit" name="search" value="Search"/>

@@ -36,7 +36,6 @@ body {
 .account:active, .account:focus, .account:active:focus,
 .account:after{
     outline: none;
-
 }
 
 /*
