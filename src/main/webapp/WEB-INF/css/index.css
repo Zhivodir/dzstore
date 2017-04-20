@@ -248,11 +248,16 @@ body {
 
 .modal-header{
     background-color:#255625 ;
+    color: #5e5e5e;
 }
 
 /**
  * Size of modal windows
  */
+
+.all-modal-change {
+    border-radius: 0px !important;
+}
 
 .modal-NewFolder {
     width: 320px !important;
@@ -262,6 +267,18 @@ body {
     width: 380px !important;
 }
 
+.modal-DirectoryUpload {
+    width: 395px !important;
+}
+
 .modal-Account{
     width: 320px !important;
+}
+
+/**
+ * Modal window of account
+ */
+
+.account-right-part{
+    margin-left: 20px;
 }

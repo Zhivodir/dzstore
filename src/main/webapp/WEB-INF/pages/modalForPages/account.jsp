@@ -9,7 +9,7 @@
             <div class="modal fade" id="modalForAccount" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                  aria-hidden="true">
                 <div class="modal-dialog modal-Account">
-                    <div class="modal-content">
+                    <div class="modal-content all-modal-change">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">
                                 <span aria-hidden="true">&times;</span>
@@ -18,20 +18,14 @@
                         </div>
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-3 account-left-part">
                                     <a href="/logout" role="button">
                                         <div class="profile-header-img">
                                             <img class="img-circle" src="img/default.jpg" alt="photo"/>
-                                            <!-- badge -->
-                                            <div class="rank-label-container">
-                                                <span class="label label-default rank-label change_photo_span">
-                                                    Change
-                                                </span>
-                                            </div>
                                         </div>
                                     </a>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 account-right-part">
                                     <p><sec:authentication property="principal.username"/></p>
                                     <p><c:out value="${user.email}"></c:out></p>
                                     <a class="btn btn-lg btn-danger" href="/logout" role="button">Logout</a>
