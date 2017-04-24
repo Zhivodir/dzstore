@@ -51,8 +51,7 @@
     <c:import url="/WEB-INF/pages/modalForPages/createNewFolder.jsp" />
     <c:import url="/WEB-INF/pages/modalForPages/fileUpload.jsp"/>
     <c:import url="/WEB-INF/pages/modalForPages/createNewFolder.jsp" />
-    <c:import url="/WEB-INF/pages/modalForPages/account.jsp"/>
-    <c:import url="/WEB-INF/pages/modalForPages/renameContent.jsp"/>
+    <c:import url="/WEB-INF/pages/modalForPages/newImageForProfile.jsp" />
 
 <!-- Bootstrap core JavaScript
 ================================================== -->

@@ -156,7 +156,7 @@ public class FilesController {
         createPathForElement(sb, curFolder);
         try {
             convFile.createNewFile();
-            FileOutputStream fos = new FileOutputStream("c:/DevKit/Temp/dzstore/users/" + login + "/" + sb.toString() + "/" + convFile);
+            FileOutputStream fos = new FileOutputStream("c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + sb.toString() + "/" + convFile);
             fos.write(file.getBytes());
             fos.close();
         } catch (FileNotFoundException e) {
@@ -185,10 +185,10 @@ public class FilesController {
         String filesPath = null;
         Folder curFolder = null;
         if (currentFolder == null || currentFolder == -1) {
-            filesPath = "c:/DevKit/Temp/dzstore/users/" + login + "/";
+            filesPath = "c:/DevKit/Temp/dzstore/users_storages/" + login + "/";
         } else {
             curFolder = contentService.getFolder(currentFolder);
-            filesPath = "c:/DevKit/Temp/dzstore/users/" + login + "/" + curFolder + "/";
+            filesPath = "c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + curFolder + "/";
         }
         String filesPathForDownload = null;
         if ((listCheckedFolder.size() != 0) || (listCheckedFiles.size() > 1)) {

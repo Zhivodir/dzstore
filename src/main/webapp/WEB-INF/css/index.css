@@ -33,6 +33,12 @@ body {
     top:51px;
 }
 
+.account {
+    background-color: #255625 !important;
+    border: 0px !important;
+    color: #9d9d9d !important;
+}
+
 .account:active, .account:focus, .account:active:focus,
 .account:after{
     outline: none;
@@ -170,6 +176,11 @@ body {
     border-radius: 0px !important;
 }
 
+.busySpace {
+    width:100%;
+    text-align: center;
+}
+
 /*
  * Content space
  */
@@ -214,6 +225,14 @@ body {
  * Profile image component
  */
 
+.top1 {
+    z-index: 3000 !important;
+}
+
+.dropdown-menu_profile {
+    z-index: 3000 !important;
+}
+
 
 .profile-header-container{
     text-align: center;
@@ -248,7 +267,7 @@ body {
 
 .modal-header{
     background-color:#255625 ;
-    color: #5e5e5e;
+    color: #9d9d9d;
 }
 
 /**

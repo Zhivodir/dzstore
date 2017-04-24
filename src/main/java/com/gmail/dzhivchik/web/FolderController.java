@@ -42,7 +42,7 @@ public class FolderController {
         Folder folder = new Folder(nameOfFolder, user, curFolder, false);
         StringBuilder sb = new StringBuilder();
         createPathForFile(sb, curFolder);
-        File myPath = new File("c:/DevKit/Temp/dzstore/users/" + login + "/" + sb.toString() + "/" + nameOfFolder);
+        File myPath = new File("c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + sb.toString() + "/" + nameOfFolder);
         contentService.createFolder(folder);
         myPath.mkdirs();
         if(currentFolder != -1){

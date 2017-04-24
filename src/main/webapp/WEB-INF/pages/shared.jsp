@@ -51,10 +51,10 @@
 </div>
 
 <c:set var="f" value="-1" scope="request"/>
-<c:import url="/WEB-INF/pages/modalForPages/createNewFolder.jsp" />
-<c:import url="/WEB-INF/pages/modalForPages/fileUpload.jsp"/>
-<c:import url="/WEB-INF/pages/modalForPages/folderUpload.jsp"/>
-<c:import url="/WEB-INF/pages/modalForPages/account.jsp"/>
+    <c:import url="/WEB-INF/pages/modalForPages/createNewFolder.jsp" />
+    <c:import url="/WEB-INF/pages/modalForPages/fileUpload.jsp"/>
+    <c:import url="/WEB-INF/pages/modalForPages/folderUpload.jsp"/>
+    <c:import url="/WEB-INF/pages/modalForPages/newImageForProfile.jsp" />
 
 <!-- Bootstrap core JavaScript
 ================================================== -->

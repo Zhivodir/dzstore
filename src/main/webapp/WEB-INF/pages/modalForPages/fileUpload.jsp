@@ -8,7 +8,7 @@
             <div class="modal fade" id="modalForFileUpload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                  aria-hidden="true">
                 <div class="modal-dialog modal-FileUpload">
-                    <div class="modal-content all-modal-change">
+                    <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">
                                 <span aria-hidden="true">&times;</span>
@@ -18,11 +18,11 @@
                         </div>
                         <div class="modal-body">
                             <form class="form-inline" enctype="multipart/form-data" action="upload" method="post">
-                                <div class="form-group" style="float: left">
+                                <div class="form-group">
                                     <input type="hidden" name="currentFolder" value="${f}">
                                     <input type="file" name="file" placeholder="Choice file">
                                 </div>
-                                <button style="float: left; margin-top: -9px" type="submit"  class="btn btn-primary">Upload</button>
+                                <button type="submit" class="btn btn-primary">Upload</button>
                             </form>
                         </div>
                     </div>

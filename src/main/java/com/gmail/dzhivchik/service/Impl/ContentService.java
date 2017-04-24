@@ -110,9 +110,9 @@ public class ContentService {
             File fileForRename = fileDAO.getListFilesById(checked_files_id).get(0);
             fileDAO.renameFile(checked_files_id, newName);
             createPathForElement(sb, fileForRename.getParentFolder());
-            java.io.File file = new java.io.File("c:/DevKit/Temp/dzstore/users/" + login + "/" + sb.toString() + fileForRename.getName());
+            java.io.File file = new java.io.File("c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + sb.toString() + fileForRename.getName());
             if(file.exists()){
-                file.renameTo(new java.io.File("c:/DevKit/Temp/dzstore/users/" + login + "/" + sb.toString() + newName));
+                file.renameTo(new java.io.File("c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + sb.toString() + newName));
             }
             else{
                 System.out.println("File not found!");
@@ -121,7 +121,7 @@ public class ContentService {
             Folder folderForRename = folderDAO.getFolder(checked_folders_id[0]);
             folderDAO.renameFolder(checked_folders_id, newName);
             createPathForElement(sb, folderForRename);
-            java.io.File file = new java.io.File("c:/DevKit/Temp/dzstore/users/" + login + "/" + sb.toString().substring(0,sb.toString().length()-1));
+            java.io.File file = new java.io.File("c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + sb.toString().substring(0,sb.toString().length()-1));
             if(file.exists()){
                 file.renameTo(new java.io.File(file.getPath().substring(0, file.getPath().lastIndexOf("\\")+1) + newName));
             }
@@ -162,6 +162,15 @@ public class ContentService {
         return content;
     }
 
+    public long getSizeBusyMemory(User user){
+        List<File> content = fileDAO.getAllList(user);
+        long sumSize = 0;
+        for(File file : content) {
+            sumSize += file.getSize();
+        }
+        return sumSize;
+    }
+
     public void deleteListOfFiles(List<File> files, String login){
         if (files.size() != 0) {
             for (File file : files) {
@@ -169,10 +178,10 @@ public class ContentService {
                 if(temp != null) {
                     StringBuilder sb = new StringBuilder();
                     createPathForElement(sb, temp);
-                    new java.io.File("c:/DevKit/Temp/dzstore/users/" + login + "/" + sb.toString() + "/" + file.getName()).delete();
+                    new java.io.File("c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + sb.toString() + "/" + file.getName()).delete();
                 }
                 else {
-                    new java.io.File("c:/DevKit/Temp/dzstore/users/" + login + "/" + file.getName()).delete();
+                    new java.io.File("c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + file.getName()).delete();
                 }
             }
         }
@@ -197,9 +206,9 @@ public class ContentService {
         if (temp != null) {
             StringBuilder sb = new StringBuilder();
             createPathForElement(sb, temp);
-            new java.io.File("c:/DevKit/Temp/dzstore/users/" + login + "/" + sb.toString() + "/" + folder.getName()).delete();
+            new java.io.File("c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + sb.toString() + "/" + folder.getName()).delete();
         } else {
-            new java.io.File("c:/DevKit/Temp/dzstore/users/" + login + "/" + folder.getName()).delete();
+            new java.io.File("c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + folder.getName()).delete();
         }
     }
 

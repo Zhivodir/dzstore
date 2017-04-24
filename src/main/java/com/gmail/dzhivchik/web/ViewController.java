@@ -35,6 +35,7 @@ public class ViewController {
         User user = userService.getUser(login);
         model.addAttribute("content", contentService.getContent(user, null));
         model.addAttribute("user", user);
+        model.addAttribute("busySpace", showBusySpace(user));
         return "index";
     }
 
@@ -53,6 +54,7 @@ public class ViewController {
         model.addAttribute("content", contentService.getContent(user, currentFolder));
         model.addAttribute("listForRelativePath", forRelativePath);
         model.addAttribute("user", user);
+        model.addAttribute("busySpace", showBusySpace(user));
         return "folder";
     }
 
@@ -62,17 +64,19 @@ public class ViewController {
         User user = userService.getUser(login);
         model.addAttribute("content", contentService.getStarredContent(user));
         model.addAttribute("user", user);
+        model.addAttribute("busySpace", showBusySpace(user));
         return "starred";
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public String search(Model model, @RequestParam(value = "whatSearch", required = false) String whatSearch) {
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUser(login);
         if (whatSearch != null) {
-            String login = SecurityContextHolder.getContext().getAuthentication().getName();
-            User user = userService.getUser(login);
             model.addAttribute("content", contentService.getListBySearch(whatSearch, user));
             model.addAttribute("user", user);
         }
+        model.addAttribute("busySpace", showBusySpace(user));
         return "search";
     }
 
@@ -82,6 +86,7 @@ public class ViewController {
         User user = userService.getUser(login);
         model.addAttribute("content", contentService.getSharedContent(user));
         model.addAttribute("user", user);
+        model.addAttribute("busySpace", showBusySpace(user));
         return "shared";
     }
 
@@ -92,5 +97,25 @@ public class ViewController {
             forRelativePath.add(parentFolder);
             getListRelativePath(parentFolder, forRelativePath);
         }
+    }
+
+    public String[] showBusySpace(User user) {
+        long filesSize = contentService.getSizeBusyMemory(user);
+        String[] sizes = new String[2];
+        if(filesSize/(1024*1024*1024) > 0){
+            sizes[0] = filesSize/(1024*1024*1024) + "."
+                    + String.valueOf(filesSize%(1024*1024*1024)).substring(0,2) + " Gb";
+        }else if(filesSize/(1024*1024) > 0){
+            sizes[0] = filesSize/(1024*1024)+ "."
+                    + String.valueOf(filesSize%(1024*1024)).substring(0,2) + " Mb";
+        }else if(filesSize/1024 > 0){
+            sizes[0] = filesSize/1024 + "."
+                    + String.valueOf(filesSize%1024).substring(0,2) + " Kb";
+        }else{
+            sizes[0] = filesSize + " bytes";
+        }
+        //Доступное по условиям тарифа. Пока захардкодено
+        sizes[1] = "10 Gb";
+        return sizes;
     }
 }

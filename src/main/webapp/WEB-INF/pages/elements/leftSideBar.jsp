@@ -7,4 +7,5 @@
         <li><a href="/shared" class="href_for_sidebar"><span class="glyphicon glyphicon-eye-open"></span> Shared with me</a></li>
         <li><a href="/starred" class="href_for_sidebar"><span class="glyphicon glyphicon glyphicon-star"></span> Starred</a></li>
     </ul>
+    <div class = "busySpace">${busySpace[0]} / ${busySpace[1]} </div>
 </div>

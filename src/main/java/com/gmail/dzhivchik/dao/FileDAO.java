@@ -15,6 +15,7 @@ public interface FileDAO {
     File[] deleteGroup(int[] checked_files_id);
     List<File> getList(User user, Folder parentFolder);
     List<File> getListFilesById(int[] listOfId);
+    List<File> getAllList(User user);
     void changeStar(int[] checked_files_id, boolean stateOfStar);
     List<File> getStarredList(User user);
     List<File> getSearchList(String whatSearch, User user);
