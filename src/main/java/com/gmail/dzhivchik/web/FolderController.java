@@ -2,7 +2,7 @@ package com.gmail.dzhivchik.web;
 
 import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
-import com.gmail.dzhivchik.service.ContentService;
+import com.gmail.dzhivchik.service.Impl.ContentService;
 import com.gmail.dzhivchik.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,10 +39,10 @@ public class FolderController {
         if(currentFolder != -1) {
             curFolder = contentService.getFolder(currentFolder);
         }
-        Folder folder = new Folder(nameOfFolder, user, curFolder, false);
+        Folder folder = new Folder(nameOfFolder, user, curFolder, false, false);
         StringBuilder sb = new StringBuilder();
         createPathForFile(sb, curFolder);
-        File myPath = new File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + "/" + nameOfFolder);
+        File myPath = new File("c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + sb.toString() + "/" + nameOfFolder);
         contentService.createFolder(folder);
         myPath.mkdirs();
         if(currentFolder != -1){

@@ -33,10 +33,15 @@ body {
     top:51px;
 }
 
+.account {
+    background-color: #255625 !important;
+    border: 0px !important;
+    color: #9d9d9d !important;
+}
+
 .account:active, .account:focus, .account:active:focus,
 .account:after{
     outline: none;
-
 }
 
 /*
@@ -56,10 +61,11 @@ body {
         /*z-index: 1000;*/
         display: block;
         padding: 20px;
+        padding-top: 0px !important;
         overflow-x: hidden;
         /*overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
         background-color: #f5f5f5;
-        border-right: 1px solid #eee;
+        /*border-right: 1px solid #eee;*/
     }
 }
 
@@ -171,6 +177,11 @@ body {
     border-radius: 0px !important;
 }
 
+.busySpace {
+    width:100%;
+    text-align: center;
+}
+
 /*
  * Content space
  */
@@ -209,4 +220,93 @@ body {
 
 .contextHref:hover {
     background-color: #449d44 !important;
+}
+
+/**
+ * Profile image component
+ */
+
+.top1 {
+    z-index: 3000 !important;
+}
+
+.dropdown-menu_profile {
+    z-index: 3000 !important;
+}
+
+
+.profile-header-container{
+    text-align: center;
+}
+
+.profile-header-img {
+    width: 100px;
+}
+
+.profile-header-img > img.img-circle {
+    width: 80px;
+    border: 2px solid #51D2B7;
+}
+
+/**
+ * Left side bar
+ */
+
+.active_menu_item {
+    background-color: #ffffff;
+}
+
+/**
+ * Ranking component
+ */
+.rank-label-container {
+    margin-top: -19px;
+    margin-left: 7px;
+    width: 100px;
+}
+
+.label.label-default.rank-label {
+    width:100%;
+    height: 30px;
+    background-color: rgb(81, 210, 183);
+    /*padding: 5px 10px 5px 10px;*/
+    border-radius: 27px;
+    font-size: 100% !important;
+}
+
+.modal-header{
+    background-color:#255625 ;
+    color: #9d9d9d;
+}
+
+/**
+ * Size of modal windows
+ */
+
+.all-modal-change {
+    border-radius: 0px !important;
+}
+
+.modal-NewFolder {
+    width: 320px !important;
+}
+
+.modal-FileUpload {
+    width: 380px !important;
+}
+
+.modal-DirectoryUpload {
+    width: 395px !important;
+}
+
+.modal-Account{
+    width: 320px !important;
+}
+
+/**
+ * Modal window of account
+ */
+
+.account-right-part{
+    margin-left: 20px;
 }

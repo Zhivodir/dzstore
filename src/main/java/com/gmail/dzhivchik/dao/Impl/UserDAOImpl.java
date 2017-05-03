@@ -31,7 +31,7 @@ public class UserDAOImpl implements UserDAO {
                 createQuery("SELECT u FROM User u WHERE u.login = :login", User.class);
         query.setParameter("login", login);
 
-        List<User> temp = (List<User>)query.getResultList();
+        List<User> temp = (List<User>) query.getResultList();
         return temp.get(0);
     }
 
@@ -52,7 +52,8 @@ public class UserDAOImpl implements UserDAO {
         return (List<User>) query.getResultList();
     }
 
-    public String preparationShareRequest(String shareFor){
+
+    public String preparationShareRequest(String shareFor) {
         String[] tempListForShare = shareFor.split(",");
         List<String> forEmail = new ArrayList<>();
         List<String> forLogin = new ArrayList<>();
@@ -65,21 +66,21 @@ public class UserDAOImpl implements UserDAO {
         }
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT u FROM User u WHERE ");
-        if(forEmail.size() != 0){
-            for(int i = 0; i < forEmail.size(); i++){
+        if (forEmail.size() != 0) {
+            for (int i = 0; i < forEmail.size(); i++) {
                 sb.append("u.email = '" + forEmail.get(i) + "' ");
-                if(i != forEmail.size() - 1){
+                if (i != forEmail.size() - 1) {
                     sb.append("OR ");
                 }
             }
         }
-        if(forLogin.size() != 0){
-            if(forEmail.size() != 0){
+        if (forLogin.size() != 0) {
+            if (forEmail.size() != 0) {
                 sb.append("OR ");
             }
-            for(int j = 0; j < forLogin.size(); j++){
+            for (int j = 0; j < forLogin.size(); j++) {
                 sb.append("u.login = '" + forLogin.get(j) + "' ");
-                if(j != forLogin.size() - 1){
+                if (j != forLogin.size() - 1) {
                     sb.append("OR ");
                 }
             }

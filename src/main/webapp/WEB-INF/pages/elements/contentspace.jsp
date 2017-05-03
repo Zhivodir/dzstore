@@ -6,7 +6,7 @@
     <div class="table-responsive">
         <form action="/actions_above_checked_files" method="post">
             <input type="hidden" name="currentFolder" value="${f}">
-
+            <input type="hidden" name="typeOfView" value="${typeOfView}">
             <table id="myTable" class="table table-striped record_table">
                 <thead>
                     <tr>
@@ -18,7 +18,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                <c:if test="${f ne -1}">
+                <c:if test="${typeOfView.equals('folder')}">
                     <tr>
                         <td></td>
                         <td><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></td>
@@ -74,12 +74,18 @@
                 </tbody>
             </table>
 
-            <c:import url="/WEB-INF/pages/elements/contextMenuForContentSpace.jsp"/>
-
-            <c:import url="/WEB-INF/pages/modalForPages/delete.jsp"/>
-            <c:import url="/WEB-INF/pages/modalForPages/rename.jsp"/>
-            <c:import url="/WEB-INF/pages/modalForPages/share.jsp"/>
-
+            <c:choose>
+                <c:when test="${typeOfView.equals('bin')}">
+                    <c:import url="/WEB-INF/pages/context_menu/for_bin.jsp"/>
+                    <c:import url="/WEB-INF/pages/modalForPages/delete.jsp"/>
+                </c:when>
+                <c:otherwise>
+                    <c:import url="/WEB-INF/pages/context_menu/general.jsp"/>
+                    <c:import url="/WEB-INF/pages/modalForPages/remove.jsp"/>
+                    <c:import url="/WEB-INF/pages/modalForPages/share.jsp"/>
+                    <c:import url="/WEB-INF/pages/modalForPages/rename.jsp"/>
+                </c:otherwise>
+            </c:choose>
         </form>
     </div>
 </div>

@@ -55,11 +55,11 @@ public class FileDAOImpl implements FileDAO {
 
         Query query;
         if(parentFolder == null){
-            query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id AND f.parentFolder.id IS NULL", File.class);
+            query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id AND f.parentFolder.id IS NULL AND f.inbin <> 1", File.class);
             query.setParameter("user_id", user_id);
         }else{
             Integer parent_id = parentFolder.getId();
-            query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id AND f.parentFolder.id = :parent_id", File.class);
+            query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id AND f.parentFolder.id = :parent_id AND f.inbin <> 1", File.class);
             query.setParameter("user_id", user_id);
             query.setParameter("parent_id", parent_id);
         }
@@ -67,7 +67,7 @@ public class FileDAOImpl implements FileDAO {
     }
 
     @Override
-    public List<File> getListById(int[] listOfId) {
+    public List<File> getListFilesById(int[] listOfId) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT f FROM File f WHERE ");
         for (int i = 0; i < listOfId.length; i++) {
@@ -100,7 +100,7 @@ public class FileDAOImpl implements FileDAO {
     @Override
     public List<File> getStarredList(User user) {
         int user_id = user.getId();
-        Query query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id AND f.starred = 1", File.class);
+        Query query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id AND f.starred = 1 AND f.inbin <> 1", File.class);
         query.setParameter("user_id", user_id);
         return (List<File>)query.getResultList();
     }
@@ -108,7 +108,7 @@ public class FileDAOImpl implements FileDAO {
     @Override
     public List<File> getSearchList(String whatSearch, User user) {
         int user_id = user.getId();
-        Query query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id AND UPPER(f.name) LIKE :whatSearch", File.class);
+        Query query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id AND UPPER(f.name) LIKE :whatSearch AND f.inbin <> 1", File.class);
         query.setParameter("user_id", user_id);
         query.setParameter("whatSearch", "%" + whatSearch.toUpperCase() + "%");
         return (List<File>)query.getResultList();
@@ -123,7 +123,7 @@ public class FileDAOImpl implements FileDAO {
     }
 
     @Override
-    public void share(List<File> targets) {
+    public void changeShare(List<File> targets) {
         for (File file : targets) {
             entityManager.merge(file);
         }
@@ -131,8 +131,39 @@ public class FileDAOImpl implements FileDAO {
 
     @Override
     public List<File> getSharedList(User user) {
-        Query query = entityManager.createQuery("SELECT f FROM File f INNER JOIN f.shareFor user WHERE user = :user", File.class);
+        Query query = entityManager.createQuery("SELECT f FROM File f INNER JOIN f.shareFor user WHERE user = :user AND f.inbin <> 1", File.class);
         query.setParameter("user", user);
         return  (List<File>)query.getResultList();
+    }
+
+    @Override
+    public List<File> getAllList(User user) {
+        int user_id = user.getId();
+        Query query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id", File.class);
+        query.setParameter("user_id", user_id);
+        return (List<File>)query.getResultList();
+    }
+
+    public List<File> getBinList(User user){
+        int user_id = user.getId();
+        Query query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id AND f.inbin = 1", File.class);
+        query.setParameter("user_id", user_id);
+        return (List<File>)query.getResultList();
+    }
+
+    @Override
+    public void changeInBin(int[] checked_files_id, boolean stateOfInBinStatus){
+        StringBuilder sb = new StringBuilder();
+        sb.append("UPDATE File f SET f.inbin = :stateOfInBinStatus WHERE ");
+        for (int i = 0; i < checked_files_id.length; i++) {
+            if(i == 0) {
+                sb.append("f.id = " + checked_files_id[0]);
+            }else{
+                sb.append(" OR f.id = " + checked_files_id[i]);
+            }
+        }
+        Query query = entityManager.createQuery(sb.toString());
+        query.setParameter("stateOfInBinStatus", stateOfInBinStatus);
+        query.executeUpdate();
     }
 }

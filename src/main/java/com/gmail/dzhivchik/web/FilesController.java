@@ -3,7 +3,7 @@ package com.gmail.dzhivchik.web;
 import com.gmail.dzhivchik.domain.File;
 import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
-import com.gmail.dzhivchik.service.ContentService;
+import com.gmail.dzhivchik.service.Impl.ContentService;
 import com.gmail.dzhivchik.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -80,46 +80,59 @@ public class FilesController {
                                            @RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
                                            @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id,
                                            @RequestParam(value = "download", required = false) String download,
+                                           @RequestParam(value = "remove", required = false) String remove,
                                            @RequestParam(value = "delete", required = false) String delete,
+                                           @RequestParam(value = "restore", required = false) String restore,
                                            @RequestParam(value = "starred", required = false) String starred,
                                            @RequestParam(value = "removestar", required = false) String removestar,
                                            @RequestParam(value = "rename", required = false) String rename,
                                            @RequestParam(value = "name", required = false) String name,
                                            @RequestParam(value = "share", required = false) String share,
                                            @RequestParam(value = "shareFor", required = false) String shareFor,
-                                           @RequestParam Integer currentFolder) {
+                                           @RequestParam(value = "addtome", required = false) String addtome,
+                                           @RequestParam(value = "f", required = false) String f,
+                                           @RequestParam String typeOfView,
+                                           @RequestParam Integer currentFolder,
+                                           final RedirectAttributes redirectAttributes) {
         if (checked_files_id != null || checked_folders_id != null) {
             String login = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.getUser(login);
 
             if (rename != null && name != null) {
-                System.out.println("RENAME");
-                if(((checked_files_id != null && checked_files_id.length == 1) && checked_folders_id == null )||
-                        ((checked_folders_id != null && checked_folders_id.length == 1) && checked_files_id == null )){
-                    rename(checked_files_id, checked_folders_id, name);
+                if (((checked_files_id != null && checked_files_id.length == 1) && checked_folders_id == null) ||
+                        ((checked_folders_id != null && checked_folders_id.length == 1) && checked_files_id == null)) {
+                    contentService.rename(login, checked_files_id, checked_folders_id, name);
                 }
             }
 
             if (starred != null) {
-                System.out.println("ADDSTAR");
-                changeStar(checked_files_id, checked_folders_id, true);
+                contentService.changeStar(checked_files_id, checked_folders_id, true);
             }
 
             if (removestar != null) {
-                System.out.println("REMOVESTAR");
-                changeStar(checked_files_id, checked_folders_id, false);
+                contentService.changeStar(checked_files_id, checked_folders_id, false);
+            }
+
+            if (remove != null) {
+                if(typeOfView.equals("shared")){
+                    contentService.cancelShare(checked_files_id, checked_folders_id, user);
+                }else {
+                    contentService.in_out_bin(checked_files_id, checked_folders_id, true);
+                }
             }
 
             if (delete != null) {
-                System.out.println("DELETE");
-                deleteContent(model, checked_files_id, checked_folders_id, login);
+                contentService.deleteCheckedContent(checked_files_id, checked_folders_id, login);
+            }
+
+            if (restore != null) {
+                contentService.in_out_bin(checked_files_id, checked_folders_id, false);
             }
 
             if (download != null) {
-                System.out.println("DOWNLOAD");
                 List<File> listCheckedFiles = new ArrayList<>();
                 if (checked_files_id != null) {
-                    listCheckedFiles = contentService.getListById(checked_files_id);
+                    listCheckedFiles = contentService.getListFilesById(checked_files_id);
                 }
 
                 List<Folder> listCheckedFolder = new ArrayList<>();
@@ -129,42 +142,42 @@ public class FilesController {
                 downloadContent(user, login, currentFolder, listCheckedFiles, listCheckedFolder);
             }
 
-            if (share != null){
-                System.out.println("SHARE");
-                List<File> listEmailForShare = new ArrayList<>();
-                share(checked_files_id, checked_folders_id, shareFor);
+            if (share != null) {
+                contentService.share(checked_files_id, checked_folders_id, shareFor);
+            }
+
+            if(addtome != null) {
+                contentService.addtome(checked_files_id, checked_folders_id, user);
             }
         }
-
-        if (currentFolder == null) {
-            return "redirect:/starred";
-        } else if (currentFolder != -1) {
-            model.addAttribute("f", currentFolder);
-            return "redirect:/folder";
-        }
-        return "redirect:/index";
+        redirectAttributes.addFlashAttribute("f", f);
+        return "redirect:/" + typeOfView;
     }
 
 
     public void uploadFile(MultipartFile file, User user, Folder curFolder, String login) {
         String fileName = file.getOriginalFilename();
         long size = file.getSize();
-        String type = "test";
-        File fileForDAO = new File(fileName, size, type, user, curFolder, false);
-        java.io.File convFile = new java.io.File(fileName);
-        contentService.uploadFile(fileForDAO);
-        StringBuilder sb = new StringBuilder();
-        createPathForElement(sb, curFolder);
-        System.out.println(sb.toString());
-        try {
-            convFile.createNewFile();
-            FileOutputStream fos = new FileOutputStream("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + "/" + convFile);
-            fos.write(file.getBytes());
-            fos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        long all = (long)10*1024*1024*1024;
+        if(size <= all - contentService.getSizeBusyMemory(user)){
+            String type = "test";
+            File fileForDAO = new File(fileName, size, type, user, curFolder, false, false);
+            java.io.File convFile = new java.io.File(fileName);
+            contentService.uploadFile(fileForDAO);
+            StringBuilder sb = new StringBuilder();
+            createPathForElement(sb, curFolder);
+            try {
+                convFile.createNewFile();
+                FileOutputStream fos = new FileOutputStream("c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + sb.toString() + "/" + convFile);
+                fos.write(file.getBytes());
+                fos.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else{
+            System.out.println("Havn't nedd memory");
         }
     }
 
@@ -178,26 +191,14 @@ public class FilesController {
     }
 
 
-    public void deleteContent(Model model, int[] checked_files_id, int[] checked_folders_id, String login) {
-        if (checked_files_id != null) {
-            File[] files = contentService.deleteCheckedFiles(checked_files_id);
-            deleteListOfFiles(Arrays.asList(files), login);
-        }
-        if (checked_folders_id != null) {
-            Folder[] folders = contentService.deleteCheckedFolders(checked_folders_id);
-            deleteListOfFolders(Arrays.asList(folders), login);
-        }
-    }
-
-
     public void downloadContent(User user, String login, Integer currentFolder, List<File> listCheckedFiles, List<Folder> listCheckedFolder) {
         String filesPath = null;
         Folder curFolder = null;
         if (currentFolder == null || currentFolder == -1) {
-            filesPath = "c:/DevKit/Temp/dzstore/" + login + "/";
+            filesPath = "c:/DevKit/Temp/dzstore/users_storages/" + login + "/";
         } else {
             curFolder = contentService.getFolder(currentFolder);
-            filesPath = "c:/DevKit/Temp/dzstore/" + login + "/" + curFolder + "/";
+            filesPath = "c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + curFolder + "/";
         }
         String filesPathForDownload = null;
         if ((listCheckedFolder.size() != 0) || (listCheckedFiles.size() > 1)) {
@@ -278,62 +279,5 @@ public class FilesController {
             e.printStackTrace();
         }
         downloadFile.delete();
-    }
-
-
-    public void changeStar(int[] checked_files_id, int[] checked_folders_id, boolean stateOfStar) {
-        System.out.println(stateOfStar);
-        contentService.changeStar(checked_files_id, checked_folders_id, stateOfStar);
-    }
-
-
-    public void rename(int[] checked_files_id, int[] checked_folders_id, String newName){
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        contentService.rename(login, checked_files_id, checked_folders_id, newName);
-    }
-
-    public void share(int[] checked_files_id, int[] checked_folders_id, String shareFor){
-        contentService.share(checked_files_id, checked_folders_id, shareFor);
-    }
-
-    public void deleteListOfFiles(List<File> files, String login){
-        if (files.size() != 0) {
-            for (File file : files) {
-                Folder temp = file.getParentFolder();
-                if(temp != null) {
-                    StringBuilder sb = new StringBuilder();
-                    createPathForElement(sb, temp);
-                    new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + "/" + file.getName()).delete();
-                }
-                else {
-                    new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + file.getName()).delete();
-                }
-            }
-        }
-    }
-
-    public void deleteListOfFolders(List<Folder> folders, String login){
-        for(Folder folder : folders) {
-            List<Folder> subfolder = folder.getFolders();
-            List<File> files = folder.getFiles();
-            if(subfolder.size() != 0){
-                deleteListOfFolders(subfolder, login);
-                deleteContentOfFolder(files, login, folder);
-            } else {
-                deleteContentOfFolder(files, login, folder);
-            }
-        }
-    }
-
-    public void deleteContentOfFolder(List<File> files, String login, Folder folder){
-        deleteListOfFiles(files, login);
-        Folder temp = folder.getParentFolder();
-        if (temp != null) {
-            StringBuilder sb = new StringBuilder();
-            createPathForElement(sb, temp);
-            new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + sb.toString() + "/" + folder.getName()).delete();
-        } else {
-            new java.io.File("c:/DevKit/Temp/dzstore/" + login + "/" + folder.getName()).delete();
-        }
     }
 }

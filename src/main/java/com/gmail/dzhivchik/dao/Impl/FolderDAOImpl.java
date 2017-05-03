@@ -30,11 +30,11 @@ public class FolderDAOImpl implements FolderDAO{
         int user_id = user.getId();
         Query query;
         if(parentFolder == null){
-            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user.id = :user_id AND c.parentFolder.id IS NULL", Folder.class);
+            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user.id = :user_id AND c.parentFolder.id IS NULL AND c.inbin <> 1", Folder.class);
             query.setParameter("user_id", user_id);
         }else{
             Integer parent_id = parentFolder.getId();
-            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user.id = :user_id AND c.parentFolder.id = :parent_id", Folder.class);
+            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user.id = :user_id AND c.parentFolder.id = :parent_id AND c.inbin <> 1", Folder.class);
             query.setParameter("user_id", user_id);
             query.setParameter("parent_id", parent_id);
         }
@@ -64,7 +64,7 @@ public class FolderDAOImpl implements FolderDAO{
     }
 
     @Override
-    public List<Folder> getListFolderById(int[] listOfId) {
+    public List<Folder> getListFoldersById(int[] listOfId) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT f FROM Folder f WHERE ");
         for (int i = 0; i < listOfId.length; i++) {
@@ -98,7 +98,7 @@ public class FolderDAOImpl implements FolderDAO{
     @Override
     public List<Folder> getStarredList(User user) {
         int user_id = user.getId();
-        Query query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.user.id = :user_id AND f.starred = 1", Folder.class);
+        Query query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.user.id = :user_id AND f.starred = 1  AND f.inbin <> 1", Folder.class);
         query.setParameter("user_id", user_id);
         return (List<Folder>)query.getResultList();
     }
@@ -106,7 +106,7 @@ public class FolderDAOImpl implements FolderDAO{
     @Override
     public List<Folder> getSearchList(String whatSearch, User user) {
         int user_id = user.getId();
-        Query query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.user.id = :user_id AND UPPER(f.name) LIKE :whatSearch", Folder.class);
+        Query query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.user.id = :user_id AND UPPER(f.name) LIKE :whatSearch  AND f.inbin <> 1", Folder.class);
         query.setParameter("user_id", user_id);
         query.setParameter("whatSearch", "%" + whatSearch.toUpperCase() + "%");
         return (List<Folder>)query.getResultList();
@@ -121,7 +121,7 @@ public class FolderDAOImpl implements FolderDAO{
     }
 
     @Override
-    public void share(List<Folder> targets) {
+    public void changeShare(List<Folder> targets) {
         for (Folder folder : targets) {
             entityManager.merge(folder);
         }
@@ -129,8 +129,32 @@ public class FolderDAOImpl implements FolderDAO{
 
     @Override
     public List<Folder> getSharedList(User user) {
-        Query query = entityManager.createQuery("SELECT f FROM Folder f INNER JOIN f.shareFor user WHERE user = :user", Folder.class);
+        Query query = entityManager.createQuery("SELECT f FROM Folder f INNER JOIN f.shareFor user WHERE user = :user AND f.inbin <> 1", Folder.class);
         query.setParameter("user", user);
         return  (List<Folder>)query.getResultList();
+    }
+
+    @Override
+    public void changeInBin(int[] checked_folders_id, boolean stateOfInBinStatus) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("UPDATE Folder f SET f.inbin = :stateOfInBinStatus WHERE ");
+        for (int i = 0; i < checked_folders_id.length; i++) {
+            if(i == 0) {
+                sb.append("f.id = " + checked_folders_id[0]);
+            }else{
+                sb.append(" OR f.id = " + checked_folders_id[i]);
+            }
+        }
+        Query query = entityManager.createQuery(sb.toString());
+        query.setParameter("stateOfInBinStatus", stateOfInBinStatus);
+        query.executeUpdate();
+    }
+
+    @Override
+    public List<Folder> getBinList(User user) {
+        int user_id = user.getId();
+        Query query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.user.id = :user_id AND f.inbin = 1", Folder.class);
+        query.setParameter("user_id", user_id);
+        return (List<Folder>)query.getResultList();
     }
 }

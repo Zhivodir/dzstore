@@ -9,7 +9,7 @@ import java.util.List;
  */
 
 @Entity
-@Table(name = "file")
+@Table(name = "files")
 public class File {
     @Id
     @GeneratedValue
@@ -18,6 +18,7 @@ public class File {
     private long size;
     private String type;
     private boolean starred;
+    private boolean inbin;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -27,9 +28,6 @@ public class File {
     @JoinColumn(name = "parent_id")
     private Folder parentFolder;
 
-    public File() {
-    }
-
     @ManyToMany
     @JoinTable(
             name="share_file_for_user",
@@ -37,13 +35,18 @@ public class File {
             inverseJoinColumns = {@JoinColumn(name = "id_user", referencedColumnName = "id")})
     private List<User> shareFor = new ArrayList<>();
 
-    public File(String name, long size, String type, User user, Folder parentFolder, boolean starred) {
+    public File() {
+    }
+
+    public File(String name, long size, String type, User user,
+                Folder parentFolder, boolean starred, boolean inbin) {
         this.name = name;
         this.size = size;
         this.type = type;
         this.user = user;
         this.parentFolder = parentFolder;
         this.starred = starred;
+        this.inbin = inbin;
     }
 
     public int getId() {
@@ -90,4 +93,12 @@ public class File {
             }
         }
     }
+    public void removeFromShareFor(List<User> forCancelShare){
+        for(User newUser : forCancelShare){
+            shareFor.remove(newUser);
+        }
+    }
+
+    public boolean isInbin() { return inbin; }
+    public void setInbin(boolean inbin) { this.inbin = inbin; }
 }

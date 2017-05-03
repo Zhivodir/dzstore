@@ -38,23 +38,26 @@
 
 <body>
 
-<c:import url="elements/navbar.jsp" />
-<c:import url="elements/contentMenu.jsp" />
+<c:import url="elements/navbar.jsp"/>
+<c:import url="elements/contentMenu.jsp"/>
 
 <div class="container-fluid">
     <div class="row">
-        <c:import url="elements/leftSideBar.jsp" />
         <c:set var="content" value="${content}" scope="request"/>
         <c:set var="f" value="-1" scope="request"/>
-            <c:import url="elements/contentspace.jsp" />
+        <c:set var="typeOfView" value="index" scope="request"/>
+        <c:import url="elements/leftSideBar.jsp"/>
+        <c:import url="elements/contentspace.jsp"/>
     </div>
 </div>
 
+<img class="img-circle" src="<c:url value="ava/${user.login}.jpeg"/>" alt="photo"/>
+
 <c:set var="f" value="-1" scope="request"/>
-    <c:import url="/WEB-INF/pages/modalForPages/createNewFolder.jsp" />
-    <c:import url="/WEB-INF/pages/modalForPages/fileUpload.jsp"/>
-    <c:import url="/WEB-INF/pages/modalForPages/folderUpload.jsp"/>
-    <c:import url="/WEB-INF/pages/modalForPages/account.jsp"/>
+<c:import url="/WEB-INF/pages/modalForPages/createNewFolder.jsp"/>
+<c:import url="/WEB-INF/pages/modalForPages/fileUpload.jsp"/>
+<c:import url="/WEB-INF/pages/modalForPages/folderUpload.jsp"/>
+<c:import url="/WEB-INF/pages/modalForPages/newImageForProfile.jsp"/>
 
 <!-- Bootstrap core JavaScript
 ================================================== -->
@@ -76,6 +79,10 @@
             }
         });
     });
+</script>
+
+<script type="text/javascript">
+    document.oncontextmenu = function (){return false};
 </script>
 
 </body>

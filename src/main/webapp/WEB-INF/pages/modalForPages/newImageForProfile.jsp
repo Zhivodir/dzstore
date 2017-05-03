@@ -5,26 +5,23 @@
     <div class="row">
         <div class="col-md-12">
             <!-- start of Modal -->
-            <div class="modal fade" id="modalForNewFolder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+            <div class="modal fade" id="modalForImageProfileUpload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                  aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
+                <div class="modal-dialog modal-FileUpload">
+                    <div class="modal-content all-modal-change">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">
                                 <span aria-hidden="true">&times;</span>
                                 <span class="sr-only">Close</span>
                             </button>
-                            <h4 class="modal-title" id="myModalLabel">Create new folder</h4>
+                            <h4 class="modal-title">Upload new image</h4>
                         </div>
                         <div class="modal-body">
-                            <form class="form-inline" action="create_folder" method="post">
-                                <div class="form-group">
-                                    <label class="sr-only" for="newFolder">newFolder</label>
-                                    <input type="hidden" name="currentFolder" value="${f}">
-                                    <input type="text" class="form-control" id="newFolder" name="nameOfFolder"
-                                           placeholder="Enter new folder name">
+                            <form class="form-inline" enctype="multipart/form-data" action="newImageForProfile" method="post">
+                                <div class="form-group" style="float: left">
+                                    <input type="file" name="file" placeholder="Choice file">
                                 </div>
-                                <button type="submit" class="btn btn-primary">Create</button>
+                                <button style="float: left; margin-top: -9px" type="submit"  class="btn btn-primary">Upload</button>
                             </form>
                         </div>
                     </div>
@@ -34,3 +31,4 @@
         </div>
     </div>
 </div>
+

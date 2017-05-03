@@ -18,8 +18,8 @@
                     .show()
                     .css({
                         position: "absolute",
-                        left: getMenuPosition(e.clientX, 'width', 'scrollLeft'),
-                        top: getMenuPosition(e.clientY, 'height', 'scrollTop')
+                        left: getMenuPosition(e.clientX - $("div.sidebar").outerWidth(), 'width', 'scrollLeft'),
+                        top: getMenuPosition(e.clientY - $("div.navbar").outerHeight()*2, 'height', 'scrollTop')
                     })
                     .off('click')
                     .on('click', 'a', function (e) {
@@ -61,6 +61,6 @@ $("#myTable td").contextMenu({
     menuSelected: function (invokedOn, selectedMenu) {
         var msg = "You selected the menu item '" + selectedMenu.text() +
             "' on the value '" + invokedOn.text() + "'";
-        alert(msg);
+        //alert($("div.top-part").outerHeight());
     }
 });

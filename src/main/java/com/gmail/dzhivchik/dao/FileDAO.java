@@ -14,11 +14,14 @@ public interface FileDAO {
     void uploadGroup(File[] files);
     File[] deleteGroup(int[] checked_files_id);
     List<File> getList(User user, Folder parentFolder);
-    List<File> getListById(int[] listOfId);
+    List<File> getListFilesById(int[] listOfId);
+    List<File> getAllList(User user);
     void changeStar(int[] checked_files_id, boolean stateOfStar);
     List<File> getStarredList(User user);
     List<File> getSearchList(String whatSearch, User user);
     void renameFile(int[] checked_files_id, String newName);
-    void share(List<File> targets);
+    void changeShare(List<File> targets);
     List<File> getSharedList(User user);
+    void changeInBin(int[] checked_files_id, boolean stateOfInBinStatus);
+    List<File> getBinList(User user);
 }

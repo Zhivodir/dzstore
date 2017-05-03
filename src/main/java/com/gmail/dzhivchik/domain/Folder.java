@@ -16,6 +16,7 @@ public class Folder {
     private int id;
     private String name;
     private boolean starred;
+    private boolean inbin;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -41,11 +42,12 @@ public class Folder {
     public Folder() {
     }
 
-    public Folder(String name, User user, Folder parentFolder, boolean starred) {
+    public Folder(String name, User user, Folder parentFolder, boolean starred, boolean inbin) {
         this.name = name;
         this.user = user;
         this.parentFolder = parentFolder;
         this.starred = starred;
+        this.inbin = inbin;
     }
 
     public int getId() { return id; }
@@ -78,4 +80,12 @@ public class Folder {
             }
         }
     }
+    public void removeFromShareFor(List<User> forCancelShare){
+        for(User newUser : forCancelShare){
+            shareFor.remove(newUser);
+        }
+    }
+
+    public boolean isInbin() { return inbin; }
+    public void setInbin(boolean inbin) { this.inbin = inbin; }
 }

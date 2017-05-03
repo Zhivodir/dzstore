@@ -1,14 +1,13 @@
 <%--
   Created by IntelliJ IDEA.
   User: User
-  Date: 05.04.2017
-  Time: 22:52
+  Date: 25.04.2017
+  Time: 10:42
   To change this template use File | Settings | File Templates.
 --%>
 
 <ul id="contextMenu" class="dropdown-menu" role="menu" style="display:none" >
-    <!--<li><input type="submit" name="delete" value="Delete"/></li>-->
-    <li><a class="contextHref" href="#" data-toggle="modal" data-target="#modalForDelete">Delete</a></li>
+    <li><a class="contextHref" href="#" data-toggle="modal" data-target="#modalForRemove">Remove</a></li>
     <li class="contextHref"><input type="submit" class="contextInput" name="download" value="Download"/></li>
     <li class="divider"></li>
     <li class="contextHref"><input type="submit" class="contextInput" name="starred" value="Starred"/></li>
@@ -16,4 +15,7 @@
     <li class="divider"></li>
     <li><a class="contextHref"  href="#" data-toggle="modal" data-target="#modalForRename">Rename</a></li>
     <li><a class="contextHref"  href="#" data-toggle="modal" data-target="#modalForShare">Share</a></li>
+    <li class="divider"></li>
+    <li class="contextHref"><input type="submit" class="contextInput" name="addtome" value="Add to my store"/></li>
 </ul>
+

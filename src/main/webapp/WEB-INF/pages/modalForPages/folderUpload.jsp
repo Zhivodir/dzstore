@@ -7,8 +7,8 @@
             <!-- start of Modal -->
             <div class="modal fade" id="modalForFolderUpload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                  aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
+                <div class="modal-dialog modal-DirectoryUpload">
+                    <div class="modal-content all-modal-change">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">
                                 <span aria-hidden="true">&times;</span>
@@ -18,11 +18,12 @@
                         </div>
                         <div class="modal-body">
                             <form class="form-inline" enctype="multipart/form-data" action="upload" method="post">
-                                <input type="hidden" name="currentFolder" value="${f}">
-                                <input type="hidden" name="uploaded" value="1"/>
-                                <label>Выберите директорию:</label>
-                                <input type="file" name="files" webkitdirectory directory multiple mozdirectory/>
-                                <input type="submit" value="Загрузить"/>
+                                <div class="form-group" style="float: left">
+                                    <input type="hidden" name="currentFolder" value="${f}">
+                                    <input type="hidden" name="uploaded" value="1"/>
+                                    <input type="file" name="files" webkitdirectory directory multiple mozdirectory/>
+                                </div>
+                                <input style="float: left; margin-top: -9px" class="btn btn-primary" type="submit" value="Загрузить"/>
                             </form>
                         </div>
                     </div>

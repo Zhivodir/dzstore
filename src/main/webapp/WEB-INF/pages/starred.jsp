@@ -22,7 +22,7 @@
     <title>DZstore</title>
 
     <!-- Bootstrap core CSS -->
-    <link  href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="css/index.css" rel="stylesheet">
@@ -36,23 +36,23 @@
 </head>
 
 <body>
-<c:import url="elements/navbar.jsp" />
-<c:import url="elements/contentMenu.jsp" />
+<c:import url="elements/navbar.jsp"/>
+<c:import url="elements/contentMenu.jsp"/>
 
 <div class="container-fluid">
     <div class="row">
-        <c:import url="elements/leftSideBar.jsp" />
+        <c:set var="typeOfView" value="starred" scope="request"/>
         <c:set var="content" value="${content}" scope="request"/>
-            <c:import url="elements/contentspace.jsp" />
+        <c:import url="elements/leftSideBar.jsp"/>
+        <c:import url="elements/contentspace.jsp"/>
     </div>
 </div>
 
 <c:set var="f" value="${f}" scope="request"/>
-    <c:import url="/WEB-INF/pages/modalForPages/createNewFolder.jsp" />
-    <c:import url="/WEB-INF/pages/modalForPages/fileUpload.jsp"/>
-    <c:import url="/WEB-INF/pages/modalForPages/createNewFolder.jsp" />
-    <c:import url="/WEB-INF/pages/modalForPages/account.jsp"/>
-    <c:import url="/WEB-INF/pages/modalForPages/renameContent.jsp"/>
+<c:import url="/WEB-INF/pages/modalForPages/createNewFolder.jsp"/>
+<c:import url="/WEB-INF/pages/modalForPages/fileUpload.jsp"/>
+<c:import url="/WEB-INF/pages/modalForPages/createNewFolder.jsp"/>
+<c:import url="/WEB-INF/pages/modalForPages/newImageForProfile.jsp"/>
 
 <!-- Bootstrap core JavaScript
 ================================================== -->
@@ -66,8 +66,8 @@
 <script src="js/ie10-viewport-bug-workaround.js"></script>
 <script src="js/contextMenu.js"></script>
 <script>
-    $(document).ready(function() {
-        $('.record_table tr').click(function(event) {
+    $(document).ready(function () {
+        $('.record_table tr').click(function (event) {
             if (event.target.type !== 'checkbox') {
                 $(':checkbox', this).trigger('click');
             }
