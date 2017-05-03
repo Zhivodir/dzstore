@@ -42,6 +42,7 @@
 
 <div class="container-fluid">
     <div class="row">
+
         <c:set var="typeOfView" value="folder" scope="request"/>
         <c:set var="content" value="${content}" scope="request"/>
         <c:set var="f" value="${f}" scope="request"/>

@@ -46,6 +46,7 @@ public class ViewController {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
         Folder currentFolder = contentService.getFolder(f);
+
         List<Folder> forRelativePath = new ArrayList<>();
         getListRelativePath(currentFolder, forRelativePath);
         Collections.reverse(forRelativePath);

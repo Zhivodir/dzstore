@@ -94,6 +94,9 @@ public class FilesController {
                                            @RequestParam String typeOfView,
                                            @RequestParam Integer currentFolder,
                                            final RedirectAttributes redirectAttributes) {
+
+        System.out.println("!!!!!  " + f);
+
         if (checked_files_id != null || checked_folders_id != null) {
             String login = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.getUser(login);
@@ -150,7 +153,7 @@ public class FilesController {
                 contentService.addtome(checked_files_id, checked_folders_id, user);
             }
         }
-        redirectAttributes.addFlashAttribute("f", f);
+        redirectAttributes.addFlashAttribute("f", currentFolder);
         return "redirect:/" + typeOfView;
     }
 

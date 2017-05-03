@@ -37,9 +37,7 @@ public class ContentService {
 
 
     @Transactional
-    public Folder getFolder(Integer id){
-        System.out.println("Eto id current folder: "  +  id);
-        return folderDAO.getFolder(id); }
+    public Folder getFolder(Integer id){ return folderDAO.getFolder(id); }
 
 
     @Transactional
