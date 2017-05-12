@@ -166,4 +166,25 @@ public class FileDAOImpl implements FileDAO {
         query.setParameter("stateOfInBinStatus", stateOfInBinStatus);
         query.executeUpdate();
     }
+
+    @Override
+    public File getFile(User user, String name, Folder parentFolder) {
+        Query query;
+        if(parentFolder == null) {
+            query = entityManager.createQuery("SELECT f FROM File f WHERE f.name = :name " +
+                    "AND f.user = :user " +
+                    "AND f.parentFolder IS NULL", File.class);
+            query.setParameter("name", name);
+            query.setParameter("user", user);
+        } else {
+            query = entityManager.createQuery("SELECT f FROM File f WHERE f.name = :name " +
+                    "AND f.user = :user " +
+                    "AND f.parentFolder = :parentFolder", File.class);
+            query.setParameter("name", name);
+            query.setParameter("user", user);
+            query.setParameter("parentFolder", parentFolder);
+        }
+        List<File> temp = (List<File>)query.getResultList();
+        return temp.get(0);
+    }
 }

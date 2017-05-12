@@ -31,12 +31,12 @@ public class FolderController {
     @RequestMapping(value = "/create_folder", method = RequestMethod.POST)
     public String createNewFolder(Model model,
                                   @RequestParam String nameOfFolder,
-                                  @RequestParam Integer currentFolder){
+                                  @RequestParam Integer currentFolder) {
 
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
         Folder curFolder = null;
-        if(currentFolder != -1) {
+        if (currentFolder != -1) {
             curFolder = contentService.getFolder(currentFolder);
         }
         Folder folder = new Folder(nameOfFolder, user, curFolder, false, false);
@@ -45,9 +45,10 @@ public class FolderController {
         File myPath = new File("c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + sb.toString() + "/" + nameOfFolder);
         contentService.createFolder(folder);
         myPath.mkdirs();
-        if(currentFolder != -1){
+        if (currentFolder != -1) {
             model.addAttribute("f", currentFolder);
-            return "redirect:/folder";}
+            return "redirect:/folder";
+        }
         return "redirect:/index";
     }
 

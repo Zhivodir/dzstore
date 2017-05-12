@@ -321,29 +321,27 @@ public class ContentService {
         }
     }
 
-    public void addSharedFolderToMyStore(StringBuilder sb, List<Folder> listOfAddFolders, User user, Folder curFolder){
+    public void addSharedFolderToMyStore(StringBuilder sb, List<Folder> listOfAddFolders, User user, Folder shareFolder){
         for(Folder folder : listOfAddFolders) {
             sb.append(folder.getName() + "/");
             String newFolder = "c:/DevKit/Temp/dzstore/users_storages/" +
                     user.getLogin() + "/" + sb.toString();
-            Folder folderForDAO = new Folder(folder.getName(), user, curFolder, false, false);
+            Folder folderForDAO = new Folder(folder.getName(), user, shareFolder, false, false);
             folderDAO.createFolder(folderForDAO);
-            Folder tf = null;
-            if(curFolder != null) {
-                tf = folderDAO.getFolder(user, folder.getName(), curFolder);
-            }
+            Folder tf = folderDAO.getFolder(user, folder.getName(), shareFolder);
             java.io.File file = new java.io.File(newFolder);
             file.mkdirs();
 
             if(folder.getFiles().size() != 0) {
                 sb.append("/");
-                addSharedFileToMyStore(sb, folder.getFiles(), user, tf);
+                //folder - родительская(ShareFold)
+                addSharedFileToMyStore(sb, folder.getFiles(), user, folder);
                 sb.delete(sb.toString().length() - 1, sb.length());
             }
 
             if(folder.getFolders().size() != 0) {
                 //Тут нужно создать пустую папку
-                addSharedFolderToMyStore(sb, folder.getFolders(), user, tf);
+                addSharedFolderToMyStore(sb, folder.getFolders(), user, folder);
                 sb.delete(sb.lastIndexOf("/") + 1, sb.length());
             }
         }

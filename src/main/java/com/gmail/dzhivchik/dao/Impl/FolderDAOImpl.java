@@ -27,30 +27,29 @@ public class FolderDAOImpl implements FolderDAO{
 
     @Override
     public List<Folder> getList(User user, Folder parentFolder) {
-        int user_id = user.getId();
-        Query query;
-        if(parentFolder == null){
-            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user.id = :user_id AND c.parentFolder.id IS NULL AND c.inbin <> 1", Folder.class);
-            query.setParameter("user_id", user_id);
-        }else{
-            Integer parent_id = parentFolder.getId();
-            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user.id = :user_id AND c.parentFolder.id = :parent_id AND c.inbin <> 1", Folder.class);
-            query.setParameter("user_id", user_id);
-            query.setParameter("parent_id", parent_id);
-        }
-        return (List<Folder>)query.getResultList();
 //        int user_id = user.getId();
 //        Query query;
 //        if(parentFolder == null){
-//            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder IS NULL AND c.inbin <> 1", Folder.class);
-//            query.setParameter("user", user);
+//            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user.id = :user_id AND c.parentFolder.id IS NULL AND c.inbin <> 1", Folder.class);
+//            query.setParameter("user_id", user_id);
 //        }else{
 //            Integer parent_id = parentFolder.getId();
-//            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder = :parent AND c.inbin <> 1", Folder.class);
-//            query.setParameter("user", user);
-//            query.setParameter("parent", parentFolder);
+//            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user.id = :user_id AND c.parentFolder.id = :parent_id AND c.inbin <> 1", Folder.class);
+//            query.setParameter("user_id", user_id);
+//            query.setParameter("parent_id", parent_id);
 //        }
 //        return (List<Folder>)query.getResultList();
+        int user_id = user.getId();
+        Query query;
+        if(parentFolder == null){
+            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder IS NULL AND c.inbin <> 1", Folder.class);
+            query.setParameter("user", user);
+        }else{
+            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder = :parent AND c.inbin <> 1", Folder.class);
+            query.setParameter("user", user);
+            query.setParameter("parent", parentFolder);
+        }
+        return (List<Folder>)query.getResultList();
     }
 
     @Override
@@ -65,12 +64,20 @@ public class FolderDAOImpl implements FolderDAO{
     @Override
     public Folder getFolder(User user, String name, Folder parentFolder) {
         Query query;
-        query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.name = :name " +
-                "AND f.user = :user " +
-                "AND f.parentFolder = :parentFolder", Folder.class);
-        query.setParameter("name", name);
-        query.setParameter("user", user);
-        query.setParameter("parentFolder", parentFolder);
+        if(parentFolder == null) {
+            query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.name = :name " +
+                    "AND f.user = :user " +
+                    "AND f.parentFolder IS NULL", Folder.class);
+            query.setParameter("name", name);
+            query.setParameter("user", user);
+        } else {
+            query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.name = :name " +
+                    "AND f.user = :user " +
+                    "AND f.parentFolder = :parentFolder", Folder.class);
+            query.setParameter("name", name);
+            query.setParameter("user", user);
+            query.setParameter("parentFolder", parentFolder);
+        }
         List<Folder> temp = (List<Folder>)query.getResultList();
         return temp.get(0);
     }
