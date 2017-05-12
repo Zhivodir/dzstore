@@ -327,20 +327,23 @@ public class ContentService {
             String newFolder = "c:/DevKit/Temp/dzstore/users_storages/" +
                     user.getLogin() + "/" + sb.toString();
             Folder folderForDAO = new Folder(folder.getName(), user, curFolder, false, false);
-
+            folderDAO.createFolder(folderForDAO);
+            Folder tf = null;
+            if(curFolder != null) {
+                tf = folderDAO.getFolder(user, folder.getName(), curFolder);
+            }
             java.io.File file = new java.io.File(newFolder);
             file.mkdirs();
 
             if(folder.getFiles().size() != 0) {
                 sb.append("/");
-                addSharedFileToMyStore(sb, folder.getFiles(), user, folder);
+                addSharedFileToMyStore(sb, folder.getFiles(), user, tf);
                 sb.delete(sb.toString().length() - 1, sb.length());
             }
 
             if(folder.getFolders().size() != 0) {
                 //Тут нужно создать пустую папку
-                folderDAO.createFolder(folderForDAO);
-                addSharedFolderToMyStore(sb, folder.getFolders(), user, folder);
+                addSharedFolderToMyStore(sb, folder.getFolders(), user, tf);
                 sb.delete(sb.lastIndexOf("/") + 1, sb.length());
             }
         }
