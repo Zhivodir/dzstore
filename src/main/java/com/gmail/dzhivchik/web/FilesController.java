@@ -95,8 +95,6 @@ public class FilesController {
                                            @RequestParam Integer currentFolder,
                                            final RedirectAttributes redirectAttributes) {
 
-        System.out.println("!!!!!  " + f);
-
         if (checked_files_id != null || checked_folders_id != null) {
             String login = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.getUser(login);
@@ -142,7 +140,7 @@ public class FilesController {
                 if (checked_folders_id != null) {
                     listCheckedFolder = contentService.getListFolderById(checked_folders_id);
                 }
-                downloadContent(user, login, currentFolder, listCheckedFiles, listCheckedFolder);
+                downloadContent(login, currentFolder, listCheckedFiles, listCheckedFolder);
             }
 
             if (share != null) {
@@ -193,22 +191,24 @@ public class FilesController {
         }
     }
 
+                         /*   DOWNLOAD  */
 
-    public void downloadContent(User user, String login, Integer currentFolder, List<File> listCheckedFiles, List<Folder> listCheckedFolder) {
+    public void downloadContent(String login, Integer currentFolder, List<File> listCheckedFiles, List<Folder> listCheckedFolder) {
         String filesPath = null;
         Folder curFolder = null;
         if (currentFolder == null || currentFolder == -1) {
             filesPath = "c:/DevKit/Temp/dzstore/users_storages/" + login + "/";
         } else {
             curFolder = contentService.getFolder(currentFolder);
-            filesPath = "c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + curFolder + "/";
+            filesPath = "c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + curFolder.getName() + "/";
         }
         String filesPathForDownload = null;
         if ((listCheckedFolder.size() != 0) || (listCheckedFiles.size() > 1)) {
             try {
                 StringBuilder structure = new StringBuilder();
                 ZipOutputStream out = new ZipOutputStream(new FileOutputStream("c:/DevKit/Temp/dzstore/Temp/archive.zip"));
-                prepareToDownload(user, out, listCheckedFiles, listCheckedFolder, filesPath, structure);
+                prepareToDownload(out, listCheckedFiles, listCheckedFolder, filesPath, structure);
+                out.flush();
                 out.close();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -217,34 +217,40 @@ public class FilesController {
             }
             filesPathForDownload = "c:/DevKit/Temp/dzstore/Temp/archive.zip";
         } else if (listCheckedFiles.size() == 1) {
-            filesPathForDownload = listCheckedFiles.get(0).getName();
+            filesPathForDownload = filesPath + listCheckedFiles.get(0).getName();
         }
         downloadFunction(filesPathForDownload);
     }
 
 
-    public void prepareToDownload(User user, ZipOutputStream out, List<File> listCheckedFiles, List<Folder> listCheckedFolder, String filesPath, StringBuilder structure) throws FileNotFoundException, IOException {
+    public void prepareToDownload(ZipOutputStream out, List<File> listCheckedFiles, List<Folder> listCheckedFolder,
+                                  String filesPath, StringBuilder structure) throws FileNotFoundException, IOException {
         int BUFFER_SIZE = 4096;
         if (listCheckedFiles.size() != 0) {
             for (File file : listCheckedFiles) {
-                String fullPath = filesPath + file.getName();
-                out.putNextEntry(new ZipEntry(structure.toString() + file.getName()));
-                FileInputStream fis = new FileInputStream(new java.io.File(fullPath));
-                byte[] buffer = new byte[BUFFER_SIZE];
-                int len;
-                while ((len = fis.read(buffer)) >= 0)
-                    out.write(buffer, 0, len);
-                fis.close();
+                if(!file.isInbin()) {
+                    String fullPath = filesPath + structure.toString() + file.getName();
+                    out.putNextEntry(new ZipEntry(structure.toString() + file.getName()));
+                    FileInputStream fis = new FileInputStream(new java.io.File(fullPath));
+                    byte[] buffer = new byte[BUFFER_SIZE];
+                    int len;
+                    while ((len = fis.read(buffer)) >= 0)
+                        out.write(buffer, 0, len);
+                    fis.close();
+                }
             }
         }
 
         if (listCheckedFolder.size() != 0) {
             for (Folder folder : listCheckedFolder) {
-                if (folder.getFiles().size() == 0 && folder.getFolders().size() == 0) {
+                if(!folder.isInbin()) {
                     structure.append(folder.getName() + "/");
-                    out.putNextEntry(new ZipEntry(structure.toString() + "/"));
+                    if (folder.getFiles().size() == 0 && folder.getFolders().size() == 0) {
+                        out.putNextEntry(new ZipEntry(structure.toString()));
+                    }
+                    prepareToDownload(out, folder.getFiles(), folder.getFolders(), filesPath, structure);
+                    structure.delete(structure.toString().lastIndexOf("/"), structure.length());
                 }
-                prepareToDownload(user, out, folder.getFiles(), folder.getFolders(), filesPath, structure);
             }
         }
     }
@@ -281,6 +287,5 @@ public class FilesController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        downloadFile.delete();
     }
 }

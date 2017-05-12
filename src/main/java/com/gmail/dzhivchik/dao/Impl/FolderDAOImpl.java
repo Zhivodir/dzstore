@@ -51,6 +51,21 @@ public class FolderDAOImpl implements FolderDAO{
     }
 
     @Override
+    public Folder getFolder(User user, String name, Folder parentFolder) {
+        Query query;
+        query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.name = :name " +
+                "AND f.user = :user " +
+                "AND f.parentFolder = :parentFolder", Folder.class);
+        query.setParameter("name", name);
+        query.setParameter("user", user);
+        query.setParameter("parentFolder", parentFolder);
+        List<Folder> temp = (List<Folder>)query.getResultList();
+        System.out.println(temp.size());
+        return temp.get(0);
+    }
+
+
+    @Override
     public Folder[] deleteGroup(int[] checked_folders_id) {
         Folder[] folders = new Folder[checked_folders_id.length];
         int num = 0;
@@ -68,6 +83,7 @@ public class FolderDAOImpl implements FolderDAO{
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT f FROM Folder f WHERE ");
         for (int i = 0; i < listOfId.length; i++) {
+            System.out.println(i);
             if(i == 0) {
                 sb.append("f.id = " + listOfId[0]);
             }else{

@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -211,6 +213,7 @@ public class ContentService {
         }
     }
 
+
     @Transactional
     public List[] getSharedContent(User user){
         List[] content = new List[2];
@@ -221,12 +224,15 @@ public class ContentService {
 
     @Transactional
     public void addtome(int[] checked_files_id, int[] checked_folders_id, User user){
+        StringBuilder sb = new StringBuilder();
         if(checked_files_id != null) {
-
+            List<File> listOfAddFiles = getListFilesById(checked_files_id);
+            addSharedFileToMyStore(sb, listOfAddFiles, user, null);
         }
 
         if(checked_folders_id != null) {
-
+            List<Folder> ListOfAddFolders = getListFolderById(checked_folders_id);
+            addSharedFolderToMyStore(sb, ListOfAddFolders, user, null);
         }
     }
 
@@ -286,5 +292,61 @@ public class ContentService {
             sb.append(curFolder.getName());
             sb.append("/");
         }
+    }
+
+
+    public void addSharedFileToMyStore(StringBuilder sb, List<File> listOfAddFiles, User user, Folder curFolder) {
+        long all = (long)10*1024*1024*1024;
+        String login = user.getLogin();
+        for(File file : listOfAddFiles){
+            String fileName = file.getName();
+            String oldOwner = file.getUser().getLogin();
+            StringBuilder relativePath = new StringBuilder();
+            createPathForElement(relativePath, curFolder);
+            String pathForSource = "c:/DevKit/Temp/dzstore/users_storages/" + oldOwner + "/" + relativePath.toString() + "/" + fileName;
+            String pathForDest = "c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + sb.toString() + fileName;
+            long size = file.getSize();
+            if(size <= all - getSizeBusyMemory(user)){
+                String type = "test";
+                File fileForDAO = new File(fileName, size, type, user, curFolder, false, false);
+                java.io.File source = new java.io.File(pathForSource);
+                java.io.File dest = new java.io.File(pathForDest);
+                try {
+                    fileDAO.upload(fileForDAO);
+                    copy(source, dest);
+                }catch (IOException e){e.printStackTrace();}
+            }else{
+                System.out.println("Havn't nedd memory");
+            }
+        }
+    }
+
+    public void addSharedFolderToMyStore(StringBuilder sb, List<Folder> listOfAddFolders, User user, Folder curFolder){
+        for(Folder folder : listOfAddFolders) {
+            sb.append(folder.getName() + "/");
+            String newFolder = "c:/DevKit/Temp/dzstore/users_storages/" +
+                    user.getLogin() + "/" + sb.toString();
+            Folder folderForDAO = new Folder(folder.getName(), user, curFolder, false, false);
+
+            java.io.File file = new java.io.File(newFolder);
+            file.mkdirs();
+
+            if(folder.getFiles().size() != 0) {
+                sb.append("/");
+                addSharedFileToMyStore(sb, folder.getFiles(), user, folder);
+                sb.delete(sb.toString().length() - 1, sb.length());
+            }
+
+            if(folder.getFolders().size() != 0) {
+                //Тут нужно создать пустую папку
+                folderDAO.createFolder(folderForDAO);
+                addSharedFolderToMyStore(sb, folder.getFolders(), user, folder);
+                sb.delete(sb.lastIndexOf("/") + 1, sb.length());
+            }
+        }
+    }
+
+    public static void copy(java.io.File source, java.io.File dest) throws IOException {
+        Files.copy(source.toPath(), dest.toPath());
     }
 }

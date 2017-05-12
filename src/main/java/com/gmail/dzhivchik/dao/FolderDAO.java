@@ -13,6 +13,7 @@ public interface FolderDAO {
 
     Folder[] deleteGroup(int[] checked_folders_id);
     Folder getFolder(int id);
+    Folder getFolder(User user, String name, Folder parentFolder);
     List<Folder> getList(User user, Folder parentFolder);
     List<Folder> getListFoldersById(int[] listOfId);
     void changeStar(int[] checked_folders_id, boolean stateOfStar);
