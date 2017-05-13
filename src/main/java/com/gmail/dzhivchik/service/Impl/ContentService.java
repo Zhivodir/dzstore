@@ -227,12 +227,12 @@ public class ContentService {
         StringBuilder sb = new StringBuilder();
         if(checked_files_id != null) {
             List<File> listOfAddFiles = getListFilesById(checked_files_id);
-            addSharedFileToMyStore(sb, listOfAddFiles, user, null);
+            addSharedFileToMyStore(sb, listOfAddFiles, user, null, null);
         }
 
         if(checked_folders_id != null) {
             List<Folder> ListOfAddFolders = getListFolderById(checked_folders_id);
-            addSharedFolderToMyStore(sb, ListOfAddFolders, user, null);
+            addSharedFolderToMyStore(sb, ListOfAddFolders, user, null, null);
         }
     }
 
@@ -295,7 +295,7 @@ public class ContentService {
     }
 
 
-    public void addSharedFileToMyStore(StringBuilder sb, List<File> listOfAddFiles, User user, Folder curFolder) {
+    public void addSharedFileToMyStore(StringBuilder sb, List<File> listOfAddFiles, User user, Folder curFolder, Folder addFolder) {
         long all = (long)10*1024*1024*1024;
         String login = user.getLogin();
         for(File file : listOfAddFiles){
@@ -308,7 +308,7 @@ public class ContentService {
             long size = file.getSize();
             if(size <= all - getSizeBusyMemory(user)){
                 String type = "test";
-                File fileForDAO = new File(fileName, size, type, user, curFolder, false, false);
+                File fileForDAO = new File(fileName, size, type, user, addFolder, false, false);
                 java.io.File source = new java.io.File(pathForSource);
                 java.io.File dest = new java.io.File(pathForDest);
                 try {
@@ -321,27 +321,27 @@ public class ContentService {
         }
     }
 
-    public void addSharedFolderToMyStore(StringBuilder sb, List<Folder> listOfAddFolders, User user, Folder shareFolder){
+    public void addSharedFolderToMyStore(StringBuilder sb, List<Folder> listOfAddFolders, User user, Folder shareFolder, Folder addFolder){
         for(Folder folder : listOfAddFolders) {
             sb.append(folder.getName() + "/");
             String newFolder = "c:/DevKit/Temp/dzstore/users_storages/" +
                     user.getLogin() + "/" + sb.toString();
-            Folder folderForDAO = new Folder(folder.getName(), user, shareFolder, false, false);
+            Folder folderForDAO = new Folder(folder.getName(), user, addFolder, false, false);
             folderDAO.createFolder(folderForDAO);
-            Folder tf = folderDAO.getFolder(user, folder.getName(), shareFolder);
+            Folder tf = folderDAO.getFolder(user, folder.getName(), addFolder);
             java.io.File file = new java.io.File(newFolder);
             file.mkdirs();
 
             if(folder.getFiles().size() != 0) {
                 sb.append("/");
                 //folder - родительская(ShareFold)
-                addSharedFileToMyStore(sb, folder.getFiles(), user, folder);
+                addSharedFileToMyStore(sb, folder.getFiles(), user, folder,tf);
                 sb.delete(sb.toString().length() - 1, sb.length());
             }
 
             if(folder.getFolders().size() != 0) {
                 //Тут нужно создать пустую папку
-                addSharedFolderToMyStore(sb, folder.getFolders(), user, folder);
+                addSharedFolderToMyStore(sb, folder.getFolders(), user, folder, tf);
                 sb.delete(sb.lastIndexOf("/") + 1, sb.length());
             }
         }
