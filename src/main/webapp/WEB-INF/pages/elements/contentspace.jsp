@@ -84,6 +84,7 @@
                     <c:import url="/WEB-INF/pages/modalForPages/remove.jsp"/>
                     <c:import url="/WEB-INF/pages/modalForPages/share.jsp"/>
                     <c:import url="/WEB-INF/pages/modalForPages/rename.jsp"/>
+                    <c:import url="/WEB-INF/pages/modalForPages/replace.jsp"/>
                 </c:otherwise>
             </c:choose>
         </form>

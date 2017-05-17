@@ -334,13 +334,11 @@ public class ContentService {
 
             if(folder.getFiles().size() != 0) {
                 sb.append("/");
-                //folder - родительская(ShareFold)
                 addSharedFileToMyStore(sb, folder.getFiles(), user, folder,tf);
                 sb.delete(sb.toString().length() - 1, sb.length());
             }
 
             if(folder.getFolders().size() != 0) {
-                //Тут нужно создать пустую папку
                 addSharedFolderToMyStore(sb, folder.getFolders(), user, folder, tf);
                 sb.delete(sb.lastIndexOf("/") + 1, sb.length());
             }

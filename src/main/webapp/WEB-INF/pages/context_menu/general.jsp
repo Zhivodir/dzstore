@@ -17,5 +17,6 @@
     <li><a class="contextHref"  href="#" data-toggle="modal" data-target="#modalForShare">Share</a></li>
     <li class="divider"></li>
     <li class="contextHref"><input type="submit" class="contextInput" name="addtome" value="Add to my store"/></li>
+    <li><a class="contextHref"  href="#" data-toggle="modal" data-target="#modalForReplace">Replace</a></li>
 </ul>
 
