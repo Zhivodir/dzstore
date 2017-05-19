@@ -18,29 +18,11 @@
                         </div>
                         <div class="modal-body">
                             <ul class="Container" id="tree">
+                                <input class="radio_move_to" type="radio" name="move_to" value="tree"/>
                                 <li class="Node IsRoot IsLast ExpandClosed">
                                     <div class="Expand"></div>
                                     <div class="Content">Каталог</div>
-                                    <ul class="Container">
-                                        <li id="1" class="Node ExpandClosed">
-                                            <div class="Expand"></div>
-                                            <div class="Content">1</div>
-                                            <ul class="Container">
-                                                <li id="2" class="Node ExpandClosed">
-                                                    <div class="Expand"></div>
-                                                    <div class="Content">1</div>
-                                                    <ul class="Container">
-                                                    </ul>
-                                                </li>
-                                                <li id="3" class="Node ExpandClosed">
-                                                    <div class="Expand"></div>
-                                                    <div class="Content">1</div>
-                                                    <ul class="Container">
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
+                                    <ul class="Container"></ul>
                                 </li>
                             </ul>
                             <input type="submit" name="replace" value="replace"/>

@@ -10,7 +10,6 @@ import java.util.List;
  */
 public interface FolderDAO {
     void createFolder(Folder folder);
-
     Folder[] deleteGroup(int[] checked_folders_id);
     Folder getFolder(int id);
     Folder getFolder(User user, String name, Folder parentFolder);
@@ -24,4 +23,5 @@ public interface FolderDAO {
     List<Folder> getSharedList(User user);
     void changeInBin(int[] checked_folders_id, boolean stateOfInBinStatus);
     List<Folder> getBinList(User user);
+    void move_to(int[] checked_folders_id, Folder target);
 }

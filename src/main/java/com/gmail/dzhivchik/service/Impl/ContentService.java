@@ -222,6 +222,7 @@ public class ContentService {
         return content;
     }
 
+
     @Transactional
     public void addtome(int[] checked_files_id, int[] checked_folders_id, User user){
         StringBuilder sb = new StringBuilder();
@@ -235,6 +236,19 @@ public class ContentService {
             addSharedFolderToMyStore(sb, ListOfAddFolders, user, null, null);
         }
     }
+
+
+    @Transactional
+    public void move_to(int[] checked_files_id, int[] checked_folders_id, User user, Folder move_to){
+        if(checked_folders_id != null) {
+            folderDAO.move_to(checked_folders_id, move_to);
+        }
+        if(checked_files_id != null) {
+            fileDAO.move_to(checked_files_id, move_to);
+        }
+    }
+
+
 
     public long getSizeBusyMemory(User user){
         List<File> content = fileDAO.getAllList(user);

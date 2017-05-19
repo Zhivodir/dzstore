@@ -187,4 +187,20 @@ public class FileDAOImpl implements FileDAO {
         List<File> temp = (List<File>)query.getResultList();
         return temp.get(0);
     }
+
+    @Override
+    public void move_to(int[] checked_files_id, Folder target) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("UPDATE File f SET f.parentFolder = :target WHERE ");
+        for (int i = 0; i < checked_files_id.length; i++) {
+            if(i == 0) {
+                sb.append("f.id = " + checked_files_id[0]);
+            }else{
+                sb.append(" OR f.id = " + checked_files_id[i]);
+            }
+        }
+        Query query = entityManager.createQuery(sb.toString());
+        query.setParameter("target", target);
+        query.executeUpdate();
+    }
 }

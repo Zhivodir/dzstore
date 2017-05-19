@@ -1,5 +1,9 @@
 package com.gmail.dzhivchik.domain;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,30 +12,39 @@ import java.util.List;
  * Created by User on 27.02.2017.
  */
 
+@JsonAutoDetect
 @Entity
 @Table(name = "folders")
 public class Folder {
     @Id
     @GeneratedValue
     private int id;
+    @JsonProperty("title")
     private String name;
+    @JsonIgnore
     private boolean starred;
+    @JsonIgnore
     private boolean inbin;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private Folder parentFolder;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "parentFolder", cascade = CascadeType.ALL)
     private List<File> files;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "parentFolder", cascade = CascadeType.ALL)
     private List<Folder> folders;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name="share_folder_for_user",

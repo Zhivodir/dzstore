@@ -179,4 +179,20 @@ public class FolderDAOImpl implements FolderDAO{
         query.setParameter("user_id", user_id);
         return (List<Folder>)query.getResultList();
     }
+
+    @Override
+    public void move_to(int[] checked_folders_id, Folder target) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("UPDATE Folder f SET f.parentFolder = :target WHERE ");
+        for (int i = 0; i < checked_folders_id.length; i++) {
+            if(i == 0) {
+                sb.append("f.id = " + checked_folders_id[0]);
+            }else{
+                sb.append(" OR f.id = " + checked_folders_id[i]);
+            }
+        }
+        Query query = entityManager.createQuery(sb.toString());
+        query.setParameter("target", target);
+        query.executeUpdate();
+    }
 }

@@ -79,6 +79,8 @@ public class FilesController {
     public String actionsAboveCheckedFiles(Model model,
                                            @RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
                                            @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id,
+                                           @RequestParam(value = "move_to", required = false) String move_to,
+                                           @RequestParam(value = "replace", required = false) String replace,
                                            @RequestParam(value = "download", required = false) String download,
                                            @RequestParam(value = "remove", required = false) String remove,
                                            @RequestParam(value = "delete", required = false) String delete,
@@ -149,6 +151,15 @@ public class FilesController {
 
             if(addtome != null) {
                 contentService.addtome(checked_files_id, checked_folders_id, user);
+            }
+
+            if(replace != null) {
+                if(move_to.equals("tree")){
+                    contentService.move_to(checked_files_id, checked_folders_id, user, null);
+                }else {
+                    Folder target = contentService.getFolder(Integer.valueOf(move_to));
+                    contentService.move_to(checked_files_id, checked_folders_id, user, target);
+                }
             }
         }
         redirectAttributes.addFlashAttribute("f", currentFolder);

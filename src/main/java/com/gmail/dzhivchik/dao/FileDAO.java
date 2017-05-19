@@ -25,4 +25,5 @@ public interface FileDAO {
     List<File> getSharedList(User user);
     void changeInBin(int[] checked_files_id, boolean stateOfInBinStatus);
     List<File> getBinList(User user);
+    void move_to(int[] checked_files_id, Folder target);
 }

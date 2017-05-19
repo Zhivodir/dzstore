@@ -372,7 +372,6 @@ body {
     float: left;
 }
 
-
 .ExpandOpen .Container {
     display: block;
 }
@@ -384,6 +383,11 @@ body {
 .ExpandOpen .Expand, .ExpandClosed .Expand {
     cursor: pointer;
 }
+
 .ExpandLeaf .Expand {
     cursor: auto;
+}
+
+.radio_move_to {
+    float:left;
 }
