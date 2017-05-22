@@ -241,15 +241,15 @@ public class ContentService {
     @Transactional
     public void move_to(int[] checked_files_id, int[] checked_folders_id, User user, Folder move_to){
         StringBuilder sb = new StringBuilder();
-        if(checked_folders_id != null) {
-            List<Folder> listOfAddFolders = getListFolderById(checked_folders_id);
-            moveFolder(sb, listOfAddFolders, move_to, user);
-            folderDAO.move_to(checked_folders_id, move_to);
-        }
         if(checked_files_id != null) {
             List<File> listOfAddFiles = getListFilesById(checked_files_id);
             moveFile(sb, listOfAddFiles, move_to, user);
             fileDAO.move_to(checked_files_id, move_to);
+        }
+        if(checked_folders_id != null) {
+            List<Folder> listOfAddFolders = getListFolderById(checked_folders_id);
+            moveFolder(sb, listOfAddFolders, move_to, user);
+            folderDAO.move_to(checked_folders_id, move_to);
         }
     }
 
@@ -324,9 +324,9 @@ public class ContentService {
             StringBuilder relativePathForDest = new StringBuilder();
             createPathForElement(relativePathForDest, moveToFolder);
             String pathForSource = pathToRoot + relativePathForSource.toString() + fileName;
-            String pathForDest = pathToRoot + relativePathForDest.toString() + fileName;
-//            System.out.println("pathForSource: " + pathForSource);
-//            System.out.println("pathForDest: " + pathForDest);
+            String pathForDest = pathToRoot + relativePathForDest.toString() + sb.toString() + fileName;
+            System.out.println("pathForSource: " + pathForSource);
+            System.out.println("pathForDest: " + pathForDest);
             String type = "test";
             java.io.File source = new java.io.File(pathForSource);
             java.io.File dest = new java.io.File(pathForDest);
@@ -349,7 +349,6 @@ public class ContentService {
             createPathForElement(relativePathForTarget, moveToFolder);
             String oldFolder = pathToRoot + relativePathForSource.toString();
             String newFolder = pathToRoot + relativePathForTarget.toString() + sb.toString();
-            System.out.println(newFolder);
             (new java.io.File(newFolder)).mkdirs();
 
             if(folder.getFiles().size() != 0) {
