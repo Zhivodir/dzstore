@@ -42,6 +42,7 @@
 <div class="container-fluid">
     <div class="row">
         <c:set var="content" value="${content}" scope="request"/>
+        <c:set var="f" value="-1" scope="request"/>
         <c:set var="typeOfView" value="bin" scope="request"/>
         <c:import url="elements/leftSideBar.jsp"/>
         <c:import url="elements/contentspace.jsp"/>

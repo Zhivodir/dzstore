@@ -226,14 +226,15 @@ public class ContentService {
     @Transactional
     public void addtome(int[] checked_files_id, int[] checked_folders_id, User user){
         StringBuilder sb = new StringBuilder();
+        String login = user.getLogin();
         if(checked_files_id != null) {
             List<File> listOfAddFiles = getListFilesById(checked_files_id);
-            addSharedFileToMyStore(sb, listOfAddFiles, user, null, null);
+            addSharedFileToMyStore(sb, listOfAddFiles, user, null, null, login);
         }
 
         if(checked_folders_id != null) {
             List<Folder> ListOfAddFolders = getListFolderById(checked_folders_id);
-            addSharedFolderToMyStore(sb, ListOfAddFolders, user, null, null);
+            addSharedFolderToMyStore(sb, ListOfAddFolders, user, null, null, login);
         }
     }
 
@@ -241,14 +242,17 @@ public class ContentService {
     @Transactional
     public void move_to(int[] checked_files_id, int[] checked_folders_id, User user, Folder move_to){
         StringBuilder sb = new StringBuilder();
+        String pathToRoot = "c:/DevKit/Temp/dzstore/users_storages/" + user.getLogin() + "/";
+        StringBuilder relativePathForTarget = new StringBuilder();
+        createPathForElement(relativePathForTarget, move_to);
         if(checked_files_id != null) {
             List<File> listOfAddFiles = getListFilesById(checked_files_id);
-            moveFile(sb, listOfAddFiles, move_to, user);
+            moveFile(pathToRoot, relativePathForTarget.toString(), sb, listOfAddFiles, move_to);
             fileDAO.move_to(checked_files_id, move_to);
         }
         if(checked_folders_id != null) {
             List<Folder> listOfAddFolders = getListFolderById(checked_folders_id);
-            moveFolder(sb, listOfAddFolders, move_to, user);
+            moveFolder(pathToRoot, relativePathForTarget.toString(), sb, listOfAddFolders, move_to);
             folderDAO.move_to(checked_folders_id, move_to);
         }
     }
@@ -313,23 +317,15 @@ public class ContentService {
         }
     }
 
-    public void moveFile(StringBuilder sb, List<File> listOfAddFiles, Folder moveToFolder, User user){
-        String login = user.getLogin();
-        String pathToRoot = "c:/DevKit/Temp/dzstore/users_storages/" + login + "/";
+    public void moveFile(String pathToRoot, String relativePathForTarget, StringBuilder sb, List<File> listOfAddFiles, Folder moveToFolder){
         Folder curFolder = listOfAddFiles.get(0).getParentFolder();
         for(File file : listOfAddFiles){
             String fileName = file.getName();
             StringBuilder relativePathForSource = new StringBuilder();
             createPathForElement(relativePathForSource, curFolder);
-            StringBuilder relativePathForDest = new StringBuilder();
-            createPathForElement(relativePathForDest, moveToFolder);
-            String pathForSource = pathToRoot + relativePathForSource.toString() + fileName;
-            String pathForDest = pathToRoot + relativePathForDest.toString() + sb.toString() + fileName;
-            System.out.println("pathForSource: " + pathForSource);
-            System.out.println("pathForDest: " + pathForDest);
             String type = "test";
-            java.io.File source = new java.io.File(pathForSource);
-            java.io.File dest = new java.io.File(pathForDest);
+            java.io.File source = new java.io.File(pathToRoot + relativePathForSource.toString() + fileName);
+            java.io.File dest = new java.io.File(pathToRoot + relativePathForTarget + sb.toString() + fileName);
             try {
                 copy(source, dest);
                 source.delete();
@@ -337,28 +333,23 @@ public class ContentService {
         }
     }
 
-    public void moveFolder(StringBuilder sb, List<Folder> listOfAddFolders, Folder moveToFolder, User user){
-        String login = user.getLogin();
-        String pathToRoot = "c:/DevKit/Temp/dzstore/users_storages/" + login + "/";
-
+    public void moveFolder(String pathToRoot, String relativePathForTarget, StringBuilder sb, List<Folder> listOfAddFolders, Folder moveToFolder){
         for(Folder folder : listOfAddFolders) {
             sb.append(folder.getName() + "/");
             StringBuilder relativePathForSource = new StringBuilder();
             createPathForElement(relativePathForSource, folder);
-            StringBuilder relativePathForTarget = new StringBuilder();
-            createPathForElement(relativePathForTarget, moveToFolder);
             String oldFolder = pathToRoot + relativePathForSource.toString();
             String newFolder = pathToRoot + relativePathForTarget.toString() + sb.toString();
             (new java.io.File(newFolder)).mkdirs();
 
             if(folder.getFiles().size() != 0) {
                 sb.append("/");
-                moveFile(sb, folder.getFiles(), moveToFolder, user);
+                moveFile(pathToRoot, relativePathForTarget, sb, folder.getFiles(), moveToFolder);
                 sb.delete(sb.toString().length() - 1, sb.length());
             }
 
             if(folder.getFolders().size() != 0) {
-                moveFolder(sb, folder.getFolders(), moveToFolder, user);
+                moveFolder(pathToRoot, relativePathForTarget, sb, folder.getFolders(), moveToFolder);
                 sb.delete(sb.lastIndexOf("/") + 1, sb.length());
             }
             sb.delete(sb.toString().length() - 1, sb.length());
@@ -367,24 +358,20 @@ public class ContentService {
         }
     }
 
-    public void addSharedFileToMyStore(StringBuilder sb, List<File> listOfAddFiles, User user, Folder curFolder, Folder addFolder) {
+    public void addSharedFileToMyStore(StringBuilder sb, List<File> listOfAddFiles, User user, Folder curFolder, Folder addFolder, String login) {
         long all = (long)10*1024*1024*1024;
-        String login = user.getLogin();
         for(File file : listOfAddFiles){
             String fileName = file.getName();
             String oldOwner = file.getUser().getLogin();
             StringBuilder relativePath = new StringBuilder();
             createPathForElement(relativePath, curFolder);
-            String pathForSource = "c:/DevKit/Temp/dzstore/users_storages/" + oldOwner + "/" + relativePath.toString() + "/" + fileName;
-            String pathForDest = "c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + sb.toString() + fileName;
             long size = file.getSize();
             if(size <= all - getSizeBusyMemory(user)){
                 String type = "test";
-                File fileForDAO = new File(fileName, size, type, user, addFolder, false, false);
-                java.io.File source = new java.io.File(pathForSource);
-                java.io.File dest = new java.io.File(pathForDest);
+                java.io.File source = new java.io.File("c:/DevKit/Temp/dzstore/users_storages/" + oldOwner + "/" + relativePath.toString() + "/" + fileName);
+                java.io.File dest = new java.io.File("c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + sb.toString() + fileName);
                 try {
-                    fileDAO.upload(fileForDAO);
+                    fileDAO.upload(new File(fileName, size, type, user, addFolder, false, false));
                     copy(source, dest);
                 }catch (IOException e){e.printStackTrace();}
             }else{
@@ -393,25 +380,22 @@ public class ContentService {
         }
     }
 
-    public void addSharedFolderToMyStore(StringBuilder sb, List<Folder> listOfAddFolders, User user, Folder shareFolder, Folder addFolder){
+    public void addSharedFolderToMyStore(StringBuilder sb, List<Folder> listOfAddFolders, User user, Folder shareFolder, Folder addFolder, String login){
         for(Folder folder : listOfAddFolders) {
             sb.append(folder.getName() + "/");
-            String newFolder = "c:/DevKit/Temp/dzstore/users_storages/" +
-                    user.getLogin() + "/" + sb.toString();
-            Folder folderForDAO = new Folder(folder.getName(), user, addFolder, false, false);
-            folderDAO.createFolder(folderForDAO);
+            folderDAO.createFolder(new Folder(folder.getName(), user, addFolder, false, false));
             Folder tf = folderDAO.getFolder(user, folder.getName(), addFolder);
-            java.io.File file = new java.io.File(newFolder);
+            java.io.File file = new java.io.File("c:/DevKit/Temp/dzstore/users_storages/" + user.getLogin() + "/" + sb.toString());
             file.mkdirs();
 
             if(folder.getFiles().size() != 0) {
                 sb.append("/");
-                addSharedFileToMyStore(sb, folder.getFiles(), user, folder,tf);
+                addSharedFileToMyStore(sb, folder.getFiles(), user, folder, tf, login);
                 sb.delete(sb.toString().length() - 1, sb.length());
             }
 
             if(folder.getFolders().size() != 0) {
-                addSharedFolderToMyStore(sb, folder.getFolders(), user, folder, tf);
+                addSharedFolderToMyStore(sb, folder.getFolders(), user, folder, tf, login);
                 sb.delete(sb.lastIndexOf("/") + 1, sb.length());
             }
         }

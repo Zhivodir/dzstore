@@ -21,6 +21,7 @@
                                 <div class="form-group">
                                     <label class="sr-only" for="newFolder">newFolder</label>
                                     <input type="hidden" name="currentFolder" value="${f}">
+                                    <input type="hidden" name="typeOfView" value="${typeOfView}">
                                     <input type="text" class="form-control" id="newFolder" name="nameOfFolder"
                                            placeholder="Enter new folder name">
                                 </div>
