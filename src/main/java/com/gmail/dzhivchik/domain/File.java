@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
 @JsonAutoDetect
 @Entity
 @Table(name = "files")
-public class File {
+public class File implements Serializable {
     @Id
     @GeneratedValue
     private int id;
@@ -113,4 +114,5 @@ public class File {
 
     public boolean isInbin() { return inbin; }
     public void setInbin(boolean inbin) { this.inbin = inbin; }
+
 }

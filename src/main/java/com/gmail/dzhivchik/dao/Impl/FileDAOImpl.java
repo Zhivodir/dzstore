@@ -4,8 +4,6 @@ import com.gmail.dzhivchik.dao.FileDAO;
 import com.gmail.dzhivchik.domain.File;
 import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -23,9 +21,21 @@ public class FileDAOImpl implements FileDAO {
     @PersistenceContext
     private EntityManager entityManager;
 
+
     @Override
     public void upload(File file) {
-        entityManager.persist(file);
+        File searchFile = isFile(file.getName(), file.isInbin(), file.getUser(), file.getParentFolder());
+        if(searchFile != null){
+            Query query = entityManager.createQuery("UPDATE File f SET f.size = :size, f.starred = :starred, f.inbin = :inbin " +
+                    "WHERE f.id = :id");
+            query.setParameter("size", file.getSize());
+            query.setParameter("starred", false);
+            query.setParameter("inbin", false);
+            query.setParameter("id", searchFile.getId());
+            query.executeUpdate();
+        } else {
+            entityManager.persist(file);
+        }
     }
 
     @Override
@@ -33,6 +43,29 @@ public class FileDAOImpl implements FileDAO {
         for (File file : files) {
             entityManager.merge(file);
         }
+    }
+
+    public File isFile(String name, boolean inbin, User user, Folder parentFolder) {
+        Query query;
+        if(parentFolder == null){
+            query = entityManager.createQuery("SELECT f FROM File f WHERE f.name = :name " +
+                    "AND f.inbin = :inbin AND f.user = :user AND f.parentFolder IS NULL", File.class);
+            query.setParameter("name", name);
+            query.setParameter("inbin", inbin);
+            query.setParameter("user", user);
+        }else{
+            query = entityManager.createQuery("SELECT f FROM File f WHERE f.name = :name " +
+                    "AND f.inbin = :inbin AND f.user = :user AND f.parentFolder = :parentFolder", File.class);
+            query.setParameter("name", name);
+            query.setParameter("inbin", inbin);
+            query.setParameter("user", user);
+            query.setParameter("parentFolder", parentFolder);
+        }
+        List<File> resultList = ((List<File>)query.getResultList());
+        if (resultList.size() != 0){
+            return resultList.get(0);
+        }
+        return null;
     }
 
     //PROBLEM : Many query to DB
