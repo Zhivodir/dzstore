@@ -22,7 +22,40 @@ public class FolderDAOImpl implements FolderDAO{
 
     @Override
     public void createFolder(Folder folder) {
-        entityManager.persist(folder);
+        Folder searchFolder = isFolder(folder.getName(), folder.isInbin(), folder.getUser(), folder.getParentFolder());
+        if(searchFolder != null){
+            Query query = entityManager.createQuery("UPDATE Folder f SET f.inbin = :inbin WHERE f.id = :id");
+            query.setParameter("inbin", false);
+            query.setParameter("id", searchFolder.getId());
+            query.executeUpdate();
+        } else {
+            entityManager.persist(folder);
+        }
+    }
+
+
+    @Override
+    public Folder isFolder(String name, boolean inbin, User user, Folder parentFolder) {
+        Query query;
+        if(parentFolder == null){
+            query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.name = :name " +
+                    "AND f.inbin = :inbin AND f.user = :user AND f.parentFolder IS NULL", Folder.class);
+            query.setParameter("name", name);
+            query.setParameter("inbin", inbin);
+            query.setParameter("user", user);
+        }else{
+            query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.name = :name " +
+                    "AND f.inbin = :inbin AND f.user = :user AND f.parentFolder = :parentFolder", Folder.class);
+            query.setParameter("name", name);
+            query.setParameter("inbin", inbin);
+            query.setParameter("user", user);
+            query.setParameter("parentFolder", parentFolder);
+        }
+        List<Folder> resultList = ((List<Folder>)query.getResultList());
+        if (resultList.size() != 0){
+            return resultList.get(0);
+        }
+        return null;
     }
 
     @Override

@@ -26,10 +26,8 @@ public class FileDAOImpl implements FileDAO {
     public void upload(File file) {
         File searchFile = isFile(file.getName(), file.isInbin(), file.getUser(), file.getParentFolder());
         if(searchFile != null){
-            Query query = entityManager.createQuery("UPDATE File f SET f.size = :size, f.starred = :starred, f.inbin = :inbin " +
-                    "WHERE f.id = :id");
+            Query query = entityManager.createQuery("UPDATE File f SET f.size = :size, f.inbin = :inbin WHERE f.id = :id");
             query.setParameter("size", file.getSize());
-            query.setParameter("starred", false);
             query.setParameter("inbin", false);
             query.setParameter("id", searchFile.getId());
             query.executeUpdate();
