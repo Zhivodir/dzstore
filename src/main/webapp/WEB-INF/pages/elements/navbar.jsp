@@ -19,8 +19,12 @@
                         <div class="col-md-3 account-left-part">
                             <a href="#" data-toggle="modal" data-target="#modalForImageProfileUpload" role="button">
                                 <div class="profile-header-img">
-                                    <%--<img class="img-circle" src="img/default.jpg" alt="photo"/>--%>
-                                    <img class="img-circle" src="<c:url value="ava/${user.login}.jpg"/>" alt="photo"/>
+                                    <c:if test="${user.avatar eq false}">
+                                        <img class="img-circle" src="img/default.jpg" alt="photo"/>
+                                    </c:if>
+                                    <c:if test="${user.avatar eq true}">
+                                        <img class="img-circle" src="<c:url value="ava/${user.login}.jpg"/>" alt="photo"/>
+                                    </c:if>
                                 </div>
                             </a>
                         </div>

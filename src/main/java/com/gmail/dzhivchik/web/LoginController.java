@@ -40,7 +40,7 @@ public class LoginController {
     public String cresteNewUser(@RequestParam("login") String login,
                                 @RequestParam("password") String password,
                                 @RequestParam("email") String email){
-        User user = new User(login, password, email, UserRoleEnum.USER);
+        User user = new User(login, password, email, UserRoleEnum.USER, false);
         userService.addUser(user);
         new java.io.File("c:/DevKit/Temp/dzstore/users_storages/" + user.getLogin()).mkdir();
         return "redirect:/login";
