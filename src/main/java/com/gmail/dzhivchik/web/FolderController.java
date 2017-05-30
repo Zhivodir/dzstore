@@ -21,6 +21,9 @@ import java.io.File;
 @Controller
 @RequestMapping("/")
 public class FolderController {
+    private static String USERS_STORAGES = "C:/DevKit/Temp/dzstore/users_storages/";
+    private static String USERS_IMAGE_FOR_PROFILE = "C:/DevKit/Temp/dzstore/users_storages/";
+    private static String TEMP = "C:/DevKit/Temp/dzstore/Temp/";
 
     @Autowired
     private ContentService contentService;
@@ -43,7 +46,7 @@ public class FolderController {
         Folder folder = new Folder(nameOfFolder, user, curFolder, false, false);
         StringBuilder sb = new StringBuilder();
         createPathForFile(sb, curFolder);
-        File myPath = new File("c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + sb.toString() + "/" + nameOfFolder);
+        File myPath = new File(USERS_STORAGES + login + "/" + sb.toString() + "/" + nameOfFolder);
         contentService.createFolder(folder);
         myPath.mkdirs();
         return "redirect:/" + typeOfView;

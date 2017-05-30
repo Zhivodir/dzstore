@@ -13,4 +13,5 @@ public interface UserDAO {
     void editUser(User user);
     void delete(User user);
     List<User> getShareReceivers(String shareFor);
+    void changeProfileImage(User user, boolean isImage);
 }

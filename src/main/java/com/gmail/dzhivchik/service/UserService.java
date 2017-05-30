@@ -10,4 +10,5 @@ public interface UserService {
     User getUser(String login);
     void addUser(User user);
     boolean existsByLogin(String login);
+    void changeIsProfileImage(String login, boolean isImage);
 }

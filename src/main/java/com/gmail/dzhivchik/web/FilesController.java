@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -30,6 +31,8 @@ import java.util.zip.ZipOutputStream;
 @Controller
 @RequestMapping("/")
 public class FilesController {
+    private static String USERS_STORAGES = "C:/DevKit/Temp/dzstore/users_storages/";
+    private static String TEMP = "C:/DevKit/Temp/dzstore/Temp/";
 
     @Autowired
     private ContentService contentService;
@@ -180,7 +183,7 @@ public class FilesController {
             createPathForElement(sb, curFolder);
             try {
                 convFile.createNewFile();
-                FileOutputStream fos = new FileOutputStream("c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + sb.toString() + "/" + convFile);
+                FileOutputStream fos = new FileOutputStream(USERS_STORAGES + login + "/" + sb.toString() + "/" + convFile);
                 fos.write(file.getBytes());
                 fos.close();
             } catch (FileNotFoundException e) {
@@ -208,16 +211,18 @@ public class FilesController {
         String filesPath = null;
         Folder curFolder = null;
         if (currentFolder == null || currentFolder == -1) {
-            filesPath = "c:/DevKit/Temp/dzstore/users_storages/" + login + "/";
+            filesPath = USERS_STORAGES + login + "/";
         } else {
             curFolder = contentService.getFolder(currentFolder);
-            filesPath = "c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + curFolder.getName() + "/";
+            filesPath = USERS_STORAGES + login + "/" + curFolder.getName() + "/";
         }
         String filesPathForDownload = null;
+        String randomName = null;
         if ((listCheckedFolder.size() != 0) || (listCheckedFiles.size() > 1)) {
+            filesPathForDownload = TEMP + randomString(8) + ".zip";
             try {
                 StringBuilder structure = new StringBuilder();
-                ZipOutputStream out = new ZipOutputStream(new FileOutputStream("c:/DevKit/Temp/dzstore/Temp/archive.zip"));
+                ZipOutputStream out = new ZipOutputStream(new FileOutputStream(filesPathForDownload));
                 prepareToDownload(out, listCheckedFiles, listCheckedFolder, filesPath, structure);
                 out.flush();
                 out.close();
@@ -226,7 +231,6 @@ public class FilesController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            filesPathForDownload = "c:/DevKit/Temp/dzstore/Temp/archive.zip";
         } else if (listCheckedFiles.size() == 1) {
             filesPathForDownload = filesPath + listCheckedFiles.get(0).getName();
         }
@@ -298,5 +302,16 @@ public class FilesController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        downloadFile.delete();
+    }
+
+    static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    static SecureRandom rnd = new SecureRandom();
+
+    String randomString( int len ){
+        StringBuilder sb = new StringBuilder( len );
+        for( int i = 0; i < len; i++ )
+            sb.append( AB.charAt( rnd.nextInt(AB.length()) ) );
+        return sb.toString();
     }
 }

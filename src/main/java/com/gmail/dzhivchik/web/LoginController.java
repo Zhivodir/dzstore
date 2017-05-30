@@ -22,6 +22,8 @@ import java.io.IOException;
 @Controller
 @RequestMapping("/")
 public class LoginController {
+    private static String USERS_STORAGES = "C:/DevKit/Temp/dzstore/users_storages/";
+    private static String USERS_IMAGE_FOR_PROFILE = "C:/DevKit/Temp/dzstore/users_storages/";
 
     @Autowired
     private UserService userService;
@@ -42,18 +44,20 @@ public class LoginController {
                                 @RequestParam("email") String email){
         User user = new User(login, password, email, UserRoleEnum.USER, false);
         userService.addUser(user);
-        new java.io.File("c:/DevKit/Temp/dzstore/users_storages/" + user.getLogin()).mkdir();
+        new java.io.File(USERS_STORAGES + user.getLogin()).mkdir();
         return "redirect:/login";
     }
 
     @RequestMapping(value = "/newImageForProfile", method = RequestMethod.POST)
     public String changeProfileImage(
-            @RequestParam(value = "file", required = false) MultipartFile file){
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestParam String typeOfView){
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         java.io.File convFile = new java.io.File(login + ".jpg");
+        userService.changeIsProfileImage(login, true);
         try {
             convFile.createNewFile();
-            FileOutputStream fos = new FileOutputStream("c:/DevKit/Temp/dzstore/users_image_for_profile/" + convFile);
+            FileOutputStream fos = new FileOutputStream(USERS_IMAGE_FOR_PROFILE + convFile);
             fos.write(file.getBytes());
             fos.close();
         } catch (FileNotFoundException e) {
@@ -61,6 +65,16 @@ public class LoginController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "redirect:/index";
+        return "redirect:/" + typeOfView;
+    }
+
+
+    @RequestMapping(value = "/deleteCurrentProfileImage", method = RequestMethod.POST)
+    public String deleteCurrentProfileImage(@RequestParam String typeOfView){
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        java.io.File currentProfileImage = new java.io.File(USERS_IMAGE_FOR_PROFILE + login + ".jpg");
+        userService.changeIsProfileImage(login, false);
+        currentProfileImage.delete();
+        return "redirect:/" + typeOfView;
     }
 }

@@ -22,6 +22,8 @@ import java.util.List;
 
 @Service
 public class ContentService {
+    private static String USERS_STORAGES = "C:/DevKit/Temp/dzstore/users_storages/";
+
     @Autowired
     private FileDAO fileDAO;
 
@@ -144,9 +146,9 @@ public class ContentService {
             File fileForRename = fileDAO.getListFilesById(checked_files_id).get(0);
             fileDAO.renameFile(checked_files_id, newName);
             createPathForElement(sb, fileForRename.getParentFolder());
-            java.io.File file = new java.io.File("c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + sb.toString() + fileForRename.getName());
+            java.io.File file = new java.io.File(USERS_STORAGES + login + "/" + sb.toString() + fileForRename.getName());
             if(file.exists()){
-                file.renameTo(new java.io.File("c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + sb.toString() + newName));
+                file.renameTo(new java.io.File(USERS_STORAGES + login + "/" + sb.toString() + newName));
             }
             else{
                 System.out.println("File not found!");
@@ -155,7 +157,7 @@ public class ContentService {
             Folder folderForRename = folderDAO.getFolder(checked_folders_id[0]);
             folderDAO.renameFolder(checked_folders_id, newName);
             createPathForElement(sb, folderForRename);
-            java.io.File file = new java.io.File("c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + sb.toString().substring(0,sb.toString().length()-1));
+            java.io.File file = new java.io.File(USERS_STORAGES + login + "/" + sb.toString().substring(0,sb.toString().length()-1));
             if(file.exists()){
                 file.renameTo(new java.io.File(file.getPath().substring(0, file.getPath().lastIndexOf("\\")+1) + newName));
             }
@@ -242,7 +244,7 @@ public class ContentService {
     @Transactional
     public void move_to(int[] checked_files_id, int[] checked_folders_id, User user, Folder move_to){
         StringBuilder sb = new StringBuilder();
-        String pathToRoot = "c:/DevKit/Temp/dzstore/users_storages/" + user.getLogin() + "/";
+        String pathToRoot = USERS_STORAGES + user.getLogin() + "/";
         StringBuilder relativePathForTarget = new StringBuilder();
         createPathForElement(relativePathForTarget, move_to);
         if(checked_files_id != null) {
@@ -275,10 +277,10 @@ public class ContentService {
                 if(temp != null) {
                     StringBuilder sb = new StringBuilder();
                     createPathForElement(sb, temp);
-                    new java.io.File("c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + sb.toString() + "/" + file.getName()).delete();
+                    new java.io.File(USERS_STORAGES + login + "/" + sb.toString() + "/" + file.getName()).delete();
                 }
                 else {
-                    new java.io.File("c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + file.getName()).delete();
+                    new java.io.File(USERS_STORAGES + login + "/" + file.getName()).delete();
                 }
             }
         }
@@ -303,9 +305,9 @@ public class ContentService {
         if (temp != null) {
             StringBuilder sb = new StringBuilder();
             createPathForElement(sb, temp);
-            new java.io.File("c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + sb.toString() + "/" + folder.getName()).delete();
+            new java.io.File(USERS_STORAGES + login + "/" + sb.toString() + "/" + folder.getName()).delete();
         } else {
-            new java.io.File("c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + folder.getName()).delete();
+            new java.io.File(USERS_STORAGES + login + "/" + folder.getName()).delete();
         }
     }
 
@@ -368,8 +370,8 @@ public class ContentService {
             long size = file.getSize();
             if(size <= all - getSizeBusyMemory(user)){
                 String type = "test";
-                java.io.File source = new java.io.File("c:/DevKit/Temp/dzstore/users_storages/" + oldOwner + "/" + relativePath.toString() + "/" + fileName);
-                java.io.File dest = new java.io.File("c:/DevKit/Temp/dzstore/users_storages/" + login + "/" + sb.toString() + fileName);
+                java.io.File source = new java.io.File(USERS_STORAGES + oldOwner + "/" + relativePath.toString() + "/" + fileName);
+                java.io.File dest = new java.io.File(USERS_STORAGES + login + "/" + sb.toString() + fileName);
                 try {
                     fileDAO.upload(new File(fileName, size, type, user, addFolder, false, false));
                     copy(source, dest);
@@ -385,7 +387,7 @@ public class ContentService {
             sb.append(folder.getName() + "/");
             folderDAO.createFolder(new Folder(folder.getName(), user, addFolder, false, false));
             Folder tf = folderDAO.getFolder(user, folder.getName(), addFolder);
-            java.io.File file = new java.io.File("c:/DevKit/Temp/dzstore/users_storages/" + user.getLogin() + "/" + sb.toString());
+            java.io.File file = new java.io.File(USERS_STORAGES + user.getLogin() + "/" + sb.toString());
             file.mkdirs();
 
             if(folder.getFiles().size() != 0) {

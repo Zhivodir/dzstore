@@ -125,7 +125,7 @@ public class FileDAOImpl implements FileDAO {
         }
         Query query = entityManager.createQuery(sb.toString());
         query.setParameter("stateOfStar", stateOfStar);
-        int result = query.executeUpdate();
+        query.executeUpdate();
     }
 
     @Override
@@ -150,7 +150,7 @@ public class FileDAOImpl implements FileDAO {
         Query query = entityManager.createQuery("UPDATE File f SET f.name = :newName WHERE f.id = :id");
         query.setParameter("newName", newName);
         query.setParameter("id", checked_files_id[0]);
-        int result = query.executeUpdate();
+        query.executeUpdate();
     }
 
     @Override
