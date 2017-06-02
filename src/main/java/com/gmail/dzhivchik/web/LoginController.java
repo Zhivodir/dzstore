@@ -39,7 +39,7 @@ public class LoginController {
     }
 
     @RequestMapping(value = "/create_new_user", method = RequestMethod.POST)
-    public String cresteNewUser(@RequestParam("login") String login,
+    public String createNewUser(@RequestParam("login") String login,
                                 @RequestParam("password") String password,
                                 @RequestParam("email") String email){
         User user = new User(login, password, email, UserRoleEnum.USER, false);
