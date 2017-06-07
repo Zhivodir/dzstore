@@ -201,7 +201,7 @@ public class FilesController {
         String filesPathForDownload = null;
         String randomName = null;
         if ((listCheckedFolder.size() != 0) || (listCheckedFiles.size() > 1)) {
-            filesPathForDownload = TEMP + randomString(8) + ".zip";
+            filesPathForDownload = randomString(8) + ".zip";
             try {
                 StringBuilder structure = new StringBuilder();
                 ZipOutputStream out = new ZipOutputStream(new FileOutputStream(filesPathForDownload));
@@ -226,14 +226,17 @@ public class FilesController {
         if (listCheckedFiles.size() != 0) {
             for (File file : listCheckedFiles) {
                 if(!file.isInbin()) {
-                    String fullPath = filesPath + structure.toString() + file.getName();
-                    out.putNextEntry(new ZipEntry(structure.toString() + file.getName()));
+                    String fullPath = structure.toString() + file.getName();
+                    out.putNextEntry(new ZipEntry(fullPath));
+                    ////Here stop - tanut iz BD
                     FileInputStream fis = new FileInputStream(new java.io.File(fullPath));
                     byte[] buffer = new byte[BUFFER_SIZE];
                     int len;
-                    while ((len = fis.read(buffer)) >= 0)
+
+                    InputStream byteForArchive = new ByteArrayInputStream(file.getData());
+                    while ((len = byteForArchive.read(buffer)) >= 0)
                         out.write(buffer, 0, len);
-                    fis.close();
+                    byteForArchive.close();
                 }
             }
         }
