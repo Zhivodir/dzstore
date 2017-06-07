@@ -373,7 +373,7 @@ public class ContentService {
                 java.io.File source = new java.io.File(USERS_STORAGES + oldOwner + "/" + relativePath.toString() + "/" + fileName);
                 java.io.File dest = new java.io.File(USERS_STORAGES + login + "/" + sb.toString() + fileName);
                 try {
-                    fileDAO.upload(new File(fileName, size, type, user, addFolder, false, false));
+                    fileDAO.upload(new File(fileName, size, type, user, addFolder, false, false, file.getData()));
                     copy(source, dest);
                 }catch (IOException e){e.printStackTrace();}
             }else{
