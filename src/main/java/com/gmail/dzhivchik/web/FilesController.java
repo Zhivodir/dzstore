@@ -190,22 +190,14 @@ public class FilesController {
                          /*   DOWNLOAD  */
 
     public void downloadContent(String login, Integer currentFolder, List<File> listCheckedFiles, List<Folder> listCheckedFolder) {
-        String filesPath = null;
-        Folder curFolder = null;
-        if (currentFolder == null || currentFolder == -1) {
-            filesPath = USERS_STORAGES + login + "/";
-        } else {
-            curFolder = contentService.getFolder(currentFolder);
-            filesPath = USERS_STORAGES + login + "/" + curFolder.getName() + "/";
-        }
+
         String filesPathForDownload = null;
-        String randomName = null;
         if ((listCheckedFolder.size() != 0) || (listCheckedFiles.size() > 1)) {
             filesPathForDownload = randomString(8) + ".zip";
             try {
                 StringBuilder structure = new StringBuilder();
                 ZipOutputStream out = new ZipOutputStream(new FileOutputStream(filesPathForDownload));
-                prepareToDownload(out, listCheckedFiles, listCheckedFolder, filesPath, structure);
+                prepareToDownload(out, listCheckedFiles, listCheckedFolder, structure);
                 out.flush();
                 out.close();
             } catch (FileNotFoundException e) {
@@ -214,14 +206,14 @@ public class FilesController {
                 e.printStackTrace();
             }
         } else if (listCheckedFiles.size() == 1) {
-            filesPathForDownload = filesPath + listCheckedFiles.get(0).getName();
+            filesPathForDownload = listCheckedFiles.get(0).getName();
         }
         downloadFunction(filesPathForDownload);
     }
 
 
-    public void prepareToDownload(ZipOutputStream out, List<File> listCheckedFiles, List<Folder> listCheckedFolder,
-                                  String filesPath, StringBuilder structure) throws FileNotFoundException, IOException {
+    public void prepareToDownload(ZipOutputStream out, List<File> listCheckedFiles,
+                                  List<Folder> listCheckedFolder, StringBuilder structure) throws FileNotFoundException, IOException {
         int BUFFER_SIZE = 4096;
         if (listCheckedFiles.size() != 0) {
             for (File file : listCheckedFiles) {
@@ -229,7 +221,6 @@ public class FilesController {
                     String fullPath = structure.toString() + file.getName();
                     out.putNextEntry(new ZipEntry(fullPath));
                     ////Here stop - tanut iz BD
-                    FileInputStream fis = new FileInputStream(new java.io.File(fullPath));
                     byte[] buffer = new byte[BUFFER_SIZE];
                     int len;
 
@@ -248,7 +239,7 @@ public class FilesController {
                     if (folder.getFiles().size() == 0 && folder.getFolders().size() == 0) {
                         out.putNextEntry(new ZipEntry(structure.toString()));
                     }
-                    prepareToDownload(out, folder.getFiles(), folder.getFolders(), filesPath, structure);
+                    prepareToDownload(out, folder.getFiles(), folder.getFolders(), structure);
                     structure.delete(structure.toString().lastIndexOf("/"), structure.length());
                 }
             }
