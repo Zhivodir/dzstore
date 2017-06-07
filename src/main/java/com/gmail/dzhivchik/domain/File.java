@@ -29,6 +29,8 @@ public class File implements Serializable {
     private boolean starred;
     @JsonIgnore
     private boolean inbin;
+    @JsonIgnore
+    private byte[] data;
 
     @JsonIgnore
     @ManyToOne
@@ -52,7 +54,7 @@ public class File implements Serializable {
     }
 
     public File(String name, long size, String type, User user,
-                Folder parentFolder, boolean starred, boolean inbin) {
+                Folder parentFolder, boolean starred, boolean inbin, byte[] data) {
         this.name = name;
         this.size = size;
         this.type = type;
@@ -60,6 +62,7 @@ public class File implements Serializable {
         this.parentFolder = parentFolder;
         this.starred = starred;
         this.inbin = inbin;
+        this.data = data;
     }
 
     public int getId() {
@@ -115,4 +118,6 @@ public class File implements Serializable {
     public boolean isInbin() { return inbin; }
     public void setInbin(boolean inbin) { this.inbin = inbin; }
 
+    public byte[] getData() { return data; }
+    public void setData(byte[] data) { this.data = data; }
 }

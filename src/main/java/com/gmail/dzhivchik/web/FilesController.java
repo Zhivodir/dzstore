@@ -170,13 +170,16 @@ public class FilesController {
     }
 
 
-    public void uploadFile(MultipartFile file, User user, Folder curFolder, String login) {
+    public void uploadFile(MultipartFile file, User user, Folder curFolder, String login){
         String fileName = file.getOriginalFilename();
         long size = file.getSize();
         long all = (long)10*1024*1024*1024;
         if(size <= all - contentService.getSizeBusyMemory(user)){
             String type = "test";
-            File fileForDAO = new File(fileName, size, type, user, curFolder, false, false);
+            File fileForDAO = null;
+            try {
+                fileForDAO = new File(fileName, size, type, user, curFolder, false, false, file.getBytes());
+            }catch (IOException e){e.printStackTrace();}
             java.io.File convFile = new java.io.File(fileName);
             contentService.uploadFile(fileForDAO);
             StringBuilder sb = new StringBuilder();

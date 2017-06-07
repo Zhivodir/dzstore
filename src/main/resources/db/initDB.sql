@@ -35,6 +35,7 @@ CREATE TABLE `file` (
     `parent_id` int(3) NULL,
     `starred` boolean, 
     `inbin` boolean,
+    `data` MEDIUMBLOB NULL,
      PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
