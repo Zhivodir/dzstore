@@ -1,9 +1,8 @@
-DROP TABLE IF EXISTS `users`;
-DROP TABLE IF EXISTS `folders`;
-DROP TABLE IF EXISTS `file`;
 DROP TABLE IF EXISTS `share_folder_for_user`;
 DROP TABLE IF EXISTS `share_file_for_user`;
- 
+DROP TABLE IF EXISTS `files`;
+DROP TABLE IF EXISTS `folders`;
+DROP TABLE IF EXISTS `users`;
 
 CREATE TABLE `users` (
     `id` int(4) NOT NULL AUTO_INCREMENT,
@@ -26,7 +25,7 @@ CREATE TABLE `folders` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE `file` (
+CREATE TABLE `files` (
     `id` int(4) NOT NULL AUTO_INCREMENT,
     `name` varchar(60) NOT NULL,
     `size` int(15) NOT NULL,
@@ -53,7 +52,7 @@ CREATE TABLE `share_file_for_user` (
     `id_file` int(4) NOT NULL,
     `id_user` int(4) NOT NULL,
     PRIMARY KEY (`id_file`, `id_user`),
-    FOREIGN KEY (`id_file`) REFERENCES `file` (id),
+    FOREIGN KEY (`id_file`) REFERENCES `files` (id),
     FOREIGN KEY (`id_user`) REFERENCES `users` (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

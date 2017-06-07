@@ -180,31 +180,10 @@ public class FilesController {
             try {
                 fileForDAO = new File(fileName, size, type, user, curFolder, false, false, file.getBytes());
             }catch (IOException e){e.printStackTrace();}
-            java.io.File convFile = new java.io.File(fileName);
             contentService.uploadFile(fileForDAO);
             StringBuilder sb = new StringBuilder();
-            createPathForElement(sb, curFolder);
-            try {
-                convFile.createNewFile();
-                FileOutputStream fos = new FileOutputStream(USERS_STORAGES + login + "/" + sb.toString() + "/" + convFile);
-                fos.write(file.getBytes());
-                fos.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }else{
-            System.out.println("Havn't nedd memory");
-        }
-    }
-
-
-    public void createPathForElement(StringBuilder sb, Folder curFolder) {
-        if (curFolder != null) {
-            createPathForElement(sb, curFolder.getParentFolder());
-            sb.append(curFolder.getName());
-            sb.append("/");
+            System.out.println("Havn't need memory");
         }
     }
 
