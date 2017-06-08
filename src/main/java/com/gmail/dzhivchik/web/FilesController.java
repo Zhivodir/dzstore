@@ -208,7 +208,8 @@ public class FilesController {
         } else if (listCheckedFiles.size() == 1) {
             filesPathForDownload = listCheckedFiles.get(0).getName();
         }
-        downloadFunction(filesPathForDownload);
+        //downloadFunction(filesPathForDownload);
+        downloadFunctionWithData(listCheckedFiles.get(0));
     }
 
 
@@ -279,6 +280,28 @@ public class FilesController {
             e.printStackTrace();
         }
         downloadFile.delete();
+    }
+
+    public void downloadFunctionWithData(File forDownload){
+        String mimeType = null;
+        if (mimeType == null) {
+            mimeType = "application/octet-stream";
+        }
+        try {
+            httpServletResponse.setContentType(mimeType);
+            httpServletResponse.setContentLength(forDownload.getData().length);
+            String headerKey = "Content-Disposition";
+            String headerValue = String.format("attachment; filename=\"%s\"",
+                    forDownload.getName());
+            httpServletResponse.setHeader(headerKey, headerValue);
+            OutputStream outStream = httpServletResponse.getOutputStream();
+
+            outStream.write(forDownload.getData());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";

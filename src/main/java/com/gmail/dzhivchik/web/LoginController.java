@@ -23,7 +23,7 @@ import java.io.IOException;
 @RequestMapping("/")
 public class LoginController {
     private static String USERS_STORAGES = "C:/DevKit/Temp/dzstore/users_storages/";
-    private static String USERS_IMAGE_FOR_PROFILE = "C:/DevKit/Temp/dzstore/users_storages/";
+    private static String USERS_IMAGE_FOR_PROFILE = "C:/DevKit/Temp/dzstore/users_image_for_profile/";
 
     @Autowired
     private UserService userService;
