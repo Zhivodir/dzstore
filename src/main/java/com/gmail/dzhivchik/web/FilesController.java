@@ -174,8 +174,9 @@ public class FilesController {
         String fileName = file.getOriginalFilename();
         long size = file.getSize();
         long all = (long)10*1024*1024*1024;
+        String mimeType = file.getContentType();
         if(size <= all - contentService.getSizeBusyMemory(user)){
-            String type = "test";
+            String type = mimeType;
             File fileForDAO = null;
             try {
                 fileForDAO = new File(fileName, size, type, user, curFolder, false, false, file.getBytes());
@@ -208,7 +209,7 @@ public class FilesController {
         } else if (listCheckedFiles.size() == 1) {
             filesPathForDownload = listCheckedFiles.get(0).getName();
         }
-        //downloadFunction(filesPathForDownload);
+//        downloadFunction(filesPathForDownload);
         downloadFunctionWithData(listCheckedFiles.get(0));
     }
 
@@ -248,60 +249,58 @@ public class FilesController {
     }
 
 
-    public void downloadFunction(String archivePath) {
-        int BUFFER_SIZE = 4096;
-        java.io.File downloadFile = new java.io.File(archivePath);
-        String mimeType = context.getMimeType(archivePath);
-        if (mimeType == null) {
-            mimeType = "application/octet-stream";
-        }
-        try {
-            FileInputStream inputStream = new FileInputStream(downloadFile);
-            httpServletResponse.setContentType(mimeType);
-            httpServletResponse.setContentLength((int) downloadFile.length());
-            String headerKey = "Content-Disposition";
-            String headerValue = String.format("attachment; filename=\"%s\"",
-                    downloadFile.getName());
-            httpServletResponse.setHeader(headerKey, headerValue);
-            OutputStream outStream = httpServletResponse.getOutputStream();
-
-            byte[] buffer = new byte[BUFFER_SIZE];
-            int bytesRead = -1;
-
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                outStream.write(buffer, 0, bytesRead);
-            }
-
-            inputStream.close();
-            outStream.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        downloadFile.delete();
-    }
+//    public void downloadFunction(String archivePath) {
+//        int BUFFER_SIZE = 4096;
+//        java.io.File downloadFile = new java.io.File(archivePath);
+//        String mimeType = context.getMimeType(archivePath);
+//        if (mimeType == null) {
+//            mimeType = "application/octet-stream";
+//        }
+//        try {
+//            FileInputStream inputStream = new FileInputStream(downloadFile);
+//            httpServletResponse.setContentType(mimeType);
+//            httpServletResponse.setContentLength((int) downloadFile.length());
+//            String headerKey = "Content-Disposition";
+//            String headerValue = String.format("attachment; filename=\"%s\"",
+//                    downloadFile.getName());
+//            httpServletResponse.setHeader(headerKey, headerValue);
+//            OutputStream outStream = httpServletResponse.getOutputStream();
+//
+//            byte[] buffer = new byte[BUFFER_SIZE];
+//            int bytesRead = -1;
+//
+//            while ((bytesRead = inputStream.read(buffer)) != -1) {
+//                outStream.write(buffer, 0, bytesRead);
+//            }
+//
+//            inputStream.close();
+//            outStream.close();
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        downloadFile.delete();
+//    }
 
     public void downloadFunctionWithData(File forDownload){
-        String mimeType = null;
-        if (mimeType == null) {
-            mimeType = "application/octet-stream";
-        }
-        try {
-            httpServletResponse.setContentType(mimeType);
-            httpServletResponse.setContentLength(forDownload.getData().length);
-            String headerKey = "Content-Disposition";
-            String headerValue = String.format("attachment; filename=\"%s\"",
-                    forDownload.getName());
-            httpServletResponse.setHeader(headerKey, headerValue);
-            OutputStream outStream = httpServletResponse.getOutputStream();
-
-            outStream.write(forDownload.getData());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//
+//            httpServletResponse.setContentType(forDownload.getType());
+//            httpServletResponse.setContentLength(forDownload.getData().length);
+//            String headerKey = "Content-Disposition";
+//            String headerValue = String.format("attachment; filename=\"%s\"",
+//                    forDownload.getName());
+//            httpServletResponse.setHeader(headerKey, headerValue);
+//            OutputStream outStream = httpServletResponse.getOutputStream();
+//            System.out.println(1);
+//            outStream.write(forDownload.getData());
+//            System.out.println(2);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
