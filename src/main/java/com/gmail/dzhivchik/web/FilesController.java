@@ -145,7 +145,7 @@ public class FilesController {
                 if (checked_folders_id != null) {
                     listCheckedFolder = contentService.getListFolderById(checked_folders_id);
                 }
-                downloadContent(login, currentFolder, listCheckedFiles, listCheckedFolder);
+                downloadContent(listCheckedFiles, listCheckedFolder);
             }
 
             if (share != null) {
@@ -190,117 +190,86 @@ public class FilesController {
 
                          /*   DOWNLOAD  */
 
-    public void downloadContent(String login, Integer currentFolder, List<File> listCheckedFiles, List<Folder> listCheckedFolder) {
-
-        String filesPathForDownload = null;
+    public void downloadContent(List<File> listCheckedFiles, List<Folder> listCheckedFolder) {
+        StringBuilder structure = new StringBuilder();
         if ((listCheckedFolder.size() != 0) || (listCheckedFiles.size() > 1)) {
-            filesPathForDownload = randomString(8) + ".zip";
+            String archiveName = randomString(8) + ".zip";
+            ZipOutputStream out;
+            long size = 0;
             try {
-                StringBuilder structure = new StringBuilder();
-                ZipOutputStream out = new ZipOutputStream(new FileOutputStream(filesPathForDownload));
-                prepareToDownload(out, listCheckedFiles, listCheckedFolder, structure);
-                out.flush();
-                out.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                out = new ZipOutputStream(new FileOutputStream(archiveName));
+                downloadSeveralFiles(archiveName, size, out, listCheckedFiles, listCheckedFolder, structure);
+            }catch (FileNotFoundException e){e.printStackTrace();}
         } else if (listCheckedFiles.size() == 1) {
-            filesPathForDownload = listCheckedFiles.get(0).getName();
+            downloadSingleFile(listCheckedFiles.get(0));
         }
-//        downloadFunction(filesPathForDownload);
-        downloadFunctionWithData(listCheckedFiles.get(0));
     }
 
-
-    public void prepareToDownload(ZipOutputStream out, List<File> listCheckedFiles,
-                                  List<Folder> listCheckedFolder, StringBuilder structure) throws FileNotFoundException, IOException {
-        int BUFFER_SIZE = 4096;
+    public long prepareZipFileForDownload(long size, ZipOutputStream out, List<File> listCheckedFiles,
+                                          List<Folder> listCheckedFolder, StringBuilder structure) throws IOException{
         if (listCheckedFiles.size() != 0) {
             for (File file : listCheckedFiles) {
-                if(!file.isInbin()) {
-                    String fullPath = structure.toString() + file.getName();
-                    out.putNextEntry(new ZipEntry(fullPath));
-                    ////Here stop - tanut iz BD
-                    byte[] buffer = new byte[BUFFER_SIZE];
-                    int len;
-
-                    InputStream byteForArchive = new ByteArrayInputStream(file.getData());
-                    while ((len = byteForArchive.read(buffer)) >= 0)
-                        out.write(buffer, 0, len);
-                    byteForArchive.close();
+                if (!file.isInbin()) {
+                    size = size + file.getSize();
+                    out.putNextEntry(new ZipEntry(structure.toString() + file.getName()));
+                    out.write(file.getData());
+                    out.closeEntry();
                 }
             }
         }
 
         if (listCheckedFolder.size() != 0) {
             for (Folder folder : listCheckedFolder) {
-                if(!folder.isInbin()) {
+                if (!folder.isInbin()) {
                     structure.append(folder.getName() + "/");
                     if (folder.getFiles().size() == 0 && folder.getFolders().size() == 0) {
                         out.putNextEntry(new ZipEntry(structure.toString()));
                     }
-                    prepareToDownload(out, folder.getFiles(), folder.getFolders(), structure);
+                    prepareZipFileForDownload(size, out, folder.getFiles(), folder.getFolders(), structure);
                     structure.delete(structure.toString().lastIndexOf("/"), structure.length());
                 }
             }
         }
+        return  size;
     }
 
+    public void downloadSingleFile(File file){
+        httpServletResponse.setContentType(file.getType());
+        httpServletResponse.setContentLength((int)file.getSize());
+        httpServletResponse.setHeader("Content-Disposition", "attachment;filename=" + file.getName());
+        OutputStream os = null;
+        try {
+            os = httpServletResponse.getOutputStream();
+            os.write(file.getData());
+            //Нужен ли тут flush
+            os.flush();
+            os.close();
+        }catch (IOException e){e.printStackTrace();}
+    }
 
-//    public void downloadFunction(String archivePath) {
-//        int BUFFER_SIZE = 4096;
-//        java.io.File downloadFile = new java.io.File(archivePath);
-//        String mimeType = context.getMimeType(archivePath);
-//        if (mimeType == null) {
-//            mimeType = "application/octet-stream";
-//        }
-//        try {
-//            FileInputStream inputStream = new FileInputStream(downloadFile);
-//            httpServletResponse.setContentType(mimeType);
-//            httpServletResponse.setContentLength((int) downloadFile.length());
-//            String headerKey = "Content-Disposition";
-//            String headerValue = String.format("attachment; filename=\"%s\"",
-//                    downloadFile.getName());
-//            httpServletResponse.setHeader(headerKey, headerValue);
-//            OutputStream outStream = httpServletResponse.getOutputStream();
-//
-//            byte[] buffer = new byte[BUFFER_SIZE];
-//            int bytesRead = -1;
-//
-//            while ((bytesRead = inputStream.read(buffer)) != -1) {
-//                outStream.write(buffer, 0, bytesRead);
-//            }
-//
-//            inputStream.close();
-//            outStream.close();
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        downloadFile.delete();
-//    }
+    public void downloadSeveralFiles(String archiveName, long size, ZipOutputStream out, List<File> listCheckedFiles, List<Folder> listCheckedFolder, StringBuilder structure){
+        int BUFFER_SIZE = 1024;
 
-    public void downloadFunctionWithData(File forDownload){
-//        try {
-//
-//            httpServletResponse.setContentType(forDownload.getType());
-//            httpServletResponse.setContentLength(forDownload.getData().length);
-//            String headerKey = "Content-Disposition";
-//            String headerValue = String.format("attachment; filename=\"%s\"",
-//                    forDownload.getName());
-//            httpServletResponse.setHeader(headerKey, headerValue);
-//            OutputStream outStream = httpServletResponse.getOutputStream();
-//            System.out.println(1);
-//            outStream.write(forDownload.getData());
-//            System.out.println(2);
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            long allFilesSize = prepareZipFileForDownload(size, out, listCheckedFiles, listCheckedFolder, structure);
+            out.close();
+
+            FileInputStream inputStream = new FileInputStream(new java.io.File(archiveName));
+            httpServletResponse.setContentType("application/zip");
+            httpServletResponse.setContentLength((int)allFilesSize);
+            httpServletResponse.setHeader("Content-Disposition", "attachment;filename=" + archiveName);
+            OutputStream os = httpServletResponse.getOutputStream();
+            byte[] buffer = new byte[BUFFER_SIZE];
+            int bytesRead = -1;
+
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                os.write(buffer, 0, bytesRead);
+            }
+            //Нужен ли тут flush
+            os.flush();
+            inputStream.close();
+            os.close();
+        }catch(IOException e){e.printStackTrace();}
     }
 
     static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
