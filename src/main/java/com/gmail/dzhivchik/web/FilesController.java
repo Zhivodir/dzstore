@@ -205,8 +205,9 @@ public class FilesController {
         int BUFFER_SIZE = 1024;
         long size = 0;
         try {
-            String archiveName = "Temp/" + randomString(8) + ".zip";
+            String archiveName = "/tmp/" + randomString(8) + ".zip";
             ZipOutputStream out = new ZipOutputStream(new FileOutputStream(archiveName));
+//            ZipOutputStream out = new ZipOutputStream(new ByteArrayOutputStream());
             StringBuilder structure = new StringBuilder();
             long allFilesSize = prepareZipFileForDownload(size, out, listCheckedFiles, listCheckedFolder, structure);
             out.flush();
@@ -254,7 +255,9 @@ public class FilesController {
             for (File file : listCheckedFiles) {
                 if (!file.isInbin()) {
                     size = size + file.getSize();
-                    out.putNextEntry(new ZipEntry(structure.toString() + file.getName()));
+                    ZipEntry entry = new ZipEntry(structure.toString() + file.getName());
+                    entry.setSize(file.getSize());
+                    out.putNextEntry(entry);
                     out.write(file.getData());
                     out.closeEntry();
                 }
