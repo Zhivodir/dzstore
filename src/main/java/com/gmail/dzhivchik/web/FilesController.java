@@ -191,29 +191,26 @@ public class FilesController {
                          /*   DOWNLOAD  */
 
     public void downloadContent(List<File> listCheckedFiles, List<Folder> listCheckedFolder) {
-        StringBuilder structure = new StringBuilder();
+
         if ((listCheckedFolder.size() != 0) || (listCheckedFiles.size() > 1)) {
-            String archiveName = randomString(8) + ".zip";
-            ZipOutputStream out;
-            long size = 0;
-            try {
-                out = new ZipOutputStream(new FileOutputStream(archiveName));
-                downloadSeveralFiles(archiveName, size, out, listCheckedFiles, listCheckedFolder, structure);
-                out.flush();
-                out.close();
-            }catch (FileNotFoundException e){e.printStackTrace();}
-            catch (IOException e){e.printStackTrace();}
-        } else if (listCheckedFiles.size() == 1) {
+            downloadSeveralFiles(listCheckedFiles, listCheckedFolder);
+        } else if ((listCheckedFiles.size() == 1)&&(listCheckedFolder.size() == 0)) {
             downloadSingleFile(listCheckedFiles.get(0));
+//            downloadSeveralFiles(listCheckedFiles, listCheckedFolder);
         }
     }
 
 
-    public void downloadSeveralFiles(String archiveName, long size, ZipOutputStream out, List<File> listCheckedFiles, List<Folder> listCheckedFolder, StringBuilder structure){
+    public void downloadSeveralFiles(List<File> listCheckedFiles, List<Folder> listCheckedFolder){
         int BUFFER_SIZE = 1024;
-
+        long size = 0;
         try {
+            String archiveName = randomString(8) + ".zip";
+            ZipOutputStream out = new ZipOutputStream(new FileOutputStream(archiveName));
+            StringBuilder structure = new StringBuilder();
             long allFilesSize = prepareZipFileForDownload(size, out, listCheckedFiles, listCheckedFolder, structure);
+            out.flush();
+            out.close();
 
             java.io.File tempFile = new java.io.File(archiveName);
             FileInputStream inputStream = new FileInputStream(tempFile);
@@ -259,7 +256,6 @@ public class FilesController {
                     size = size + file.getSize();
                     out.putNextEntry(new ZipEntry(structure.toString() + file.getName()));
                     out.write(file.getData());
-                    out.flush();
                     out.closeEntry();
                 }
             }
