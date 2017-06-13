@@ -205,7 +205,7 @@ public class FilesController {
         int BUFFER_SIZE = 1024;
         long size = 0;
         try {
-            String archiveName = "/Temp/" + randomString(8) + ".zip";
+            String archiveName = "Temp/" + randomString(8) + ".zip";
             ZipOutputStream out = new ZipOutputStream(new FileOutputStream(archiveName));
             StringBuilder structure = new StringBuilder();
             long allFilesSize = prepareZipFileForDownload(size, out, listCheckedFiles, listCheckedFolder, structure);
