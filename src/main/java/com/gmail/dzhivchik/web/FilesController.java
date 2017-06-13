@@ -199,11 +199,57 @@ public class FilesController {
             try {
                 out = new ZipOutputStream(new FileOutputStream(archiveName));
                 downloadSeveralFiles(archiveName, size, out, listCheckedFiles, listCheckedFolder, structure);
+                out.flush();
+                out.close();
             }catch (FileNotFoundException e){e.printStackTrace();}
+            catch (IOException e){e.printStackTrace();}
         } else if (listCheckedFiles.size() == 1) {
             downloadSingleFile(listCheckedFiles.get(0));
         }
     }
+
+
+    public void downloadSeveralFiles(String archiveName, long size, ZipOutputStream out, List<File> listCheckedFiles, List<Folder> listCheckedFolder, StringBuilder structure){
+        int BUFFER_SIZE = 1024;
+
+        try {
+            long allFilesSize = prepareZipFileForDownload(size, out, listCheckedFiles, listCheckedFolder, structure);
+
+            java.io.File tempFile = new java.io.File(archiveName);
+            FileInputStream inputStream = new FileInputStream(tempFile);
+            httpServletResponse.setContentType("application/zip");
+            httpServletResponse.setContentLength((int)allFilesSize);
+            httpServletResponse.setHeader("Content-Disposition", "attachment;filename=" + archiveName);
+            OutputStream os = httpServletResponse.getOutputStream();
+            byte[] buffer = new byte[BUFFER_SIZE];
+            int bytesRead = -1;
+
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                os.write(buffer, 0, bytesRead);
+            }
+            //Нужен ли тут flush
+            os.flush();
+            os.close();
+            inputStream.close();
+            tempFile.delete();
+        }catch(IOException e){e.printStackTrace();}
+    }
+
+
+    public void downloadSingleFile(File file){
+        httpServletResponse.setContentType(file.getType());
+        httpServletResponse.setContentLength((int)file.getSize());
+        httpServletResponse.setHeader("Content-Disposition", "attachment;filename=" + file.getName());
+        OutputStream os = null;
+        try {
+            os = httpServletResponse.getOutputStream();
+            os.write(file.getData());
+            //Нужен ли тут flush
+            os.flush();
+            os.close();
+        }catch (IOException e){e.printStackTrace();}
+    }
+
 
     public long prepareZipFileForDownload(long size, ZipOutputStream out, List<File> listCheckedFiles,
                                           List<Folder> listCheckedFolder, StringBuilder structure) throws IOException{
@@ -213,6 +259,7 @@ public class FilesController {
                     size = size + file.getSize();
                     out.putNextEntry(new ZipEntry(structure.toString() + file.getName()));
                     out.write(file.getData());
+                    out.flush();
                     out.closeEntry();
                 }
             }
@@ -231,45 +278,6 @@ public class FilesController {
             }
         }
         return  size;
-    }
-
-    public void downloadSingleFile(File file){
-        httpServletResponse.setContentType(file.getType());
-        httpServletResponse.setContentLength((int)file.getSize());
-        httpServletResponse.setHeader("Content-Disposition", "attachment;filename=" + file.getName());
-        OutputStream os = null;
-        try {
-            os = httpServletResponse.getOutputStream();
-            os.write(file.getData());
-            //Нужен ли тут flush
-            os.flush();
-            os.close();
-        }catch (IOException e){e.printStackTrace();}
-    }
-
-    public void downloadSeveralFiles(String archiveName, long size, ZipOutputStream out, List<File> listCheckedFiles, List<Folder> listCheckedFolder, StringBuilder structure){
-        int BUFFER_SIZE = 1024;
-
-        try {
-            long allFilesSize = prepareZipFileForDownload(size, out, listCheckedFiles, listCheckedFolder, structure);
-            out.close();
-
-            FileInputStream inputStream = new FileInputStream(new java.io.File(archiveName));
-            httpServletResponse.setContentType("application/zip");
-            httpServletResponse.setContentLength((int)allFilesSize);
-            httpServletResponse.setHeader("Content-Disposition", "attachment;filename=" + archiveName);
-            OutputStream os = httpServletResponse.getOutputStream();
-            byte[] buffer = new byte[BUFFER_SIZE];
-            int bytesRead = -1;
-
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                os.write(buffer, 0, bytesRead);
-            }
-            //Нужен ли тут flush
-            os.flush();
-            inputStream.close();
-            os.close();
-        }catch(IOException e){e.printStackTrace();}
     }
 
     static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
