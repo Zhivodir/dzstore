@@ -29,7 +29,7 @@ CREATE TABLE `files` (
     `id` int(4) NOT NULL AUTO_INCREMENT,
     `name` varchar(60) NOT NULL,
     `size` int(15) NOT NULL,
-    `type` varchar(7) NOT NULL,
+    `type` varchar(50) NOT NULL,
     `user_id` int(4) NOT NULL,
     `parent_id` int(3) NULL,
     `starred` boolean, 

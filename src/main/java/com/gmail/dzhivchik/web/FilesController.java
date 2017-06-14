@@ -217,7 +217,6 @@ public class FilesController {
             out.close();
 
             java.io.File tempFile = new java.io.File(archiveName);
-            tempFile.createNewFile();
             FileInputStream inputStream = new FileInputStream(tempFile);
             httpServletResponse.setContentType("application/zip");
             httpServletResponse.setContentLength((int)allFilesSize);
@@ -262,7 +261,6 @@ public class FilesController {
                     ZipEntry entry = new ZipEntry(structure.toString() + file.getName());
                     entry.setSize(file.getSize());
                     out.putNextEntry(entry);
-                    System.out.println(file.getSize());
                     out.write(file.getData());
                     out.closeEntry();
                 }
