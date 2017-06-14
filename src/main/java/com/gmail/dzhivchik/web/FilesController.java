@@ -205,7 +205,7 @@ public class FilesController {
         int BUFFER_SIZE = 1024;
         long size = 0;
         try {
-            String archiveName = "/tmp/" + randomString(8) + ".zip";
+            String archiveName = randomString(8) + ".zip";
             ZipOutputStream out = new ZipOutputStream(new FileOutputStream(archiveName));
 //            ZipOutputStream out = new ZipOutputStream(new ByteArrayOutputStream());
             StringBuilder structure = new StringBuilder();
@@ -271,8 +271,10 @@ public class FilesController {
                     if (folder.getFiles().size() == 0 && folder.getFolders().size() == 0) {
                         out.putNextEntry(new ZipEntry(structure.toString()));
                     }
+                    System.out.println(structure);
                     prepareZipFileForDownload(size, out, folder.getFiles(), folder.getFolders(), structure);
-                    structure.delete(structure.toString().lastIndexOf("/"), structure.length());
+                    structure.delete(structure.toString().lastIndexOf(folder.getName()), structure.length());
+                    System.out.println(structure);
                 }
             }
         }
