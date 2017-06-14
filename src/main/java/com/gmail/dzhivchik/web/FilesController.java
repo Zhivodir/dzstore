@@ -264,7 +264,7 @@ public class FilesController {
                         out.putNextEntry(new ZipEntry(structure.toString()));
                     }
                     prepareToDownload(out, folder.getFiles(), folder.getFolders(), filesPath, structure);
-                    structure.delete(structure.toString().lastIndexOf("/"), structure.length());
+                    structure.delete(structure.toString().lastIndexOf(folder.getName()), structure.length());
                 }
             }
         }
