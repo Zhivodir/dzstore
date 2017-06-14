@@ -17,7 +17,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
@@ -214,6 +217,7 @@ public class FilesController {
             out.close();
 
             java.io.File tempFile = new java.io.File(archiveName);
+            tempFile.createNewFile();
             FileInputStream inputStream = new FileInputStream(tempFile);
             httpServletResponse.setContentType("application/zip");
             httpServletResponse.setContentLength((int)allFilesSize);
@@ -271,10 +275,8 @@ public class FilesController {
                     if (folder.getFiles().size() == 0 && folder.getFolders().size() == 0) {
                         out.putNextEntry(new ZipEntry(structure.toString()));
                     }
-                    System.out.println(structure);
                     prepareZipFileForDownload(size, out, folder.getFiles(), folder.getFolders(), structure);
                     structure.delete(structure.toString().lastIndexOf(folder.getName()), structure.length());
-                    System.out.println(structure);
                 }
             }
         }
