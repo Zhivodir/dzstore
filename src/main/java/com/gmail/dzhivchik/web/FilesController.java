@@ -262,6 +262,7 @@ public class FilesController {
                     ZipEntry entry = new ZipEntry(structure.toString() + file.getName());
                     entry.setSize(file.getSize());
                     out.putNextEntry(entry);
+                    System.out.println(file.getSize());
                     out.write(file.getData());
                     out.closeEntry();
                 }
