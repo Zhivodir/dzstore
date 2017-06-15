@@ -210,6 +210,7 @@ public class FilesController {
 //            ZipOutputStream out = new ZipOutputStream(new ByteArrayOutputStream());
             StringBuilder structure = new StringBuilder();
             long allFilesSize = prepareZipFileForDownload(size, out, listCheckedFiles, listCheckedFolder, structure);
+            out.flush();
             out.close();
 
             java.io.File tempFile = new java.io.File(archiveName);
@@ -254,18 +255,18 @@ public class FilesController {
             for (File file : listCheckedFiles) {
                 if (!file.isInbin()) {
                     size = size + file.getSize();
-                    ZipEntry entry = new ZipEntry(structure.toString() + file.getName());
+                    ZipEntry entry = (new ZipEntry(structure.toString() + file.getName()));
                     entry.setSize(file.getSize());
                     out.putNextEntry(entry);
+
                     InputStream is = new ByteArrayInputStream(file.getData());
                     int bytesIn = 0;
                     byte[] readBuffer = new byte[256];
                     while((bytesIn = is.read(readBuffer)) != -1){
                         out.write(readBuffer, 0, bytesIn);
                     }
-                    out.flush();
-//                    out.write(file.getData());
                     out.closeEntry();
+                    is.close();
                 }
             }
         }
@@ -276,8 +277,10 @@ public class FilesController {
                     structure.append(folder.getName() + "/");
                     if (folder.getFiles().size() == 0 && folder.getFolders().size() == 0) {
                         out.putNextEntry(new ZipEntry(structure.toString()));
+                        out.closeEntry();
+                    }else {
+                        prepareZipFileForDownload(size, out, folder.getFiles(), folder.getFolders(), structure);
                     }
-                    prepareZipFileForDownload(size, out, folder.getFiles(), folder.getFolders(), structure);
                     structure.delete(structure.toString().lastIndexOf(folder.getName()), structure.length());
                 }
             }
