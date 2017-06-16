@@ -191,12 +191,10 @@ public class FilesController {
                          /*   DOWNLOAD  */
 
     public void downloadContent(List<File> listCheckedFiles, List<Folder> listCheckedFolder) {
-
         if ((listCheckedFolder.size() != 0) || (listCheckedFiles.size() > 1)) {
             downloadSeveralFiles(listCheckedFiles, listCheckedFolder);
         } else if ((listCheckedFiles.size() == 1)&&(listCheckedFolder.size() == 0)) {
             downloadSingleFile(listCheckedFiles.get(0));
-//            downloadSeveralFiles(listCheckedFiles, listCheckedFolder);
         }
     }
 
@@ -205,27 +203,25 @@ public class FilesController {
         int BUFFER_SIZE = 1024;
         long size = 0;
         try {
+            StringBuilder structure = new StringBuilder();
             String archiveName = randomString(8) + ".zip";
             ZipOutputStream out = new ZipOutputStream(new FileOutputStream(archiveName));
-//            ZipOutputStream out = new ZipOutputStream(new ByteArrayOutputStream());
-            StringBuilder structure = new StringBuilder();
-            long allFilesSize = prepareZipFileForDownload(size, out, listCheckedFiles, listCheckedFolder, structure);
+
+            prepareZipFileForDownload(size, out, listCheckedFiles, listCheckedFolder, structure);
             out.flush();
             out.close();
 
             java.io.File tempFile = new java.io.File(archiveName);
             FileInputStream inputStream = new FileInputStream(tempFile);
             httpServletResponse.setContentType("application/zip");
-            httpServletResponse.setContentLength((int)allFilesSize);
             httpServletResponse.setHeader("Content-Disposition", "attachment;filename=" + archiveName);
             OutputStream os = httpServletResponse.getOutputStream();
             byte[] buffer = new byte[BUFFER_SIZE];
-            int bytesRead = -1;
+            int bytesRead;
 
             while ((bytesRead = inputStream.read(buffer)) != -1) {
                 os.write(buffer, 0, bytesRead);
             }
-            //Нужен ли тут flush
             os.flush();
             os.close();
             inputStream.close();
@@ -242,26 +238,24 @@ public class FilesController {
         try {
             os = httpServletResponse.getOutputStream();
             os.write(file.getData());
-            //Нужен ли тут flush
             os.flush();
             os.close();
         }catch (IOException e){e.printStackTrace();}
     }
 
 
-    public long prepareZipFileForDownload(long size, ZipOutputStream out, List<File> listCheckedFiles,
+    public void prepareZipFileForDownload(long size, ZipOutputStream out, List<File> listCheckedFiles,
                                           List<Folder> listCheckedFolder, StringBuilder structure) throws IOException{
         if (listCheckedFiles.size() != 0) {
             for (File file : listCheckedFiles) {
                 if (!file.isInbin()) {
-                    size = size + file.getSize();
                     ZipEntry entry = (new ZipEntry(structure.toString() + file.getName()));
                     entry.setSize(file.getSize());
                     out.putNextEntry(entry);
 
                     InputStream is = new ByteArrayInputStream(file.getData());
-                    int bytesIn = 0;
-                    byte[] readBuffer = new byte[256];
+                    int bytesIn;
+                    byte[] readBuffer = new byte[512];
                     while((bytesIn = is.read(readBuffer)) != -1){
                         out.write(readBuffer, 0, bytesIn);
                     }
@@ -285,7 +279,6 @@ public class FilesController {
                 }
             }
         }
-        return  size;
     }
 
     static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
