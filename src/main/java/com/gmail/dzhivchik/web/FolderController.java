@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.io.File;
-
 /**
  * Created by User on 28.02.2017.
  */
@@ -44,20 +42,7 @@ public class FolderController {
             curFolder = contentService.getFolder(currentFolder);
         }
         Folder folder = new Folder(nameOfFolder, user, curFolder, false, false);
-        StringBuilder sb = new StringBuilder();
-        createPathForFile(sb, curFolder);
-        File myPath = new File(USERS_STORAGES + login + "/" + sb.toString() + "/" + nameOfFolder);
         contentService.createFolder(folder);
-        myPath.mkdirs();
         return "redirect:/" + typeOfView;
-    }
-
-
-    public void createPathForFile(StringBuilder sb, Folder curFolder) {
-        if (curFolder != null) {
-            createPathForFile(sb, curFolder.getParentFolder());
-            sb.append(curFolder.getName());
-            sb.append("/");
-        }
     }
 }

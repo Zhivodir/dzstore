@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -68,12 +65,10 @@ public class ContentService {
     @Transactional
     public void deleteCheckedContent(int[] checked_files_id, int[] checked_folders_id, String login){
         if (checked_files_id != null) {
-            File[] files = fileDAO.deleteGroup(checked_files_id);;
-            deleteListOfFiles(Arrays.asList(files), login);
+            fileDAO.deleteGroup(checked_files_id);
         }
         if (checked_folders_id != null) {
-            Folder[] folders = folderDAO.deleteGroup(checked_folders_id);
-            deleteListOfFolders(Arrays.asList(folders), login);
+            folderDAO.deleteGroup(checked_folders_id);
         }
     }
 
@@ -145,25 +140,9 @@ public class ContentService {
         if(checked_files_id != null){
             File fileForRename = fileDAO.getListFilesById(checked_files_id).get(0);
             fileDAO.renameFile(checked_files_id, newName);
-            createPathForElement(sb, fileForRename.getParentFolder());
-            java.io.File file = new java.io.File(USERS_STORAGES + login + "/" + sb.toString() + fileForRename.getName());
-            if(file.exists()){
-                file.renameTo(new java.io.File(USERS_STORAGES + login + "/" + sb.toString() + newName));
-            }
-            else{
-                System.out.println("File not found!");
-            }
         }else if(checked_folders_id != null){
             Folder folderForRename = folderDAO.getFolder(checked_folders_id[0]);
             folderDAO.renameFolder(checked_folders_id, newName);
-            createPathForElement(sb, folderForRename);
-            java.io.File file = new java.io.File(USERS_STORAGES + login + "/" + sb.toString().substring(0,sb.toString().length()-1));
-            if(file.exists()){
-                file.renameTo(new java.io.File(file.getPath().substring(0, file.getPath().lastIndexOf("\\")+1) + newName));
-            }
-            else{
-                System.out.println("File not found!");
-            }
         }
     }
 
@@ -231,34 +210,25 @@ public class ContentService {
         String login = user.getLogin();
         if(checked_files_id != null) {
             List<File> listOfAddFiles = getListFilesById(checked_files_id);
-            addSharedFileToMyStore(sb, listOfAddFiles, user, null, null, login);
+            addSharedFileToMyStore(listOfAddFiles, user, null, null);
         }
 
         if(checked_folders_id != null) {
             List<Folder> ListOfAddFolders = getListFolderById(checked_folders_id);
-            addSharedFolderToMyStore(sb, ListOfAddFolders, user, null, null, login);
+            addSharedFolderToMyStore(ListOfAddFolders, user, null, null);
         }
     }
 
 
     @Transactional
     public void move_to(int[] checked_files_id, int[] checked_folders_id, User user, Folder move_to){
-        StringBuilder sb = new StringBuilder();
-        String pathToRoot = USERS_STORAGES + user.getLogin() + "/";
-        StringBuilder relativePathForTarget = new StringBuilder();
-        createPathForElement(relativePathForTarget, move_to);
         if(checked_files_id != null) {
-            List<File> listOfAddFiles = getListFilesById(checked_files_id);
-            moveFile(pathToRoot, relativePathForTarget.toString(), sb, listOfAddFiles, move_to);
             fileDAO.move_to(checked_files_id, move_to);
         }
         if(checked_folders_id != null) {
-            List<Folder> listOfAddFolders = getListFolderById(checked_folders_id);
-            moveFolder(pathToRoot, relativePathForTarget.toString(), sb, listOfAddFolders, move_to);
             folderDAO.move_to(checked_folders_id, move_to);
         }
     }
-
 
 
     public long getSizeBusyMemory(User user){
@@ -270,46 +240,7 @@ public class ContentService {
         return sumSize;
     }
 
-    public void deleteListOfFiles(List<File> files, String login){
-        if (files.size() != 0) {
-            for (File file : files) {
-                Folder temp = file.getParentFolder();
-                if(temp != null) {
-                    StringBuilder sb = new StringBuilder();
-                    createPathForElement(sb, temp);
-                    new java.io.File(USERS_STORAGES + login + "/" + sb.toString() + "/" + file.getName()).delete();
-                }
-                else {
-                    new java.io.File(USERS_STORAGES + login + "/" + file.getName()).delete();
-                }
-            }
-        }
-    }
 
-    public void deleteListOfFolders(List<Folder> folders, String login){
-        for(Folder folder : folders) {
-            List<Folder> subfolder = folder.getFolders();
-            List<File> files = folder.getFiles();
-            if(subfolder.size() != 0){
-                deleteListOfFolders(subfolder, login);
-                deleteContentOfFolder(files, login, folder);
-            } else {
-                deleteContentOfFolder(files, login, folder);
-            }
-        }
-    }
-
-    public void deleteContentOfFolder(List<File> files, String login, Folder folder){
-        deleteListOfFiles(files, login);
-        Folder temp = folder.getParentFolder();
-        if (temp != null) {
-            StringBuilder sb = new StringBuilder();
-            createPathForElement(sb, temp);
-            new java.io.File(USERS_STORAGES + login + "/" + sb.toString() + "/" + folder.getName()).delete();
-        } else {
-            new java.io.File(USERS_STORAGES + login + "/" + folder.getName()).delete();
-        }
-    }
 
     public void createPathForElement(StringBuilder sb, Folder curFolder) {
         if (curFolder != null) {
@@ -319,91 +250,34 @@ public class ContentService {
         }
     }
 
-    public void moveFile(String pathToRoot, String relativePathForTarget, StringBuilder sb, List<File> listOfAddFiles, Folder moveToFolder){
-        Folder curFolder = listOfAddFiles.get(0).getParentFolder();
-        for(File file : listOfAddFiles){
-            String fileName = file.getName();
-            StringBuilder relativePathForSource = new StringBuilder();
-            createPathForElement(relativePathForSource, curFolder);
-            String type = "test";
-            java.io.File source = new java.io.File(pathToRoot + relativePathForSource.toString() + fileName);
-            java.io.File dest = new java.io.File(pathToRoot + relativePathForTarget + sb.toString() + fileName);
-            try {
-                copy(source, dest);
-                source.delete();
-            }catch (IOException e){e.printStackTrace();}
-        }
-    }
 
-    public void moveFolder(String pathToRoot, String relativePathForTarget, StringBuilder sb, List<Folder> listOfAddFolders, Folder moveToFolder){
-        for(Folder folder : listOfAddFolders) {
-            sb.append(folder.getName() + "/");
-            StringBuilder relativePathForSource = new StringBuilder();
-            createPathForElement(relativePathForSource, folder);
-            String oldFolder = pathToRoot + relativePathForSource.toString();
-            String newFolder = pathToRoot + relativePathForTarget.toString() + sb.toString();
-            (new java.io.File(newFolder)).mkdirs();
-
-            if(folder.getFiles().size() != 0) {
-                sb.append("/");
-                moveFile(pathToRoot, relativePathForTarget, sb, folder.getFiles(), moveToFolder);
-                sb.delete(sb.toString().length() - 1, sb.length());
-            }
-
-            if(folder.getFolders().size() != 0) {
-                moveFolder(pathToRoot, relativePathForTarget, sb, folder.getFolders(), moveToFolder);
-                sb.delete(sb.lastIndexOf("/") + 1, sb.length());
-            }
-            sb.delete(sb.toString().length() - 1, sb.length());
-            sb.delete(sb.lastIndexOf("/") + 1, sb.length());
-            (new java.io.File(oldFolder)).delete();
-        }
-    }
-
-    public void addSharedFileToMyStore(StringBuilder sb, List<File> listOfAddFiles, User user, Folder curFolder, Folder addFolder, String login) {
+    public void addSharedFileToMyStore(List<File> listOfAddFiles, User user, Folder curFolder, Folder addFolder) {
         long all = (long)10*1024*1024*1024;
         for(File file : listOfAddFiles){
             String fileName = file.getName();
-            String oldOwner = file.getUser().getLogin();
             StringBuilder relativePath = new StringBuilder();
             createPathForElement(relativePath, curFolder);
             long size = file.getSize();
             if(size <= all - getSizeBusyMemory(user)){
-                String type = "test";
-                java.io.File source = new java.io.File(USERS_STORAGES + oldOwner + "/" + relativePath.toString() + "/" + fileName);
-                java.io.File dest = new java.io.File(USERS_STORAGES + login + "/" + sb.toString() + fileName);
-                try {
-                    fileDAO.upload(new File(fileName, size, type, user, addFolder, false, false, file.getData()));
-                    copy(source, dest);
-                }catch (IOException e){e.printStackTrace();}
+                fileDAO.upload(new File(fileName, size, file.getType(), user, addFolder, false, false, file.getData()));
             }else{
-                System.out.println("Havn't nedd memory");
+                System.out.println("Havn't need memory");
             }
         }
     }
 
-    public void addSharedFolderToMyStore(StringBuilder sb, List<Folder> listOfAddFolders, User user, Folder shareFolder, Folder addFolder, String login){
+    public void addSharedFolderToMyStore(List<Folder> listOfAddFolders, User user, Folder shareFolder, Folder addFolder){
         for(Folder folder : listOfAddFolders) {
-            sb.append(folder.getName() + "/");
             folderDAO.createFolder(new Folder(folder.getName(), user, addFolder, false, false));
             Folder tf = folderDAO.getFolder(user, folder.getName(), addFolder);
-            java.io.File file = new java.io.File(USERS_STORAGES + user.getLogin() + "/" + sb.toString());
-            file.mkdirs();
 
             if(folder.getFiles().size() != 0) {
-                sb.append("/");
-                addSharedFileToMyStore(sb, folder.getFiles(), user, folder, tf, login);
-                sb.delete(sb.toString().length() - 1, sb.length());
+                addSharedFileToMyStore(folder.getFiles(), user, folder, tf);
             }
 
             if(folder.getFolders().size() != 0) {
-                addSharedFolderToMyStore(sb, folder.getFolders(), user, folder, tf, login);
-                sb.delete(sb.lastIndexOf("/") + 1, sb.length());
+                addSharedFolderToMyStore(folder.getFolders(), user, folder, tf);
             }
         }
-    }
-
-    public static void copy(java.io.File source, java.io.File dest) throws IOException {
-        Files.copy(source.toPath(), dest.toPath());
     }
 }

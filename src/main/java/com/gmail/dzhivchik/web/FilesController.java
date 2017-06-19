@@ -225,7 +225,6 @@ public class FilesController {
             os.flush();
             os.close();
             inputStream.close();
-            tempFile.delete();
         }catch(IOException e){e.printStackTrace();}
     }
 
