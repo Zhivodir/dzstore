@@ -48,7 +48,6 @@ public class AppConfig extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/css/**").addResourceLocations("/WEB-INF/css/");
         registry.addResourceHandler("/js/**").addResourceLocations("/WEB-INF/js/");
         registry.addResourceHandler("/img/**").addResourceLocations("/WEB-INF/img/");
-        registry.addResourceHandler("/ava/**").addResourceLocations("file:///C:/DevKit/Temp/dzstore/users_image_for_profile/");
     }
 
     @Bean

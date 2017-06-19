@@ -182,7 +182,6 @@ public class FilesController {
                 fileForDAO = new File(fileName, size, type, user, curFolder, false, false, file.getBytes());
             }catch (IOException e){e.printStackTrace();}
             contentService.uploadFile(fileForDAO);
-            StringBuilder sb = new StringBuilder();
         }else{
             System.out.println("Havn't need memory");
         }

@@ -9,7 +9,8 @@ CREATE TABLE `users` (
     `login` varchar(60) NOT NULL,
     `password` varchar(10) NOT NULL,
     `role` varchar(15) NOT NULL,
-    `avatar` BOOLEAN NOT NULL DEFAULT FALSE,
+#     `avatar` BOOLEAN NOT NULL DEFAULT FALSE,
+    `avatar` BOOLEAN DEFAULT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -19,9 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/")
 public class FolderController {
-    private static String USERS_STORAGES = "C:/DevKit/Temp/dzstore/users_storages/";
-    private static String USERS_IMAGE_FOR_PROFILE = "C:/DevKit/Temp/dzstore/users_storages/";
-    private static String TEMP = "C:/DevKit/Temp/dzstore/Temp/";
 
     @Autowired
     private ContentService contentService;

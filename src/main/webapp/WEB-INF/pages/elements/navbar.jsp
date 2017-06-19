@@ -16,18 +16,6 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu_profile" role="menu">
                     <div class="row">
-                        <div class="col-md-3 account-left-part">
-                            <a href="#" data-toggle="modal" data-target="#modalForImageProfileUpload" role="button">
-                                <div class="profile-header-img">
-                                    <c:if test="${user.avatar eq false}">
-                                        <img class="img-circle" src="img/default.jpg" alt="photo"/>
-                                    </c:if>
-                                    <c:if test="${user.avatar eq true}">
-                                        <img class="img-circle" src="<c:url value="ava/${user.login}.jpg"/>" alt="photo"/>
-                                    </c:if>
-                                </div>
-                            </a>
-                        </div>
                         <div class="col-md-6 account-right-part">
                             <p><sec:authentication property="principal.username"/></p>
                             <p><c:out value="${user.email}"></c:out></p>

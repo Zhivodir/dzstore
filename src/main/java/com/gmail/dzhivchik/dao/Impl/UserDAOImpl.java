@@ -87,12 +87,4 @@ public class UserDAOImpl implements UserDAO {
         }
         return sb.toString();
     }
-
-    @Override
-    public void changeProfileImage(User user, boolean isImage) {
-        Query query = entityManager.createQuery("UPDATE User user SET user.avatar = :isImage WHERE user.id = :id");
-        query.setParameter("isImage", isImage);
-        query.setParameter("id", user.getId());
-        int result = query.executeUpdate();
-    }
 }

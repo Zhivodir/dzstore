@@ -33,10 +33,4 @@ public class UserServiceImpl implements UserService {
     public boolean existsByLogin(String login) {
         return false;
     }
-
-    @Override
-    @Transactional
-    public void changeIsProfileImage(String login, boolean isImage) {
-        userDAO.changeProfileImage(userDAO.getUser(login), isImage);
-    }
 }
