@@ -51,8 +51,6 @@
     </div>
 </div>
 
-<img class="img-circle" src="<c:url value="ava/${user.login}.jpeg"/>" alt="photo"/>
-
 <c:set var="f" value="-1" scope="request"/>
 <c:set var="typeOfView" value="index" scope="request"/>
 <c:import url="/WEB-INF/pages/modalForPages/createNewFolder.jsp"/>
@@ -88,6 +86,24 @@
 
 <script type="text/javascript">
     document.oncontextmenu = function (){return false};
+</script>
+
+<script>
+    $('#myTable input[type="checkbox"]').click(function(){
+        if($(this).prop('checked'))
+            $(this).parent().parent().addClass('selected');
+        else
+            $(this).parent().parent().removeClass('selected');
+    });
+
+    jQuery(function($) {
+        $('.folder_href').click(function() {
+            return false;
+        }).dblclick(function() {
+            window.location = this.href;
+            return false;
+        });
+    });
 </script>
 
 </body>

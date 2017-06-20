@@ -28,9 +28,9 @@
                     </tr>
                 </c:if>
                 <c:forEach items="${content[1]}" var="currentFolder">
-                    <tr>
-                        <td><input type="checkbox" name="checked_folders_id" value="${currentFolder.id}"/></td>
-                        <td><a href="/folder?f=${currentFolder.id}">${currentFolder.name}</a>
+                    <tr class="choise_field choise_folder">
+                        <td><input hidden class="choise_checkbox choise_folder" type="checkbox" name="checked_folders_id" value="${currentFolder.id}"/></td>
+                        <td><a class="folder_href" href="/folder?f=${currentFolder.id}"><strong>${currentFolder.name}</strong></a>
                             <c:if test="${currentFolder.starred eq true}">
                                 <span class="glyphicon glyphicon-star"></span>
                             </c:if>
@@ -41,8 +41,8 @@
                     </tr>
                 </c:forEach>
                 <c:forEach items="${content[0]}" var="currentFile">
-                    <tr>
-                        <td><input type="checkbox" name="checked_files_id" value="${currentFile.id}"/></td>
+                    <tr class="choise_field">
+                        <td><input hidden class="choise_checkbox choise_folder" type="checkbox" name="checked_files_id" value="${currentFile.id}"/></td>
                         <td>${currentFile.name}
                             <c:if test="${currentFile.starred eq true}">
                                 <span class="glyphicon glyphicon-star"></span>

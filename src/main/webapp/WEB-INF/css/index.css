@@ -190,6 +190,23 @@ body {
  * Content space
  */
 
+.selected{
+    background-color: #449d44 !important;
+}
+
+.choise_field:hover{
+    background-color: #449d44 !important;
+}
+
+.folder_href, .folder_href:hover{
+    color: black !important;
+    text-decoration: none;
+}
+
+.choise_field input:checked {
+    background-color: #449d44 !important;
+}
+
 .checkId{
     width: 10%;
 }
