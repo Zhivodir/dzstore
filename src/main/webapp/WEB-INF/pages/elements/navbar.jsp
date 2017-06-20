@@ -5,11 +5,20 @@
 
 <nav class="navbar navbar-inverse navbar-fixed-top top1">
     <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">DZstore</a>
+        <div class="col-xs-3">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">DZstore</a>
+            </div>
         </div>
-        <div id="navbar" class="navbar-collapse collapse">
-
+        <div class="col-xs-6 search_form">
+            <div id="navbar" class="navbar-collapse collapse">
+                <form class="navbar-form" action="/search" method="post">
+                    <input type="text" name="whatSearch" class="search_field" placeholder="Search...">
+                    <input type="submit" name="search" class="search_submit" value="Search"/>
+                </form>
+            </div>
+        </div>
+        <div class="col-xs-3">
             <ul class="nav navbar-nav navbar-right">
                 <button type="button" class="btn btn-lg account" data-toggle="dropdown">
                     <sec:authentication property="principal.username"/><span class="caret"></span>
@@ -24,11 +33,6 @@
                     </div>
                 </div>
             </ul>
-
-            <form class="navbar-form navbar-right" action="/search" method="post">
-                <input type="text" name="whatSearch" class="form-control" placeholder="Search...">
-                <input type="submit" name="search" value="Search"/>
-            </form>
         </div>
     </div>
 </nav>

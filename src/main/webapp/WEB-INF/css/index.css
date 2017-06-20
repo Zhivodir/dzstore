@@ -90,6 +90,9 @@ body {
     background-color: #255625 !important;
 }
 
+.search_field{
+    width: 80%;
+}
 
 /*
  * Main content
