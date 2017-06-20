@@ -146,6 +146,7 @@ body {
 .newButton {
     margin-top: 8px;
     margin-left: 19px;
+    border-radius: 0px !important;
 }
 
 .currentFolderPath {
