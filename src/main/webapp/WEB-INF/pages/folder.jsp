@@ -42,7 +42,6 @@
 
 <div class="container-fluid">
     <div class="row">
-
         <c:set var="typeOfView" value="folder" scope="request"/>
         <c:set var="content" value="${content}" scope="request"/>
         <c:set var="f" value="${f}" scope="request"/>
@@ -70,17 +69,6 @@
 <script src="js/ie10-viewport-bug-workaround.js"></script>
 <script src="js/contextMenu.js"></script>
 <script src="js/tree.js"></script>
-<script>
-    $(document).ready(function () {
-        $('.record_table tr').click(function (event) {
-            if (event.target.type !== 'checkbox') {
-                $(':checkbox', this).trigger('click');
-            }
-        });
-    });</script>
-
-<script>
-    onload = function() { tree("tree", "/ajax/load_tree_of_catalog") }
-</script>
+<script src="js/other_script.js"></script>
 </body>
 </html>

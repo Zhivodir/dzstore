@@ -67,14 +67,7 @@
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="js/ie10-viewport-bug-workaround.js"></script>
 <script src="js/contextMenu.js"></script>
-<script>
-    $(document).ready(function () {
-        $('.record_table tr').click(function (event) {
-            if (event.target.type !== 'checkbox') {
-                $(':checkbox', this).trigger('click');
-            }
-        });
-    });</script>
+<script src="js/other_script.js"></script>
 
 </body>
 </html>

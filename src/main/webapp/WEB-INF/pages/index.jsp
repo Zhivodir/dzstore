@@ -70,41 +70,7 @@
 <script src="js/ie10-viewport-bug-workaround.js"></script>
 <script src="js/contextMenu.js"></script>
 <script src="js/tree.js"></script>
-<script>
-    $(document).ready(function () {
-        $('.record_table tr').click(function (event) {
-            if (event.target.type !== 'checkbox') {
-                $(':checkbox', this).trigger('click');
-            }
-        });
-    });
-</script>
-
-<script>
-    onload = function() { tree("tree", "/ajax/load_tree_of_catalog") }
-</script>
-
-<script type="text/javascript">
-    document.oncontextmenu = function (){return false};
-</script>
-
-<script>
-    $('#myTable input[type="checkbox"]').click(function(){
-        if($(this).prop('checked'))
-            $(this).parent().parent().addClass('selected');
-        else
-            $(this).parent().parent().removeClass('selected');
-    });
-
-    jQuery(function($) {
-        $('.folder_href').click(function() {
-            return false;
-        }).dblclick(function() {
-            window.location = this.href;
-            return false;
-        });
-    });
-</script>
+<script src="js/other_script.js"></script>
 
 </body>
 </html>
