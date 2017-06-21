@@ -9,13 +9,13 @@
             <input type="hidden" name="typeOfView" value="${typeOfView}">
             <table id="myTable" class="table table-striped record_table">
                 <thead>
-                <tr>
-                    <th class="checkId"></th>
-                    <th class="checkName" >Name</th>
-                    <th class="checkType">Type</th>
-                    <th class="checkOwner">Owner</th>
-                    <th class="checkSize">Size</th>
-                </tr>
+                    <tr>
+                        <th class="checkId"></th>
+                        <th class="checkName" >Name</th>
+                        <th class="checkType">Type</th>
+                        <th class="checkOwner">Owner</th>
+                        <th class="checkSize">Size</th>
+                    </tr>
                 </thead>
                 <tbody>
                 <c:if test="${typeOfView.equals('folder')}">

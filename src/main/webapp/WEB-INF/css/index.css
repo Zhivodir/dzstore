@@ -90,6 +90,9 @@ body {
     background-color: #255625 !important;
 }
 
+.search_field{
+    width: 80%;
+}
 
 /*
  * Main content
@@ -143,6 +146,7 @@ body {
 .newButton {
     margin-top: 8px;
     margin-left: 19px;
+    border-radius: 0px !important;
 }
 
 .currentFolderPath {
@@ -185,6 +189,23 @@ body {
 /*
  * Content space
  */
+
+.selected{
+    background-color: #449d44 !important;
+}
+
+.choise_field:hover{
+    background-color: #449d44 !important;
+}
+
+.folder_href, .folder_href:hover{
+    color: black !important;
+    text-decoration: none;
+}
+
+.choise_field input:checked {
+    background-color: #449d44 !important;
+}
 
 .checkId{
     width: 10%;

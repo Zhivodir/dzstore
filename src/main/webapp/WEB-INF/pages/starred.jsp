@@ -67,17 +67,8 @@
 <script src="js/ie10-viewport-bug-workaround.js"></script>
 <script src="js/contextMenu.js"></script>
 <script src="js/tree.js"></script>
-<script>
-    $(document).ready(function () {
-        $('.record_table tr').click(function (event) {
-            if (event.target.type !== 'checkbox') {
-                $(':checkbox', this).trigger('click');
-            }
-        });
-    });</script>
-<script>
-    onload = function() { tree("tree", "/ajax/load_tree_of_catalog") }
-</script>
+<script src="js/other_scripts.js"></script>
+
 </body>
 </html>
 
