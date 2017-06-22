@@ -46,7 +46,6 @@ public class ViewController {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
         Folder currentFolder = contentService.getFolder(f);
-
         List<Folder> forRelativePath = new ArrayList<>();
         getListRelativePath(currentFolder, forRelativePath);
         Collections.reverse(forRelativePath);
@@ -57,7 +56,7 @@ public class ViewController {
         model.addAttribute("listForRelativePath", forRelativePath);
         model.addAttribute("user", user);
         model.addAttribute("busySpace", showBusySpace(user));
-        model.addAttribute("typeOfView", "folder");
+        model.addAttribute("typeOfView", "folder");//
         return "folder";
     }
 

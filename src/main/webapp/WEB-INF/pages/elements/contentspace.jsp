@@ -30,7 +30,15 @@
                 <c:forEach items="${content[1]}" var="currentFolder">
                     <tr class="choise_field choise_folder">
                         <td><input hidden class="choise_checkbox choise_folder" type="checkbox" name="checked_folders_id" value="${currentFolder.id}"/></td>
-                        <td><a class="folder_href" href="/folder?f=${currentFolder.id}"><strong>${currentFolder.name}</strong></a>
+                        <td>
+                            <c:choose>
+                                <c:when test="${typeOfView.equals('bin')}">
+                                    <a class="folder_href" href="#?f=${currentFolder.id}" ondblclick="$('#modalForOpenDataInBin').modal('show')"><strong>${currentFolder.name}</strong></a>
+                                </c:when>
+                                <c:otherwise>
+                                    <a class="folder_href" href="/folder?f=${currentFolder.id}"><strong>${currentFolder.name}</strong></a>
+                                </c:otherwise>
+                            </c:choose>
                             <c:if test="${currentFolder.starred eq true}">
                                 <span class="glyphicon glyphicon-star"></span>
                             </c:if>
@@ -77,14 +85,15 @@
             <c:choose>
                 <c:when test="${typeOfView.equals('bin')}">
                     <c:import url="/WEB-INF/pages/context_menu/for_bin.jsp"/>
-                    <c:import url="/WEB-INF/pages/modalForPages/delete.jsp"/>
+                    <c:import url="/WEB-INF/pages/modalForPages/operations/delete.jsp"/>
+                    <c:import url="/WEB-INF/pages/modalForPages/errors/dataInBin.jsp"/>
                 </c:when>
                 <c:otherwise>
                     <c:import url="/WEB-INF/pages/context_menu/general.jsp"/>
-                    <c:import url="/WEB-INF/pages/modalForPages/remove.jsp"/>
-                    <c:import url="/WEB-INF/pages/modalForPages/share.jsp"/>
-                    <c:import url="/WEB-INF/pages/modalForPages/rename.jsp"/>
-                    <c:import url="/WEB-INF/pages/modalForPages/replace.jsp"/>
+                    <c:import url="/WEB-INF/pages/modalForPages/operations/remove.jsp"/>
+                    <c:import url="/WEB-INF/pages/modalForPages/operations/share.jsp"/>
+                    <c:import url="/WEB-INF/pages/modalForPages/operations/rename.jsp"/>
+                    <c:import url="/WEB-INF/pages/modalForPages/operations/replace.jsp"/>
                 </c:otherwise>
             </c:choose>
         </form>

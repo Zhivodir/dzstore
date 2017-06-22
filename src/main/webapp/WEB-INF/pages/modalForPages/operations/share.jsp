@@ -1,11 +1,10 @@
 <%--
   Created by IntelliJ IDEA.
   User: User
-  Date: 25.04.2017
-  Time: 11:40
+  Date: 05.04.2017
+  Time: 22:37
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -13,7 +12,7 @@
     <div class="row">
         <div class="col-md-12">
             <!-- start of Modal -->
-            <div class="modal fade" id="modalForRemove" tabindex="-1"
+            <div class="modal fade modal-coordinate" id="modalForShare" tabindex="-1"
                  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content all-modal-change">
@@ -26,8 +25,9 @@
                         <div class="modal-body">
                             <div class="form-group">
                                 <input type="hidden" name="currentFolder" value="${f}">
+                                <input type="text" name="shareFor">
                             </div>
-                            <input type="submit" name="remove" value="Remove"/>
+                            <input type="submit" name="share" value="Share"/>
                         </div>
                     </div>
                 </div>
@@ -36,4 +36,3 @@
         </div>
     </div>
 </div>
-

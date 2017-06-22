@@ -194,9 +194,9 @@ body {
     background-color: #449d44 !important;
 }
 
-.choise_field:hover{
-    background-color: #449d44 !important;
-}
+/*.choise_field:hover{*/
+    /*background-color: #449d44 !important;*/
+/*}*/
 
 .folder_href, .folder_href:hover{
     color: black !important;
@@ -320,7 +320,11 @@ body {
     width: 395px !important;
 }
 
-.modal-Account{
+.modal-Account {
+    width: 320px !important;
+}
+
+.modalForOpenDataInBin {
     width: 320px !important;
 }
 
@@ -384,7 +388,7 @@ body {
     width: 18px;
     height: 18px;
     float: left;
-    background-image: url(../img/for_tree/loading.gif);
+    /*background-image: url(../img/for_tree/loading.gif);*/
 }
 
 .Expand {
@@ -411,4 +415,8 @@ body {
 
 .radio_move_to {
     float:left;
+}
+
+.modal-coordinate {
+    margin-top: 12%;
 }

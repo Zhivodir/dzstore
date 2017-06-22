@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.security.SecureRandom;
@@ -31,17 +30,12 @@ import java.util.zip.ZipOutputStream;
 @Controller
 @RequestMapping("/")
 public class FilesController {
-    private static String USERS_STORAGES = "C:/DevKit/Temp/dzstore/users_storages/";
-    private static String TEMP = "C:/DevKit/Temp/dzstore/Temp/";
 
     @Autowired
     private ContentService contentService;
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private ServletContext context;
 
     @Autowired
     private HttpServletResponse httpServletResponse;

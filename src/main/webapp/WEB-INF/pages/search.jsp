@@ -51,10 +51,10 @@
 
 <c:set var="f" value="${f}" scope="request"/>
 <c:set var="typeOfView" value="index" scope="request"/>
-    <c:import url="/WEB-INF/pages/modalForPages/createNewFolder.jsp" />
-    <c:import url="/WEB-INF/pages/modalForPages/fileUpload.jsp"/>
-    <c:import url="/WEB-INF/pages/modalForPages/folderUpload.jsp"/>
-    <c:import url="/WEB-INF/pages/modalForPages/newImageForProfile.jsp" />
+    <c:import url="/WEB-INF/pages/modalForPages/operations/createNewFolder.jsp" />
+    <c:import url="/WEB-INF/pages/modalForPages/operations/fileUpload.jsp"/>
+    <c:import url="/WEB-INF/pages/modalForPages/operations/folderUpload.jsp"/>
+    <c:import url="/WEB-INF/pages/modalForPages/operations/newImageForProfile.jsp" />
 
 <!-- Bootstrap core JavaScript
 ================================================== -->
@@ -67,7 +67,7 @@
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="js/ie10-viewport-bug-workaround.js"></script>
 <script src="js/tree.js"></script>
-<script src="js/other_script.js"></script>
+<script src="js/other_scripts.js"></script>
 
 </body>
 </html>

@@ -12,9 +12,9 @@
     <div class="row">
         <div class="col-md-12">
             <!-- start of Modal -->
-            <div class="modal fade" id="modalForShare" tabindex="-1"
+            <div class="modal fade modal-coordinate" id="modalForOpenDataInBin" tabindex="-1"
                  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
+                <div class="modal-dialog modalForOpenDataInBin">
                     <div class="modal-content all-modal-change">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">
@@ -23,11 +23,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <div class="form-group">
-                                <input type="hidden" name="currentFolder" value="${f}">
-                                <input type="text" name="shareFor">
-                            </div>
-                            <input type="submit" name="share" value="Share"/>
+                            <span>Эта папка в корзине</span>
                         </div>
                     </div>
                 </div>

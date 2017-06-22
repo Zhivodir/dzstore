@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-md-12">
             <!-- start of Modal -->
-            <div class="modal fade" id="modalForReplace" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+            <div class="modal fade modal-coordinate" id="modalForReplace" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                  aria-hidden="true">
                 <div class="modal-dialog modal-FileUpload">
                     <div class="modal-content">
