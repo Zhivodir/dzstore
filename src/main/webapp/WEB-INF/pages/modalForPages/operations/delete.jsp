@@ -14,7 +14,7 @@
             <!-- start of Modal -->
             <div class="modal fade modal-coordinate" id="modalForDelete" tabindex="-1"
                  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-standart">
                     <div class="modal-content all-modal-change">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">

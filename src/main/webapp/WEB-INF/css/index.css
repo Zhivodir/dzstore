@@ -90,6 +90,10 @@ body {
     background-color: #255625 !important;
 }
 
+.search_form{
+    margin-top: 5px;
+}
+
 .search_field{
     width: 80%;
 }
@@ -264,11 +268,15 @@ body {
     width: 100px;
 }
 
-.profile-header-img > img.img-circle {
-    width: 80px;
-    border: 2px solid #51D2B7;
-}
+/*.profile-header-img > img.img-circle {*/
+    /*width: 35px;*/
+    /*border: 2px solid #000000;*/
+/*}*/
 
+.img-circle {
+    width: 40px !important;
+    border: 2px solid #5e5e5e;
+}
 /**
  * Left side bar
  */
@@ -325,6 +333,10 @@ body {
 }
 
 .modalForOpenDataInBin {
+    width: 320px !important;
+}
+
+.modal-standart {
     width: 320px !important;
 }
 

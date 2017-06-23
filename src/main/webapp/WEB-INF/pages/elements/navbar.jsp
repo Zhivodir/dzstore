@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<!-- Nuzhno proverit ne vliyaet li na security-->
 
 <nav class="navbar navbar-inverse navbar-fixed-top top1">
     <div class="container-fluid">
@@ -20,6 +19,9 @@
         </div>
         <div class="col-xs-3">
             <ul class="nav navbar-nav navbar-right">
+                <div class="col-md-3 account-left-part">
+                      <img class="img-circle" src="img/default.jpg" alt="photo"/>
+                </div>
                 <button type="button" class="btn btn-lg account" data-toggle="dropdown">
                     <sec:authentication property="principal.username"/><span class="caret"></span>
                 </button>
