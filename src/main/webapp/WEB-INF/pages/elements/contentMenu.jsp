@@ -27,7 +27,19 @@
         </div>
         <div class="col-sm-9 col-md-10">
             <div class="currentFolderPath">
-                <a href="/index" class="levelPath">My store</a>
+                <c:if test="${typeOfView.equals('index')}">
+                    <a href="/${typeOfView}" class="levelPath">My store</a>
+                </c:if>
+                <c:if test="${typeOfView.equals('shared')}">
+                    <a href="/${typeOfView}" class="levelPath">Shared with me</a>
+                </c:if>
+                <c:if test="${typeOfView.equals('starred')}">
+                    <a href="/${typeOfView}" class="levelPath">Starred</a>
+                </c:if>
+                <c:if test="${typeOfView.equals('bin')}">
+                    <a href="/${typeOfView}" class="levelPath">Bin</a>
+                </c:if>
+
                 <c:if test="${f ne null}">
                     <c:forEach items="${listForRelativePath}" var="folder">
                         <span class="glyphicon glyphicon glyphicon-chevron-right" aria-hidden="true"></span>

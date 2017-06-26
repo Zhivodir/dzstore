@@ -31,6 +31,8 @@ public class File implements Serializable {
     private boolean inbin;
     @JsonIgnore
     private byte[] data;
+    @JsonIgnore
+    private boolean shareInFolder;
 
     @JsonIgnore
     @ManyToOne
@@ -53,8 +55,8 @@ public class File implements Serializable {
     public File() {
     }
 
-    public File(String name, long size, String type, User user,
-                Folder parentFolder, boolean starred, boolean inbin, byte[] data) {
+    public File(String name, long size, String type, User user, Folder parentFolder,
+                boolean starred, boolean inbin, byte[] data, boolean shareInFolder) {
         this.name = name;
         this.size = size;
         this.type = type;
@@ -63,11 +65,10 @@ public class File implements Serializable {
         this.starred = starred;
         this.inbin = inbin;
         this.data = data;
+        this.shareInFolder = shareInFolder;
     }
 
-    public int getId() {
-        return id;
-    }
+    public int getId() { return id; }
     public void setId(int id) {
         this.id = id;
     }
@@ -120,4 +121,7 @@ public class File implements Serializable {
 
     public byte[] getData() { return data; }
     public void setData(byte[] data) { this.data = data; }
+
+    public boolean isShareInFolder() { return shareInFolder; }
+    public void setShareInFolder(boolean shareInFolder) { this.shareInFolder = shareInFolder; }
 }

@@ -161,8 +161,16 @@ public class FileDAOImpl implements FileDAO {
     }
 
     @Override
-    public List<File> getSharedList(User user) {
-        Query query = entityManager.createQuery("SELECT f FROM File f INNER JOIN f.shareFor user WHERE user = :user AND f.inbin <> 1", File.class);
+    public List<File> getSharedList(User user, Integer targetFolder) {
+        Query query;
+        if(targetFolder == null ) {
+            query = entityManager.createQuery("SELECT f FROM File f INNER JOIN f.shareFor user " +
+                    "WHERE user = :user AND f.inbin <> 1 AND f.shareInFolder = false", File.class);
+        } else {
+            query = entityManager.createQuery("SELECT f FROM File f INNER JOIN f.shareFor user " +
+                    "WHERE user = :user AND f.inbin <> 1 AND f.shareInFolder = true AND f.parentFolder.id = :targetFolder", File.class);
+            query.setParameter("targetFolder", targetFolder);
+        }
         query.setParameter("user", user);
         return  (List<File>)query.getResultList();
     }

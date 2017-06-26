@@ -21,7 +21,7 @@ public interface FolderDAO {
     List<Folder> getSearchList(String whatSearch, User user);
     void renameFolder(int[] checked_folders_id, String newName);
     void changeShare(List<Folder> targets);
-    List<Folder> getSharedList(User user);
+    List<Folder> getSharedList(User user, Integer targetFolder);
     void changeInBin(int[] checked_folders_id, boolean stateOfInBinStatus);
     List<Folder> getBinList(User user);
     void move_to(int[] checked_folders_id, Folder target);

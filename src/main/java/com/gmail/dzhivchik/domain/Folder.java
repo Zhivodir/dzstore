@@ -25,6 +25,8 @@ public class Folder {
     private boolean starred;
     @JsonIgnore
     private boolean inbin;
+    @JsonIgnore
+    private boolean shareInFolder;
 
     @JsonIgnore
     @ManyToOne
@@ -55,12 +57,14 @@ public class Folder {
     public Folder() {
     }
 
-    public Folder(String name, User user, Folder parentFolder, boolean starred, boolean inbin) {
+    public Folder(String name, User user, Folder parentFolder,
+                  boolean starred, boolean inbin, boolean shareInFolder) {
         this.name = name;
         this.user = user;
         this.parentFolder = parentFolder;
         this.starred = starred;
         this.inbin = inbin;
+        this.shareInFolder = shareInFolder;
     }
 
     public int getId() { return id; }
@@ -101,4 +105,7 @@ public class Folder {
 
     public boolean isInbin() { return inbin; }
     public void setInbin(boolean inbin) { this.inbin = inbin; }
+
+    public boolean isShareInFolder() { return shareInFolder; }
+    public void setShareInFolder(boolean shareInFolder) { this.shareInFolder = shareInFolder; }
 }

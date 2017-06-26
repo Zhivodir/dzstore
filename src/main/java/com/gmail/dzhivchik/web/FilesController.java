@@ -143,7 +143,8 @@ public class FilesController {
             }
 
             if (share != null) {
-                contentService.share(checked_files_id, checked_folders_id, shareFor);
+                List[] content = contentService.getContentById(checked_files_id, checked_folders_id);
+                contentService.share(content[0], content[1], shareFor, false);
             }
 
             if(addtome != null) {
@@ -173,7 +174,7 @@ public class FilesController {
             String type = mimeType;
             File fileForDAO = null;
             try {
-                fileForDAO = new File(fileName, size, type, user, curFolder, false, false, file.getBytes());
+                fileForDAO = new File(fileName, size, type, user, curFolder, false, false, file.getBytes(), false);
             }catch (IOException e){e.printStackTrace();}
             contentService.uploadFile(fileForDAO);
         }else{

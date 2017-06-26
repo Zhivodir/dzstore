@@ -7,6 +7,7 @@ import com.gmail.dzhivchik.domain.File;
 import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -138,34 +139,40 @@ public class ContentService {
     public void rename(String login, int[] checked_files_id, int[] checked_folders_id, String newName){
         StringBuilder sb = new StringBuilder();
         if(checked_files_id != null){
-            File fileForRename = fileDAO.getListFilesById(checked_files_id).get(0);
+            //File fileForRename = fileDAO.getListFilesById(checked_files_id).get(0);
             fileDAO.renameFile(checked_files_id, newName);
         }else if(checked_folders_id != null){
-            Folder folderForRename = folderDAO.getFolder(checked_folders_id[0]);
+            //Folder folderForRename = folderDAO.getFolder(checked_folders_id[0]);
             folderDAO.renameFolder(checked_folders_id, newName);
         }
     }
 
     @Transactional
-    public void share(int[] checked_files_id, int[] checked_folders_id, String shareFor){
+    public void share(List<File> checked_files, List<Folder> checked_folders, String shareFor, boolean shareInFolder){
         List<User> receivers = userDAO.getShareReceivers(shareFor);
-
-        List<File> targetsFiles = null;
-        if(checked_files_id != null){
-            targetsFiles = fileDAO.getListFilesById(checked_files_id);
-            for (File file : targetsFiles){
-                file.addToShareFor(receivers);
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        for (int i = 0; i < receivers.size(); i++) {
+            if(receivers.get(i).getLogin().equals(login)){
+                receivers.remove(receivers.get(i));
+                i--;
             }
-            fileDAO.changeShare(targetsFiles);
         }
 
-        List<Folder> targetsFolder = null;
-        if(checked_folders_id != null){
-            targetsFolder = folderDAO.getListFoldersById(checked_folders_id);
-            for (Folder folder : targetsFolder){
-                folder.addToShareFor(receivers);
+        if(checked_files != null){
+            for (File file : checked_files){
+                file.addToShareFor(receivers);
+                file.setShareInFolder(shareInFolder);
             }
-            folderDAO.changeShare(targetsFolder);
+            fileDAO.changeShare(checked_files);
+        }
+
+        if(checked_folders != null){
+            for (Folder folder : checked_folders){
+                folder.addToShareFor(receivers);
+                share(folder.getFiles(), folder.getFolders(), shareFor, true);
+                //file.setShareInFolder(shareInFolder);
+            }
+            folderDAO.changeShare(checked_folders);
         }
     }
 
@@ -196,18 +203,16 @@ public class ContentService {
 
 
     @Transactional
-    public List[] getSharedContent(User user){
+    public List[] getSharedContent(User user, Integer targetFolder){
         List[] content = new List[2];
-        content[0] = fileDAO.getSharedList(user);
-        content[1] = folderDAO.getSharedList(user);
+        content[0] = fileDAO.getSharedList(user, targetFolder);
+        content[1] = folderDAO.getSharedList(user, targetFolder);
         return content;
     }
 
 
     @Transactional
     public void addtome(int[] checked_files_id, int[] checked_folders_id, User user){
-        StringBuilder sb = new StringBuilder();
-        String login = user.getLogin();
         if(checked_files_id != null) {
             List<File> listOfAddFiles = getListFilesById(checked_files_id);
             addSharedFileToMyStore(listOfAddFiles, user, null, null);
@@ -259,7 +264,7 @@ public class ContentService {
             createPathForElement(relativePath, curFolder);
             long size = file.getSize();
             if(size <= all - getSizeBusyMemory(user)){
-                fileDAO.upload(new File(fileName, size, file.getType(), user, addFolder, false, false, file.getData()));
+                fileDAO.upload(new File(fileName, size, file.getType(), user, addFolder, false, false, file.getData(), false));
             }else{
                 System.out.println("Havn't need memory");
             }
@@ -268,7 +273,7 @@ public class ContentService {
 
     public void addSharedFolderToMyStore(List<Folder> listOfAddFolders, User user, Folder shareFolder, Folder addFolder){
         for(Folder folder : listOfAddFolders) {
-            folderDAO.createFolder(new Folder(folder.getName(), user, addFolder, false, false));
+            folderDAO.createFolder(new Folder(folder.getName(), user, addFolder, false, false, false));
             Folder tf = folderDAO.getFolder(user, folder.getName(), addFolder);
 
             if(folder.getFiles().size() != 0) {
@@ -279,5 +284,16 @@ public class ContentService {
                 addSharedFolderToMyStore(folder.getFolders(), user, folder, tf);
             }
         }
+    }
+
+    public List[] getContentById(int[] checked_files_id, int[] checked_folders_id) {
+        List[] content = new List[2];
+        if(checked_files_id != null) {
+            content[0] = getListFilesById(checked_files_id);
+        }
+        if(checked_folders_id != null) {
+            content[1] = getListFolderById(checked_folders_id);
+        }
+        return content;
     }
 }

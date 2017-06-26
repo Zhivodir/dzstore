@@ -38,7 +38,7 @@ public class FolderController {
         if (currentFolder != -1) {
             curFolder = contentService.getFolder(currentFolder);
         }
-        Folder folder = new Folder(nameOfFolder, user, curFolder, false, false);
+        Folder folder = new Folder(nameOfFolder, user, curFolder, false, false, false);
         contentService.createFolder(folder);
         return "redirect:/" + typeOfView;
     }

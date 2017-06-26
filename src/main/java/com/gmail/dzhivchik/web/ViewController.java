@@ -42,7 +42,8 @@ public class ViewController {
     }
 
     @RequestMapping(value = "/folder", method = RequestMethod.GET)
-    public String inFolder(Model model, @ModelAttribute("f") final Integer f) {
+    public String inFolder(Model model,
+                           @ModelAttribute("f") final Integer f) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
         Folder currentFolder = contentService.getFolder(f);
@@ -84,11 +85,12 @@ public class ViewController {
         return "search";
     }
 
-    @RequestMapping(value = "/shared")
-    public String shared(Model model) {
+    @RequestMapping(value = "/shared", method = RequestMethod.GET)
+    public String shared(Model model,
+                         @RequestParam(value = "f", required = false) Integer f) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
-        model.addAttribute("content", contentService.getSharedContent(user));
+        model.addAttribute("content", contentService.getSharedContent(user, f));
         model.addAttribute("user", user);
         model.addAttribute("busySpace", showBusySpace(user));
         model.addAttribute("typeOfView", "shared");

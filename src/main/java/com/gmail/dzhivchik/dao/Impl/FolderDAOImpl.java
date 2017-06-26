@@ -183,8 +183,16 @@ public class FolderDAOImpl implements FolderDAO{
     }
 
     @Override
-    public List<Folder> getSharedList(User user) {
-        Query query = entityManager.createQuery("SELECT f FROM Folder f INNER JOIN f.shareFor user WHERE user = :user AND f.inbin <> 1", Folder.class);
+    public List<Folder> getSharedList(User user, Integer targetFolder) {
+        Query query;
+        if(targetFolder == null ) {
+            query = entityManager.createQuery("SELECT f FROM Folder f INNER JOIN f.shareFor user " +
+                    "WHERE user = :user AND f.inbin <> 1  AND f.shareInFolder = false", Folder.class);
+        } else {
+            query = entityManager.createQuery("SELECT f FROM Folder f INNER JOIN f.shareFor user " +
+                    "WHERE user = :user AND f.inbin <> 1 AND f.shareInFolder = true AND f.parentFolder.id = :targetFolder", Folder.class);
+            query.setParameter("targetFolder", targetFolder);
+        }
         query.setParameter("user", user);
         return  (List<Folder>)query.getResultList();
     }
