@@ -27,18 +27,20 @@
         </div>
         <div class="col-sm-9 col-md-10">
             <div class="currentFolderPath">
-                <c:if test="${typeOfView.equals('index')}">
-                    <a href="/${typeOfView}" class="levelPath">My store</a>
-                </c:if>
-                <c:if test="${typeOfView.equals('shared')}">
-                    <a href="/${typeOfView}" class="levelPath">Shared with me</a>
-                </c:if>
-                <c:if test="${typeOfView.equals('starred')}">
-                    <a href="/${typeOfView}" class="levelPath">Starred</a>
-                </c:if>
-                <c:if test="${typeOfView.equals('bin')}">
-                    <a href="/${typeOfView}" class="levelPath">Bin</a>
-                </c:if>
+                <c:choose>
+                    <c:when test="${typeOfView.equals('index')}">
+                        <a href="/${typeOfView}" class="levelPath">My store</a>
+                    </c:when>
+                    <c:when test="${typeOfView.equals('shared')}">
+                        <a href="/${typeOfView}" class="levelPath">Shared with me</a>
+                    </c:when>
+                    <c:when test="${typeOfView.equals('starred')}">
+                        <a href="/${typeOfView}" class="levelPath">Starred</a>
+                    </c:when>
+                    <c:when test="${typeOfView.equals('bin')}">
+                        <a href="/${typeOfView}" class="levelPath">Bin</a>
+                    </c:when>
+                </c:choose>
 
                 <c:if test="${f ne null}">
                     <c:forEach items="${listForRelativePath}" var="folder">

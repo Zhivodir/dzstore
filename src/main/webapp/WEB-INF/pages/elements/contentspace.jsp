@@ -42,6 +42,9 @@
                                     <a class="folder_href" href="/folder?f=${currentFolder.id}"><strong>${currentFolder.name}</strong></a>
                                 </c:otherwise>
                             </c:choose>
+                            <c:if test="${!typeOfView.equals('shared') && currentFolder.shareFor.size() ne 0}">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                            </c:if>
                             <c:if test="${currentFolder.starred eq true}">
                                 <span class="glyphicon glyphicon-star"></span>
                             </c:if>
@@ -55,6 +58,9 @@
                     <tr class="choise_field">
                         <td><input hidden class="choise_checkbox choise_folder" type="checkbox" name="checked_files_id" value="${currentFile.id}"/></td>
                         <td>${currentFile.name}
+                            <c:if test="${!typeOfView.equals('shared') && currentFile.shareFor.size() ne 0}">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                            </c:if>
                             <c:if test="${currentFile.starred eq true}">
                                 <span class="glyphicon glyphicon-star"></span>
                             </c:if>
