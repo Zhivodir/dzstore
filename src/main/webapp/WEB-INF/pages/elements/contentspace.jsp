@@ -30,7 +30,7 @@
                 <c:forEach items="${content[1]}" var="currentFolder">
                     <tr class="choise_field choise_folder">
                         <td><input hidden class="choise_checkbox choise_folder" type="checkbox" name="checked_folders_id" value="${currentFolder.id}"/></td>
-                        <td>
+                        <td class="forContextMenu">
                             <c:choose>
                                 <c:when test="${typeOfView.equals('bin')}">
                                     <a class="folder_href" href="#?f=${currentFolder.id}" ondblclick="$('#modalForOpenDataInBin').modal('show')"><strong>${currentFolder.name}</strong></a>
@@ -57,7 +57,7 @@
                 <c:forEach items="${content[0]}" var="currentFile">
                     <tr class="choise_field">
                         <td><input hidden class="choise_checkbox choise_folder" type="checkbox" name="checked_files_id" value="${currentFile.id}"/></td>
-                        <td>${currentFile.name}
+                        <td class="forContextMenu">${currentFile.name}
                             <c:if test="${!typeOfView.equals('shared') && currentFile.shareFor.size() ne 0}">
                                 <span class="glyphicon glyphicon-eye-open"></span>
                             </c:if>

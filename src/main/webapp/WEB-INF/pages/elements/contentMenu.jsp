@@ -32,7 +32,7 @@
                         <a href="/${typeOfView}" class="levelPath">My store</a>
                     </c:when>
                     <c:when test="${typeOfView.equals('shared')}">
-                        <a href="/${typeOfView}" class="levelPath">Shared with me</a>
+                        <a class="sharedWithMe" href="/${typeOfView}" class="levelPath">Shared with me</a>
                     </c:when>
                     <c:when test="${typeOfView.equals('starred')}">
                         <a href="/${typeOfView}" class="levelPath">Starred</a>

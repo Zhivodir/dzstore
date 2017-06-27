@@ -28,7 +28,7 @@
                                 <input type="text" class="form-control" id="newName" name="name"
                                        placeholder="Enter new name">
                             </div>
-                            <input type="submit" name="rename" value="Rename"/>
+                            <input class="submitRename" type="submit" name="rename" value="Rename"/>
                         </div>
                     </div>
                 </div>

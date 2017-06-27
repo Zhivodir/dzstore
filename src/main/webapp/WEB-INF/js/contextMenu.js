@@ -11,6 +11,40 @@
             $(this).on("contextmenu", function (e) {
                 // return native menu if pressing control
                 if (e.ctrlKey) return;
+                var allOfSelected = $(".selected");
+                var countOfSelected = allOfSelected.length;
+                var countOfSelectedWithStar = $(".selected .glyphicon-star").length;
+                var countOfSelectedForShare = $(".selected .glyphicon-eye-open").length;
+
+                if(countOfSelected > 1){
+                    $(".li_rename").attr("hidden", true);
+                }else{
+                    $(".li_rename").attr("hidden", false);
+                }
+
+                if(countOfSelected - countOfSelectedWithStar > 0){
+                    $(".li_starred").attr("hidden", false);
+                    $(".li_removestar").attr("hidden", true);
+                }else{
+                    $(".li_starred").attr("hidden", true);
+                    $(".li_removestar").attr("hidden", false);
+                }
+
+                if(countOfSelected - countOfSelectedForShare > 0){
+                    $(".li_share").attr("hidden", false);
+                }else{
+                    $(".li_share").attr("hidden", true);
+                }
+
+                if($(".currentFolderPath a.sharedWithMe").length != 0){
+                    $(".li_replace").attr("hidden", true);
+                }else{
+                    $(".li_replace").attr("hidden", false);
+                }
+
+
+
+
 
                 //open menu
                 var $menu = $(settings.menuSelector)

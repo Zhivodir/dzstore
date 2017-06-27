@@ -31,4 +31,3 @@ jQuery(function($) {
         return false;
     });
 });
-
