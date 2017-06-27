@@ -32,7 +32,7 @@
                         <a href="/${typeOfView}" class="levelPath">My store</a>
                     </c:when>
                     <c:when test="${typeOfView.equals('shared')}">
-                        <a class="sharedWithMe" href="/${typeOfView}" class="levelPath">Shared with me</a>
+                        <a href="/${typeOfView}" class="levelPath sharedWithMe">Shared with me</a>
                     </c:when>
                     <c:when test="${typeOfView.equals('starred')}">
                         <a href="/${typeOfView}" class="levelPath">Starred</a>
@@ -45,7 +45,17 @@
                 <c:if test="${f ne null}">
                     <c:forEach items="${listForRelativePath}" var="folder">
                         <span class="glyphicon glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                        <a href="/folder?f=${folder.id}" class="levelPath">${folder.name}</a>
+                        <c:choose>
+                            <c:when test="${typeOfView.equals('index')}">
+                                <a href="/index?f=${folder.id}" class="levelPath">${folder.name}</a>
+                            </c:when>
+                            <c:when test="${typeOfView.equals('shared')}">
+                                <a href="/shared?f=${folder.id}" class="levelPath">${folder.name}</a>
+                            </c:when>
+                            <c:otherwise>
+                                <a href="/folder?f=${folder.id}" class="levelPath">${folder.name}</a>
+                            </c:otherwise>
+                        </c:choose>
                     </c:forEach>
                 </c:if>
             </div>

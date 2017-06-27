@@ -38,6 +38,9 @@
                                 <c:when test="${typeOfView.equals('shared')}">
                                     <a class="folder_href" href="/shared?f=${currentFolder.id}"><strong>${currentFolder.name}</strong></a>
                                 </c:when>
+                                <c:when test="${typeOfView.equals('index')}">
+                                    <a class="folder_href" href="/index?f=${currentFolder.id}"><strong>${currentFolder.name}</strong></a>
+                                </c:when>
                                 <c:otherwise>
                                     <a class="folder_href" href="/folder?f=${currentFolder.id}"><strong>${currentFolder.name}</strong></a>
                                 </c:otherwise>

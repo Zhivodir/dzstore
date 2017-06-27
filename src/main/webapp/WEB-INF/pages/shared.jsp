@@ -45,13 +45,14 @@
     <div class="row">
         <c:set var="typeOfView" value="shared" scope="request"/>
         <c:set var="content" value="${content}" scope="request"/>
-        <c:set var="f" value="-1" scope="request"/>
+        <%--<c:set var="f" value="-1" scope="request"/>--%>
         <c:import url="elements/leftSideBar.jsp" />
         <c:import url="elements/contentspace.jsp" />
     </div>
 </div>
 
-<c:set var="f" value="-1" scope="request"/>
+<%--<c:set var="f" value="-1" scope="request"/>--%>
+<c:set var="f" value="${f}" scope="request"/>
 <c:set var="typeOfView" value="index" scope="request"/>
     <c:import url="/WEB-INF/pages/modalForPages/operations/createNewFolder.jsp" />
     <c:import url="/WEB-INF/pages/modalForPages/operations/fileUpload.jsp"/>

@@ -30,11 +30,24 @@ public class ViewController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/index")
-    public String onIndex(Model model) {
+    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    public String onIndex(Model model,
+                          @RequestParam(value = "f", required = false) Integer f) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
-        model.addAttribute("content", contentService.getContent(user, null));
+        System.out.println("!!!!!!!!!!" + f);
+        if(f != null && f > 0) {
+            Folder currentFolder = contentService.getFolder(f);
+            List<Folder> forRelativePath = new ArrayList<>();
+            getListRelativePath(currentFolder, forRelativePath);
+            Collections.reverse(forRelativePath);
+            forRelativePath.add(currentFolder);
+            model.addAttribute("listForRelativePath", forRelativePath);
+            model.addAttribute("content", contentService.getContent(user, currentFolder));
+        }else{
+            model.addAttribute("content", contentService.getContent(user, null));
+        }
+        model.addAttribute("f", f);
         model.addAttribute("user", user);
         model.addAttribute("busySpace", showBusySpace(user));
         model.addAttribute("typeOfView", "index");
@@ -90,6 +103,15 @@ public class ViewController {
                          @RequestParam(value = "f", required = false) Integer f) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
+        if(f != null && f > 0) {
+            Folder currentFolder = contentService.getFolder(f);
+            List<Folder> forRelativePath = new ArrayList<>();
+            getListRelativePath(currentFolder, forRelativePath);
+            Collections.reverse(forRelativePath);
+            forRelativePath.add(currentFolder);
+            model.addAttribute("listForRelativePath", forRelativePath);
+        }
+        model.addAttribute("f", f);
         model.addAttribute("content", contentService.getSharedContent(user, f));
         model.addAttribute("user", user);
         model.addAttribute("busySpace", showBusySpace(user));

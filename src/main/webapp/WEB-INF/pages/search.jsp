@@ -49,8 +49,8 @@
     </div>
 </div>
 
-<c:set var="f" value="${f}" scope="request"/>
-<c:set var="typeOfView" value="index" scope="request"/>
+<%--<c:set var="f" value="${f}" scope="request"/>--%>
+<%--<c:set var="typeOfView" value="index" scope="request"/>--%>
     <c:import url="/WEB-INF/pages/modalForPages/operations/createNewFolder.jsp" />
     <c:import url="/WEB-INF/pages/modalForPages/operations/fileUpload.jsp"/>
     <c:import url="/WEB-INF/pages/modalForPages/operations/folderUpload.jsp"/>
