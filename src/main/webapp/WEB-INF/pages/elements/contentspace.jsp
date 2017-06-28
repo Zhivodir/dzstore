@@ -5,7 +5,7 @@
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     <div class="table-responsive">
         <form action="/actions_above_checked_files" method="post">
-            <input type="hidden" name="currentFolder" value="${f}">
+            <input type="hidden" name="currentFolderID" value="${currentFolderID}">
             <input type="hidden" name="typeOfView" value="${typeOfView}">
             <table id="myTable" class="table table-striped record_table">
                 <thead>
@@ -33,16 +33,13 @@
                         <td class="forContextMenu">
                             <c:choose>
                                 <c:when test="${typeOfView.equals('bin')}">
-                                    <a class="folder_href" href="#?f=${currentFolder.id}" ondblclick="$('#modalForOpenDataInBin').modal('show')"><strong>${currentFolder.name}</strong></a>
+                                    <a class="folder_href" href="#?currentFolderID=${currentFolder.id}" ondblclick="$('#modalForOpenDataInBin').modal('show')"><strong>${currentFolder.name}</strong></a>
                                 </c:when>
                                 <c:when test="${typeOfView.equals('shared')}">
-                                    <a class="folder_href" href="/shared?f=${currentFolder.id}"><strong>${currentFolder.name}</strong></a>
-                                </c:when>
-                                <c:when test="${typeOfView.equals('index')}">
-                                    <a class="folder_href" href="/index?f=${currentFolder.id}"><strong>${currentFolder.name}</strong></a>
+                                    <a class="folder_href" href="/shared?currentFolderID=${currentFolder.id}"><strong>${currentFolder.name}</strong></a>
                                 </c:when>
                                 <c:otherwise>
-                                    <a class="folder_href" href="/folder?f=${currentFolder.id}"><strong>${currentFolder.name}</strong></a>
+                                    <a class="folder_href" href="/folder?currentFolderID=${currentFolder.id}"><strong>${currentFolder.name}</strong></a>
                                 </c:otherwise>
                             </c:choose>
                             <c:if test="${!typeOfView.equals('shared') && currentFolder.shareFor.size() ne 0}">
@@ -60,7 +57,7 @@
                 <c:forEach items="${content[0]}" var="currentFile">
                     <tr class="choise_field">
                         <td><input hidden class="choise_checkbox choise_folder" type="checkbox" name="checked_files_id" value="${currentFile.id}"/></td>
-                        <td class="forContextMenu">${currentFile.name}
+                        <td>${currentFile.name}
                             <c:if test="${!typeOfView.equals('shared') && currentFile.shareFor.size() ne 0}">
                                 <span class="glyphicon glyphicon-eye-open"></span>
                             </c:if>

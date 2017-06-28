@@ -19,7 +19,7 @@
                         <div class="modal-body">
                             <form class="form-inline" enctype="multipart/form-data" action="upload" method="post">
                                 <div class="form-group">
-                                    <input type="hidden" name="currentFolder" value="${f}">
+                                    <input type="hidden" name="currentFolderID" value="${currentFolderID}">
                                     <input type="file" name="file" placeholder="Choice file">
                                 </div>
                                 <button type="submit" class="btn btn-primary">Upload</button>

@@ -19,7 +19,7 @@
                         <div class="modal-body">
                             <form class="form-inline" enctype="multipart/form-data" action="upload" method="post">
                                 <div class="form-group" style="float: left">
-                                    <input type="hidden" name="currentFolder" value="${f}">
+                                    <input type="hidden" name="currentFolderID" value="${currentFolderID}">
                                     <input type="hidden" name="uploaded" value="1"/>
                                     <input type="file" name="files" webkitdirectory directory multiple mozdirectory/>
                                 </div>
