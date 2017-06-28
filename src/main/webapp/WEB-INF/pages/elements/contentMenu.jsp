@@ -40,20 +40,23 @@
                     <c:when test="${typeOfView.equals('bin')}">
                         <a href="/${typeOfView}" class="levelPath">Bin</a>
                     </c:when>
+                    <c:when test="${typeOfView.equals('search')}">
+                        <span class="levelPath">Search result</span>
+                    </c:when>
                 </c:choose>
 
-                <c:if test="${f ne null}">
+                <c:if test="${currentFolderID ne null}">
                     <c:forEach items="${listForRelativePath}" var="folder">
                         <span class="glyphicon glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
                         <c:choose>
                             <c:when test="${typeOfView.equals('index')}">
-                                <a href="/index?f=${folder.id}" class="levelPath">${folder.name}</a>
+                                <a href="/index?currentFolderID=${folder.id}" class="levelPath">${folder.name}</a>
                             </c:when>
                             <c:when test="${typeOfView.equals('shared')}">
-                                <a href="/shared?f=${folder.id}" class="levelPath">${folder.name}</a>
+                                <a href="/shared?currentFolderID=${folder.id}" class="levelPath">${folder.name}</a>
                             </c:when>
                             <c:otherwise>
-                                <a href="/folder?f=${folder.id}" class="levelPath">${folder.name}</a>
+                                <a href="/index?currentFolderID=${folder.id}" class="levelPath">${folder.name}</a>
                             </c:otherwise>
                         </c:choose>
                     </c:forEach>

@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,26 +51,26 @@ public class ViewController {
         model.addAttribute("typeOfView", "index");
         return "index";
     }
-
-    @RequestMapping(value = "/folder", method = RequestMethod.GET)
-    public String inFolder(Model model,
-                           @ModelAttribute("currentFolderID") final Integer currentFolderID) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
-        Folder currentFolder = contentService.getFolder(currentFolderID);
-        List<Folder> forRelativePath = new ArrayList<>();
-        getListRelativePath(currentFolder, forRelativePath);
-        Collections.reverse(forRelativePath);
-        forRelativePath.add(currentFolder);
-        //id-shnik folder vnutr' kotoroy zaxodim
-        model.addAttribute("currentFolderID", currentFolderID);
-        model.addAttribute("content", contentService.getContent(user, currentFolder));
-        model.addAttribute("listForRelativePath", forRelativePath);
-        model.addAttribute("user", user);
-        model.addAttribute("busySpace", showBusySpace(user));
-        model.addAttribute("typeOfView", "folder");//
-        return "folder";
-    }
+//
+//    @RequestMapping(value = "/folder", method = RequestMethod.GET)
+//    public String inFolder(Model model,
+//                           @ModelAttribute("currentFolderID") final Integer currentFolderID) {
+//        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+//        User user = userService.getUser(login);
+//        Folder currentFolder = contentService.getFolder(currentFolderID);
+//        List<Folder> forRelativePath = new ArrayList<>();
+//        getListRelativePath(currentFolder, forRelativePath);
+//        Collections.reverse(forRelativePath);
+//        forRelativePath.add(currentFolder);
+//        //id-shnik folder vnutr' kotoroy zaxodim
+//        model.addAttribute("currentFolderID", currentFolderID);
+//        model.addAttribute("content", contentService.getContent(user, currentFolder));
+//        model.addAttribute("listForRelativePath", forRelativePath);
+//        model.addAttribute("user", user);
+//        model.addAttribute("busySpace", showBusySpace(user));
+//        model.addAttribute("typeOfView", "folder");//
+//        return "folder";
+//    }
 
     @RequestMapping(value = "/starred")
     public String onStarred(Model model) {
