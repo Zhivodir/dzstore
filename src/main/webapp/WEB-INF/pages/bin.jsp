@@ -15,27 +15,22 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
 
     <title>DZstore</title>
 
-    <!-- Bootstrap core CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
     <link href="css/index.css" rel="stylesheet">
     <link href="css/forContextMenu.css" rel="stylesheet">
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
 </head>
 
 <body>
+<%@ include file="greeting.jsp" %>
+
+<sec:authorize access="isAuthenticated()">
 <c:import url="elements/navbar.jsp"/>
 <c:import url="elements/contentMenu.jsp"/>
 
@@ -48,7 +43,7 @@
     </div>
 </div>
 
-<c:set var="f" value="${f}" scope="request"/>
+<c:set var="currentFolderID" value="${currentFolderID}" scope="request"/>
 <c:import url="/WEB-INF/pages/modalForPages/operations/createNewFolder.jsp"/>
 <c:import url="/WEB-INF/pages/modalForPages/operations/fileUpload.jsp"/>
 <c:import url="/WEB-INF/pages/modalForPages/operations/createNewFolder.jsp"/>
@@ -66,6 +61,7 @@
 <script src="js/ie10-viewport-bug-workaround.js"></script>
 <script src="js/contextMenu.js"></script>
 <script src="js/other_scripts.js"></script>
+</sec:authorize>
 
 </body>
 </html>

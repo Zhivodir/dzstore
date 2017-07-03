@@ -29,7 +29,7 @@
             <div class="currentFolderPath">
                 <c:choose>
                     <c:when test="${typeOfView.equals('index')}">
-                        <a href="/${typeOfView}" class="levelPath">My store</a>
+                        <a href="/" class="levelPath">My store</a>
                     </c:when>
                     <c:when test="${typeOfView.equals('shared')}">
                         <a href="/${typeOfView}" class="levelPath sharedWithMe">Shared with me</a>
@@ -49,14 +49,11 @@
                     <c:forEach items="${listForRelativePath}" var="folder">
                         <span class="glyphicon glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
                         <c:choose>
-                            <c:when test="${typeOfView.equals('index')}">
-                                <a href="/index?currentFolderID=${folder.id}" class="levelPath">${folder.name}</a>
-                            </c:when>
                             <c:when test="${typeOfView.equals('shared')}">
                                 <a href="/shared?currentFolderID=${folder.id}" class="levelPath">${folder.name}</a>
                             </c:when>
                             <c:otherwise>
-                                <a href="/index?currentFolderID=${folder.id}" class="levelPath">${folder.name}</a>
+                                <a href="/?currentFolderID=${folder.id}" class="levelPath">${folder.name}</a>
                             </c:otherwise>
                         </c:choose>
                     </c:forEach>

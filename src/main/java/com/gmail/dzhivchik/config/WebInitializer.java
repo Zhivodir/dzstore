@@ -4,12 +4,15 @@ import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.DispatcherServlet;
 
+import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration.Dynamic;
+import java.util.EnumSet;
 
 public class WebInitializer implements WebApplicationInitializer {
 
@@ -25,6 +28,17 @@ public class WebInitializer implements WebApplicationInitializer {
         Dynamic servlet = servletContext.addServlet("dispatcher", new DispatcherServlet(ctx));
         servlet.addMapping("/");
         servlet.setLoadOnStartup(1);
+
+        // Фильтр для корректного приема и отображения кирилицы
+        EnumSet<DispatcherType> dispatcherTypes = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE);
+        CharacterEncodingFilter cef = new CharacterEncodingFilter();
+        cef.setEncoding("UTF-8");
+        cef.setForceEncoding(true);
+        FilterRegistration.Dynamic characterEncoder = servletContext.addFilter("encodingFilter", cef);
+        characterEncoder.setInitParameter("encoding", "UTF-8");
+        characterEncoder.setInitParameter("forceEncoding", "true");
+        characterEncoder.addMappingForUrlPatterns(dispatcherTypes, true, "/*");
+        characterEncoder.setAsyncSupported(true);
 
         //Reshaet: org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role:   could not initialize proxy - no Session
         FilterRegistration.Dynamic filter = servletContext.addFilter("openEntityManagerInViewFilter", OpenEntityManagerInViewFilter.class);

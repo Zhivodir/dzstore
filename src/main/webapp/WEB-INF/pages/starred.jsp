@@ -36,6 +36,9 @@
 </head>
 
 <body>
+<%@ include file="greeting.jsp" %>
+<sec:authorize access="isAuthenticated()">
+
 <c:import url="elements/navbar.jsp"/>
 <c:import url="elements/contentMenu.jsp"/>
 
@@ -43,12 +46,13 @@
     <div class="row">
         <c:set var="typeOfView" value="starred" scope="request"/>
         <c:set var="content" value="${content}" scope="request"/>
+        <c:set var="currentFolderID" value="${currentFolderID}" scope="request"/>
         <c:import url="elements/leftSideBar.jsp"/>
         <c:import url="elements/contentspace.jsp"/>
     </div>
 </div>
 
-<c:set var="f" value="${f}" scope="request"/>
+<c:set var="currentFolderID" value="${currentFolderID}" scope="request"/>
 <%--<c:set var="typeOfView" value="index" scope="request"/>--%>
 <c:import url="/WEB-INF/pages/modalForPages/operations/createNewFolder.jsp"/>
 <c:import url="/WEB-INF/pages/modalForPages/operations/fileUpload.jsp"/>
@@ -68,7 +72,7 @@
 <script src="js/contextMenu.js"></script>
 <script src="js/tree.js"></script>
 <script src="js/other_scripts.js"></script>
-
+</sec:authorize>
 </body>
 </html>
 

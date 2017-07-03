@@ -44,6 +44,7 @@ public class FilesController {
     public String upload(Model model,
                          @RequestParam(value = "file", required = false) MultipartFile file,
                          @RequestParam(value = "files", required = false) MultipartFile[] files,
+                         @RequestParam String typeOfView,
                          @RequestParam Integer currentFolderID) {
 
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -51,8 +52,7 @@ public class FilesController {
 
         System.out.println("Current folder id: " + currentFolderID);
         Folder curFolder = null;
-        if (currentFolderID != -1 && currentFolderID != null) {
-            System.out.println(11111);
+        if (currentFolderID != null) {
             curFolder = contentService.getFolder(currentFolderID);
         }
 
@@ -66,12 +66,11 @@ public class FilesController {
             }
         }
 
-        if (currentFolderID != -1) {
-            model.addAttribute("currentFolderID", currentFolderID);
-            return "redirect:/folder";
-        }
         model.addAttribute("currentFolderID", currentFolderID);
-        return "redirect:/index";
+        if(typeOfView.equals("index")){
+            return "redirect:/";
+        }
+        return "redirect:/" + typeOfView;
     }
 
 
@@ -92,7 +91,6 @@ public class FilesController {
                                            @RequestParam(value = "share", required = false) String share,
                                            @RequestParam(value = "shareFor", required = false) String shareFor,
                                            @RequestParam(value = "addtome", required = false) String addtome,
-//                                           @RequestParam(value = "f", required = false) String f,
                                            @RequestParam String typeOfView,
                                            @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID,
                                            final RedirectAttributes redirectAttributes) {
@@ -164,6 +162,9 @@ public class FilesController {
             }
         }
         redirectAttributes.addFlashAttribute("currentFolderID", currentFolderID);
+        if(typeOfView.equals("index")){
+            return "redirect:/";
+        }
         return "redirect:/" + typeOfView;
     }
 

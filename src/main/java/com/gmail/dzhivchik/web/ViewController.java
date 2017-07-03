@@ -29,7 +29,8 @@ public class ViewController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/index", method = RequestMethod.GET)
+//    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public String onIndex(Model model,
                           @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -51,35 +52,18 @@ public class ViewController {
         model.addAttribute("typeOfView", "index");
         return "index";
     }
-//
-//    @RequestMapping(value = "/folder", method = RequestMethod.GET)
-//    public String inFolder(Model model,
-//                           @ModelAttribute("currentFolderID") final Integer currentFolderID) {
-//        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-//        User user = userService.getUser(login);
-//        Folder currentFolder = contentService.getFolder(currentFolderID);
-//        List<Folder> forRelativePath = new ArrayList<>();
-//        getListRelativePath(currentFolder, forRelativePath);
-//        Collections.reverse(forRelativePath);
-//        forRelativePath.add(currentFolder);
-//        //id-shnik folder vnutr' kotoroy zaxodim
-//        model.addAttribute("currentFolderID", currentFolderID);
-//        model.addAttribute("content", contentService.getContent(user, currentFolder));
-//        model.addAttribute("listForRelativePath", forRelativePath);
-//        model.addAttribute("user", user);
-//        model.addAttribute("busySpace", showBusySpace(user));
-//        model.addAttribute("typeOfView", "folder");//
-//        return "folder";
-//    }
+
 
     @RequestMapping(value = "/starred")
-    public String onStarred(Model model) {
+    public String onStarred(Model model,
+                            @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
         model.addAttribute("content", contentService.getStarredContent(user));
         model.addAttribute("user", user);
         model.addAttribute("busySpace", showBusySpace(user));
         model.addAttribute("typeOfView", "starred");
+        model.addAttribute("currentFolderID", currentFolderID);
         return "starred";
     }
 
@@ -140,7 +124,9 @@ public class ViewController {
     //all code change on query to DB
     public String[] showBusySpace(User user) {
         long filesSize = contentService.getSizeBusyMemory(user);
+        long ostatok = 0;
         String[] sizes = new String[2];
+        int size = 0;
         long wholePart = filesSize;
         long delitel = 1;
         int pow = 0;
@@ -150,24 +136,23 @@ public class ViewController {
             delitel = delitel * 1024;
             pow++;
         }
-        sizes[0] = wholePart + "";
-        if(filesSize%delitel != 0){
-            sizes[0] = sizes[0] + "." + String.valueOf(filesSize % (delitel)).substring(0, 2);
-        }
+        ostatok = filesSize%delitel;
+        size = (int)Math.round(Double.parseDouble(wholePart + "." + ostatok));
+
         switch (pow){
             case 0:
                 if(filesSize != 0){
-                    sizes[0] = sizes[0] + " bytes";
+                    sizes[0] = size + " bytes";
                 }
                 break;
             case 1:
-                sizes[0] = sizes[0] + " Kb";
+                sizes[0] = size + " Kb";
                 break;
             case 2:
-                sizes[0] = sizes[0] + " Mb";
+                sizes[0] = size + " Mb";
                 break;
             case 3:
-                sizes[0] = sizes[0] + " Gb";
+                sizes[0] = size + " Gb";
                 break;
         }
         //Доступное по условиям тарифа. Пока захардкодено

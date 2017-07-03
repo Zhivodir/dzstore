@@ -39,7 +39,7 @@
                                     <a class="folder_href" href="/shared?currentFolderID=${currentFolder.id}"><strong>${currentFolder.name}</strong></a>
                                 </c:when>
                                 <c:otherwise>
-                                    <a class="folder_href" href="/index?currentFolderID=${currentFolder.id}"><strong>${currentFolder.name}</strong></a>
+                                    <a class="folder_href" href="/?currentFolderID=${currentFolder.id}"><strong>${currentFolder.name}</strong></a>
                                 </c:otherwise>
                             </c:choose>
                             <c:if test="${!typeOfView.equals('shared') && currentFolder.shareFor.size() ne 0}">

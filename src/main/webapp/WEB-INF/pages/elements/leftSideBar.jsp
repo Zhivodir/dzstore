@@ -5,10 +5,10 @@
     <ul class="nav nav-sidebar">
         <c:choose>
             <c:when test="${typeOfView.equals('index')||typeOfView.equals('folder')}">
-                <li><a href="/index" class="href_for_sidebar active_menu_item"><span class="glyphicon glyphicon-home"></span> My store</a></li>
+                <li><a href="/" class="href_for_sidebar active_menu_item"><span class="glyphicon glyphicon-home"></span> My store</a></li>
             </c:when>
             <c:otherwise>
-                <li><a href="/index" class="href_for_sidebar"><span class="glyphicon glyphicon-home"></span> My store</a></li>
+                <li><a href="/" class="href_for_sidebar"><span class="glyphicon glyphicon-home"></span> My store</a></li>
             </c:otherwise>
         </c:choose>
         <c:choose>

@@ -47,7 +47,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // по которым будет определятся доступ к ресурсам и остальным данным
                 .authorizeRequests()
                 .antMatchers("/resources/**", "/**").permitAll()
-                .antMatchers("/index/**").hasAnyRole("USER","ADMIN")
+//                .antMatchers("/index/**").hasAnyRole("USER","ADMIN")
+                .antMatchers("/**").hasAnyRole("USER","ADMIN")
                 .anyRequest().permitAll()
                 .and();
 
@@ -59,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // указываем URL при неудачном логине
                 .failureUrl("/login?error")
                 // Указываем параметры логина и пароля с формы логина
-                .defaultSuccessUrl("/index")
+                .defaultSuccessUrl("/")
                 .usernameParameter("j_username")
                 .passwordParameter("j_password")
                 // даем доступ к форме логина всем
