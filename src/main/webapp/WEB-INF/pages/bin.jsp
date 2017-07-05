@@ -46,6 +46,7 @@
 <c:set var="currentFolderID" value="${currentFolderID}" scope="request"/>
 <c:import url="/WEB-INF/pages/modalForPages/operations/createNewFolder.jsp"/>
 <c:import url="/WEB-INF/pages/modalForPages/operations/fileUpload.jsp"/>
+    <c:import url="/WEB-INF/pages/modalForPages/operations/folderUpload.jsp"/>
 <c:import url="/WEB-INF/pages/modalForPages/operations/createNewFolder.jsp"/>
 <c:import url="/WEB-INF/pages/modalForPages/operations/newImageForProfile.jsp"/>
 

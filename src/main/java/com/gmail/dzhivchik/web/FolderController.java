@@ -35,11 +35,15 @@ public class FolderController {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
         Folder curFolder = null;
-        if (currentFolder != -1) {
+        if (currentFolder != null) {
             curFolder = contentService.getFolder(currentFolder);
         }
         Folder folder = new Folder(nameOfFolder, user, curFolder, false, false, false);
+        System.out.println(folder.getFiles() == null);
         contentService.createFolder(folder);
+        if(typeOfView.equals("index")){
+            return "redirect:/";
+        }
         return "redirect:/" + typeOfView;
     }
 }

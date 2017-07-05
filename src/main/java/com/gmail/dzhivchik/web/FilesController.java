@@ -45,12 +45,12 @@ public class FilesController {
                          @RequestParam(value = "file", required = false) MultipartFile file,
                          @RequestParam(value = "files", required = false) MultipartFile[] files,
                          @RequestParam String typeOfView,
+                         @RequestParam(value = "structure", required = false) String structure,
                          @RequestParam Integer currentFolderID) {
 
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
 
-        System.out.println("Current folder id: " + currentFolderID);
         Folder curFolder = null;
         if (currentFolderID != null) {
             curFolder = contentService.getFolder(currentFolderID);
@@ -61,11 +61,18 @@ public class FilesController {
         }
 
         if (files != null) {
-            for (MultipartFile currentFile : files) {
-                uploadFile(currentFile, user, curFolder, login);
+            String[] pathes = null;
+            if(structure.startsWith(",")){
+                structure = structure.substring(1);
             }
+            String targetFolderPath = structure.substring(0, structure.indexOf("/"));
+            structure = structure.replaceAll(targetFolderPath + "/", "");
+            Folder targetFolder = new Folder(targetFolderPath, user, curFolder, false, false, false);
+            targetFolder.setFiles(new ArrayList<File>());
+            pathes = structure.split(";");
+            prepareNewFolderForUpload(files, pathes, user, targetFolder, structure);
+            contentService.uploadFolder(targetFolder);
         }
-
         model.addAttribute("currentFolderID", currentFolderID);
         if(typeOfView.equals("index")){
             return "redirect:/";
@@ -143,7 +150,7 @@ public class FilesController {
                 downloadContent(listCheckedFiles, listCheckedFolder);
             }
 
-            if (share != null) {
+            if(share != null) {
                 List[] content = contentService.getContentById(checked_files_id, checked_folders_id);
                 contentService.share(content[0], content[1], shareFor, false);
             }
@@ -184,6 +191,25 @@ public class FilesController {
         }else{
             System.out.println("Havn't need memory");
         }
+    }
+
+    public void prepareNewFolderForUpload(MultipartFile[] files, String[] pathes, User user, Folder curFolder, String structure){
+        try {
+            for (int i = 0; i < pathes.length; i++) {
+                System.out.println(pathes[i]);
+                if (!pathes[i].contains("/")) {
+                    File file = new File(pathes[i], files[i].getSize(), files[i].getContentType(),
+                            user, curFolder, false, false, files[i].getBytes(), false);
+                    curFolder.getFiles().add(file);
+                }else if(pathes[i].contains("/")){
+                    //curFolder.getFolders().add(new Folder(targetFolderPath, user, curFolder, false, false, false))
+                }
+            }
+        }catch (IOException e){e.printStackTrace();}
+    }
+
+    public void addingFileAddingIntoSubfolder(MultipartFile file, User user, Folder curFolder, String path){
+
     }
 
                          /*   DOWNLOAD  */

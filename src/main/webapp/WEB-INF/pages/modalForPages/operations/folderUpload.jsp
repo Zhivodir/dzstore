@@ -18,10 +18,12 @@
                         </div>
                         <div class="modal-body">
                             <form class="form-inline" enctype="multipart/form-data" action="upload" method="post">
-                                <div class="form-group" style="float: left">
+                                <div class="form-group" style="float: left" id="folder_upload">
+                                    <input type="hidden" name="typeOfView" value="${typeOfView}">
                                     <input type="hidden" name="currentFolderID" value="${currentFolderID}">
                                     <input type="hidden" name="uploaded" value="1"/>
-                                    <input type="file" name="files" webkitdirectory directory multiple mozdirectory/>
+                                    <input type="hidden" name="structure" id="structure" value=""/>
+                                    <input type="file" name="files" id="files" webkitdirectory directory multiple mozdirectory/>
                                 </div>
                                 <input style="float: left; margin-top: -9px" class="btn btn-primary" type="submit" value="Загрузить"/>
                             </form>

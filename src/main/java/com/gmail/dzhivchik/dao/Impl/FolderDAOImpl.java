@@ -35,6 +35,12 @@ public class FolderDAOImpl implements FolderDAO{
 
 
     @Override
+    public void upload(Folder folder) {
+        entityManager.merge(folder);
+    }
+
+
+    @Override
     public Folder isFolder(String name, boolean inbin, User user, Folder parentFolder) {
         Query query;
         if(parentFolder == null){

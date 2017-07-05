@@ -49,8 +49,8 @@ public class ContentService {
 
 
     @Transactional
-    public void uploadFolder(File[] files){
-        fileDAO.uploadGroup(files);
+    public void uploadFolder(Folder folder){
+        folderDAO.upload(folder);
     }
 
 
