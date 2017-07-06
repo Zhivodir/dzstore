@@ -40,11 +40,11 @@ public class Folder {
 
     @JsonIgnore
     @OneToMany(mappedBy = "parentFolder", cascade = CascadeType.ALL)
-    private List<File> files;
+    private List<File> files = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "parentFolder", cascade = CascadeType.ALL)
-    private List<Folder> folders;
+    private List<Folder> folders = new ArrayList<>();
 
     @JsonIgnore
     @ManyToMany
@@ -108,4 +108,14 @@ public class Folder {
 
     public boolean isShareInFolder() { return shareInFolder; }
     public void setShareInFolder(boolean shareInFolder) { this.shareInFolder = shareInFolder; }
+
+    @Override
+    public String toString() {
+        return "Folder{" +
+                "name='" + name + '\'' +
+                ", parentFolder=" + parentFolder +
+                ", files=" + files +
+                ", folders=" + folders +
+                '}';
+    }
 }

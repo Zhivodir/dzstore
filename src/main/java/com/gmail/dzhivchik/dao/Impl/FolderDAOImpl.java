@@ -36,7 +36,15 @@ public class FolderDAOImpl implements FolderDAO{
 
     @Override
     public void upload(Folder folder) {
-        entityManager.merge(folder);
+        Folder searchFolder = isFolder(folder.getName(), folder.isInbin(), folder.getUser(), folder.getParentFolder());
+        if(searchFolder != null){
+            Query query = entityManager.createQuery("UPDATE Folder f SET f.inbin = :inbin WHERE f.id = :id");
+            query.setParameter("inbin", false);
+            query.setParameter("id", searchFolder.getId());
+            query.executeUpdate();
+        } else {
+            entityManager.persist(folder);
+        }
     }
 
 

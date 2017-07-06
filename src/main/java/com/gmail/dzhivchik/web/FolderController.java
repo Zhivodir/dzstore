@@ -39,7 +39,6 @@ public class FolderController {
             curFolder = contentService.getFolder(currentFolder);
         }
         Folder folder = new Folder(nameOfFolder, user, curFolder, false, false, false);
-        System.out.println(folder.getFiles() == null);
         contentService.createFolder(folder);
         if(typeOfView.equals("index")){
             return "redirect:/";

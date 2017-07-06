@@ -19,7 +19,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -65,10 +67,9 @@ public class FilesController {
             if(structure.startsWith(",")){
                 structure = structure.substring(1);
             }
-            String targetFolderPath = structure.substring(0, structure.indexOf("/"));
-            structure = structure.replaceAll(targetFolderPath + "/", "");
-            Folder targetFolder = new Folder(targetFolderPath, user, curFolder, false, false, false);
-            targetFolder.setFiles(new ArrayList<File>());
+            String targetFolderName = structure.substring(0, structure.indexOf("/"));
+            structure = structure.replaceAll(targetFolderName + "/", "");
+            Folder targetFolder = new Folder(targetFolderName, user, curFolder, false, false, false);
             pathes = structure.split(";");
             prepareNewFolderForUpload(files, pathes, user, targetFolder, structure);
             contentService.uploadFolder(targetFolder);
@@ -194,23 +195,46 @@ public class FilesController {
     }
 
     public void prepareNewFolderForUpload(MultipartFile[] files, String[] pathes, User user, Folder curFolder, String structure){
+        Map<String, Folder> map = new HashMap<>();
         try {
             for (int i = 0; i < pathes.length; i++) {
-                System.out.println(pathes[i]);
                 if (!pathes[i].contains("/")) {
                     File file = new File(pathes[i], files[i].getSize(), files[i].getContentType(),
                             user, curFolder, false, false, files[i].getBytes(), false);
                     curFolder.getFiles().add(file);
-                }else if(pathes[i].contains("/")){
-                    //curFolder.getFolders().add(new Folder(targetFolderPath, user, curFolder, false, false, false))
+                } else if (pathes[i].contains("/")) {
+                    String pathToFolderWithThisFile = pathes[i].substring(0, pathes[i].lastIndexOf("/"));
+
+                    if (map.containsKey(pathToFolderWithThisFile)) {
+                        //если папка уже есть в нее просто добавляеться файл
+                        map.get(pathToFolderWithThisFile).getFiles().add(new File(pathes[i], files[i].getSize(), files[i].getContentType(),
+                                user, map.get(pathToFolderWithThisFile), false, false, files[i].getBytes(), false));
+                    } else {
+                        //если такой папки еще нет
+                        //изначально считаеться ,что добавляемая пользователем папка родительская для текущей папки
+                        Folder parentFolderForFolderWithThisFile = curFolder;
+                        //точка начала имени родительской папки файла
+                        int startOfTargetFolderName = pathToFolderWithThisFile.lastIndexOf("/") + 1;
+                        String targetFolderNameAndFileName = pathes[i].substring(startOfTargetFolderName);
+                        String targetFolderName = targetFolderNameAndFileName.substring(0, targetFolderNameAndFileName.indexOf("/"));
+                        //если добавляемая пользователем папка не родительская для
+                        // текущей папки ,то определяем родительскую и достаем её из карты
+                        if(startOfTargetFolderName > 0) {
+                            String parentFolderPath = pathToFolderWithThisFile.substring(0, pathToFolderWithThisFile.indexOf("/"));
+                            parentFolderForFolderWithThisFile = map.get(parentFolderPath);
+                        }
+                        Folder newFolder = new Folder(targetFolderName, user, parentFolderForFolderWithThisFile, false, false, false);
+                        System.out.println(targetFolderNameAndFileName.substring(targetFolderNameAndFileName.lastIndexOf("/")));
+                        newFolder.getFiles().add(new File(targetFolderNameAndFileName.substring(targetFolderNameAndFileName.lastIndexOf("/")+1), files[i].getSize(), files[i].getContentType(),
+                                user, map.get(pathToFolderWithThisFile), false, false, files[i].getBytes(), false));
+                        parentFolderForFolderWithThisFile.getFolders().add(newFolder);
+                        map.put(pathToFolderWithThisFile, newFolder);
+                    }
                 }
             }
         }catch (IOException e){e.printStackTrace();}
     }
 
-    public void addingFileAddingIntoSubfolder(MultipartFile file, User user, Folder curFolder, String path){
-
-    }
 
                          /*   DOWNLOAD  */
 

@@ -124,4 +124,12 @@ public class File implements Serializable {
 
     public boolean isShareInFolder() { return shareInFolder; }
     public void setShareInFolder(boolean shareInFolder) { this.shareInFolder = shareInFolder; }
+
+    @Override
+    public String toString() {
+        return "File{" +
+                "name='" + name + '\'' +
+                ", size=" + size +
+                '}';
+    }
 }
