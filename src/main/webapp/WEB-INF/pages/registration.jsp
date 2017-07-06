@@ -33,6 +33,7 @@
 </head>
 
 <body>
+
 <h1>Регистрация</h1>
 <div class="container-fluid">
     <div class="row">
