@@ -204,19 +204,20 @@ public class FilesController {
                     curFolder.getFiles().add(file);
                 } else if (pathes[i].contains("/")) {
                     String pathToFolderWithThisFile = pathes[i].substring(0, pathes[i].lastIndexOf("/"));
-
+                    //точка начала имени родительской папки файла
+                    int startOfTargetFolderName = pathToFolderWithThisFile.lastIndexOf("/") + 1;
+                    String targetFolderNameAndFileName = pathes[i].substring(startOfTargetFolderName);
+                    String targetFolderName = targetFolderNameAndFileName.substring(0, targetFolderNameAndFileName.indexOf("/"));
                     if (map.containsKey(pathToFolderWithThisFile)) {
                         //если папка уже есть в нее просто добавляеться файл
-                        map.get(pathToFolderWithThisFile).getFiles().add(new File(pathes[i], files[i].getSize(), files[i].getContentType(),
+                        map.get(pathToFolderWithThisFile).getFiles().add(new File(targetFolderNameAndFileName.substring(targetFolderNameAndFileName.lastIndexOf("/")+1), files[i].getSize(), files[i].getContentType(),
                                 user, map.get(pathToFolderWithThisFile), false, false, files[i].getBytes(), false));
                     } else {
                         //если такой папки еще нет
                         //изначально считаеться ,что добавляемая пользователем папка родительская для текущей папки
                         Folder parentFolderForFolderWithThisFile = curFolder;
-                        //точка начала имени родительской папки файла
-                        int startOfTargetFolderName = pathToFolderWithThisFile.lastIndexOf("/") + 1;
-                        String targetFolderNameAndFileName = pathes[i].substring(startOfTargetFolderName);
-                        String targetFolderName = targetFolderNameAndFileName.substring(0, targetFolderNameAndFileName.indexOf("/"));
+
+
                         //если добавляемая пользователем папка не родительская для
                         // текущей папки ,то определяем родительскую и достаем её из карты
                         if(startOfTargetFolderName > 0) {
@@ -224,9 +225,8 @@ public class FilesController {
                             parentFolderForFolderWithThisFile = map.get(parentFolderPath);
                         }
                         Folder newFolder = new Folder(targetFolderName, user, parentFolderForFolderWithThisFile, false, false, false);
-                        System.out.println(targetFolderNameAndFileName.substring(targetFolderNameAndFileName.lastIndexOf("/")));
-                        newFolder.getFiles().add(new File(targetFolderNameAndFileName.substring(targetFolderNameAndFileName.lastIndexOf("/")+1), files[i].getSize(), files[i].getContentType(),
-                                user, map.get(pathToFolderWithThisFile), false, false, files[i].getBytes(), false));
+//                        newFolder.getFiles().add(new File(targetFolderNameAndFileName.substring(targetFolderNameAndFileName.lastIndexOf("/")+1), files[i].getSize(), files[i].getContentType(),
+//                                user, map.get(pathToFolderWithThisFile), false, false, files[i].getBytes(), false));
                         parentFolderForFolderWithThisFile.getFolders().add(newFolder);
                         map.put(pathToFolderWithThisFile, newFolder);
                     }
