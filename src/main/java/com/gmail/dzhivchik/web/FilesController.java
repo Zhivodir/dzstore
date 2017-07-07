@@ -62,7 +62,7 @@ public class FilesController {
             uploadFile(file, user, curFolder, login);
         }
 
-        if (files != null) {
+        if (files != null && structure != null) {
             String[] pathes = null;
             if(structure.startsWith(",")){
                 structure = structure.substring(1);

@@ -35,7 +35,6 @@ public class LoginController {
                                 @RequestParam("password") String password,
                                 @RequestParam("email") String email){
         User user = new User(login, password, email, UserRoleEnum.USER);
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!");
         userService.addUser(user);
         return "redirect:/login";
     }
