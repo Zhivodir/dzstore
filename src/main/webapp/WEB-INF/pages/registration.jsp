@@ -34,38 +34,16 @@
 
 <body>
 
-<h1>Регистрация</h1>
-<div class="container-fluid">
+<div class="container-fluid" style="width: 300px;">
     <div class="row">
         <div class="col-md-12">
+            <h2 style="text-align: center;">Registration</h2>
             <form action="create_new_user" method="post">
-                <div class="form-group">
-                    <label for="mail" class="col-sm-2 control-label">Email</label>
-                    <div class="col-sm-10">
-                        <input type="email" name="email" class="form-control" id="mail" placeholder="Email">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="mail" class="col-sm-2 control-label">Login</label>
-                    <div class="col-sm-10">
-                        <input type="text" name="login" class="form-control" id="login" placeholder="Login">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="mail" class="col-sm-2 control-label">Password</label>
-                    <div class="col-sm-10">
-                        <input type="text" name="password" class="form-control" id="password" placeholder="Password">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="mail" class="col-sm-2 control-label">Password</label>
-                    <div class="col-sm-10">
-                        <input type="text" name="conf_password" class="form-control" placeholder="Confirm password">
-                    </div>
-                </div>
-                <div class="col-sm-offset-2 col-sm-10">
-                    <button type="submit" class="btn btn-success">Подтвердить</button>
-                </div>
+                <input type="email" name="email" class="form-control" id="mail" placeholder="Email">
+                <input type="text" name="login" class="form-control" id="login" placeholder="Login">
+                <input type="text" name="password" class="form-control" id="password" placeholder="Password">
+                <input type="text" name="conf_password" class="form-control" placeholder="Confirm password">
+                <button type="submit"  class="btn btn-lg btn-primary btn-block">Confirm</button>
             </form>
         </div>
     </div>
