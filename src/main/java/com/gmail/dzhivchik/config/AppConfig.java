@@ -61,7 +61,6 @@ public class AppConfig extends WebMvcConfigurerAdapter {
         return entityManagerFactory;
     }
 
-    //control transaction
     @Bean
     public PlatformTransactionManager transactionManager(EntityManagerFactory emf){
         return new JpaTransactionManager(emf);
@@ -78,27 +77,25 @@ public class AppConfig extends WebMvcConfigurerAdapter {
         return adapter;
     }
 
-    //tak luchshe ne delat
     @Bean
     public DataSource dataSource()
     {
         //for local
-        DriverManagerDataSource ds = new DriverManagerDataSource();
-        ds.setDriverClassName("com.mysql.jdbc.Driver");
-        ds.setUrl("jdbc:mysql://localhost:3306/DZStore_temp");
-        ds.setUsername("admin");
-        ds.setPassword("admin");
-        //for heroku
 //        DriverManagerDataSource ds = new DriverManagerDataSource();
 //        ds.setDriverClassName("com.mysql.jdbc.Driver");
-//        ds.setUrl("jdbc:mysql://eu-cdbr-west-01.cleardb.com:3306/heroku_46f7a3e95a511d9");
-//        ds.setUsername("ba592b5a50ac58");
-//        ds.setPassword("2ca6aff4");
+//        ds.setUrl("jdbc:mysql://localhost:3306/DZStore_temp");
+//        ds.setUsername("admin");
+//        ds.setPassword("admin");
+        //for heroku
+        DriverManagerDataSource ds = new DriverManagerDataSource();
+        ds.setDriverClassName("com.mysql.jdbc.Driver");
+        ds.setUrl("jdbc:mysql://eu-cdbr-west-01.cleardb.com:3306/heroku_46f7a3e95a511d9");
+        ds.setUsername("ba592b5a50ac58");
+        ds.setPassword("2ca6aff4");
 
         return ds;
     }
 
-    //initialising of UserDetailsService
     @Bean
     public UserDetailsService getUserDetailsService(){
         return new UserDetailsServiceImpl();
