@@ -37,8 +37,8 @@
         <h2 class="form-signin-heading" style="text-align: center">Please sign in</h2>
         <input type="text" class="form-control" name="j_username" placeholder="Email address" required autofocus value="Dims">
         <input type="password" class="form-control" name="j_password" placeholder="Password" required value="2">
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>
-        <a href="/registration" style="text-align: center;">Registration</a>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <a href="/registration" style="margin-left: 35%;">Registration</a>
     </form>
 </div>
 
