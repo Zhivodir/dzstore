@@ -25,12 +25,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void addUser(User user) {
-        userDAO.addUser(user);
-    }
-
-    @Override
-    public boolean existsByLogin(String login) {
-        return false;
+    public boolean addUser(User user) {
+        boolean wasAdded = false;
+        if(getUser(user.getLogin()) == null) {
+            userDAO.addUser(user);
+            wasAdded = true;
+        }
+        return wasAdded;
     }
 }

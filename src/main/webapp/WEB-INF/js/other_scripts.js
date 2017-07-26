@@ -74,7 +74,7 @@ var structure = document.getElementById('structure');
 var structureValue = "";
 
 input.onchange = function(e) {
-    var files = e.target.files; // FileList
+    var files = e.target.files;
     for (var i = 0, f; f = files[i]; ++i){
         console.debug(files[i].webkitRelativePath);
         structureValue  = structureValue + files[i].webkitRelativePath + ";";
@@ -86,12 +86,5 @@ input.onchange = function(e) {
 //append to form element that you want .
     document.getElementById("folder_upload").appendChild(input);
 
-    // $('#form').append('<input type="hidden" name="fieldname" value="fieldvalue" />');
-    // or other way
-    //
-    // $('<input>').attr({
-    //     type: 'hidden',
-    //     id: 'fieldId',
-    //     name: 'fieldname'
-    // }).appendTo('form')
 }
+

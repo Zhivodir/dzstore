@@ -29,7 +29,6 @@ public class ViewController {
     @Autowired
     private UserService userService;
 
-//    @RequestMapping(value = "/index", method = RequestMethod.GET)
     @RequestMapping(method = RequestMethod.GET)
     public String onIndex(Model model,
                           @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {

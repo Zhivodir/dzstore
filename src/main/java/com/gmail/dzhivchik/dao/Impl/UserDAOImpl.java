@@ -32,6 +32,9 @@ public class UserDAOImpl implements UserDAO {
         query.setParameter("login", login);
 
         List<User> temp = (List<User>) query.getResultList();
+        if(temp.size() < 1){
+            return null;
+        }
         return temp.get(0);
     }
 
