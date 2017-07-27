@@ -27,11 +27,11 @@ $(document).ready(function(){
         if(nameOfLastField == "mail" && valueOfLastField.search(emailPattern) != 0){
             $("span." + nameOfLastField).remove();
             $("<span class=\'error " + nameOfLastField + "\'  style='color: #ff0000'>Неправильный формат E-mail.</span>")
-                 .insertAfter("form input:eq(" + numOfLastField + ")");
+                .insertAfter("form input:eq(" + numOfLastField + ")");
             $('#' + nameOfLastField).addClass(nameOfLastField + '-error');
         }else if((nameOfLastField == "conf_password" || nameOfLastField == "password") &&
-           (document.getElementById("password").value != "" && document.getElementById("conf_password").value != "") &&
-           (document.getElementById("conf_password").value != document.getElementById("password").value)){
+            (document.getElementById("password").value != "" && document.getElementById("conf_password").value != "") &&
+            (document.getElementById("conf_password").value != document.getElementById("password").value)){
             $("span." + nameOfLastField).remove();
             $("<span class=\'error " + nameOfLastField + "\'  style='color: #ff0000'>Пароли не совпадают. Повторите попытку.</span>")
                 .insertAfter("form input:eq(" + numOfLastField + ")");

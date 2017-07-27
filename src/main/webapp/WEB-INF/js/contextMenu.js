@@ -1,6 +1,7 @@
 /**
  * Created by User on 21.03.2017.
  */
+
 (function ($, window) {
 
     $.fn.contextMenu = function (settings) {
@@ -16,7 +17,7 @@
                 var countOfSelectedWithStar = $(".selected .glyphicon-star").length;
                 var countOfSelectedForShare = $(".selected .glyphicon-eye-open").length;
 
-                if(countOfSelected > 1){
+                if(countOfSelected != 1){
                     $(".li_rename").attr("hidden", true);
                 }else{
                     $(".li_rename").attr("hidden", false);
@@ -42,9 +43,11 @@
                     $(".li_replace").attr("hidden", false);
                 }
 
-
-
-
+                if($("input[name='typeOfView']").val() != "shared"){
+                    $(".li_addtome").attr("hidden", true);
+                }else{
+                    $(".li_addtome").attr("hidden", false);
+                }
 
                 //open menu
                 var $menu = $(settings.menuSelector)
@@ -95,6 +98,5 @@ $("#myTable td").contextMenu({
     menuSelected: function (invokedOn, selectedMenu) {
         var msg = "You selected the menu item '" + selectedMenu.text() +
             "' on the value '" + invokedOn.text() + "'";
-        //alert($("div.top-part").outerHeight());
     }
 });

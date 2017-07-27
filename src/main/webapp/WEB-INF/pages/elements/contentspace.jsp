@@ -6,7 +6,7 @@
     <div class="table-responsive">
         <form action="/actions_above_checked_files" method="post">
             <input type="hidden" name="currentFolderID" value="${currentFolderID}">
-            <input type="hidden" name="typeOfView" value="${typeOfView}">
+            <input class="typeOfView" type="hidden" name="typeOfView" value="${typeOfView}">
             <table id="myTable" class="table table-striped record_table">
                 <thead>
                     <tr>

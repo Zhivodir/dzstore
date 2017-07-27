@@ -41,7 +41,7 @@ var tr = $('#myTable .choise_field'),
 
 
 tr.on('click', function(e) {
-     method = !e.shiftKey && !e.ctrlKey ? 'single' : (e.shiftKey ? 'shift' : 'ctrl');
+    method = !e.shiftKey && !e.ctrlKey ? 'single' : (e.shiftKey ? 'shift' : 'ctrl');
     selection[method](this);
     $('#myTable tr').each(function(indx, el) {
         $("input:checkbox").removeAttr("checked");
@@ -87,4 +87,3 @@ input.onchange = function(e) {
     document.getElementById("folder_upload").appendChild(input);
 
 }
-

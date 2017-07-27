@@ -29,6 +29,7 @@ public class ViewController {
     @Autowired
     private UserService userService;
 
+
     @RequestMapping(method = RequestMethod.GET)
     public String onIndex(Model model,
                           @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
@@ -66,6 +67,7 @@ public class ViewController {
         return "starred";
     }
 
+
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public String search(Model model, @RequestParam(value = "whatSearch", required = false) String whatSearch) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -78,6 +80,7 @@ public class ViewController {
         model.addAttribute("typeOfView", "search");
         return "search";
     }
+
 
     @RequestMapping(value = "/shared", method = RequestMethod.GET)
     public String shared(Model model,
@@ -111,6 +114,7 @@ public class ViewController {
         return "bin";
     }
 
+
     public void getListRelativePath(Folder currentFolder, List<Folder> forRelativePath) {
         Folder parentFolder = currentFolder.getParentFolder();
 
@@ -120,7 +124,7 @@ public class ViewController {
         }
     }
 
-    //all code change on query to DB
+
     public String[] showBusySpace(User user) {
         long filesSize = contentService.getSizeBusyMemory(user);
         long ostatok = 0;
