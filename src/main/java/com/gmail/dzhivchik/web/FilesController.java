@@ -32,6 +32,7 @@ import java.util.zip.ZipOutputStream;
 @Controller
 @RequestMapping("/")
 public class FilesController {
+    final static private long MAX_SIZE_OF_FILE = 5120;
 
     @Autowired
     private ContentService contentService;
@@ -58,7 +59,7 @@ public class FilesController {
             curFolder = contentService.getFolder(currentFolderID);
         }
 
-        if (file != null) {
+        if (file != null && file.getSize() < MAX_SIZE_OF_FILE) {
             uploadFile(file, user, curFolder, login);
         }
 
@@ -198,7 +199,10 @@ public class FilesController {
         Map<String, Folder> map = new HashMap<>();
         try {
             for (int i = 0; i < pathes.length; i++) {
-                if (!pathes[i].contains("/")) {
+                if (files[i].getSize() > MAX_SIZE_OF_FILE){
+                    continue;
+                }
+                else if (!pathes[i].contains("/")) {
                     File file = new File(pathes[i], files[i].getSize(), files[i].getContentType(),
                             user, curFolder, false, false, files[i].getBytes(), false);
                     curFolder.getFiles().add(file);
@@ -216,7 +220,6 @@ public class FilesController {
                         //если такой папки еще нет
                         //изначально считаеться ,что добавляемая пользователем папка родительская для текущей папки
                         Folder parentFolderForFolderWithThisFile = curFolder;
-
 
                         //если добавляемая пользователем папка не родительская для
                         // текущей папки ,то определяем родительскую и достаем её из карты

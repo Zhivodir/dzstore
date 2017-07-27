@@ -139,10 +139,8 @@ public class ContentService {
     public void rename(String login, int[] checked_files_id, int[] checked_folders_id, String newName){
         StringBuilder sb = new StringBuilder();
         if(checked_files_id != null){
-            //File fileForRename = fileDAO.getListFilesById(checked_files_id).get(0);
             fileDAO.renameFile(checked_files_id, newName);
         }else if(checked_folders_id != null){
-            //Folder folderForRename = folderDAO.getFolder(checked_folders_id[0]);
             folderDAO.renameFolder(checked_folders_id, newName);
         }
     }
@@ -170,7 +168,6 @@ public class ContentService {
             for (Folder folder : checked_folders){
                 folder.addToShareFor(receivers);
                 share(folder.getFiles(), folder.getFolders(), shareFor, true);
-                //file.setShareInFolder(shareInFolder);
             }
             folderDAO.changeShare(checked_folders);
         }
