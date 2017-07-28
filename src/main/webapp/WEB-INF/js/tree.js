@@ -1,8 +1,11 @@
 /**
  * Created by User on 15.05.2017.
  */
+
+
+
 function tree(id, url) {
-    var element = document.getElementById(id)
+    var element = document.getElementById(id);
 
     function hasClass(elem, className) {
         return new RegExp("(^|\\s)"+className+"(\\s|$)").test(elem.className)
@@ -90,11 +93,11 @@ function tree(id, url) {
             alert(msg)
         }
 
-        showLoading(true)
+        showLoading(true);
 
         $.ajax({
             url: url,
-            data: {id: node.id},
+            data: {id: node.id, fields: fields},
             dataType: "json",
             success: onSuccess,
             error: onAjaxError,

@@ -167,6 +167,7 @@ public class ContentService {
         if(checked_folders != null){
             for (Folder folder : checked_folders){
                 folder.addToShareFor(receivers);
+                folder.setShareInFolder(shareInFolder);
                 share(folder.getFiles(), folder.getFolders(), shareFor, true);
             }
             folderDAO.changeShare(checked_folders);
