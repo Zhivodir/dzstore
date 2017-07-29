@@ -95,9 +95,19 @@ function tree(id, url) {
 
         showLoading(true);
 
+        // var fields = $('input[type=checkbox].choise_folder:checked').map(function() {
+        //     return this.value;
+        // }).get();
+
+        var str = "";
+        var str = str + $('input[type=checkbox].choise_folder:checked').map(function() {
+            return this.value;
+        }).get();
+        //var fields = x.length;
+
         $.ajax({
             url: url,
-            data: {id: node.id, fields: fields},
+            data: {id: node.id, fields: str},
             dataType: "json",
             success: onSuccess,
             error: onAjaxError,

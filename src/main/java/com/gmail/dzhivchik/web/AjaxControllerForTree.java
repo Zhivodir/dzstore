@@ -37,9 +37,10 @@ public class AjaxControllerForTree {
     @RequestMapping(value = "/ajax/load_tree_of_catalog", method = RequestMethod.GET)
     public String loadTree(Model model,
                            @RequestParam(value = "id", required = false) String id,
-                           @RequestParam(value = "fields", required = false) String[] fields
+                           @RequestParam(value = "fields", required = false) String fields
     ){
         System.out.println(fields);
+        //String[] exceptionFolders = fields.split(",");
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
         List[] content = null;
