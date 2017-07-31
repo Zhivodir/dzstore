@@ -63,6 +63,15 @@ public class ContentService {
     }
 
 
+    @Transactional(readOnly=true)
+    public List[] getContent(User user, Folder parentFolder, String[] exceptionFolders){
+        List[] content = new List[2];
+        content[0] = fileDAO.getList(user, parentFolder);
+        content[1] = folderDAO.getList(user, parentFolder, exceptionFolders);
+        return content;
+    }
+
+
     @Transactional
     public void deleteCheckedContent(int[] checked_files_id, int[] checked_folders_id, String login){
         if (checked_files_id != null) {

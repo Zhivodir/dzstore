@@ -88,22 +88,17 @@ function tree(id, url) {
         }
 
         function onLoadError(error) {
-            var msg = "Ошибка "+error.errcode
-            if (error.message) msg = msg + ' :'+error.message
+            var msg = "Ошибка " + error.errcode
+            if (error.message) msg = msg + ' :' + error.message
             alert(msg)
         }
 
         showLoading(true);
 
-        // var fields = $('input[type=checkbox].choise_folder:checked').map(function() {
-        //     return this.value;
-        // }).get();
-
         var str = "";
         var str = str + $('input[type=checkbox].choise_folder:checked').map(function() {
             return this.value;
         }).get();
-        //var fields = x.length;
 
         $.ajax({
             url: url,

@@ -40,14 +40,22 @@ public class AjaxControllerForTree {
                            @RequestParam(value = "fields", required = false) String fields
     ){
         System.out.println(fields);
-        //String[] exceptionFolders = fields.split(",");
+        String[] exceptionFolders = fields.split(",");
+        for(String str:exceptionFolders){
+            System.out.println(str);
+        }
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
         List[] content = null;
+//        if(id == "") {
+//            content = contentService.getContent(user, null);
+//        } else {
+//            content = contentService.getContent(user, contentService.getFolder(Integer.valueOf(id)));
+//        }
         if(id == "") {
-            content = contentService.getContent(user, null);
+            content = contentService.getContent(user, null, exceptionFolders);
         } else {
-            content = contentService.getContent(user, contentService.getFolder(Integer.valueOf(id)));
+            content = contentService.getContent(user, contentService.getFolder(Integer.valueOf(id)), exceptionFolders);
         }
         List<File> filesForTree = content[0];
         List<Folder> foldersForTree = content[1];
