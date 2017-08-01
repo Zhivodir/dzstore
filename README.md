@@ -19,6 +19,10 @@
 6) **Search of content**
 7) **Your account** - here you can see information about your account and exit from it
 
-<h4>Choice of content and operation above him:</h4>
+<h4>Choice of content and operation above him:</h4> 
+
+- **Choice of content** comes true by means of standard combination of left mouse's click and keys of Ctrl and Shift.
+- **Operations** above the chosen content are executed by means of context menu (right mouse's click)
+    
 
 [_**Dmytro Zhyvodorov**_](https://www.linkedin.com/in/yurii-salimov)
