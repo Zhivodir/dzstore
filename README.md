@@ -25,6 +25,9 @@
 
 - **Choice of content** comes true by means of standard combination of left mouse's click and keys of Ctrl and Shift.
 - **Operations** above the chosen content are executed by means of context menu (right mouse's click)
-    
+
+<h4>Context menu:</h4> 
+
+![general](src/main/resources/screenshot/context_menu.jpg)    
 
 [_**Dmytro Zhyvodorov**_](https://www.linkedin.com/in/yurii-salimov)
