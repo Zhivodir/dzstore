@@ -28,6 +28,8 @@
 
 <h4>Context menu:</h4> 
 
-![general](src/main/resources/screenshot/context_menu.jpg)    
+![general](src/main/resources/screenshot/context_menu.jpg)  
+
+P.S. On this example not all options are presented - a list depends on the chosen content and from chosen left menu item
 
 [_**Dmytro Zhyvodorov**_](https://www.linkedin.com/in/yurii-salimov)
