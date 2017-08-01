@@ -7,6 +7,8 @@
 **Resource limitations**:  Because Heroku allows free of charge to use very limited resources (5 Mb for data base) and don't allows to keep files on hard disk - this storage save all content in data base and allow upload files with size not bigger then 5 Kb.
 <h4>Interface of the application:</h4>
 
+![general](src/main/resources/screenshot/general.jpg)
+
 1) **Left menu** - include 4 points:
     - **My store** - my files are kept here
     - **Shared with me** - files of other users, which shared for me, are kept here
