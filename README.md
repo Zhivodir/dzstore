@@ -5,7 +5,7 @@
 **Used Technologies**: Java EE, Maven, Servlets, Spring Framework (IoC, MVC, Security), JPA / Hibernate, MySQL, JSP / JSTL, Bootstrap, CSS, JS.
 
 **Resource limitations**:  Because Heroku allows free of charge to use very limited resources (5 Mb for data base) and don't allows to keep files on hard disk - this storage save all content in data base and allow upload files with size not bigger then 5 Kb.
-####<h4>Interface of the application:</h4>
+<h4>Interface of the application:</h4>
 
 1) **Left menu** - include 4 points:
     - **My store** - my files are kept here
@@ -17,6 +17,8 @@
 4) **Path to current directory** 
 5) **Button for add new content to your store** - here you can create new directory, upload file, upload several files or structure with directories and files
 6) **Search of content**
-6) **Your account** - here you can see information about your account and exit from it
+7) **Your account** - here you can see information about your account and exit from it
+
+<h4>Choice of content and operation above him:</h4>
 
 [_**Dmytro Zhyvodorov**_](https://www.linkedin.com/in/yurii-salimov)
