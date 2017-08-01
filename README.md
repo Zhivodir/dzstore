@@ -31,5 +31,15 @@
 ![general](src/main/resources/screenshot/context_menu.jpg)  
 
 P.S. On this example not all options are presented - a list depends on the chosen content and from chosen left menu item
+- **Remove** - remove chosen content into the Bin.
+- **Restore** - returns content from the Bin to store. A point is accessible only for content in a basket 
+- **Delete** - deletes content from the Bin (final delete). A point is accessible only for content in a basket
+- **Download** - download chosen content from site to your hard disk.
+- **Starred** - to mark important for you content.
+- **Remove star** - to clean content from select.
+- **Rename** - to rename content.
+- **Share** - to share chosen content for other(chosen) users. At the choice of addressee for share login or email is specified in a form.(plural choice addressees are specified through a comma) 
+- **Replace** - replace choisen content to the chosen folder.
+
 
 [_**Dmytro Zhyvodorov**_](https://www.linkedin.com/in/yurii-salimov)
