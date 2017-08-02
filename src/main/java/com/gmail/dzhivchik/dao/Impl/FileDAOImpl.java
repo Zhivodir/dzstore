@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -66,7 +67,6 @@ public class FileDAOImpl implements FileDAO {
         return null;
     }
 
-    //PROBLEM : Many query to DB
     @Override
     public File[] deleteGroup(int[] checked_files_id) {
         File[] files = new File[checked_files_id.length];
@@ -133,7 +133,13 @@ public class FileDAOImpl implements FileDAO {
         int user_id = user.getId();
         Query query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id AND f.starred = 1 AND f.inbin <> 1", File.class);
         query.setParameter("user_id", user_id);
-        return (List<File>)query.getResultList();
+        Query query2 = entityManager.createQuery("SELECT f FROM File f INNER JOIN f.shareFor user " +
+                "WHERE user = :user AND f.inbin <> 1 AND f.starred = 1", File.class);
+        query2.setParameter("user", user);
+        List<File> result = new ArrayList<>();
+        result.addAll((List<File>)query.getResultList());
+        result.addAll((List<File>)query2.getResultList());
+        return result;
     }
 
     @Override

@@ -20,7 +20,6 @@ import java.util.List;
 
 @Service
 public class ContentService {
-    private static String USERS_STORAGES = "C:/DevKit/Temp/dzstore/users_storages/";
 
     @Autowired
     private FileDAO fileDAO;
