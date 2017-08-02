@@ -9,13 +9,12 @@ CREATE TABLE `users` (
     `login` varchar(60) NOT NULL,
     `password` varchar(10) NOT NULL,
     `role` varchar(15) NOT NULL,
--- #     `avatar` BOOLEAN NOT NULL DEFAULT FALSE,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE `folders` (
-    `id` int(3) NOT NULL AUTO_INCREMENT,
+    `id` int(4) NOT NULL AUTO_INCREMENT,
     `name` varchar(60) NOT NULL,
     `user_id` int(4) NOT NULL,
     `parent_id` int(3) NULL,
