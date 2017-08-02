@@ -79,12 +79,11 @@ public class FolderDAOImpl implements FolderDAO{
         Query query;
         if(parentFolder == null){
             query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder IS NULL AND c.inbin <> 1", Folder.class);
-            query.setParameter("user", user);
         }else{
             query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder = :parent AND c.inbin <> 1", Folder.class);
-            query.setParameter("user", user);
             query.setParameter("parent", parentFolder);
         }
+        query.setParameter("user", user);
         return (List<Folder>)query.getResultList();
     }
 
@@ -102,12 +101,10 @@ public class FolderDAOImpl implements FolderDAO{
         Query query;
         if(parentFolder == null){
             query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder IS NULL AND c.inbin <> 1" + sb.toString(), Folder.class);
-            query.setParameter("user", user);
         }else{
             query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder = :parent AND c.inbin <> 1" + sb.toString(), Folder.class);
-            query.setParameter("user", user);
             query.setParameter("parent", parentFolder);
-        }
+        }query.setParameter("user", user);
         return (List<Folder>)query.getResultList();
     }
 
@@ -127,16 +124,14 @@ public class FolderDAOImpl implements FolderDAO{
             query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.name = :name " +
                     "AND f.user = :user " +
                     "AND f.parentFolder IS NULL", Folder.class);
-            query.setParameter("name", name);
-            query.setParameter("user", user);
         } else {
             query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.name = :name " +
                     "AND f.user = :user " +
                     "AND f.parentFolder = :parentFolder", Folder.class);
-            query.setParameter("name", name);
-            query.setParameter("user", user);
             query.setParameter("parentFolder", parentFolder);
         }
+        query.setParameter("name", name);
+        query.setParameter("user", user);
         List<Folder> temp = (List<Folder>)query.getResultList();
         return temp.get(0);
     }
