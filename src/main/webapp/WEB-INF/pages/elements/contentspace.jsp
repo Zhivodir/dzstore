@@ -45,7 +45,7 @@
                             <c:if test="${!typeOfView.equals('shared') && currentFolder.shareFor.size() ne 0}">
                                 <span class="glyphicon glyphicon-eye-open"></span>
                             </c:if>
-                            <c:if test="${currentFolder.starred eq true}">
+                            <c:if test="${currentFolder.starred eq true && !typeOfView.equals('starred')}">
                                 <span class="glyphicon glyphicon-star"></span>
                             </c:if>
                         </td>
@@ -61,7 +61,7 @@
                             <c:if test="${!typeOfView.equals('shared') && currentFile.shareFor.size() ne 0}">
                                 <span class="glyphicon glyphicon-eye-open"></span>
                             </c:if>
-                            <c:if test="${currentFile.starred eq true}">
+                            <c:if test="${currentFile.starred eq true && !typeOfView.equals('starred')}">
                                 <span class="glyphicon glyphicon-star"></span>
                             </c:if>
                         </td>
