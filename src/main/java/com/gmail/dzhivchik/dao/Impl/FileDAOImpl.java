@@ -49,17 +49,14 @@ public class FileDAOImpl implements FileDAO {
         if(parentFolder == null){
             query = entityManager.createQuery("SELECT f FROM File f WHERE f.name = :name " +
                     "AND f.inbin = :inbin AND f.user = :user AND f.parentFolder IS NULL", File.class);
-            query.setParameter("name", name);
-            query.setParameter("inbin", inbin);
-            query.setParameter("user", user);
         }else{
             query = entityManager.createQuery("SELECT f FROM File f WHERE f.name = :name " +
                     "AND f.inbin = :inbin AND f.user = :user AND f.parentFolder = :parentFolder", File.class);
-            query.setParameter("name", name);
-            query.setParameter("inbin", inbin);
-            query.setParameter("user", user);
             query.setParameter("parentFolder", parentFolder);
         }
+        query.setParameter("name", name);
+        query.setParameter("inbin", inbin);
+        query.setParameter("user", user);
         List<File> resultList = ((List<File>)query.getResultList());
         if (resultList.size() != 0){
             return resultList.get(0);
@@ -87,13 +84,12 @@ public class FileDAOImpl implements FileDAO {
         Query query;
         if(parentFolder == null){
             query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id AND f.parentFolder.id IS NULL AND f.inbin <> 1", File.class);
-            query.setParameter("user_id", user_id);
         }else{
             Integer parent_id = parentFolder.getId();
             query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id AND f.parentFolder.id = :parent_id AND f.inbin <> 1", File.class);
-            query.setParameter("user_id", user_id);
             query.setParameter("parent_id", parent_id);
         }
+        query.setParameter("user_id", user_id);
         return (List<File>)query.getResultList();
     }
 
@@ -219,16 +215,14 @@ public class FileDAOImpl implements FileDAO {
             query = entityManager.createQuery("SELECT f FROM File f WHERE f.name = :name " +
                     "AND f.user = :user " +
                     "AND f.parentFolder IS NULL", File.class);
-            query.setParameter("name", name);
-            query.setParameter("user", user);
         } else {
             query = entityManager.createQuery("SELECT f FROM File f WHERE f.name = :name " +
                     "AND f.user = :user " +
                     "AND f.parentFolder = :parentFolder", File.class);
-            query.setParameter("name", name);
-            query.setParameter("user", user);
             query.setParameter("parentFolder", parentFolder);
         }
+        query.setParameter("name", name);
+        query.setParameter("user", user);
         List<File> temp = (List<File>)query.getResultList();
         return temp.get(0);
     }

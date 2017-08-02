@@ -55,17 +55,14 @@ public class FolderDAOImpl implements FolderDAO{
         if(parentFolder == null){
             query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.name = :name " +
                     "AND f.inbin = :inbin AND f.user = :user AND f.parentFolder IS NULL", Folder.class);
-            query.setParameter("name", name);
-            query.setParameter("inbin", inbin);
-            query.setParameter("user", user);
         }else{
             query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.name = :name " +
                     "AND f.inbin = :inbin AND f.user = :user AND f.parentFolder = :parentFolder", Folder.class);
-            query.setParameter("name", name);
-            query.setParameter("inbin", inbin);
-            query.setParameter("user", user);
             query.setParameter("parentFolder", parentFolder);
         }
+        query.setParameter("name", name);
+        query.setParameter("inbin", inbin);
+        query.setParameter("user", user);
         List<Folder> resultList = ((List<Folder>)query.getResultList());
         if (resultList.size() != 0){
             return resultList.get(0);
