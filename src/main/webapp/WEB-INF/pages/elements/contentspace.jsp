@@ -11,14 +11,14 @@
                 <thead>
                     <tr>
                         <th class="checkId"></th>
-                        <th class="checkName" >Name</th>
+                        <th class="checkName">Name</th>
                         <th class="checkType">Type</th>
                         <th class="checkOwner">Owner</th>
                         <th class="checkSize">Size</th>
                     </tr>
                 </thead>
                 <tbody>
-                <c:if test="${typeOfView.equals('folder')}">
+                <c:if test="${currentFolderID ne null}">
                     <tr>
                         <td></td>
                         <td><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></td>
