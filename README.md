@@ -43,4 +43,4 @@ P.S. On this example not all options are presented - a list depends on the chose
 - **Add to my store** - to add other user's files, which are shared for you, into your store.
 
 
-[_**Dmytro Zhyvodorov**_](https://www.linkedin.com/in/yurii-salimov)
+[_**Dmytro Zhyvodorov**_](https://www.linkedin.com/in/Dmytro Zhyvodorov)
