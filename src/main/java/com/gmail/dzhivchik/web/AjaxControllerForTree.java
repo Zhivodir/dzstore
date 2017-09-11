@@ -1,8 +1,6 @@
 package com.gmail.dzhivchik.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gmail.dzhivchik.domain.File;
-import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.service.Impl.ContentService;
 import com.gmail.dzhivchik.service.UserService;
@@ -47,18 +45,13 @@ public class AjaxControllerForTree {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
         List[] content = null;
-//        if(id == "") {
-//            content = contentService.getContent(user, null);
-//        } else {
-//            content = contentService.getContent(user, contentService.getFolder(Integer.valueOf(id)));
-//        }
         if(id == "") {
             content = contentService.getContent(user, null, exceptionFolders);
         } else {
             content = contentService.getContent(user, contentService.getFolder(Integer.valueOf(id)), exceptionFolders);
         }
-        List<File> filesForTree = content[0];
-        List<Folder> foldersForTree = content[1];
+//        List<File> filesForTree = content[0];
+//        List<Folder> foldersForTree = content[1];
 
         StringWriter writer = new StringWriter();
         ObjectMapper mapper = new ObjectMapper();
