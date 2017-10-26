@@ -37,11 +37,8 @@ public class AjaxControllerForTree {
                            @RequestParam(value = "id", required = false) String id,
                            @RequestParam(value = "fields", required = false) String fields
     ){
-        System.out.println(fields);
+        System.out.println(id);
         String[] exceptionFolders = fields.split(",");
-        for(String str:exceptionFolders){
-            System.out.println(str);
-        }
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
         List[] content = null;
@@ -50,9 +47,7 @@ public class AjaxControllerForTree {
         } else {
             content = contentService.getContent(user, contentService.getFolder(Integer.valueOf(id)), exceptionFolders);
         }
-//        List<File> filesForTree = content[0];
-//        List<Folder> foldersForTree = content[1];
-//
+
         StringWriter writer = new StringWriter();
         ObjectMapper mapper = new ObjectMapper();
         try {

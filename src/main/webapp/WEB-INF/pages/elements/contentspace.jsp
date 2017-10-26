@@ -21,7 +21,11 @@
                 <c:if test="${currentFolderID ne null}">
                     <tr>
                         <td></td>
-                        <td><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></td>
+                        <td>
+                            <a class="folder_href" href="/?currentFolderID=${folder.id}">
+                                <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
+                            </a>
+                        </td>
                         <td></td>
                         <td></td>
                         <td></td>
