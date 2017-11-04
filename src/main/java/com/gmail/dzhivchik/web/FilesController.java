@@ -2,6 +2,7 @@ package com.gmail.dzhivchik.web;
 
 import com.gmail.dzhivchik.domain.File;
 import com.gmail.dzhivchik.domain.Folder;
+import com.gmail.dzhivchik.domain.Sender;
 import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.service.Impl.ContentService;
 import com.gmail.dzhivchik.service.UserService;
@@ -155,6 +156,7 @@ public class FilesController {
             if(share != null) {
                 List[] content = contentService.getContentById(checked_files_id, checked_folders_id);
                 contentService.share(content[0], content[1], shareFor, false);
+                sendMessageToEmail();
             }
 
             if(addtome != null) {
@@ -228,8 +230,6 @@ public class FilesController {
                             parentFolderForFolderWithThisFile = map.get(parentFolderPath);
                         }
                         Folder newFolder = new Folder(targetFolderName, user, parentFolderForFolderWithThisFile, false, false, false);
-//                        newFolder.getFiles().add(new File(targetFolderNameAndFileName.substring(targetFolderNameAndFileName.lastIndexOf("/")+1), files[i].getSize(), files[i].getContentType(),
-//                                user, map.get(pathToFolderWithThisFile), false, false, files[i].getBytes(), false));
                         parentFolderForFolderWithThisFile.getFolders().add(newFolder);
                         map.put(pathToFolderWithThisFile, newFolder);
                     }
@@ -330,6 +330,15 @@ public class FilesController {
             }
         }
     }
+
+
+    private void sendMessageToEmail(){
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUser(login);
+        Sender tlsSender = new Sender("dzhproject@gmail.com", "");
+        tlsSender.send("This is Subject", "TLS: This is text!", "support@dzstore.com", "dzhivchik@gmail.com");
+    }
+
 
     static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     static SecureRandom rnd = new SecureRandom();

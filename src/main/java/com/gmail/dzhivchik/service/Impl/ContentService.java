@@ -153,6 +153,7 @@ public class ContentService {
         }
     }
 
+
     @Transactional
     public void share(List<File> checked_files, List<Folder> checked_folders, String shareFor, boolean shareInFolder){
         List<User> receivers = userDAO.getShareReceivers(shareFor);
