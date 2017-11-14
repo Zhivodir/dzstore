@@ -42,6 +42,9 @@ public class ContentService {
 
 
     @Transactional
+    public File getFile(Integer id){ return fileDAO.getFile(id); }
+
+    @Transactional
     public void uploadFile(File file){
         fileDAO.upload(file);
     }

@@ -31,12 +31,6 @@
                     $(".li_removestar").attr("hidden", false);
                 }
 
-                if(countOfSelected - countOfSelectedForShare > 0){
-                    $(".li_share").attr("hidden", false);
-                }else{
-                    $(".li_share").attr("hidden", true);
-                }
-
                 if($(".currentFolderPath a.sharedWithMe").length != 0){
                     $(".li_replace").attr("hidden", true);
                 }else{

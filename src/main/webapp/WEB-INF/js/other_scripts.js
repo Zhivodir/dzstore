@@ -53,8 +53,6 @@ tr.on('click', function(e) {
 });
 
 
-
-
 jQuery(function($) {
     $('.folder_href').click(function() {
         return false;
@@ -87,4 +85,69 @@ input.onchange = function(e) {
     document.getElementById("folder_upload").appendChild(input);
 
 }
+
+
+/********************************/
+/*       Ajax's scripts         */
+/* Operations with modal windows*/
+/* for share content            */
+/********************************/
+
+$(".li_share").click(function(){
+    var folders = new Array();
+    var files = new Array();
+
+    var i = 0;
+    $("#content_form input:checkbox:checked.choise_folder").each(function( index ) {
+        folders[i] = $(this).val();
+        i++;
+    });
+
+    var i = 0;
+    $("#content_form input:checkbox:checked.choise_file").each(function( index ) {
+        files[i] = $(this).val();
+        i++;
+    });
+
+    //var modalContent = $(".share_for_account").first();
+    //Если выбран только один элемент контента - то можно увидеть
+    // , для каких пользователей он расшарен
+    if(folders.length + files.length == 1){
+        var res = $.post(
+            "/ajax/load_share_account_for_content",
+            {folders: folders.toString(), files: files.toString()},
+            onLoaded,
+            'json'
+        );
+    }
+});
+
+
+function onLoaded(data) {
+    var modalContent = $(".share_for_account").first();
+
+    for(var i = 0; i < data.length; i++){
+        modalContent.append('<span class="show_login_for_share">' + data[i].login + '</span>');
+    }
+
+    $('.share_for_account').click(function(){
+        $('#modal_share').empty();
+        var modalContent = $("#modal_share").first();
+
+        modalContent.append('<div class="form-group">');
+        for(var i = 0; i < data.length; i++){
+            modalContent.append('<div><span>' + data[i].login + '</span>' +
+            '<input class="choise_checkbox choise_folder" type="checkbox" name="users" value="' + data[i].id + '"/></div>');
+        }
+        modalContent.append('</div>');
+        modalContent.append('<div class="form-group"><input type="submit" name="share" value="Готово"/></div>')
+    });
+}
+
+
+// удаляет данные из модального окна при его закрытии
+// $('a[data-toggle="modal"]').on('hidden', function() {
+//     // $(this).data('modal').$element.removeData();
+//     $('#modal_share').empty();
+// });
 

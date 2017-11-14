@@ -4,7 +4,7 @@
 
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     <div class="table-responsive">
-        <form action="/actions_above_checked_files" method="post">
+        <form id="content_form" action="/actions_above_checked_files" method="post">
             <input type="hidden" name="currentFolderID" value="${currentFolderID}">
             <input type="hidden" name="typeOfView" value="${typeOfView}">
             <table id="myTable" class="table table-striped record_table">
@@ -60,7 +60,7 @@
                 </c:forEach>
                 <c:forEach items="${content[0]}" var="currentFile">
                     <tr class="choise_field">
-                        <td><input hidden class="choise_checkbox choise_folder" type="checkbox" name="checked_files_id" value="${currentFile.id}"/></td>
+                        <td><input hidden class="choise_checkbox choise_file" type="checkbox" name="checked_files_id" value="${currentFile.id}"/></td>
                         <td>${currentFile.name}
                             <c:if test="${!typeOfView.equals('shared') && currentFile.shareFor.size() ne 0}">
                                 <span class="glyphicon glyphicon-eye-open"></span>

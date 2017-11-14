@@ -333,10 +333,8 @@ public class FilesController {
 
 
     private void sendMessageToEmail(){
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
         Sender tlsSender = new Sender("dzhproject@gmail.com", "");
-        tlsSender.send("This is Subject", "TLS: This is text!", "support@dzstore.com", "dzhivchik@gmail.com");
+        tlsSender.send("This is Subject", "TLS: This is text!", "support@dzstore.com", "");
     }
 
 

@@ -432,3 +432,17 @@ body {
 .modal-coordinate {
     margin-top: 12%;
 }
+
+.show_login_for_share {
+    /*float:left;*/
+    background-color: #d9edf7;
+    border: 2px #ffffff solid;
+}
+
+.share_for_account:hover {
+    cursor: pointer;
+}
+
+.left-float {
+    float:left;
+}

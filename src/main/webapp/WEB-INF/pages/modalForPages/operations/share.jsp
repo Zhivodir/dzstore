@@ -22,12 +22,16 @@
                                 <span class="sr-only">Close</span>
                             </button>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body" id="modal_share">
                             <div class="form-group">
-                                <input type="hidden" name="currentFolder" value="${f}">
                                 <input type="text" name="shareFor">
                             </div>
-                            <input type="submit" name="share" value="Share"/>
+                            <div class="form-group share_for_account">
+
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" name="share" value="Готово"/>
+                            </div>
                         </div>
                     </div>
                 </div>

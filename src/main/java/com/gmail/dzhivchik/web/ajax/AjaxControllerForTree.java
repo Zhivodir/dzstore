@@ -1,4 +1,4 @@
-package com.gmail.dzhivchik.web;
+package com.gmail.dzhivchik.web.ajax;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gmail.dzhivchik.domain.User;
@@ -37,7 +37,6 @@ public class AjaxControllerForTree {
                            @RequestParam(value = "id", required = false) String id,
                            @RequestParam(value = "fields", required = false) String fields
     ){
-        System.out.println(id);
         String[] exceptionFolders = fields.split(",");
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);

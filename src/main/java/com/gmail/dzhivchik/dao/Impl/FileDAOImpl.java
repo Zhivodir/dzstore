@@ -22,6 +22,14 @@ public class FileDAOImpl implements FileDAO {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Override
+    public File getFile(int id) {
+        Query query;
+        query = entityManager.createQuery("SELECT f FROM File f WHERE f.id = :id", File.class);
+        query.setParameter("id", id);
+        List<File> temp = (List<File>)query.getResultList();
+        return temp.get(0);
+    }
 
     @Override
     public void upload(File file) {

@@ -141,5 +141,4 @@ function tree(id, url) {
         // загрузить узел
         load(node)
     }
-
 }
