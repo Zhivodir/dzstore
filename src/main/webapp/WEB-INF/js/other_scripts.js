@@ -94,6 +94,7 @@ input.onchange = function(e) {
 /********************************/
 
 $(".li_share").click(function(){
+    $('#modal_share').empty();
     var folders = new Array();
     var files = new Array();
 
@@ -109,7 +110,6 @@ $(".li_share").click(function(){
         i++;
     });
 
-    //var modalContent = $(".share_for_account").first();
     //Если выбран только один элемент контента - то можно увидеть
     // , для каких пользователей он расшарен
     if(folders.length + files.length == 1){
@@ -124,30 +124,38 @@ $(".li_share").click(function(){
 
 
 function onLoaded(data) {
-    var modalContent = $(".share_for_account").first();
-
-    for(var i = 0; i < data.length; i++){
-        modalContent.append('<span class="show_login_for_share">' + data[i].login + '</span>');
-    }
+    showFormForNewShare(data);
 
     $('.share_for_account').click(function(){
-        $('#modal_share').empty();
-        var modalContent = $("#modal_share").first();
-
-        modalContent.append('<div class="form-group">');
-        for(var i = 0; i < data.length; i++){
-            modalContent.append('<div><span>' + data[i].login + '</span>' +
-            '<input class="choise_checkbox choise_folder" type="checkbox" name="users" value="' + data[i].id + '"/></div>');
-        }
-        modalContent.append('</div>');
-        modalContent.append('<div class="form-group"><input type="submit" name="share" value="Готово"/></div>')
+        showFormForEditOfShare(data)
     });
 }
 
 
-// удаляет данные из модального окна при его закрытии
-// $('a[data-toggle="modal"]').on('hidden', function() {
-//     // $(this).data('modal').$element.removeData();
-//     $('#modal_share').empty();
-// });
+function showFormForNewShare(data){
+    $('#modal_share').empty();
+    var modalContent = $("#modal_share").first();
+    modalContent.append('<div class="form-group"><input type="text" name="shareFor"></div>' +
+        '<div class="form-group share_for_account"></div>');
+    modalContent.append('<div class="form-group"><input type="submit" name="share" value="Готово"/>');
+
+    var modalContent = $(".share_for_account").first();
+    for(var i = 0; i < data.length; i++){
+        modalContent.append('<span class="show_login_for_share">' + data[i].login + '</span>');
+    }
+}
+
+
+function showFormForEditOfShare(data) {
+    $('#modal_share').empty();
+    var modalContent = $("#modal_share").first();
+
+    modalContent.append('<div class="form-group testing">');
+    for(var i = 0; i < data.length; i++){
+        modalContent.append('<div><span>' + data[i].login + '</span>' +
+            '<input class="choise_checkbox choise_folder cancel_share" type="checkbox" name="cancel_share_for_users" value="' + data[i].id + '"/></div>');
+    }
+    modalContent.append('</div>');
+    modalContent.append('<div class="form-group"><input type="submit" name="share" value="Готово"/>');
+}
 

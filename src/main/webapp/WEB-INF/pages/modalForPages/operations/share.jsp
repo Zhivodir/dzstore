@@ -23,15 +23,6 @@
                             </button>
                         </div>
                         <div class="modal-body" id="modal_share">
-                            <div class="form-group">
-                                <input type="text" name="shareFor">
-                            </div>
-                            <div class="form-group share_for_account">
-
-                            </div>
-                            <div class="form-group">
-                                <input type="submit" name="share" value="Готово"/>
-                            </div>
                         </div>
                     </div>
                 </div>

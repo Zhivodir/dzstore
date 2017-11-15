@@ -188,6 +188,25 @@ public class ContentService {
 
 
     @Transactional
+    public void cancelShareForUsers(List<File> checked_files, List<Folder> checked_folders, int[] cancel_share_for_users){
+        List<User> receivers = userDAO.getUsersById(cancel_share_for_users);
+
+        if(checked_files != null){
+            for (File file : checked_files){
+                file.removeFromShareFor(receivers);
+            }
+            fileDAO.changeShare(checked_files);
+        }
+
+        if(checked_folders != null){
+            for (Folder folder : checked_folders){
+                folder.removeFromShareFor(receivers);
+            }
+        }
+    }
+
+
+    @Transactional
     public void cancelShare(int[] checked_files_id, int[] checked_folders_id, User user){
         List<User> receivers = new ArrayList<>();
         receivers.add(user);

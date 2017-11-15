@@ -40,6 +40,23 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
+    public List<User> getUsersById(int[] cancel_share_for_users) {
+        Query query;
+        StringBuilder sb = new StringBuilder();
+        for (int j = 0; j < cancel_share_for_users.length; j++) {
+            sb.append("u.id = '" + cancel_share_for_users[j] + "' ");
+            if (j != cancel_share_for_users.length - 1) {
+                sb.append("OR ");
+            }
+        }
+        query = entityManager.
+                createQuery("SELECT u FROM User u WHERE " + sb.toString(), User.class);
+
+        List<User> resultList = (List<User>) query.getResultList();
+        return resultList;
+    }
+
+    @Override
     public void editUser(User user) {
         entityManager.merge(user);
     }

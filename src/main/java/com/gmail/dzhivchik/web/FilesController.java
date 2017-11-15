@@ -88,6 +88,7 @@ public class FilesController {
     public String actionsAboveCheckedFiles(Model model,
                                            @RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
                                            @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id,
+                                           @RequestParam(value = "cancel_share_for_users", required = false) int[] cancel_share_for_users,
                                            @RequestParam(value = "move_to", required = false) String move_to,
                                            @RequestParam(value = "replace", required = false) String replace,
                                            @RequestParam(value = "download", required = false) String download,
@@ -155,8 +156,13 @@ public class FilesController {
 
             if(share != null) {
                 List[] content = contentService.getContentById(checked_files_id, checked_folders_id);
-                contentService.share(content[0], content[1], shareFor, false);
-                sendMessageToEmail();
+                if(cancel_share_for_users != null && cancel_share_for_users.length != 0){
+                    contentService.cancelShareForUsers(content[0], content[1], cancel_share_for_users);
+                }
+                else {
+                    contentService.share(content[0], content[1], shareFor, false);
+                }
+                //sendMessageToEmail();
             }
 
             if(addtome != null) {
