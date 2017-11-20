@@ -38,7 +38,7 @@ P.S. On this example not all options are presented - a list depends on the chose
 - **Starred** - to mark important for you content.
 - **Remove star** - to clean content from select.
 - **Rename** - to rename content.
-- **Share** - to share chosen content for other(chosen) users. At the choice of addressee for share login or email is specified in a form.(plural choice addressees are specified through a comma) 
+- **Share** - to share chosen content for other(chosen) users. At the choice of addressee for share login or email is specified in a form.(plural choice addressees are specified through a comma).  After this action addressee get notification on his/her email(this function realised , but it is not available at this moment). 
 - **Replace** - replace choisen content to the chosen folder.
 - **Add to my store** - to add other user's files, which are shared for you, into your store.
 
