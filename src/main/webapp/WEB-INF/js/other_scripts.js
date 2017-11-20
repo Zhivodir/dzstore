@@ -179,7 +179,7 @@ function selectShareUserForEdit() {
 /*Show old name of file or folder for rename*/
 
 
-$(".li_rename").click(function(){
-    var oldName = $("tr.selected").find('td:nth-child(2)').find('span').html();
-    $("#newName").prop("value", oldName);
-});
+// $(".li_rename").click(function(){
+//     var oldName = $("tr.selected").find('td:nth-child(2)').find('span').html();
+//     $("#newName").prop("value", oldName);
+// });
