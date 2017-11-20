@@ -95,34 +95,34 @@ input.onchange = function(e) {
 /* for share content            */
 /********************************/
 
-$(".li_share").click(function(){
-    var folders = new Array();
-    var files = new Array();
-    $('#modal_share').empty();
-
-    var i = 0;
-    $("#content_form input:checkbox:checked.choise_folder").each(function( index ) {
-        folders[i] = $(this).val();
-        i++;
-    });
-
-    var i = 0;
-    $("#content_form input:checkbox:checked.choise_file").each(function( index ) {
-        files[i] = $(this).val();
-        i++;
-    });
-
-    //Если выбран только один элемент контента - то можно увидеть
-    // , для каких пользователей он расшарен
-    if(folders.length + files.length == 1){
-        var res = $.post(
-            "/ajax/load_share_account_for_content",
-            {folders: folders.toString(), files: files.toString()},
-            onLoaded,
-            'json'
-        );
-    }
-});
+// $(".li_share").click(function(){
+//     var folders = new Array();
+//     var files = new Array();
+//     $('#modal_share').empty();
+//
+//     var i = 0;
+//     $("#content_form input:checkbox:checked.choise_folder").each(function( index ) {
+//         folders[i] = $(this).val();
+//         i++;
+//     });
+//
+//     var i = 0;
+//     $("#content_form input:checkbox:checked.choise_file").each(function( index ) {
+//         files[i] = $(this).val();
+//         i++;
+//     });
+//
+//     //Если выбран только один элемент контента - то можно увидеть
+//     // , для каких пользователей он расшарен
+//     if(folders.length + files.length == 1){
+//         var res = $.post(
+//             "/ajax/load_share_account_for_content",
+//             {folders: folders.toString(), files: files.toString()},
+//             onLoaded,
+//             'json'
+//         );
+//     }
+// });
 
 
 function onLoaded(data) {
