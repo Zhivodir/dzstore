@@ -159,7 +159,7 @@ public class FilesController {
                 if(cancel_share_for_users != null && cancel_share_for_users.length != 0){
                     contentService.cancelShareForUsers(content[0], content[1], cancel_share_for_users);
                 }
-                else {
+                else if(shareFor != null){
                     contentService.share(content[0], content[1], shareFor, false);
                 }
                 //sendMessageToEmail();

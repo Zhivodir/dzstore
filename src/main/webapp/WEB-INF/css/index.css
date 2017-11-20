@@ -444,5 +444,18 @@ body {
 }
 
 .left-float {
-    float:left;
+    float: left;
+}
+
+.share_for{
+    padding: 2px;
+}
+
+.share_for:hover {
+    cursor: pointer;
+    background-color: #F0FFF0;
+}
+
+div.share_for.selected {
+    background-color: #985f0d;
 }

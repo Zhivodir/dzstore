@@ -7,6 +7,9 @@ onload = function() { tree("tree", "/ajax/load_tree_of_catalog") }
 
 document.oncontextmenu = function (){return false};
 
+/*********************************************/
+/* Select files and folders for contentplace */
+/*********************************************/
 
 var tr = $('#myTable .choise_field'),
     selection = {
@@ -62,7 +65,6 @@ jQuery(function($) {
     });
 });
 
-
 /******************************/
 /* Upload with save structure */
 /******************************/
@@ -94,9 +96,9 @@ input.onchange = function(e) {
 /********************************/
 
 $(".li_share").click(function(){
-    $('#modal_share').empty();
     var folders = new Array();
     var files = new Array();
+    $('#modal_share').empty();
 
     var i = 0;
     $("#content_form input:checkbox:checked.choise_folder").each(function( index ) {
@@ -150,12 +152,34 @@ function showFormForEditOfShare(data) {
     $('#modal_share').empty();
     var modalContent = $("#modal_share").first();
 
-    modalContent.append('<div class="form-group testing">');
+    modalContent.append('<div class="form-group">');
     for(var i = 0; i < data.length; i++){
-        modalContent.append('<div><span>' + data[i].login + '</span>' +
-            '<input class="choise_checkbox choise_folder cancel_share" type="checkbox" name="cancel_share_for_users" value="' + data[i].id + '"/></div>');
+        modalContent.append('<div class="share_for"><span>' + data[i].login + '</span>' +
+            '<input hidden class="choise_checkbox choise_folder cancel_share" type="checkbox" name="cancel_share_for_users" value="' + data[i].id + '"/></div>');
     }
     modalContent.append('</div>');
     modalContent.append('<div class="form-group"><input type="submit" name="share" value="Готово"/>');
+    selectShareUserForEdit();
 }
 
+
+function selectShareUserForEdit() {
+    $(".share_for").click(function(){
+        if($(this).hasClass('selected')){
+            $(this).removeClass('selected');
+            $(this)[0].getElementsByTagName('input')[0].checked = false;
+        }else{
+            $(this).addClass('selected');
+            $(this)[0].getElementsByTagName('input')[0].checked = true;
+        }
+    });
+}
+
+
+/*Show old name of file or folder for rename*/
+
+
+$(".li_rename").click(function(){
+    var oldName = $("tr.selected").find('td:nth-child(2)').find('span').html();
+    $("#newName").prop("value", oldName);
+});

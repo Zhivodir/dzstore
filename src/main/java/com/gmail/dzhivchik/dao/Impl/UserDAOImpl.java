@@ -79,7 +79,8 @@ public class UserDAOImpl implements UserDAO {
         List<String> forEmail = new ArrayList<>();
         List<String> forLogin = new ArrayList<>();
         for (String receiver : tempListForShare) {
-            if (receiver.trim().contains("@")) {
+            receiver = receiver.trim();
+            if (receiver.contains("@")) {
                 forEmail.add(receiver);
             } else {
                 forLogin.add(receiver);
