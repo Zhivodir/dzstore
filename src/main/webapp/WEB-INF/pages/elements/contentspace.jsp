@@ -34,16 +34,16 @@
                 <c:forEach items="${content[1]}" var="currentFolder">
                     <tr class="choise_field choise_folder">
                         <td><input hidden class="choise_checkbox choise_folder" type="checkbox" name="checked_folders_id" value="${currentFolder.id}"/></td>
-                        <td class="forContextMenu name_of_content">
+                        <td class="forContextMenu">
                             <c:choose>
                                 <c:when test="${typeOfView.equals('bin')}">
-                                    <a class="folder_href" href="#?currentFolderID=${currentFolder.id}" ondblclick="$('#modalForOpenDataInBin').modal('show')"><strong>${currentFolder.name}</strong></a>
+                                    <a class="folder_href" href="#?currentFolderID=${currentFolder.id}" ondblclick="$('#modalForOpenDataInBin').modal('show')"><strong><span class="name_of_content">${currentFolder.name}</span></strong></a>
                                 </c:when>
                                 <c:when test="${typeOfView.equals('shared')}">
-                                    <a class="folder_href" href="/shared?currentFolderID=${currentFolder.id}"><strong>${currentFolder.name}</strong></a>
+                                    <a class="folder_href" href="/shared?currentFolderID=${currentFolder.id}"><strong><span class="name_of_content">${currentFolder.name}</span></strong></a>
                                 </c:when>
                                 <c:otherwise>
-                                    <a class="folder_href" href="/?currentFolderID=${currentFolder.id}"><strong>${currentFolder.name}</strong></a>
+                                    <a class="folder_href" href="/?currentFolderID=${currentFolder.id}"><strong><span class="name_of_content">${currentFolder.name}</span></strong></a>
                                 </c:otherwise>
                             </c:choose>
                             <c:if test="${!typeOfView.equals('shared') && currentFolder.shareFor.size() ne 0}">
