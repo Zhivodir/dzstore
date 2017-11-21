@@ -93,6 +93,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
         ds.setUrl("jdbc:mysql://eu-cdbr-west-01.cleardb.com:3306/heroku_2411027723b6162?useUnicode=true&characterEncoding=UTF-8");
         ds.setUsername("b37e2c921f7603");
         ds.setPassword("51d552f6");
+
         return ds;
     }
 
