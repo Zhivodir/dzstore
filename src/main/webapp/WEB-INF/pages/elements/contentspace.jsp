@@ -19,33 +19,29 @@
                 </thead>
                 <tbody>
                 <c:if test="${currentFolderID ne null}">
-                    <tr>
+                    <tr class="choise_field" ondblclick="window.location.href='/?currentFolderID=${folder.id}'">
                         <td></td>
-                        <td>
-                            <a class="folder_href" href="/?currentFolderID=${folder.id}">
-                                <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
-                            </a>
-                        </td>
+                        <td><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></td>
                         <td></td>
                         <td></td>
                         <td></td>
                     </tr>
                 </c:if>
                 <c:forEach items="${content[1]}" var="currentFolder">
-                    <tr class="choise_field choise_folder">
+                    <c:choose>
+                        <c:when test="${typeOfView.equals('bin')}">
+                            <tr class="choise_field choise_folder" ondblclick="$('#modalForOpenDataInBin').modal('show')">
+                        </c:when>
+                        <c:when test="${typeOfView.equals('shared')}">
+                            <tr class="choise_field choise_folder" ondblclick="window.location.href='/shared?currentFolderID=${currentFolder.id}'">
+                        </c:when>
+                        <c:otherwise>
+                            <tr class="choise_field choise_folder" ondblclick="window.location.href='/?currentFolderID=${currentFolder.id}'">
+                        </c:otherwise>
+                    </c:choose>
                         <td><input hidden class="choise_checkbox choise_folder" type="checkbox" name="checked_folders_id" value="${currentFolder.id}"/></td>
                         <td class="forContextMenu">
-                            <c:choose>
-                                <c:when test="${typeOfView.equals('bin')}">
-                                    <a class="folder_href" href="#?currentFolderID=${currentFolder.id}" ondblclick="$('#modalForOpenDataInBin').modal('show')"><strong><span class="name_of_content">${currentFolder.name}</span></strong></a>
-                                </c:when>
-                                <c:when test="${typeOfView.equals('shared')}">
-                                    <a class="folder_href" href="/shared?currentFolderID=${currentFolder.id}"><strong><span class="name_of_content">${currentFolder.name}</span></strong></a>
-                                </c:when>
-                                <c:otherwise>
-                                    <a class="folder_href" href="/?currentFolderID=${currentFolder.id}"><strong><span class="name_of_content">${currentFolder.name}</span></strong></a>
-                                </c:otherwise>
-                            </c:choose>
+                            <strong><span class="name_of_content">${currentFolder.name}</span></strong>
                             <c:if test="${!typeOfView.equals('shared') && currentFolder.shareFor.size() ne 0}">
                                 <span class="glyphicon glyphicon-eye-open"></span>
                             </c:if>

@@ -15,7 +15,8 @@ var tr = $('#myTable .choise_field'),
     selection = {
         single: function(el) {
             tr.not(el).removeClass(this.cl);
-            this.ctrl(el);
+            $(el).addClass(this.cl);
+            //this.ctrl(el);
         },
         shift: function(el) {
 
@@ -35,7 +36,6 @@ var tr = $('#myTable .choise_field'),
                 $(el).addClass(this.cl);
             }
             this.last = $(el).index(this.slcr);
-            console.log(this.last);
         },
         slcr: '#myTable .choise_field',
         cl: 'selected',
@@ -55,15 +55,6 @@ tr.on('click', function(e) {
     })
 });
 
-
-jQuery(function($) {
-    $('.folder_href').click(function() {
-        return false;
-    }).dblclick(function() {
-        window.location = this.href;
-        return false;
-    });
-});
 
 /******************************/
 /* Upload with save structure */
