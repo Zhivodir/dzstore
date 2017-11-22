@@ -105,13 +105,15 @@ $(".li_share").click(function(){
 
     //Если выбран только один элемент контента - то можно увидеть
     // , для каких пользователей он расшарен
-    if(folders.length + files.length == 1){
+    if(folders.length + files.length == 1) {
         var res = $.post(
             "/ajax/load_share_account_for_content",
             {folders: folders.toString(), files: files.toString()},
             onLoaded,
             'json'
         );
+    } else {
+        showFormForNewShareForManySelect();
     }
 });
 
@@ -122,6 +124,14 @@ function onLoaded(data) {
     $('.share_for_account').click(function(){
         showFormForEditOfShare(data)
     });
+}
+
+
+function showFormForNewShareForManySelect(){
+    $('#modal_share').empty();
+    var modalContent = $("#modal_share").first();
+    modalContent.append('<div class="form-group"><input class="form-control" type="text" name="shareFor" placeholder="Укажите логин или почту человека"></div>' +
+        '<div class="share_for_account"></div>');
 }
 
 
