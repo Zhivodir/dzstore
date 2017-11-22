@@ -9,6 +9,7 @@
                  aria-hidden="true">
                 <div class="modal-dialog modal-DirectoryUpload">
                     <div class="modal-content all-modal-change">
+                        <form class="form-inline" enctype="multipart/form-data" action="upload" method="post">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">
                                 <span aria-hidden="true">&times;</span>
@@ -17,17 +18,19 @@
                             <h4 class="modal-title">Upload folder</h4>
                         </div>
                         <div class="modal-body">
-                            <form class="form-inline" enctype="multipart/form-data" action="upload" method="post">
-                                <div class="form-group" style="float: left" id="folder_upload">
-                                    <input type="hidden" name="typeOfView" value="${typeOfView}">
-                                    <input type="hidden" name="currentFolderID" value="${currentFolderID}">
-                                    <input type="hidden" name="uploaded" value="1"/>
-                                    <input type="hidden" name="structure" id="structure" value=""/>
-                                    <input type="file" name="files" id="files" webkitdirectory directory multiple mozdirectory/>
-                                </div>
-                                <input style="float: left; margin-top: -9px" class="btn btn-primary" type="submit" value="Загрузить"/>
-                            </form>
+                            <div class="form-group" style="float: left" id="folder_upload">
+                                <input type="hidden" name="typeOfView" value="${typeOfView}">
+                                <input type="hidden" name="currentFolderID" value="${currentFolderID}">
+                                <input type="hidden" name="uploaded" value="1"/>
+                                <input type="hidden" name="structure" id="structure" value=""/>
+                                <input type="file" name="files" id="files" webkitdirectory directory multiple mozdirectory/>
+                            </div>
                         </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                                <button type="submit" class="btn btn-primary">Upload</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

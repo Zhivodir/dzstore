@@ -17,18 +17,18 @@
                 <div class="modal-dialog modal-standart">
                     <div class="modal-content all-modal-change">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">
-                                <span aria-hidden="true">&times;</span>
-                                <span class="sr-only">Close</span>
-                            </button>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel">Переименование</h4>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
                                 <input type="hidden" name="currentFolder" value="${f}">
-                                <input type="text" class="form-control" id="newName" name="name"
-                                       placeholder="Enter new name">
+                                <input type="text" class="form-control" id="newName" name="name" placeholder="Enter new name">
                             </div>
-                            <input class="submitRename" type="submit" name="rename" value="Rename"/>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                            <button type="submit" name="rename" value="Готово" class="btn btn-primary">Сохранить</button>
                         </div>
                     </div>
                 </div>

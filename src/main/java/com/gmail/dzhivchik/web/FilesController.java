@@ -155,6 +155,7 @@ public class FilesController {
             }
 
             if(share != null) {
+                System.out.println(share);
                 List[] content = contentService.getContentById(checked_files_id, checked_folders_id);
                 if(cancel_share_for_users != null && cancel_share_for_users.length != 0){
                     contentService.cancelShareForUsers(content[0], content[1], cancel_share_for_users);

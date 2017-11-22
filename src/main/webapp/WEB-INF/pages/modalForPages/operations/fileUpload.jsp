@@ -9,23 +9,23 @@
                  aria-hidden="true">
                 <div class="modal-dialog modal-FileUpload">
                     <div class="modal-content">
+                        <form class="form-inline" enctype="multipart/form-data" action="upload" method="post">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">
-                                <span aria-hidden="true">&times;</span>
-                                <span class="sr-only">Close</span>
-                            </button>
-                            <h4 class="modal-title">Upload file</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel">Загрузить файл</h4>
                         </div>
                         <div class="modal-body">
-                            <form class="form-inline" enctype="multipart/form-data" action="upload" method="post">
-                                <div class="form-group">
-                                    <input type="hidden" name="typeOfView" value="${typeOfView}">
-                                    <input type="hidden" name="currentFolderID" value="${currentFolderID}">
-                                    <input type="file" name="file" placeholder="Choice file">
-                                </div>
-                                <button type="submit" class="btn btn-primary">Upload</button>
-                            </form>
+                            <div class="form-group">
+                                <input type="hidden" name="typeOfView" value="${typeOfView}">
+                                <input type="hidden" name="currentFolderID" value="${currentFolderID}">
+                                <input type="file" name="file">
+                            </div>
                         </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                            <button type="submit" class="btn btn-primary">Upload</button>
+                        </div>
+                        </form>
                     </div>
                 </div>
             </div>

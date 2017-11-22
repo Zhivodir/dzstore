@@ -44,7 +44,7 @@ var tr = $('#myTable .choise_field'),
 
 
 tr.on('click', function(e) {
-     method = !e.shiftKey && !e.ctrlKey ? 'single' : (e.shiftKey ? 'shift' : 'ctrl');
+    method = !e.shiftKey && !e.ctrlKey ? 'single' : (e.shiftKey ? 'shift' : 'ctrl');
     selection[method](this);
     $('#myTable tr').each(function(indx, el) {
         $("input:checkbox").removeAttr("checked");
@@ -128,13 +128,14 @@ function onLoaded(data) {
 function showFormForNewShare(data){
     $('#modal_share').empty();
     var modalContent = $("#modal_share").first();
-    modalContent.append('<div class="form-group"><input type="text" name="shareFor"></div>' +
-        '<div class="form-group share_for_account"></div>');
-    modalContent.append('<div class="form-group"><input type="submit" name="share" value="Готово"/>');
+    modalContent.append('<div class="form-group"><input class="form-control" type="text" name="shareFor" placeholder="Укажите логин или почту человека"></div>' +
+        '<div class="share_for_account"></div>');
 
     var modalContent = $(".share_for_account").first();
+
+    modalContent.append('<span class="btn">Доступ открыт для: </span>');
     for(var i = 0; i < data.length; i++){
-        modalContent.append('<span class="show_login_for_share">' + data[i].login + '</span>');
+        modalContent.append('<span class="info_block">' + data[i].login + '</span>');
     }
 }
 

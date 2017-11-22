@@ -10,11 +10,8 @@
                 <div class="modal-dialog modal-FileUpload">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">
-                                <span aria-hidden="true">&times;</span>
-                                <span class="sr-only">Close</span>
-                            </button>
-                            <h4 class="modal-title">Move to...</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel">Перенести в ...</h4>
                         </div>
                         <div class="modal-body">
                             <ul class="Container" id="tree">
@@ -25,7 +22,10 @@
                                     <ul class="Container"></ul>
                                 </li>
                             </ul>
-                            <input type="submit" name="replace" value="replace"/>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                            <button type="submit" name="replace" value="replace"class="btn btn-primary">Перенести</button>
                         </div>
                     </div>
                 </div>

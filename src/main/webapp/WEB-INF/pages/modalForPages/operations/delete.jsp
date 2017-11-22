@@ -17,16 +17,18 @@
                 <div class="modal-dialog modal-standart">
                     <div class="modal-content all-modal-change">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">
-                                <span aria-hidden="true">&times;</span>
-                                <span class="sr-only">Close</span>
-                            </button>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel">Удаление</h4>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <input type="hidden" name="currentFolder" value="${f}">
+                                
                             </div>
-                            <input type="submit" name="delete" value="Delete"/>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="hidden" name="currentFolder" value="${f}">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                            <button type="submit" name="delete" value="delete" class="btn btn-primary">Удалить</button>
                         </div>
                     </div>
                 </div>
