@@ -33,24 +33,32 @@ public class ViewController {
     @RequestMapping(method = RequestMethod.GET)
     public String onIndex(Model model,
                           @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
-        if(currentFolderID != null && currentFolderID > 0) {
-            Folder currentFolder = contentService.getFolder(currentFolderID);
-            List<Folder> forRelativePath = new ArrayList<>();
-            getListRelativePath(currentFolder, forRelativePath);
-            Collections.reverse(forRelativePath);
-            forRelativePath.add(currentFolder);
-            model.addAttribute("listForRelativePath", forRelativePath);
-            model.addAttribute("content", contentService.getContent(user, currentFolder));
-        }else{
-            model.addAttribute("content", contentService.getContent(user, null));
-        }
-        model.addAttribute("currentFolderID", currentFolderID);
-        model.addAttribute("user", user);
-        model.addAttribute("busySpace", showBusySpace(user));
-        model.addAttribute("typeOfView", "index");
-        return "index";
+            String login = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userService.getUser(login);
+            List[] content = null;
+            Integer parentsFolderID = null;
+            if(currentFolderID != null && currentFolderID > 0) {
+                Folder currentFolder = contentService.getFolder(currentFolderID);
+                Folder parentsFolder = currentFolder.getParentFolder();
+                List<Folder> forRelativePath = new ArrayList<>();
+                getListRelativePath(currentFolder, forRelativePath);
+                Collections.reverse(forRelativePath);
+                forRelativePath.add(currentFolder);
+                model.addAttribute("listForRelativePath", forRelativePath);
+                content = contentService.getContent(user, currentFolder);
+                if(parentsFolder != null) {
+                    parentsFolderID = parentsFolder.getId();
+                }
+            } else {
+                content = contentService.getContent(user, null);
+            }
+            model.addAttribute("parentsFolderID", parentsFolderID);
+            model.addAttribute("content", content);
+            model.addAttribute("currentFolderID", currentFolderID);
+            model.addAttribute("user", user);
+            model.addAttribute("busySpace", showBusySpace(user));
+            model.addAttribute("typeOfView", "index");
+            return "index";
     }
 
 

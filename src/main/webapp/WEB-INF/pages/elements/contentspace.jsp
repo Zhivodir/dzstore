@@ -20,7 +20,7 @@
                 </thead>
                 <tbody>
                 <c:if test="${currentFolderID ne null}">
-                    <tr class="choise_field" ondblclick="window.location.href='/?currentFolderID=${folder.id}'">
+                    <tr class="choise_field" ondblclick="window.location.href='/?currentFolderID=${parentsFolderID}'">
                         <td></td>
                         <td><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></td>
                         <td></td>
