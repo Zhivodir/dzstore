@@ -472,3 +472,12 @@ body {
 div.share_for.selected {
     background-color: #985f0d;
 }
+
+.name_of_content:hover{
+    cursor: default;
+    -webkit-user-select: none;
+    /* user-select -- это нестандартное свойство */
+    -moz-user-select: none;
+    /* поэтому нужны префиксы */
+    -ms-user-select: none;
+}
