@@ -4,6 +4,9 @@
 
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
     padding-top: 50px;
 }
 
@@ -475,9 +478,4 @@ div.share_for.selected {
 
 .name_of_content:hover{
     cursor: default;
-    -webkit-user-select: none;
-    /* user-select -- это нестандартное свойство */
-    -moz-user-select: none;
-    /* поэтому нужны префиксы */
-    -ms-user-select: none;
 }
