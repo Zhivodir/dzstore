@@ -286,7 +286,6 @@ public class FilesController {
         }catch(IOException e){e.printStackTrace();}
     }
 
-
     public void downloadSingleFile(File file){
         httpServletResponse.setContentType(file.getType());
         httpServletResponse.setContentLength((int)file.getSize());
