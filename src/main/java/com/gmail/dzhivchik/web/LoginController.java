@@ -21,6 +21,11 @@ public class LoginController {
     @Autowired
     private UserService userService;
 
+    @RequestMapping(value = "/test", method = RequestMethod.POST)
+    public String androidTest(){
+        return "!!!!!!!!!!!";
+    }
+
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String loginPage(){
         return "login";
