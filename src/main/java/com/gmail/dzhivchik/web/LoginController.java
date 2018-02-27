@@ -24,8 +24,8 @@ public class LoginController {
 
     @ResponseBody
     @RequestMapping(value = "/test", method = RequestMethod.POST)
-    public String androidTest(){
-        String test = "!!!!!!!!!!!!!!!";
+    public String androidTest(@RequestParam("code") String[] code){
+        String test = "!!!!!!!!!!!!!!!" + code[0];
         return test;
     }
 
