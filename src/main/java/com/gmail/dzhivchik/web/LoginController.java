@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Created by User on 03.02.2017.
@@ -21,9 +22,11 @@ public class LoginController {
     @Autowired
     private UserService userService;
 
+    @ResponseBody
     @RequestMapping(value = "/test", method = RequestMethod.POST)
     public String androidTest(){
-        return "!!!!!!!!!!!";
+        String test = "!!!!!!!!!!!!!!!";
+        return test;
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
