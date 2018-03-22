@@ -1,7 +1,6 @@
 package com.gmail.dzhivchik.dao.Impl;
 
 import com.gmail.dzhivchik.dao.FolderDAO;
-import com.gmail.dzhivchik.domain.File;
 import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
 import org.springframework.stereotype.Repository;
