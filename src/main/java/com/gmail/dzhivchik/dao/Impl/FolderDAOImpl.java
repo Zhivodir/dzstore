@@ -202,10 +202,11 @@ public class FolderDAOImpl implements FolderDAO{
     }
 
     @Override
-    public void renameFolder(int[] checked_folders_id, String newName) {
-        Query query = entityManager.createQuery("UPDATE Folder f SET f.name = :newName WHERE f.id = :id");
+    public void renameFolder(User userWhoWantRename, int[] checked_folders_id, String newName) {
+        Query query = entityManager.createQuery("UPDATE Folder f SET f.name = :newName WHERE f.id = :id AND f.user = :userWhoWantRename");
         query.setParameter("newName", newName);
         query.setParameter("id", checked_folders_id[0]);
+        query.setParameter("userWhoWantRename", userWhoWantRename);
         int result = query.executeUpdate();
     }
 

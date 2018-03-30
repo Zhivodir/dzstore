@@ -21,7 +21,7 @@ public interface FolderDAO {
     void changeStar(int[] checked_folders_id, boolean stateOfStar);
     List<Folder> getStarredList(User user);
     List<Folder> getSearchList(String whatSearch, User user);
-    void renameFolder(int[] checked_folders_id, String newName);
+    void renameFolder(User userWhoWantRename, int[] checked_folders_id, String newName);
     void changeShare(List<Folder> targets);
     List<Folder> getSharedList(User user, Integer targetFolder);
     void changeInBin(int[] checked_folders_id, boolean stateOfInBinStatus);

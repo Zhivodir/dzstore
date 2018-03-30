@@ -22,7 +22,7 @@ public interface FileDAO {
     void changeStar(int[] checked_files_id, boolean stateOfStar);
     List<File> getStarredList(User user);
     List<File> getSearchList(String whatSearch, User user);
-    void renameFile(int[] checked_files_id, String newName);
+    void renameFile(User userWhoWantRename, int[] checked_files_id, String newName);
     void changeShare(List<File> targets);
 //    List<File> getSharedList(User user);
     List<File> getSharedList(User user, Integer targetFolder);

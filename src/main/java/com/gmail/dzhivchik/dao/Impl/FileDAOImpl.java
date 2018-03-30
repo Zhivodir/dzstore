@@ -155,10 +155,11 @@ public class FileDAOImpl implements FileDAO {
     }
 
     @Override
-    public void renameFile(int[] checked_files_id, String newName) {
-        Query query = entityManager.createQuery("UPDATE File f SET f.name = :newName WHERE f.id = :id");
+    public void renameFile(User userWhoWantRename ,int[] checked_files_id, String newName) {
+        Query query = entityManager.createQuery("UPDATE File f SET f.name = :newName WHERE f.id = :id AND f.user = :userWhoWantRename");
         query.setParameter("newName", newName);
         query.setParameter("id", checked_files_id[0]);
+        query.setParameter("userWhoWantRename", userWhoWantRename);
         query.executeUpdate();
     }
 

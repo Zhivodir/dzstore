@@ -134,7 +134,7 @@ public class ViewController {
     }
 
 
-    public String[] showBusySpace(User user) {
+    private String[] showBusySpace(User user) {
         long filesSize = contentService.getSizeBusyMemory(user);
         long ostatok = 0;
         String[] sizes = new String[2];

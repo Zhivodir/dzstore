@@ -10,9 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Created by User on 31.01.2017.
@@ -20,6 +28,7 @@ import java.util.List;
 
 @Service
 public class ContentService {
+    final static private long MAX_SIZE_OF_FILE = 5120;
 
     @Autowired
     private FileDAO fileDAO;
@@ -30,52 +39,84 @@ public class ContentService {
     @Autowired
     private UserDAO userDAO;
 
+    @Autowired
+    private HttpServletResponse httpServletResponse;
+
 
     @Transactional
-    public void createFolder(Folder folder){
+    public void createFolder(Folder folder) {
         folderDAO.createFolder(folder);
     }
 
-
     @Transactional
-    public Folder getFolder(Integer id){ return folderDAO.getFolder(id); }
-
-
-    @Transactional
-    public File getFile(Integer id){ return fileDAO.getFile(id); }
-
-    @Transactional
-    public void uploadFile(File file){
-        fileDAO.upload(file);
+    public Folder getFolder(Integer id) {
+        return folderDAO.getFolder(id);
     }
 
-
     @Transactional
-    public void uploadFolder(Folder folder){
-        folderDAO.upload(folder);
+    public File getFile(Integer id) {
+        return fileDAO.getFile(id);
     }
 
+    @Transactional
+    public void uploadContent(MultipartFile file, MultipartFile[] files, String structure, Integer currentFolderID){
+        User currentUser = getCurrentUser();
 
-    @Transactional(readOnly=true)
-    public List[] getContent(User user, Folder parentFolder){
+        Folder curFolder = null;
+        if (currentFolderID != null) {
+            curFolder = getFolder(currentFolderID);
+        }
+
+        if (file != null && file.getSize() < MAX_SIZE_OF_FILE) {
+            uploadFile(file, currentUser, curFolder);
+        }
+
+        if (files != null && structure != null) {
+            String[] pathes = null;
+            if (structure.startsWith(",")) {
+                structure = structure.substring(1);
+            }
+            String targetFolderName = structure.substring(0, structure.indexOf("/"));
+            structure = structure.replaceAll(targetFolderName + "/", "");
+            Folder targetFolder = new Folder(targetFolderName, currentUser, curFolder, false, false, false);
+            pathes = structure.split(";");
+            prepareNewFolderForUpload(files, pathes, currentUser, targetFolder, structure);
+            folderDAO.upload(targetFolder);
+        }
+    }
+
+    @Transactional
+    public void downloadContent(int[] checked_files_id, int[] checked_folders_id){
+        List<File> listCheckedFiles = new ArrayList<>();
+        if (checked_files_id != null) {
+            listCheckedFiles = getListFilesById(checked_files_id);
+        }
+
+        List<Folder> listCheckedFolder = new ArrayList<>();
+        if (checked_folders_id != null) {
+            listCheckedFolder = getListFolderById(checked_folders_id);
+        }
+        downloadContent(listCheckedFiles, listCheckedFolder);
+    }
+
+    @Transactional(readOnly = true)
+    public List[] getContent(User user, Folder parentFolder) {
         List[] content = new List[2];
         content[0] = fileDAO.getList(user, parentFolder);
         content[1] = folderDAO.getList(user, parentFolder);
         return content;
     }
 
-
-    @Transactional(readOnly=true)
-    public List[] getContent(User user, Folder parentFolder, String[] exceptionFolders){
+    @Transactional(readOnly = true)
+    public List[] getContent(User user, Folder parentFolder, String[] exceptionFolders) {
         List[] content = new List[2];
         content[0] = fileDAO.getList(user, parentFolder);
         content[1] = folderDAO.getList(user, parentFolder, exceptionFolders);
         return content;
     }
 
-
     @Transactional
-    public void deleteCheckedContent(int[] checked_files_id, int[] checked_folders_id, String login){
+    public void deleteCheckedContent(int[] checked_files_id, int[] checked_folders_id) {
         if (checked_files_id != null) {
             fileDAO.deleteGroup(checked_files_id);
         }
@@ -84,43 +125,39 @@ public class ContentService {
         }
     }
 
-
     @Transactional
     public List<File> getListFilesById(int[] checked_files_id) {
         return fileDAO.getListFilesById(checked_files_id);
     }
-
 
     @Transactional
     public List<Folder> getListFolderById(int[] checked_folders_id) {
         return folderDAO.getListFoldersById(checked_folders_id);
     }
 
-
     @Transactional
     public void changeStar(int[] checked_files_id, int[] checked_folders_id, boolean stateOfStar) {
-        if(checked_files_id != null){
+        if (checked_files_id != null) {
             fileDAO.changeStar(checked_files_id, stateOfStar);
         }
-        if(checked_folders_id != null){
+        if (checked_folders_id != null) {
             folderDAO.changeStar(checked_folders_id, stateOfStar);
         }
     }
 
-
     @Transactional
     public void in_out_bin(int[] checked_files_id, int[] checked_folders_id, boolean stateOfInBinStatus) {
-        if(checked_files_id != null){
+        if (checked_files_id != null) {
             fileDAO.changeInBin(checked_files_id, stateOfInBinStatus);
         }
-        if(checked_folders_id != null){
+        if (checked_folders_id != null) {
             folderDAO.changeInBin(checked_folders_id, stateOfInBinStatus);
         }
     }
 
 
     @Transactional
-    public List[] getStarredContent(User user){
+    public List[] getStarredContent(User user) {
         List[] content = new List[2];
         content[0] = fileDAO.getStarredList(user);
         content[1] = folderDAO.getStarredList(user);
@@ -129,7 +166,7 @@ public class ContentService {
 
 
     @Transactional
-    public List[] getBinContent(User user){
+    public List[] getBinContent(User user) {
         List[] content = new List[2];
         content[0] = fileDAO.getBinList(user);
         content[1] = folderDAO.getBinList(user);
@@ -138,46 +175,43 @@ public class ContentService {
 
 
     @Transactional
-    public List[] getListBySearch(String whatSearch, User user){
+    public List[] getListBySearch(String whatSearch, User user) {
         List[] content = new List[2];
         content[0] = fileDAO.getSearchList(whatSearch, user);
         content[1] = folderDAO.getSearchList(whatSearch, user);
         return content;
     }
 
-
     @Transactional
-    public void rename(String login, int[] checked_files_id, int[] checked_folders_id, String newName){
-        StringBuilder sb = new StringBuilder();
-        if(checked_files_id != null){
-            fileDAO.renameFile(checked_files_id, newName);
-        }else if(checked_folders_id != null){
-            folderDAO.renameFolder(checked_folders_id, newName);
+    public void rename(int[] checked_files_id, int[] checked_folders_id, String newName) {
+        if (checked_files_id != null) {
+            fileDAO.renameFile(getCurrentUser(), checked_files_id, newName);
+        } else if (checked_folders_id != null) {
+            folderDAO.renameFolder(getCurrentUser(), checked_folders_id, newName);
         }
     }
 
-
     @Transactional
-    public void share(List<File> checked_files, List<Folder> checked_folders, String shareFor, boolean shareInFolder){
+    public void share(List<File> checked_files, List<Folder> checked_folders, String shareFor, boolean shareInFolder) {
         List<User> receivers = userDAO.getShareReceivers(shareFor);
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         for (int i = 0; i < receivers.size(); i++) {
-            if(receivers.get(i).getLogin().equals(login)){
+            if (receivers.get(i).getLogin().equals(login)) {
                 receivers.remove(receivers.get(i));
                 i--;
             }
         }
 
-        if(checked_files != null){
-            for (File file : checked_files){
+        if (checked_files != null) {
+            for (File file : checked_files) {
                 file.addToShareFor(receivers);
                 file.setShareInFolder(shareInFolder);
             }
             fileDAO.changeShare(checked_files);
         }
 
-        if(checked_folders != null){
-            for (Folder folder : checked_folders){
+        if (checked_folders != null) {
+            for (Folder folder : checked_folders) {
                 folder.addToShareFor(receivers);
                 folder.setShareInFolder(shareInFolder);
                 share(folder.getFiles(), folder.getFolders(), shareFor, true);
@@ -186,97 +220,95 @@ public class ContentService {
         }
     }
 
-
     @Transactional
-    public void cancelShareForUsers(List<File> checked_files, List<Folder> checked_folders, int[] cancel_share_for_users){
+    public void cancelShareForUsers(List<File> checked_files, List<Folder> checked_folders, int[] cancel_share_for_users) {
         List<User> receivers = userDAO.getUsersById(cancel_share_for_users);
 
-        if(checked_files != null){
-            for (File file : checked_files){
+        if (checked_files != null) {
+            for (File file : checked_files) {
                 file.removeFromShareFor(receivers);
             }
             fileDAO.changeShare(checked_files);
         }
 
-        if(checked_folders != null){
-            for (Folder folder : checked_folders){
+        if (checked_folders != null) {
+            for (Folder folder : checked_folders) {
                 folder.removeFromShareFor(receivers);
             }
         }
     }
 
-
     @Transactional
-    public void cancelShare(int[] checked_files_id, int[] checked_folders_id, User user){
+    public void removeFromShareWithMe(int[] checked_files_id, int[] checked_folders_id, User user) {
         List<User> receivers = new ArrayList<>();
         receivers.add(user);
 
         List<File> targetsFiles = null;
-        if(checked_files_id != null){
+        if (checked_files_id != null) {
             targetsFiles = fileDAO.getListFilesById(checked_files_id);
-            for (File file : targetsFiles){
+            for (File file : targetsFiles) {
                 file.removeFromShareFor(receivers);
             }
             fileDAO.changeShare(targetsFiles);
         }
 
         List<Folder> targetsFolder = null;
-        if(checked_folders_id != null){
+        if (checked_folders_id != null) {
             targetsFolder = folderDAO.getListFoldersById(checked_folders_id);
-            for (Folder folder : targetsFolder){
+            for (Folder folder : targetsFolder) {
                 folder.removeFromShareFor(receivers);
             }
             folderDAO.changeShare(targetsFolder);
         }
     }
 
-
     @Transactional
-    public List[] getSharedContent(User user, Integer targetFolder){
+    public List[] getSharedContent(User user, Integer targetFolder) {
         List[] content = new List[2];
         content[0] = fileDAO.getSharedList(user, targetFolder);
         content[1] = folderDAO.getSharedList(user, targetFolder);
         return content;
     }
 
-
     @Transactional
-    public void addtome(int[] checked_files_id, int[] checked_folders_id, User user){
-        if(checked_files_id != null) {
+    public void addtome(int[] checked_files_id, int[] checked_folders_id) {
+        User currentUser = getCurrentUser();
+        if (checked_files_id != null) {
             List<File> listOfAddFiles = getListFilesById(checked_files_id);
-            addSharedFileToMyStore(listOfAddFiles, user, null, null);
+            addSharedFileToMyStore(listOfAddFiles, currentUser, null, null);
         }
 
-        if(checked_folders_id != null) {
+        if (checked_folders_id != null) {
             List<Folder> ListOfAddFolders = getListFolderById(checked_folders_id);
-            addSharedFolderToMyStore(ListOfAddFolders, user, null, null);
+            addSharedFolderToMyStore(ListOfAddFolders, currentUser, null, null);
         }
     }
-
 
     @Transactional
-    public void move_to(int[] checked_files_id, int[] checked_folders_id, User user, Folder move_to){
-        if(checked_files_id != null) {
-            fileDAO.move_to(checked_files_id, move_to);
+    public void move_to(int[] checked_files_id, int[] checked_folders_id, String move_to) {
+        Folder target = null;
+        if (!move_to.equals("tree")) {
+            target = getFolder(Integer.valueOf(move_to));
         }
-        if(checked_folders_id != null) {
-            folderDAO.move_to(checked_folders_id, move_to);
+        if (checked_files_id != null) {
+            fileDAO.move_to(checked_files_id, target);
+        }
+        if (checked_folders_id != null) {
+            folderDAO.move_to(checked_folders_id, target);
         }
     }
 
-
-    public long getSizeBusyMemory(User user){
+    public long getSizeBusyMemory(User user) {
         List<File> content = fileDAO.getAllList(user);
         long sumSize = 0;
-        for(File file : content) {
+        for (File file : content) {
             sumSize += file.getSize();
         }
         return sumSize;
     }
 
 
-
-    public void createPathForElement(StringBuilder sb, Folder curFolder) {
+    private void createPathForElement(StringBuilder sb, Folder curFolder) {
         if (curFolder != null) {
             createPathForElement(sb, curFolder.getParentFolder());
             sb.append(curFolder.getName());
@@ -285,31 +317,29 @@ public class ContentService {
     }
 
 
-    public void addSharedFileToMyStore(List<File> listOfAddFiles, User user, Folder curFolder, Folder addFolder) {
-        long all = (long)10*1024*1024*1024;
-        for(File file : listOfAddFiles){
-            String fileName = file.getName();
+    private void addSharedFileToMyStore(List<File> listOfAddFiles, User user, Folder curFolder, Folder addFolder) {
+        long all = (long) 10 * 1024 * 1024 * 1024;
+        for (File file : listOfAddFiles) {
             StringBuilder relativePath = new StringBuilder();
             createPathForElement(relativePath, curFolder);
-            long size = file.getSize();
-            if(size <= all - getSizeBusyMemory(user)){
-                fileDAO.upload(new File(fileName, size, file.getType(), user, addFolder, false, false, file.getData(), false));
-            }else{
+            if (file.getSize() <= all - getSizeBusyMemory(user)) {
+                fileDAO.upload(new File(file.getName(), file.getSize(), file.getType(), user, addFolder, false, false, file.getData(), false));
+            } else {
                 System.out.println("Havn't need memory");
             }
         }
     }
 
-    public void addSharedFolderToMyStore(List<Folder> listOfAddFolders, User user, Folder shareFolder, Folder addFolder){
-        for(Folder folder : listOfAddFolders) {
+    private void addSharedFolderToMyStore(List<Folder> listOfAddFolders, User user, Folder shareFolder, Folder addFolder) {
+        for (Folder folder : listOfAddFolders) {
             folderDAO.createFolder(new Folder(folder.getName(), user, addFolder, false, false, false));
             Folder tf = folderDAO.getFolder(user, folder.getName(), addFolder);
 
-            if(folder.getFiles().size() != 0) {
+            if (folder.getFiles().size() != 0) {
                 addSharedFileToMyStore(folder.getFiles(), user, folder, tf);
             }
 
-            if(folder.getFolders().size() != 0) {
+            if (folder.getFolders().size() != 0) {
                 addSharedFolderToMyStore(folder.getFolders(), user, folder, tf);
             }
         }
@@ -317,12 +347,183 @@ public class ContentService {
 
     public List[] getContentById(int[] checked_files_id, int[] checked_folders_id) {
         List[] content = new List[2];
-        if(checked_files_id != null) {
+        if (checked_files_id != null) {
             content[0] = getListFilesById(checked_files_id);
         }
-        if(checked_folders_id != null) {
+        if (checked_folders_id != null) {
             content[1] = getListFolderById(checked_folders_id);
         }
         return content;
+    }
+
+    private User getCurrentUser() {
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userDAO.getUser(login);
+    }
+
+    private void uploadFile(MultipartFile file, User user, Folder curFolder) {
+        String fileName = file.getOriginalFilename();
+        long size = file.getSize();
+        long all = (long) 10 * 1024 * 1024 * 1024;
+        String mimeType = file.getContentType();
+        if (size <= all - getSizeBusyMemory(user)) {
+            String type = mimeType;
+            File fileForDAO = null;
+            try {
+                fileForDAO = new File(fileName, size, type, user, curFolder, false, false, file.getBytes(), false);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            fileDAO.upload(fileForDAO);
+        } else {
+            System.out.println("Havn't need memory");
+        }
+    }
+
+    private void prepareNewFolderForUpload(MultipartFile[] files, String[] pathes, User user, Folder curFolder, String structure) {
+        Map<String, Folder> map = new HashMap<>();
+        try {
+            for (int i = 0; i < pathes.length; i++) {
+                if (files[i].getSize() > MAX_SIZE_OF_FILE) {
+                    continue;
+                } else if (!pathes[i].contains("/")) {
+                    File file = new File(pathes[i], files[i].getSize(), files[i].getContentType(),
+                            user, curFolder, false, false, files[i].getBytes(), false);
+                    curFolder.getFiles().add(file);
+                } else if (pathes[i].contains("/")) {
+                    String pathToFolderWithThisFile = pathes[i].substring(0, pathes[i].lastIndexOf("/"));
+                    //точка начала имени родительской папки файла
+                    int startOfTargetFolderName = pathToFolderWithThisFile.lastIndexOf("/") + 1;
+                    String targetFolderNameAndFileName = pathes[i].substring(startOfTargetFolderName);
+                    String targetFolderName = targetFolderNameAndFileName.substring(0, targetFolderNameAndFileName.indexOf("/"));
+                    if (map.containsKey(pathToFolderWithThisFile)) {
+                        //если папка уже есть в нее просто добавляеться файл
+                        map.get(pathToFolderWithThisFile).getFiles().add(new File(targetFolderNameAndFileName.substring(targetFolderNameAndFileName.lastIndexOf("/") + 1), files[i].getSize(), files[i].getContentType(),
+                                user, map.get(pathToFolderWithThisFile), false, false, files[i].getBytes(), false));
+                    } else {
+                        //если такой папки еще нет
+                        //изначально считаеться ,что добавляемая пользователем папка родительская для текущей папки
+                        Folder parentFolderForFolderWithThisFile = curFolder;
+
+                        //если добавляемая пользователем папка не родительская для
+                        // текущей папки ,то определяем родительскую и достаем её из карты
+                        if (startOfTargetFolderName > 0) {
+                            String parentFolderPath = pathToFolderWithThisFile.substring(0, pathToFolderWithThisFile.indexOf("/"));
+                            parentFolderForFolderWithThisFile = map.get(parentFolderPath);
+                        }
+                        Folder newFolder = new Folder(targetFolderName, user, parentFolderForFolderWithThisFile, false, false, false);
+                        parentFolderForFolderWithThisFile.getFolders().add(newFolder);
+                        map.put(pathToFolderWithThisFile, newFolder);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+                             /*   DOWNLOAD  */
+
+    private void downloadContent(List<File> listCheckedFiles, List<Folder> listCheckedFolder) {
+        if ((listCheckedFolder.size() != 0) || (listCheckedFiles.size() > 1)) {
+            downloadSeveralFiles(listCheckedFiles, listCheckedFolder);
+        } else if ((listCheckedFiles.size() == 1) && (listCheckedFolder.size() == 0)) {
+            downloadSingleFile(listCheckedFiles.get(0));
+        }
+    }
+
+
+    private void downloadSeveralFiles(List<File> listCheckedFiles, List<Folder> listCheckedFolder) {
+        int BUFFER_SIZE = 1024;
+        long size = 0;
+        try {
+            StringBuilder structure = new StringBuilder();
+            String archiveName = randomString(8) + ".zip";
+            ZipOutputStream out = new ZipOutputStream(new FileOutputStream(archiveName));
+
+            prepareZipFileForDownload(size, out, listCheckedFiles, listCheckedFolder, structure);
+            out.flush();
+            out.close();
+
+            java.io.File tempFile = new java.io.File(archiveName);
+            FileInputStream inputStream = new FileInputStream(tempFile);
+            httpServletResponse.setContentType("application/zip");
+            httpServletResponse.setHeader("Content-Disposition", "attachment;filename=" + archiveName);
+            OutputStream os = httpServletResponse.getOutputStream();
+            byte[] buffer = new byte[BUFFER_SIZE];
+            int bytesRead;
+
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                os.write(buffer, 0, bytesRead);
+            }
+            os.flush();
+            os.close();
+            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void downloadSingleFile(File file) {
+        httpServletResponse.setContentType(file.getType());
+        httpServletResponse.setContentLength((int) file.getSize());
+        httpServletResponse.setHeader("Content-Disposition", "attachment;filename=" + file.getName());
+        OutputStream os = null;
+        try {
+            os = httpServletResponse.getOutputStream();
+            os.write(file.getData());
+            os.flush();
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void prepareZipFileForDownload(long size, ZipOutputStream out, List<File> listCheckedFiles,
+                                          List<Folder> listCheckedFolder, StringBuilder structure) throws IOException {
+        if (listCheckedFiles.size() != 0) {
+            for (File file : listCheckedFiles) {
+                if (!file.isInbin()) {
+                    ZipEntry entry = (new ZipEntry(structure.toString() + file.getName()));
+                    entry.setSize(file.getSize());
+                    out.putNextEntry(entry);
+
+                    InputStream is = new ByteArrayInputStream(file.getData());
+                    int bytesIn;
+                    byte[] readBuffer = new byte[512];
+                    while ((bytesIn = is.read(readBuffer)) != -1) {
+                        out.write(readBuffer, 0, bytesIn);
+                    }
+                    out.closeEntry();
+                    is.close();
+                }
+            }
+        }
+
+        if (listCheckedFolder.size() != 0) {
+            for (Folder folder : listCheckedFolder) {
+                if (!folder.isInbin()) {
+                    structure.append(folder.getName() + "/");
+                    if (folder.getFiles().size() == 0 && folder.getFolders().size() == 0) {
+                        out.putNextEntry(new ZipEntry(structure.toString()));
+                        out.closeEntry();
+                    } else {
+                        prepareZipFileForDownload(size, out, folder.getFiles(), folder.getFolders(), structure);
+                    }
+                    structure.delete(structure.toString().lastIndexOf(folder.getName()), structure.length());
+                }
+            }
+        }
+    }
+
+    private static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    private static SecureRandom rnd = new SecureRandom();
+
+    private String randomString(int len) {
+        StringBuilder sb = new StringBuilder(len);
+        for (int i = 0; i < len; i++)
+            sb.append(AB.charAt(rnd.nextInt(AB.length())));
+        return sb.toString();
     }
 }

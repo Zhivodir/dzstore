@@ -21,7 +21,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                            <button type="submit" name="remove" value="Remove" class="btn btn-primary">В корзину</button>
+                            <button type="submit" name="action" value="remove" class="btn btn-primary">В корзину</button>
                         </div>
                     </div>
                 </div>
