@@ -124,7 +124,7 @@ public class ViewController {
     }
 
 
-    public void getListRelativePath(Folder currentFolder, List<Folder> forRelativePath) {
+    private void getListRelativePath(Folder currentFolder, List<Folder> forRelativePath) {
         Folder parentFolder = currentFolder.getParentFolder();
 
         if (parentFolder != null) {

@@ -22,9 +22,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-/**
- * Created by User on 31.01.2017.
- */
+
 
 @Service
 public class ContentService {
@@ -146,7 +144,7 @@ public class ContentService {
     }
 
     @Transactional
-    public void in_out_bin(int[] checked_files_id, int[] checked_folders_id, boolean stateOfInBinStatus) {
+    public void removeInBin(int[] checked_files_id, int[] checked_folders_id, boolean stateOfInBinStatus) {
         if (checked_files_id != null) {
             fileDAO.changeInBin(checked_files_id, stateOfInBinStatus);
         }
@@ -192,7 +190,7 @@ public class ContentService {
     }
 
     @Transactional
-    public void share(List<File> checked_files, List<Folder> checked_folders, String shareFor, boolean shareInFolder) {
+    public void shareForCheckedUsers(List<File> checked_files, List<Folder> checked_folders, String shareFor, boolean shareInFolder) {
         List<User> receivers = userDAO.getShareReceivers(shareFor);
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         for (int i = 0; i < receivers.size(); i++) {
@@ -214,14 +212,14 @@ public class ContentService {
             for (Folder folder : checked_folders) {
                 folder.addToShareFor(receivers);
                 folder.setShareInFolder(shareInFolder);
-                share(folder.getFiles(), folder.getFolders(), shareFor, true);
+                shareForCheckedUsers(folder.getFiles(), folder.getFolders(), shareFor, true);
             }
             folderDAO.changeShare(checked_folders);
         }
     }
 
     @Transactional
-    public void cancelShareForUsers(List<File> checked_files, List<Folder> checked_folders, int[] cancel_share_for_users) {
+    public void cancelShareForCheckedUsers(List<File> checked_files, List<Folder> checked_folders, int[] cancel_share_for_users) {
         List<User> receivers = userDAO.getUsersById(cancel_share_for_users);
 
         if (checked_files != null) {
@@ -271,7 +269,7 @@ public class ContentService {
     }
 
     @Transactional
-    public void addtome(int[] checked_files_id, int[] checked_folders_id) {
+    public void addToMe(int[] checked_files_id, int[] checked_folders_id) {
         User currentUser = getCurrentUser();
         if (checked_files_id != null) {
             List<File> listOfAddFiles = getListFilesById(checked_files_id);
@@ -285,7 +283,7 @@ public class ContentService {
     }
 
     @Transactional
-    public void move_to(int[] checked_files_id, int[] checked_folders_id, String move_to) {
+    public void removeToFolder(int[] checked_files_id, int[] checked_folders_id, String move_to) {
         Folder target = null;
         if (!move_to.equals("tree")) {
             target = getFolder(Integer.valueOf(move_to));

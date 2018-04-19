@@ -16,10 +16,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
 
-/**
- * Created by User on 06.11.2017.
- * Load list of accounts which have accesse ti this content
- */
+
 
 @Controller
 @RequestMapping("/")
