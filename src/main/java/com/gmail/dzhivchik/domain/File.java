@@ -19,7 +19,7 @@ import java.util.List;
 public class File implements Serializable {
     @Id
     @GeneratedValue
-    private int id;
+    private Integer id;
     @JsonProperty("title")
     private String name;
     @JsonIgnore
@@ -68,7 +68,7 @@ public class File implements Serializable {
         this.shareInFolder = shareInFolder;
     }
 
-    public int getId() { return id; }
+    public Integer getId() { return id; }
     public void setId(int id) {
         this.id = id;
     }

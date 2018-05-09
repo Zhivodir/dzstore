@@ -43,7 +43,7 @@ public class ContentService {
 
     @Transactional
     public void createFolder(Folder folder) {
-        folderDAO.createFolder(folder);
+        folderDAO.save(folder);
     }
 
     @Transactional
@@ -79,7 +79,7 @@ public class ContentService {
             Folder targetFolder = new Folder(targetFolderName, currentUser, curFolder, false, false, false);
             pathes = structure.split(";");
             prepareNewFolderForUpload(files, pathes, currentUser, targetFolder, structure);
-            folderDAO.upload(targetFolder);
+            folderDAO.save(targetFolder);
         }
     }
 
@@ -330,7 +330,7 @@ public class ContentService {
 
     private void addSharedFolderToMyStore(List<Folder> listOfAddFolders, User user, Folder shareFolder, Folder addFolder) {
         for (Folder folder : listOfAddFolders) {
-            folderDAO.createFolder(new Folder(folder.getName(), user, addFolder, false, false, false));
+            folderDAO.save(new Folder(folder.getName(), user, addFolder, false, false, false));
             Folder tf = folderDAO.getFolder(user, folder.getName(), addFolder);
 
             if (folder.getFiles().size() != 0) {

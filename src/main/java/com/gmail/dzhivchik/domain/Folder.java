@@ -18,7 +18,7 @@ import java.util.List;
 public class Folder {
     @Id
     @GeneratedValue
-    private int id;
+    private Integer id;
     @JsonProperty("title")
     private String name;
     @JsonIgnore
@@ -67,7 +67,7 @@ public class Folder {
         this.shareInFolder = shareInFolder;
     }
 
-    public int getId() { return id; }
+    public Integer getId() { return id; }
     public void setId(int id) { this.id = id; }
 
     public String getName() { return name; }

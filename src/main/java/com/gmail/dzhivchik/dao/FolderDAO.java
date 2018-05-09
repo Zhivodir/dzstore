@@ -9,8 +9,7 @@ import java.util.List;
  * Created by User on 27.02.2017.
  */
 public interface FolderDAO {
-    void createFolder(Folder folder);
-    void upload(Folder folder);
+    Folder save(Folder folder);
     Folder isFolder(String name, boolean inbin, User user, Folder parentFolder);
     Folder[] deleteGroup(int[] checked_folders_id);
     Folder getFolder(int id);
