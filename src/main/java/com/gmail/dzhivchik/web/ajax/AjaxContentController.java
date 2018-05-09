@@ -24,12 +24,11 @@ public class AjaxContentController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/create_folder", method = RequestMethod.POST)
+    @RequestMapping(value = "/createFolder", method = RequestMethod.POST)
     public Folder createFolder(Model model,
         @RequestParam String nameOfFolder,
-        @RequestParam Integer currentFolder,
-        @RequestParam String typeOfView) {
-
+        @RequestParam Integer currentFolder) {
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             String login = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.getUser(login);
             Folder curFolder = null;
@@ -37,7 +36,6 @@ public class AjaxContentController {
                 curFolder = contentService.getFolder(currentFolder);
             }
             Folder folder = new Folder(nameOfFolder, user, curFolder, false, false, false);
-            contentService.createFolder(folder);
-        return null;
+        return contentService.createFolder(folder);
     }
 }

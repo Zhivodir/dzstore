@@ -8,7 +8,7 @@
             <div class="modal fade modal-coordinate" id="modalForNewFolder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                  aria-hidden="true">
                 <div class="modal-dialog modal-NewFolder">
-                    <form class="form-inline" action="create_folder" method="post">
+                    <form class="form-inline" id="createFolder">
                     <div class="modal-content all-modal-change">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -25,7 +25,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                            <button type="submit" class="btn btn-primary">Create</button>
+                            <button type="button" onclick="createFolder()" class="btn btn-primary">Create</button>
                         </div>
                     </div>
                     </form>
