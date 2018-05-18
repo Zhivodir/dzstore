@@ -2,7 +2,11 @@
  * Created by User on 21.06.2017.
  */
 
-onload = function() { tree("tree", "/ajax/load_tree_of_catalog") }
+if($("#typeOfView").val() !== 'bin') {
+    onload = function () {
+        tree("tree", "/ajax/load_tree_of_catalog")
+    }
+}
 
 
 document.oncontextmenu = function (){return false};

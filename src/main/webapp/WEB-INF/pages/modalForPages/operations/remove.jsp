@@ -16,7 +16,7 @@
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <input type="hidden" name="currentFolder" value="${f}">
+                                <input type="hidden" name="currentFolder" value="${currentFolderID}">
                             </div>
                         </div>
                         <div class="modal-footer">

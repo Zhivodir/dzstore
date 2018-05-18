@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -69,13 +70,13 @@ public class ContentController {
             User user = userService.getUser(login);
 
             switch (action) {
-                case "remove":
-                    if (typeOfView.equals("shared")) {
-                        contentService.removeFromShareWithMe(checked_files_id, checked_folders_id, user);
-                    } else {
-                        contentService.removeInBin(checked_files_id, checked_folders_id, true);
-                    }
-                    break;
+//                case "remove":
+//                    if (typeOfView.equals("shared")) {
+//                        contentService.removeFromShareWithMe(checked_files_id, checked_folders_id, user);
+//                    } else {
+//                        contentService.removeInBin(checked_files_id, checked_folders_id, true);
+//                    }
+//                    break;
                 case "rename":
                     if (name != null &&
                             ((checked_files_id != null && checked_files_id.length == 1) && checked_folders_id == null) ||
@@ -92,15 +93,15 @@ public class ContentController {
                     }
                     //sendMessageToEmail();
                     break;
-                case "replace":
-                    contentService.removeToFolder(checked_files_id, checked_folders_id, move_to);
-                    break;
-                case "Download":
-                    contentService.downloadContent(checked_files_id, checked_folders_id);
-                    break;
-                case "delete":
-                    contentService.deleteCheckedContent(checked_files_id, checked_folders_id);
-                    break;
+//                case "replace":
+//                    contentService.removeToFolder(checked_files_id, checked_folders_id, move_to);
+//                    break;
+//                case "download":
+//                    contentService.downloadContent(checked_files_id, checked_folders_id);
+//                    break;
+//                case "delete":
+//                    contentService.deleteCheckedContent(checked_files_id, checked_folders_id);
+//                    break;
                 case "Star":
                     contentService.changeStar(checked_files_id, checked_folders_id, true);
                     break;
@@ -140,6 +141,15 @@ public class ContentController {
             return "redirect:/";
         }
         return "redirect:/" + typeOfView;
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/download", method = RequestMethod.POST)
+    public void download(Model model,
+                         @RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
+                         @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id) {
+        contentService.downloadContent(checked_files_id, checked_folders_id);
     }
 
     private void sendMessageToEmail() {

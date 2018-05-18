@@ -22,13 +22,13 @@
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <input type="hidden" name="currentFolder" value="${f}">
+                                <input type="hidden" name="currentFolder" value="${currentFolder}">
                                 <input type="text" class="form-control" id="newName" name="name" placeholder="Enter new name">
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                            <button type="submit" name="action" value="rename" class="btn btn-primary">Сохранить</button>
+                            <button type="submit" onclick="rename()" class="btn btn-primary">Сохранить</button>
                         </div>
                     </div>
                 </div>
