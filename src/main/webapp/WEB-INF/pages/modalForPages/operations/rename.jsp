@@ -28,7 +28,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                            <button type="submit" onclick="rename()" class="btn btn-primary">Сохранить</button>
+                            <button type="button" onclick="rename()" class="btn btn-primary">Сохранить</button>
                         </div>
                     </div>
                 </div>

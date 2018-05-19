@@ -1,6 +1,5 @@
 package com.gmail.dzhivchik.web;
 
-import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.Sender;
 import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.service.Impl.ContentService;
@@ -12,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -70,20 +68,6 @@ public class ContentController {
             User user = userService.getUser(login);
 
             switch (action) {
-//                case "remove":
-//                    if (typeOfView.equals("shared")) {
-//                        contentService.removeFromShareWithMe(checked_files_id, checked_folders_id, user);
-//                    } else {
-//                        contentService.removeInBin(checked_files_id, checked_folders_id, true);
-//                    }
-//                    break;
-                case "rename":
-                    if (name != null &&
-                            ((checked_files_id != null && checked_files_id.length == 1) && checked_folders_id == null) ||
-                            ((checked_folders_id != null && checked_folders_id.length == 1) && checked_files_id == null)) {
-                        contentService.rename(checked_files_id, checked_folders_id, name);
-                    }
-                    break;
                 case "share":
                     List[] content = contentService.getContentById(checked_files_id, checked_folders_id);
                     if (cancel_share_for_users != null && cancel_share_for_users.length != 0) {
@@ -93,20 +77,8 @@ public class ContentController {
                     }
                     //sendMessageToEmail();
                     break;
-//                case "replace":
-//                    contentService.removeToFolder(checked_files_id, checked_folders_id, move_to);
-//                    break;
-//                case "download":
-//                    contentService.downloadContent(checked_files_id, checked_folders_id);
-//                    break;
-//                case "delete":
-//                    contentService.deleteCheckedContent(checked_files_id, checked_folders_id);
-//                    break;
-                case "Star":
-                    contentService.changeStar(checked_files_id, checked_folders_id, true);
-                    break;
-                case "Remove star":
-                    contentService.changeStar(checked_files_id, checked_folders_id, false);
+                case "Download":
+                    contentService.downloadContent(checked_files_id, checked_folders_id);
                     break;
                 case "Restore":
                     contentService.removeInBin(checked_files_id, checked_folders_id, false);
@@ -121,35 +93,6 @@ public class ContentController {
             return "redirect:/";
         }
         return "redirect:/" + typeOfView;
-    }
-
-    @RequestMapping(value = "/create_folder", method = RequestMethod.POST)
-    public String createNewFolder(Model model,
-                                  @RequestParam String nameOfFolder,
-                                  @RequestParam Integer currentFolder,
-                                  @RequestParam String typeOfView) {
-
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
-        Folder curFolder = null;
-        if (currentFolder != null) {
-            curFolder = contentService.getFolder(currentFolder);
-        }
-        Folder folder = new Folder(nameOfFolder, user, curFolder, false, false, false);
-        contentService.createFolder(folder);
-        if(typeOfView.equals("index")){
-            return "redirect:/";
-        }
-        return "redirect:/" + typeOfView;
-    }
-
-
-    @ResponseBody
-    @RequestMapping(value = "/download", method = RequestMethod.POST)
-    public void download(Model model,
-                         @RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
-                         @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id) {
-        contentService.downloadContent(checked_files_id, checked_folders_id);
     }
 
     private void sendMessageToEmail() {

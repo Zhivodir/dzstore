@@ -25,7 +25,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                            <button type="submit" onclick="replace()" class="btn btn-primary">Перенести</button>
+                            <button type="button" onclick="replace()" class="btn btn-primary">Перенести</button>
                         </div>
                     </div>
                 </div>

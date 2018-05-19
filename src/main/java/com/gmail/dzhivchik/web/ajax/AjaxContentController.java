@@ -93,9 +93,26 @@ public class AjaxContentController {
     @ResponseBody
     @RequestMapping(value = "/replace", method = RequestMethod.POST)
     public void replace(Model model,
-                       @RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
-                       @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id,
-                       @RequestParam(value = "move_to", required = false) String move_to) {
+                        @RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
+                        @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id,
+                        @RequestParam(value = "move_to", required = false) String move_to) {
         contentService.removeToFolder(checked_files_id, checked_folders_id, move_to);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/addStar", method = RequestMethod.POST)
+    public void addStar(Model model,
+                        @RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
+                        @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id) {
+        contentService.changeStar(checked_files_id, checked_folders_id, true);
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/removeStar", method = RequestMethod.POST)
+    public void removeStar(Model model,
+                        @RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
+                        @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id) {
+        contentService.changeStar(checked_files_id, checked_folders_id, false);
     }
 }

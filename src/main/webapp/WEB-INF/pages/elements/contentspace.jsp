@@ -5,8 +5,8 @@
 
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     <div class="table-responsive">
-        <form id="content_form">
-        <%--<form id="content_form" action="/actions_above_checked_files" method="post">--%>
+        <%--<form id="content_form">--%>
+        <form id="content_form" action="/actions_above_checked_files" method="post">
             <input type="hidden" id="currentFolderID" name="currentFolderID" value="${currentFolderID}">
             <input type="hidden" id="typeOfView" name="typeOfView" value="${typeOfView}">
             <table id="myTable" class="table table-striped record_table">

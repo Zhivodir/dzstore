@@ -29,7 +29,7 @@
                             <input type="hidden" name="currentFolder" value="${currentFolderID}">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
                             <%--<button type="submit" name="action" value="delete" class="btn btn-primary">Удалить</button>--%>
-                            <button type="submit" onclick="deleteContent()" class="btn btn-primary">Удалить</button>
+                            <button type="button" onclick="deleteContent()" class="btn btn-primary">Удалить</button>
                         </div>
                     </div>
                 </div>
