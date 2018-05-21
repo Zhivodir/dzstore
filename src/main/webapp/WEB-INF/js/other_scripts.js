@@ -164,7 +164,6 @@ function showFormForEditOfShare(data) {
             '<input hidden class="choise_checkbox choise_folder cancel_share" type="checkbox" name="cancel_share_for_users" value="' + data[i].id + '"/></div>');
     }
     modalContent.append('</div>');
-    modalContent.append('<div class="form-group"><input type="submit" name="share" value="Готово"/>');
     selectShareUserForEdit();
 }
 

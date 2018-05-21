@@ -93,7 +93,6 @@ public class ViewController {
     @RequestMapping(value = "/shared", method = RequestMethod.GET)
     public String shared(Model model,
                          @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
-        System.out.println("Текущая папка: " + currentFolderID);
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
         if(currentFolderID != null && currentFolderID > 0) {

@@ -65,6 +65,7 @@ public class ContentService {
             curFolder = getFolder(currentFolderID);
         }
 
+        System.out.println(file.getSize() + " !!!!!!!!!!!!!!!!!!!!");
         if (file != null && file.getSize() < MAX_SIZE_OF_FILE) {
             uploadFile(file, currentUser, curFolder);
         }

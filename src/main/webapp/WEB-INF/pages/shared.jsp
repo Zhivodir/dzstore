@@ -73,6 +73,7 @@
 <script src="js/ie10-viewport-bug-workaround.js"></script>
 <script src="js/contextMenu.js"></script>
 <script src="js/other_scripts.js"></script>
+<script src="js/contentOperations.js"></script>
 </sec:authorize>
 
 </body>

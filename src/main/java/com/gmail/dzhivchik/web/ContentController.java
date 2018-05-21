@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
-
 /**
  * Created by User on 21.02.2017.
  */
@@ -50,15 +48,10 @@ public class ContentController {
     }
 
 
-    @RequestMapping(value = "/actions_above_checked_files", method = RequestMethod.POST)
+    @RequestMapping(value = "/download", method = RequestMethod.POST)
     public String actionsAboveCheckedFiles(Model model,
                                            @RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
                                            @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id,
-                                           @RequestParam(value = "cancel_share_for_users", required = false) int[] cancel_share_for_users,
-                                           @RequestParam(value = "move_to", required = false) String move_to,
-                                           @RequestParam(value = "name", required = false) String name,
-                                           @RequestParam(value = "shareFor", required = false) String shareFor,
-                                           @RequestParam(value = "action", required = false) String action,
                                            @RequestParam String typeOfView,
                                            @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID,
                                            final RedirectAttributes redirectAttributes) {
@@ -66,27 +59,7 @@ public class ContentController {
         if (checked_files_id != null || checked_folders_id != null) {
             String login = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.getUser(login);
-
-            switch (action) {
-                case "share":
-                    List[] content = contentService.getContentById(checked_files_id, checked_folders_id);
-                    if (cancel_share_for_users != null && cancel_share_for_users.length != 0) {
-                        contentService.cancelShareForCheckedUsers(content[0], content[1], cancel_share_for_users);
-                    } else if (shareFor != null) {
-                        contentService.shareForCheckedUsers(content[0], content[1], shareFor, false);
-                    }
-                    //sendMessageToEmail();
-                    break;
-                case "Download":
-                    contentService.downloadContent(checked_files_id, checked_folders_id);
-                    break;
-                case "Restore":
-                    contentService.removeInBin(checked_files_id, checked_folders_id, false);
-                    break;
-                case "Add to me":
-                    contentService.addToMe(checked_files_id, checked_folders_id);
-                    break;
-            }
+            contentService.downloadContent(checked_files_id, checked_folders_id);
         }
         redirectAttributes.addFlashAttribute("currentFolderID", currentFolderID);
         if (typeOfView.equals("index")) {

@@ -1,13 +1,15 @@
 package com.gmail.dzhivchik.web.ajax;
 
 import com.gmail.dzhivchik.domain.Folder;
+import com.gmail.dzhivchik.domain.Sender;
 import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.service.Impl.ContentService;
 import com.gmail.dzhivchik.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/ajax/content")
@@ -23,10 +25,9 @@ public class AjaxContentController {
 
     @ResponseBody
     @RequestMapping(value = "/createFolder", method = RequestMethod.POST)
-    public Folder createFolder(Model model,
-                               @RequestParam String nameOfFolder,
-                               @RequestParam Integer currentFolder,
-                               @RequestParam String typeOfView) {
+    public void createFolder(@RequestParam String nameOfFolder,
+                             @RequestParam Integer currentFolder,
+                             @RequestParam String typeOfView) {
 
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
@@ -36,14 +37,11 @@ public class AjaxContentController {
         }
         Folder folder = new Folder(nameOfFolder, user, curFolder, false, false, false);
         contentService.createFolder(folder);
-        return null;
     }
 
-    //Надо что бы отправлял статус и на основе статусе уже либо удалять из DOM либо нет
     @ResponseBody
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
-    public void remove(Model model,
-                       @RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
+    public void remove(@RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
                        @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id,
                        @RequestParam String typeOfView) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -57,8 +55,7 @@ public class AjaxContentController {
 
     @ResponseBody
     @RequestMapping(value = "/restore", method = RequestMethod.POST)
-    public void restore(Model model,
-                        @RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
+    public void restore(@RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
                         @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
@@ -67,8 +64,7 @@ public class AjaxContentController {
 
     @ResponseBody
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public void delete(Model model,
-                       @RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
+    public void delete(@RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
                        @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
@@ -77,8 +73,7 @@ public class AjaxContentController {
 
     @ResponseBody
     @RequestMapping(value = "/rename", method = RequestMethod.POST)
-    public void rename(Model model,
-                       @RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
+    public void rename(@RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
                        @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id,
                        @RequestParam(value = "name", required = false) String name) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -92,8 +87,7 @@ public class AjaxContentController {
 
     @ResponseBody
     @RequestMapping(value = "/replace", method = RequestMethod.POST)
-    public void replace(Model model,
-                        @RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
+    public void replace(@RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
                         @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id,
                         @RequestParam(value = "move_to", required = false) String move_to) {
         contentService.removeToFolder(checked_files_id, checked_folders_id, move_to);
@@ -101,18 +95,43 @@ public class AjaxContentController {
 
     @ResponseBody
     @RequestMapping(value = "/addStar", method = RequestMethod.POST)
-    public void addStar(Model model,
-                        @RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
+    public void addStar(@RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
                         @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id) {
         contentService.changeStar(checked_files_id, checked_folders_id, true);
     }
 
-
     @ResponseBody
     @RequestMapping(value = "/removeStar", method = RequestMethod.POST)
-    public void removeStar(Model model,
-                        @RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
-                        @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id) {
+    public void removeStar(@RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
+                           @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id) {
         contentService.changeStar(checked_files_id, checked_folders_id, false);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/share", method = RequestMethod.POST)
+    public void cancelShare(@RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
+                            @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id,
+                            @RequestParam(value = "cancel_share_for_users", required = false) int[] cancel_share_for_users,
+                            @RequestParam(value = "shareFor", required = false) String shareFor) {
+        List[] content = contentService.getContentById(checked_files_id, checked_folders_id);
+        if (cancel_share_for_users != null && cancel_share_for_users.length != 0) {
+            contentService.cancelShareForCheckedUsers(content[0], content[1], cancel_share_for_users);
+        }
+        if (shareFor != null) {
+            contentService.shareForCheckedUsers(content[0], content[1], shareFor, false);
+        }
+        //sendMessageToEmail();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/addToMe", method = RequestMethod.POST)
+    public void addToMe(@RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
+                        @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id) {
+        contentService.addToMe(checked_files_id, checked_folders_id);
+    }
+
+    private void sendMessageToEmail() {
+        Sender tlsSender = new Sender("dzhproject@gmail.com", "");
+        tlsSender.send("This is Subject", "TLS: This is text!", "support@dzstore.com", "");
     }
 }
