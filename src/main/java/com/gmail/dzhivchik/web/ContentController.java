@@ -49,12 +49,12 @@ public class ContentController {
 
 
     @RequestMapping(value = "/download", method = RequestMethod.POST)
-    public String actionsAboveCheckedFiles(Model model,
-                                           @RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
-                                           @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id,
-                                           @RequestParam String typeOfView,
-                                           @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID,
-                                           final RedirectAttributes redirectAttributes) {
+    public String download(Model model,
+                           @RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
+                           @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id,
+                           @RequestParam String typeOfView,
+                           @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID,
+                           final RedirectAttributes redirectAttributes) {
 
         if (checked_files_id != null || checked_folders_id != null) {
             String login = SecurityContextHolder.getContext().getAuthentication().getName();

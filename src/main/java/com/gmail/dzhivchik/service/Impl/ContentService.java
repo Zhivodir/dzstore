@@ -22,8 +22,6 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-
-
 @Service
 public class ContentService {
     final static private long MAX_SIZE_OF_FILE = 5120;
@@ -65,7 +63,6 @@ public class ContentService {
             curFolder = getFolder(currentFolderID);
         }
 
-        System.out.println(file.getSize() + " !!!!!!!!!!!!!!!!!!!!");
         if (file != null && file.getSize() < MAX_SIZE_OF_FILE) {
             uploadFile(file, currentUser, curFolder);
         }

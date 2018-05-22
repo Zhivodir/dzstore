@@ -2,7 +2,7 @@
  * Created by User on 21.06.2017.
  */
 
-if($("#typeOfView").val() !== 'bin') {
+if($("#typeOfView").val() !== 'bin' && ($("#typeOfView").val() !== 'shared')) {
     onload = function () {
         tree("tree", "/ajax/load_tree_of_catalog")
     }
@@ -16,6 +16,7 @@ document.oncontextmenu = function (){return false};
 /*********************************************/
 
 var doc = $('#myTable .choise_field');
+// var doc = $('#myTable');
 var tr = doc,
     selection = {
         single: function(el) {
@@ -46,8 +47,7 @@ var tr = doc,
         last: null
     };
 
-
-tr.on('click', function(e) {
+tr.parent().on('click', '.choise_field', function(e) {
     method = !e.shiftKey && !e.ctrlKey ? 'single' : (e.shiftKey ? 'shift' : 'ctrl');
     selection[method](this);
     $('#myTable tr').each(function(indx, el) {
@@ -59,6 +59,23 @@ tr.on('click', function(e) {
     })
 });
 
+//ЗДЕСЬ ДВОЙНОЙ ЩЕЛЧОК!!!!!!!!!!!!!!!!!!!!!!!!!!
+tr.parent().on('dblclick', '.choise_folder', function(e) {
+    var currentElementId = $(this).find('input.choise_checkbox').attr("value");
+    window.location.href="/?currentFolderID=" + currentElementId;
+});
+
+tr.parent().on('dblclick', '.folder-open', function(e) {
+    window.location.href="/?currentFolderID=" + $("input#parentsFolderID").attr("value");
+});
+
+tr.parent().on('dblclick', '.choise_folder_in_bin', function(e) {
+    $('#modalForOpenDataInBin').modal('show')
+});
+
+tr.parent().on('dblclick', '.choise_folder_shared', function(e) {
+    window.location.href='/shared?currentFolderID=' + $("input#currentFolderID").attr("value");
+});
 
 /******************************/
 /* Upload with save structure */

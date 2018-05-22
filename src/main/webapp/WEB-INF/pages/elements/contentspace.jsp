@@ -2,11 +2,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     <div class="table-responsive">
         <%--<form id="content_form">--%>
-        <form id="content_form" action="/actions_above_checked_files" method="post">
+        <form id="content_form" action="/download" method="post">
+            <input type="hidden" id="parentsFolderID" name="parentsFolderID" value="${parentsFolderID}">
             <input type="hidden" id="currentFolderID" name="currentFolderID" value="${currentFolderID}">
             <input type="hidden" id="typeOfView" name="typeOfView" value="${typeOfView}">
             <table id="myTable" class="table table-striped record_table">
@@ -21,7 +21,7 @@
                 </thead>
                 <tbody>
                 <c:if test="${currentFolderID ne null}">
-                    <tr class="choise_field" ondblclick="window.location.href='/?currentFolderID=${parentsFolderID}'">
+                    <tr class="choise_field folder-open">
                         <td></td>
                         <td><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></td>
                         <td></td>
@@ -32,13 +32,13 @@
                 <c:forEach items="${content[1]}" var="currentFolder">
                     <c:choose>
                         <c:when test="${typeOfView.equals('bin')}">
-                            <tr class="choise_field choise_folder" ondblclick="$('#modalForOpenDataInBin').modal('show')">
+                            <tr class="choise_field choise_folder_in_bin">
                         </c:when>
                         <c:when test="${typeOfView.equals('shared')}">
-                            <tr class="choise_field choise_folder" ondblclick="window.location.href='/shared?currentFolderID=${currentFolder.id}'">
+                            <tr class="choise_field choise_folder_shared">
                         </c:when>
                         <c:otherwise>
-                            <tr class="choise_field choise_folder" ondblclick="window.location.href='/?currentFolderID=${currentFolder.id}'">
+                            <tr class="choise_field choise_folder">
                         </c:otherwise>
                     </c:choose>
                         <td><input hidden class="choise_checkbox choise_folder" type="checkbox" name="checked_folders_id" value="${currentFolder.id}"/></td>

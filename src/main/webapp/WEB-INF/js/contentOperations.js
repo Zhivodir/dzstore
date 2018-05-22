@@ -53,8 +53,6 @@ function createFolder() {
                     .append($('<td>').append(data.owner))
                     .append($('<td>').append("  -  "))
                 );
-            // doc = $('#myTable .choise_field');
-            // alert(doc.length);
         }
     });
 }
@@ -84,7 +82,6 @@ function rename() {
 function replace() {
     var currentPlace = $("input#currentFolderID").val();
     var newPlace = $("input#move_to").val();
-    // alert(currentPlace + " " + newPlace);
     $.ajax({
         type: "POST",
         url: ajaxUrl + "replace",
@@ -121,7 +118,6 @@ function removeStar() {
 }
 
 function share() {
-    alert($(div.share_for).length);
     $.ajax({
         type: "POST",
         url: ajaxUrl + "share",

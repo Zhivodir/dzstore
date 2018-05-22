@@ -3,7 +3,6 @@ package com.gmail.dzhivchik.web.ajax;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.service.Impl.ContentService;
-import com.gmail.dzhivchik.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,9 +23,6 @@ public class AjaxControllerForLoadAccount {
 
     @Autowired
     private ContentService contentService;
-
-    @Autowired
-    private UserService userService;
 
     @ResponseBody
     @RequestMapping(value = "/ajax/load_share_account_for_content", method = RequestMethod.POST)

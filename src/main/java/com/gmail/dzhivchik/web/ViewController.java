@@ -125,7 +125,6 @@ public class ViewController {
 
     private void getListRelativePath(Folder currentFolder, List<Folder> forRelativePath) {
         Folder parentFolder = currentFolder.getParentFolder();
-
         if (parentFolder != null) {
             forRelativePath.add(parentFolder);
             getListRelativePath(parentFolder, forRelativePath);
@@ -141,7 +140,6 @@ public class ViewController {
         long wholePart = filesSize;
         long delitel = 1;
         int pow = 0;
-
         while (wholePart / 1024 > 0) {
             wholePart = wholePart / 1024;
             delitel = delitel * 1024;
