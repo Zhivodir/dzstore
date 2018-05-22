@@ -37,23 +37,24 @@ function restore() {
 }
 
 function createFolder() {
-    alert("CreateFolder");
     $.ajax({
         type: "POST",
         url: ajaxUrl + "createFolder",
         data: $("#create_folder").serialize(),
-        success: function () {
+        success: function (data) {
             $("#modalForNewFolder").modal("hide");
             var typeOfView = $("#typeOfView").val();
             var newTr = "";
             $("#myTable").find('tbody')
-                .append($('<tr>')
-                    .append($('<td>').append("text"))
-                    .append($('<td>').append("text"))
-                    .append($('<td>').append("text"))
-                    .append($('<td>').append("text"))
-                    .append($('<td>').append("text"))
+                .append($('<tr class="choise_field choise_folder" ondblclick="window.location.href=/?currentFolderID=' + data.id + '">')
+                    .append($('<td>').append('<input hidden class="choise_checkbox choise_folder" type="checkbox" name="checked_folders_id" value="' + data.id + '"/>'))
+                    .append($('<td class="forContextMenu">').append('<strong><span class="name_of_content">' + data.name + '</span></strong>'))
+                    .append($('<td>').append('<span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>'))
+                    .append($('<td>').append(data.owner))
+                    .append($('<td>').append("  -  "))
                 );
+            // doc = $('#myTable .choise_field');
+            // alert(doc.length);
         }
     });
 }

@@ -42,8 +42,8 @@ public class ContentService {
 
 
     @Transactional
-    public void createFolder(Folder folder) {
-        folderDAO.save(folder);
+    public Folder createFolder(Folder folder) {
+        return folderDAO.save(folder);
     }
 
     @Transactional

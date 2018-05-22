@@ -5,6 +5,7 @@ import com.gmail.dzhivchik.domain.Sender;
 import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.service.Impl.ContentService;
 import com.gmail.dzhivchik.service.UserService;
+import com.gmail.dzhivchik.to.Content;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class AjaxContentController {
 
     @ResponseBody
     @RequestMapping(value = "/createFolder", method = RequestMethod.POST)
-    public void createFolder(@RequestParam String nameOfFolder,
+    public Content createFolder(@RequestParam String nameOfFolder,
                              @RequestParam Integer currentFolder,
                              @RequestParam String typeOfView) {
 
@@ -36,7 +37,7 @@ public class AjaxContentController {
             curFolder = contentService.getFolder(currentFolder);
         }
         Folder folder = new Folder(nameOfFolder, user, curFolder, false, false, false);
-        contentService.createFolder(folder);
+        return fromFolderToContent(contentService.createFolder(folder));
     }
 
     @ResponseBody
@@ -133,5 +134,9 @@ public class AjaxContentController {
     private void sendMessageToEmail() {
         Sender tlsSender = new Sender("dzhproject@gmail.com", "");
         tlsSender.send("This is Subject", "TLS: This is text!", "support@dzstore.com", "");
+    }
+
+    private Content fromFolderToContent(Folder folder){
+        return new Content(folder.getId(), folder.getName(), 0, folder.getUser().getLogin(), "");
     }
 }

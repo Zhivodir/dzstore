@@ -15,7 +15,8 @@ document.oncontextmenu = function (){return false};
 /* Select files and folders for contentplace */
 /*********************************************/
 
-var tr = $('#myTable .choise_field'),
+var doc = $('#myTable .choise_field');
+var tr = doc,
     selection = {
         single: function(el) {
             tr.not(el).removeClass(this.cl);
@@ -23,7 +24,6 @@ var tr = $('#myTable .choise_field'),
             //this.ctrl(el);
         },
         shift: function(el) {
-
             if (typeof this.last !== 'number') {
                 return this.single(el);
             }
