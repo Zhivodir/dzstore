@@ -1,11 +1,9 @@
 package com.gmail.dzhivchik.web.ajax;
 
-import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.Sender;
 import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.service.Impl.ContentService;
 import com.gmail.dzhivchik.service.UserService;
-import com.gmail.dzhivchik.to.Content;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -136,7 +134,7 @@ public class AjaxContentController {
         tlsSender.send("This is Subject", "TLS: This is text!", "support@dzstore.com", "");
     }
 
-    private Content fromFolderToContent(Folder folder){
-        return new Content(folder.getId(), folder.getName(), 0, folder.getUser().getLogin(), "");
-    }
+//    private Content fromFolderToContent(Folder folder){
+//        return new Content(folder.getId(), folder.getName(), 0, folder.getUser().getLogin(), "");
+//    }
 }
