@@ -1,5 +1,6 @@
 package com.gmail.dzhivchik.web;
 
+import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.Sender;
 import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.service.Impl.ContentService;
@@ -63,6 +64,26 @@ public class ContentController {
         }
         redirectAttributes.addFlashAttribute("currentFolderID", currentFolderID);
         if (typeOfView.equals("index")) {
+            return "redirect:/";
+        }
+        return "redirect:/" + typeOfView;
+    }
+
+    @RequestMapping(value = "/create_folder", method = RequestMethod.POST)
+    public String createNewFolder(Model model,
+                                  @RequestParam String nameOfFolder,
+                                  @RequestParam Integer currentFolder,
+                                  @RequestParam String typeOfView) {
+
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUser(login);
+        Folder curFolder = null;
+        if (currentFolder != null) {
+            curFolder = contentService.getFolder(currentFolder);
+        }
+        Folder folder = new Folder(nameOfFolder, user, curFolder, false, false, false);
+        contentService.createFolder(folder);
+        if(typeOfView.equals("index")){
             return "redirect:/";
         }
         return "redirect:/" + typeOfView;

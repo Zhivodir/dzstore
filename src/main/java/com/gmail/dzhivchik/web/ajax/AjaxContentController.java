@@ -24,21 +24,21 @@ public class AjaxContentController {
     @Autowired
     private UserService userService;
 
-    @ResponseBody
-    @RequestMapping(value = "/createFolder", method = RequestMethod.POST)
-    public Content createFolder(@RequestParam String nameOfFolder,
-                             @RequestParam Integer currentFolder,
-                             @RequestParam String typeOfView) {
-
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
-        Folder curFolder = null;
-        if (currentFolder != null) {
-            curFolder = contentService.getFolder(currentFolder);
-        }
-        Folder folder = new Folder(nameOfFolder, user, curFolder, false, false, false);
-        return fromFolderToContent(contentService.createFolder(folder));
-    }
+//    @ResponseBody
+//    @RequestMapping(value = "/createFolder", method = RequestMethod.POST)
+//    public Content createFolder(@RequestParam String nameOfFolder,
+//                             @RequestParam Integer currentFolder,
+//                             @RequestParam String typeOfView) {
+//
+//        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+//        User user = userService.getUser(login);
+//        Folder curFolder = null;
+//        if (currentFolder != null) {
+//            curFolder = contentService.getFolder(currentFolder);
+//        }
+//        Folder folder = new Folder(nameOfFolder, user, curFolder, false, false, false);
+//        return fromFolderToContent(contentService.createFolder(folder));
+//    }
 
     @ResponseBody
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
