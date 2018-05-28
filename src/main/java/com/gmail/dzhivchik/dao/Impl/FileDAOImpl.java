@@ -64,10 +64,7 @@ public class FileDAOImpl implements FileDAO {
         query.setParameter("inbin", inbin);
         query.setParameter("user", user);
         List<File> resultList = ((List<File>) query.getResultList());
-        if (resultList.size() != 0) {
-            return resultList.get(0);
-        }
-        return null;
+        return (resultList.size() != 0) ? resultList.get(0) : null;
     }
 
     @Override

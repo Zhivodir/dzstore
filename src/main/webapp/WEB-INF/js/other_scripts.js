@@ -16,7 +16,6 @@ document.oncontextmenu = function (){return false};
 /*********************************************/
 
 var doc = $('#myTable .choise_field');
-// var doc = $('#myTable');
 var tr = doc,
     selection = {
         single: function(el) {
@@ -141,7 +140,6 @@ $(".li_share").click(function(){
 
 function onLoaded(data) {
     showFormForNewShare(data);
-
     $('.share_for_account').click(function(){
         showFormForEditOfShare(data)
     });
