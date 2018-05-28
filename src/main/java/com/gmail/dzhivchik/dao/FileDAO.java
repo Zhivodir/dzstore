@@ -24,7 +24,6 @@ public interface FileDAO {
     List<File> getSearchList(String whatSearch, User user);
     void renameFile(User userWhoWantRename, int[] checked_files_id, String newName);
     void changeShare(List<File> targets);
-//    List<File> getSharedList(User user);
     List<File> getSharedList(User user, Integer targetFolder);
     void changeInBin(int[] checked_files_id, boolean stateOfInBinStatus);
     List<File> getBinList(User user);

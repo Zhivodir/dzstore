@@ -33,12 +33,8 @@ public class UserDAOImpl implements UserDAO {
         query = entityManager.
                 createQuery("SELECT u FROM User u WHERE u.login = :login", User.class);
         query.setParameter("login", login);
-
         List<User> temp = (List<User>) query.getResultList();
-        if(temp.size() < 1){
-            return null;
-        }
-        return temp.get(0);
+        return (temp.size() < 1) ? null : temp.get(0);
     }
 
     @Override
