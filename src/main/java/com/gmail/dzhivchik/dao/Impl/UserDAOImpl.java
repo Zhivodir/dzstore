@@ -8,7 +8,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by User on 09.02.2017.
@@ -41,17 +43,10 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public List<User> getUsersById(int[] cancel_share_for_users) {
-        Query query;
-        StringBuilder sb = new StringBuilder();
-        for (int j = 0; j < cancel_share_for_users.length; j++) {
-            sb.append("u.id = '" + cancel_share_for_users[j] + "' ");
-            if (j != cancel_share_for_users.length - 1) {
-                sb.append("OR ");
-            }
-        }
-        query = entityManager.
-                createQuery("SELECT u FROM User u WHERE " + sb.toString(), User.class);
-
+        List<Integer> list = Arrays.stream(cancel_share_for_users).boxed().collect(Collectors.toList());
+        Query query = entityManager.
+                createQuery("SELECT u FROM User u WHERE u.id IN :list", User.class);
+        query.setParameter("list", list);
         List<User> resultList = (List<User>) query.getResultList();
         return resultList;
     }

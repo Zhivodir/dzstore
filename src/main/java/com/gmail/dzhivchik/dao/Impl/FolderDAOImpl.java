@@ -9,7 +9,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by User on 27.02.2017.
@@ -24,10 +26,6 @@ public class FolderDAOImpl implements FolderDAO{
     public Folder save(Folder folder) {
         Folder searchFolder = isFolder(folder.getName(), folder.isInbin(), folder.getUser(), folder.getParentFolder());
         if(searchFolder != null){
-//            Query query = entityManager.createQuery("UPDATE Folder f SET f.inbin = :inbin WHERE f.id = :id");
-//            query.setParameter("inbin", false);
-//            query.setParameter("id", searchFolder.getId());
-//            query.executeUpdate();
             return entityManager.merge(folder);
         } else {
             entityManager.persist(folder);
@@ -136,33 +134,19 @@ public class FolderDAOImpl implements FolderDAO{
 
     @Override
     public List<Folder> getListFoldersById(int[] listOfId) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("SELECT f FROM Folder f WHERE ");
-        for (int i = 0; i < listOfId.length; i++) {
-            if(i == 0) {
-                sb.append("f.id = " + listOfId[0]);
-            }else{
-                sb.append(" OR f.id = " + listOfId[i]);
-            }
-        }
-        Query query = entityManager.createQuery(sb.toString(), Folder.class);
+        List<Integer> list = Arrays.stream(listOfId).boxed().collect(Collectors.toList());
+        Query query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.id IN :list", Folder.class);
+        query.setParameter("list", list);
         return (List<Folder>)query.getResultList();
     }
 
 
     @Override
     public void changeStar(int[] checked_folders_id, boolean stateOfStar) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("UPDATE Folder f SET f.starred = :stateOfStar WHERE ");
-        for (int i = 0; i < checked_folders_id.length; i++) {
-            if(i == 0) {
-                sb.append("f.id = " + checked_folders_id[0]);
-            }else{
-                sb.append(" OR f.id = " + checked_folders_id[i]);
-            }
-        }
-        Query query = entityManager.createQuery(sb.toString());
+        List<Integer> list = Arrays.stream(checked_folders_id).boxed().collect(Collectors.toList());
+        Query query = entityManager.createQuery("UPDATE Folder f SET f.starred = :stateOfStar WHERE f.id IN :list");
         query.setParameter("stateOfStar", stateOfStar);
+        query.setParameter("list", list);
         int result = query.executeUpdate();
     }
 
@@ -222,17 +206,10 @@ public class FolderDAOImpl implements FolderDAO{
 
     @Override
     public void changeInBin(int[] checked_folders_id, boolean stateOfInBinStatus) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("UPDATE Folder f SET f.inbin = :stateOfInBinStatus WHERE ");
-        for (int i = 0; i < checked_folders_id.length; i++) {
-            if(i == 0) {
-                sb.append("f.id = " + checked_folders_id[0]);
-            }else{
-                sb.append(" OR f.id = " + checked_folders_id[i]);
-            }
-        }
-        Query query = entityManager.createQuery(sb.toString());
+        List<Integer> list = Arrays.stream(checked_folders_id).boxed().collect(Collectors.toList());
+        Query query = entityManager.createQuery("UPDATE Folder f SET f.inbin = :stateOfInBinStatus WHERE f.id IN :list");
         query.setParameter("stateOfInBinStatus", stateOfInBinStatus);
+        query.setParameter("list", list);
         query.executeUpdate();
     }
 
@@ -246,17 +223,10 @@ public class FolderDAOImpl implements FolderDAO{
 
     @Override
     public void move_to(int[] checked_folders_id, Folder target) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("UPDATE Folder f SET f.parentFolder = :target WHERE ");
-        for (int i = 0; i < checked_folders_id.length; i++) {
-            if(i == 0) {
-                sb.append("f.id = " + checked_folders_id[0]);
-            }else{
-                sb.append(" OR f.id = " + checked_folders_id[i]);
-            }
-        }
-        Query query = entityManager.createQuery(sb.toString());
+        List<Integer> list = Arrays.stream(checked_folders_id).boxed().collect(Collectors.toList());
+        Query query = entityManager.createQuery("UPDATE Folder f SET f.parentFolder = :target WHERE f.id IN :list");
         query.setParameter("target", target);
+        query.setParameter("list", list);
         query.executeUpdate();
     }
 }

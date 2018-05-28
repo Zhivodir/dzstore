@@ -85,7 +85,11 @@ function replace() {
     $.ajax({
         type: "POST",
         url: ajaxUrl + "replace",
-        data: $("#content_form").serialize()
+        data: $("#content_form").serialize(),
+        success: function () {
+            $('#modalForReplace').modal('hide');
+            $("input.choise_checkbox:checked").parent().parent().remove();
+        }
     });
 }
 
