@@ -38,9 +38,7 @@ public class ContentController {
                          @RequestParam String typeOfView,
                          @RequestParam(value = "structure", required = false) String structure,
                          @RequestParam Integer currentFolderID) {
-
         contentService.uploadContent(file, files, structure, currentFolderID);
-
         model.addAttribute("currentFolderID", currentFolderID);
         if (typeOfView.equals("index")) {
             return "redirect:/";

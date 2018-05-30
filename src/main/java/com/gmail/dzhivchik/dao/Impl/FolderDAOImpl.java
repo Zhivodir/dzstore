@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by User on 27.02.2017.
@@ -54,7 +55,6 @@ public class FolderDAOImpl implements FolderDAO {
 
     @Override
     public List<Folder> getList(User user, Folder parentFolder) {
-        int user_id = user.getId();
         Query query;
         if (parentFolder == null) {
             query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder IS NULL AND c.inbin <> 1", Folder.class);
@@ -68,23 +68,20 @@ public class FolderDAOImpl implements FolderDAO {
 
     @Override
     public List<Folder> getList(User user, Folder parentFolder, String[] exceptionFolder) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < exceptionFolder.length; i++) {
-            if (i == 0) {
-                sb.append("AND c.id <>" + exceptionFolder[0]);
-            } else {
-                sb.append(" OR c.id <>" + exceptionFolder[i]);
-            }
-        }
-        int user_id = user.getId();
+        int[] tempList = Arrays.asList(exceptionFolder).stream().mapToInt(Integer::parseInt).toArray();
+        List<Integer> list = Arrays.stream(tempList).boxed().collect(Collectors.toList());
+
         Query query;
         if (parentFolder == null) {
-            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder IS NULL AND c.inbin <> 1" + sb.toString(), Folder.class);
+            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder IS NULL AND c.inbin <> 1" +
+                    " AND c.id NOT IN :list", Folder.class);
         } else {
-            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder = :parent AND c.inbin <> 1" + sb.toString(), Folder.class);
+            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder = :parent AND c.inbin <> 1 " +
+                    " AND c.id NOT IN :list", Folder.class);
             query.setParameter("parent", parentFolder);
         }
         query.setParameter("user", user);
+        query.setParameter("list", list);
         return (List<Folder>) query.getResultList();
     }
 
@@ -93,8 +90,7 @@ public class FolderDAOImpl implements FolderDAO {
         Query query;
         query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.id = :id", Folder.class);
         query.setParameter("id", id);
-        List<Folder> temp = (List<Folder>) query.getResultList();
-        return temp.get(0);
+        return (Folder)query.getSingleResult();
     }
 
     @Override
@@ -112,8 +108,7 @@ public class FolderDAOImpl implements FolderDAO {
         }
         query.setParameter("name", name);
         query.setParameter("user", user);
-        List<Folder> temp = (List<Folder>) query.getResultList();
-        return temp.get(0);
+        return (Folder)query.getSingleResult();
     }
 
 

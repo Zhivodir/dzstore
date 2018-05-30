@@ -9,8 +9,13 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,11 +27,9 @@ public class FileDAOImpl implements FileDAO {
 
     @Override
     public File getFile(int id) {
-        Query query;
-        query = entityManager.createQuery("SELECT f FROM File f WHERE f.id = :id", File.class);
+        Query query = entityManager.createQuery("SELECT f FROM File f WHERE f.id = :id", File.class);
         query.setParameter("id", id);
-        List<File> temp = (List<File>) query.getResultList();
-        return temp.get(0);
+        return (File)query.getSingleResult();
     }
 
     @Override
@@ -83,7 +86,6 @@ public class FileDAOImpl implements FileDAO {
     @Override
     public List<File> getList(User user, Folder parentFolder) {
         int user_id = user.getId();
-
         Query query;
         if (parentFolder == null) {
             query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id AND f.parentFolder.id IS NULL AND f.inbin <> 1", File.class);
@@ -96,7 +98,7 @@ public class FileDAOImpl implements FileDAO {
         return (List<File>) query.getResultList();
     }
 
-    @Override
+//    @Override
     public List<File> getListFilesById(int[] listOfId) {
         List<Integer> list = Arrays.stream(listOfId).boxed().collect(Collectors.toList());
         Query query = entityManager.createQuery("SELECT f FROM File f WHERE f.id IN :list", File.class);
@@ -116,7 +118,7 @@ public class FileDAOImpl implements FileDAO {
     @Override
     public List<File> getStarredList(User user) {
         int user_id = user.getId();
-        Query query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id AND f.starred = 1 AND f.inbin <> 1", File.class);
+        Query query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id AND f.inbin <> 1 AND f.starred = 1", File.class);
         query.setParameter("user_id", user_id);
         Query query2 = entityManager.createQuery("SELECT f FROM File f INNER JOIN f.shareFor user WHERE user = :user AND f.inbin <> 1 AND f.starred = 1", File.class);
         query2.setParameter("user", user);
@@ -195,18 +197,15 @@ public class FileDAOImpl implements FileDAO {
         Query query;
         if (parentFolder == null) {
             query = entityManager.createQuery("SELECT f FROM File f WHERE f.name = :name " +
-                    "AND f.user = :user " +
-                    "AND f.parentFolder IS NULL", File.class);
+                    "AND f.user = :user AND f.parentFolder IS NULL", File.class);
         } else {
             query = entityManager.createQuery("SELECT f FROM File f WHERE f.name = :name " +
-                    "AND f.user = :user " +
-                    "AND f.parentFolder = :parentFolder", File.class);
+                    "AND f.user = :user AND f.parentFolder = :parentFolder", File.class);
             query.setParameter("parentFolder", parentFolder);
         }
         query.setParameter("name", name);
         query.setParameter("user", user);
-        List<File> temp = (List<File>) query.getResultList();
-        return temp.get(0);
+        return (File)query.getSingleResult();
     }
 
     @Override

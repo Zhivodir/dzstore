@@ -15,10 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -72,12 +69,12 @@ public class ContentService {
             if (structure.startsWith(",")) {
                 structure = structure.substring(1);
             }
-            String targetFolderName = structure.substring(0, structure.indexOf("/"));
-            structure = structure.replaceAll(targetFolderName + "/", "");
-            Folder targetFolder = new Folder(targetFolderName, currentUser, curFolder, false, false, false);
-            pathes = structure.split(";");
-            prepareNewFolderForUpload(files, pathes, currentUser, targetFolder, structure);
-            folderDAO.save(targetFolder);
+            String folderForUpload = structure.substring(0, structure.indexOf("/"));
+            String folderForUploadContent = structure.replaceAll(folderForUpload + "/", "");
+            Folder newFolder = new Folder(folderForUpload, currentUser, curFolder, false, false, false);
+            pathes = folderForUploadContent.split(";");
+            prepareNewFolderForUpload(files, pathes, currentUser, newFolder);
+            folderDAO.save(newFolder);
         }
     }
 
@@ -376,7 +373,7 @@ public class ContentService {
         }
     }
 
-    private void prepareNewFolderForUpload(MultipartFile[] files, String[] pathes, User user, Folder curFolder, String structure) {
+    private void prepareNewFolderForUpload(MultipartFile[] files, String[] pathes, User user, Folder curFolder) {
         Map<String, Folder> map = new HashMap<>();
         try {
             for (int i = 0; i < pathes.length; i++) {

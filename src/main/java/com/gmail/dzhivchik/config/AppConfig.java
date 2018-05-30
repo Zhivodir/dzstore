@@ -87,7 +87,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 //        ds.setUrl("jdbc:mysql://localhost:3306/DZStore_temp");
 //        ds.setUsername("admin");
 //        ds.setPassword("admin");
-//        for heroku
+        //for heroku
         DriverManagerDataSource ds = new DriverManagerDataSource();
         ds.setDriverClassName("com.mysql.jdbc.Driver");
         ds.setUrl("jdbc:mysql://eu-cdbr-west-01.cleardb.com:3306/heroku_2411027723b6162?useUnicode=true&characterEncoding=UTF-8");

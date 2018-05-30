@@ -37,9 +37,9 @@ public class AjaxControllerForTree {
                            @RequestParam(value = "id", required = false) String id,
                            @RequestParam(value = "fields", required = false) String fields
     ){
-        String[] exceptionFolders = fields.split(",");
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
+        String[] exceptionFolders = fields.split(",");
         List[] content = null;
         if(id == "") {
             content = contentService.getContent(user, null, exceptionFolders);
