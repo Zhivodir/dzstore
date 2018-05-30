@@ -54,15 +54,9 @@ public class FileDAOImpl implements FileDAO {
     }
 
     public File isFile(String name, boolean inbin, User user, Folder parentFolder) {
-        Query query;
-        if (parentFolder == null) {
-            query = entityManager.createQuery("SELECT f FROM File f WHERE f.name = :name " +
-                    "AND f.inbin = :inbin AND f.user = :user AND f.parentFolder IS NULL", File.class);
-        } else {
-            query = entityManager.createQuery("SELECT f FROM File f WHERE f.name = :name " +
-                    "AND f.inbin = :inbin AND f.user = :user AND f.parentFolder = :parentFolder", File.class);
-            query.setParameter("parentFolder", parentFolder);
-        }
+        Query query = entityManager.createQuery("SELECT f FROM File f WHERE f.name = :name " +
+                    "AND f.inbin = :inbin AND f.user = :user AND ( f.parentFolder = :parentFolder OR ( f.parentFolder IS NULL AND :parentFolder IS NULL ) )", File.class);
+        query.setParameter("parentFolder", parentFolder);
         query.setParameter("name", name);
         query.setParameter("inbin", inbin);
         query.setParameter("user", user);
