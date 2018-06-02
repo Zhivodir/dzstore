@@ -1,5 +1,6 @@
 package com.gmail.dzhivchik.dao.Impl;
 
+import com.gmail.dzhivchik.AuthorizedUser;
 import com.gmail.dzhivchik.dao.FolderDAO;
 import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
@@ -55,6 +56,7 @@ public class FolderDAOImpl implements FolderDAO {
 
     @Override
     public List<Folder> getList(User user, Folder parentFolder) {
+//        System.out.println("This is " + AuthorizedUser.id());
         Query query;
         if (parentFolder == null) {
             query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder IS NULL AND c.inbin <> 1", Folder.class);
@@ -145,6 +147,7 @@ public class FolderDAOImpl implements FolderDAO {
 
     @Override
     public List<Folder> getStarredList(User user) {
+//        System.out.println(AuthorizedUser.id() + "!!!!!!!!!!");
         int user_id = user.getId();
         Query query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.user.id = :user_id AND f.starred = 1  AND f.inbin <> 1", Folder.class);
         query.setParameter("user_id", user_id);

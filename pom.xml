@@ -16,6 +16,7 @@
 
         <tomcat.version>8.5.5</tomcat.version>
         <spring.version>4.2.1.RELEASE</spring.version>
+        <!--<spring.version>5.0.4.RELEASE</spring.version>-->
         <jackson-json.version>2.9.5</jackson-json.version>
 
         <!--DB-->

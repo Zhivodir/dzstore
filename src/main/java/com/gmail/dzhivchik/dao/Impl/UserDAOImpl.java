@@ -2,6 +2,8 @@ package com.gmail.dzhivchik.dao.Impl;
 
 import com.gmail.dzhivchik.dao.UserDAO;
 import com.gmail.dzhivchik.domain.User;
+import org.hibernate.jpa.QueryHints;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -49,7 +51,8 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public void delete(User user) {}
+    public void delete(User user) {
+    }
 
     @Override
     public List<User> getShareReceivers(String shareFor) {
@@ -66,5 +69,15 @@ public class UserDAOImpl implements UserDAO {
         query.setParameter("forEmail", forEmail);
         query.setParameter("forLogin", forLogin);
         return (List<User>) query.getResultList();
+    }
+
+
+    @Override
+    public User getByEmail(String email) {
+        List<User> users = entityManager.createQuery("SELECT u FROM User u " +
+                "WHERE u.email =:email", User.class)
+                .setParameter("email", email)
+                .getResultList();
+        return DataAccessUtils.singleResult(users);
     }
 }
