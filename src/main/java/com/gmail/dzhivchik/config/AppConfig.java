@@ -1,6 +1,6 @@
 package com.gmail.dzhivchik.config;
 
-import com.gmail.dzhivchik.service.Impl.UserDetailsServiceImpl;
+import com.gmail.dzhivchik.service.Impl.UserServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -99,6 +99,6 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 
     @Bean
     public UserDetailsService getUserDetailsService(){
-        return new UserDetailsServiceImpl();
+        return new UserServiceImpl();
     }
 }
