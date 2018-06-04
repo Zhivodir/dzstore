@@ -16,7 +16,7 @@ import static java.util.Objects.requireNonNull;
 public class AuthorizedUser extends org.springframework.security.core.userdetails.User {
     private static final long serialVersionUID = 1L;
 
-    private UserTo userTo;
+    private static UserTo userTo;
 
     public AuthorizedUser(User user) {
         super(user.getEmail(), user.getPassword(), true, true, true, true,
@@ -47,12 +47,17 @@ public class AuthorizedUser extends org.springframework.security.core.userdetail
         return safeGet().userTo.getId();
     }
 
-    public void update(UserTo newTo) {
-        userTo = newTo;
-    }
-
     public UserTo getUserTo() {
         return userTo;
+    }
+
+    public void updateBusySize(long additionalSize) {
+        this.getUserTo().changeBusySize(additionalSize);
+        //userTo.changeSize(sizes);
+    }
+
+    public static String[] getShowBusySize() {
+        return userTo.getshowBusySize();
     }
 
     @Override

@@ -46,6 +46,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("User " + login + " is not found");
         }
-        return new AuthorizedUser(user);
+        AuthorizedUser authorizedUser = new AuthorizedUser(user);
+        authorizedUser.updateBusySize(userDAO.getBusySize());
+        return authorizedUser;
     }
 }

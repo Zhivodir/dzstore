@@ -15,4 +15,5 @@ public interface UserDAO {
     void delete(User user);
     List<User> getShareReceivers(String shareFor);
     User getByEmail(String email);
+    long getBusySize();
 }

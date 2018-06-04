@@ -8,4 +8,9 @@ public class UserUtil {
     public static UserTo asTo(User user) {
         return new UserTo(user.getId(), user.getLogin(), user.getEmail(), user.getPassword());
     }
+
+    private static String calculateBusySize(){
+
+        return null;
+    }
 }

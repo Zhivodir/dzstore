@@ -1,6 +1,8 @@
 package com.gmail.dzhivchik.dao.Impl;
 
+import com.gmail.dzhivchik.AuthorizedUser;
 import com.gmail.dzhivchik.dao.UserDAO;
+import com.gmail.dzhivchik.domain.File;
 import com.gmail.dzhivchik.domain.User;
 import org.hibernate.jpa.QueryHints;
 import org.springframework.dao.support.DataAccessUtils;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -71,7 +74,6 @@ public class UserDAOImpl implements UserDAO {
         return (List<User>) query.getResultList();
     }
 
-
     @Override
     public User getByEmail(String email) {
         List<User> users = entityManager.createQuery("SELECT u FROM User u " +
@@ -79,5 +81,13 @@ public class UserDAOImpl implements UserDAO {
                 .setParameter("email", email)
                 .getResultList();
         return DataAccessUtils.singleResult(users);
+    }
+
+    @Override
+    public long getBusySize() {
+        int user_id = AuthorizedUser.id();
+        Query query = entityManager.createQuery("SELECT SUM(f.size) FROM File f WHERE f.user.id = :user_id", Long.class);
+        query.setParameter("user_id", user_id);
+        return (Long)query.getSingleResult();
     }
 }
