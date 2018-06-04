@@ -16,11 +16,11 @@ import static java.util.Objects.requireNonNull;
 public class AuthorizedUser extends org.springframework.security.core.userdetails.User {
     private static final long serialVersionUID = 1L;
 
-    private final UserTo userTo;
+    private UserTo userTo;
 
     public AuthorizedUser(User user) {
-        super(user.getEmail(), user.getPassword(), false, true, true, true,
-                new HashSet<GrantedAuthority>(Arrays.asList(new SimpleGrantedAuthority(user.getRole().toString()))));
+        super(user.getEmail(), user.getPassword(), true, true, true, true,
+                new HashSet<GrantedAuthority>(Arrays.asList(new SimpleGrantedAuthority("ROLE_" + user.getRole().toString()))));
         this.userTo = UserUtil.asTo(user);
     }
 
@@ -30,11 +30,6 @@ public class AuthorizedUser extends org.springframework.security.core.userdetail
             return null;
         }
         Object principal = auth.getPrincipal();
-        if (principal instanceof AuthorizedUser) {
-            System.out.println(true);
-        } else {
-            System.out.println(false);
-        }
         return (principal instanceof AuthorizedUser) ? (AuthorizedUser) principal : null;
     }
 
@@ -49,8 +44,11 @@ public class AuthorizedUser extends org.springframework.security.core.userdetail
     }
 
     public static int id() {
-        System.out.println("Heed Id: " + safeGet().userTo.getId());
         return safeGet().userTo.getId();
+    }
+
+    public void update(UserTo newTo) {
+        userTo = newTo;
     }
 
     public UserTo getUserTo() {

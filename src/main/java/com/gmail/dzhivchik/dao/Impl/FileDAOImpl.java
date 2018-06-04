@@ -1,5 +1,6 @@
 package com.gmail.dzhivchik.dao.Impl;
 
+import com.gmail.dzhivchik.AuthorizedUser;
 import com.gmail.dzhivchik.dao.FileDAO;
 import com.gmail.dzhivchik.domain.File;
 import com.gmail.dzhivchik.domain.Folder;
@@ -33,7 +34,7 @@ public class FileDAOImpl implements FileDAO {
 
     @Override
     public void upload(File file) {
-        File searchFile = isFile(file.getName(), file.isInbin(), file.getUser(), file.getParentFolder());
+        File searchFile = isFile(file.getName(), file.isInbin(), file.getParentFolder());
         if (searchFile != null) {
             Query query = entityManager.createQuery("UPDATE File f SET f.size = :size, f.inbin = :inbin WHERE f.id = :id");
             query.setParameter("size", file.getSize());
@@ -52,13 +53,14 @@ public class FileDAOImpl implements FileDAO {
         }
     }
 
-    public File isFile(String name, boolean inbin, User user, Folder parentFolder) {
+    public File isFile(String name, boolean inbin, Folder parentFolder) {
+        int user_id = AuthorizedUser.id();
         Query query = entityManager.createQuery("SELECT f FROM File f WHERE f.name = :name " +
-                "AND f.inbin = :inbin AND f.user = :user AND ( f.parentFolder = :parentFolder OR ( f.parentFolder IS NULL AND :parentFolder IS NULL ) )", File.class);
+                "AND f.inbin = :inbin AND f.user.id = :user_id AND ( f.parentFolder = :parentFolder OR ( f.parentFolder IS NULL AND :parentFolder IS NULL ) )", File.class);
         query.setParameter("parentFolder", parentFolder);
         query.setParameter("name", name);
         query.setParameter("inbin", inbin);
-        query.setParameter("user", user);
+        query.setParameter("user_id", user_id);
         List<File> resultList = ((List<File>) query.getResultList());
         return (resultList.size() != 0) ? resultList.get(0) : null;
     }
@@ -77,26 +79,16 @@ public class FileDAOImpl implements FileDAO {
     }
 
     @Override
-    public List<File> getList(User user, Folder parentFolder) {
-//       Restrictions.eqOrIsNull("status", status)      instead |
-//        c.add(status == null ? Restrictions.isNull("status") : Restrictions.eq("status", status));
-
-//        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-//        CriteriaQuery<File> query = cb.createQuery(File.class);
-//        Root<File> c = query.from(File.class);
-//        query.select(c).where(cb.equal(c.get("user"), user),
-//                              cb.equal(c.get("parentFolder"), parentFolder),
-//                              cb.notEqual(c.get("inbin"), 1));
-//        List<File> result = entityManager.createQuery(query).getResultList();
-//        return result;
+    public List<File> getList(Folder parentFolder) {
+        int user_id = AuthorizedUser.id();
         Query query;
         if (parentFolder == null) {
-            query = entityManager.createQuery("SELECT f FROM File f WHERE f.user = :user AND f.parentFolder IS NULL AND f.inbin <> 1", File.class);
+            query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id AND f.parentFolder IS NULL AND f.inbin <> 1", File.class);
         } else {
-            query = entityManager.createQuery("SELECT f FROM File f WHERE f.user = :user AND f.parentFolder = :parentFolder AND f.inbin <> 1", File.class);
+            query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id AND f.parentFolder = :parentFolder AND f.inbin <> 1", File.class);
             query.setParameter("parentFolder", parentFolder);
         }
-        query.setParameter("user", user);
+        query.setParameter("user_id", user_id);
         return (List<File>) query.getResultList();
     }
 
@@ -118,12 +110,12 @@ public class FileDAOImpl implements FileDAO {
     }
 
     @Override
-    public List<File> getStarredList(User user) {
-        int user_id = user.getId();
+    public List<File> getStarredList() {
+        int user_id = AuthorizedUser.id();
         Query query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id AND f.inbin <> 1 AND f.starred = 1", File.class);
         query.setParameter("user_id", user_id);
-        Query query2 = entityManager.createQuery("SELECT f FROM File f INNER JOIN f.shareFor user WHERE user = :user AND f.inbin <> 1 AND f.starred = 1", File.class);
-        query2.setParameter("user", user);
+        Query query2 = entityManager.createQuery("SELECT f FROM File f INNER JOIN f.shareFor user WHERE user.id = :user_id AND f.inbin <> 1 AND f.starred = 1", File.class);
+        query2.setParameter("user_id", user_id);
         List<File> result = new ArrayList<>();
         result.addAll((List<File>) query.getResultList());
         result.addAll((List<File>) query2.getResultList());
@@ -131,8 +123,8 @@ public class FileDAOImpl implements FileDAO {
     }
 
     @Override
-    public List<File> getSearchList(String whatSearch, User user) {
-        int user_id = user.getId();
+    public List<File> getSearchList(String whatSearch) {
+        int user_id = AuthorizedUser.id();
         Query query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id AND UPPER(f.name) LIKE :whatSearch AND f.inbin <> 1", File.class);
         query.setParameter("user_id", user_id);
         query.setParameter("whatSearch", "%" + whatSearch.toUpperCase() + "%");
@@ -140,11 +132,12 @@ public class FileDAOImpl implements FileDAO {
     }
 
     @Override
-    public void renameFile(User userWhoWantRename, int[] checked_files_id, String newName) {
-        Query query = entityManager.createQuery("UPDATE File f SET f.name = :newName WHERE f.id = :id AND f.user = :userWhoWantRename");
+    public void renameFile(int[] checked_files_id, String newName) {
+        int owner_id = AuthorizedUser.id();
+        Query query = entityManager.createQuery("UPDATE File f SET f.name = :newName WHERE f.id = :id AND f.user.id = :owner_id");
         query.setParameter("newName", newName);
         query.setParameter("id", checked_files_id[0]);
-        query.setParameter("userWhoWantRename", userWhoWantRename);
+        query.setParameter("owner_id", owner_id);
         query.executeUpdate();
     }
 
@@ -156,30 +149,31 @@ public class FileDAOImpl implements FileDAO {
     }
 
     @Override
-    public List<File> getSharedList(User user, Integer targetFolder) {
+    public List<File> getSharedList(Integer targetFolder) {
+        int user_id = AuthorizedUser.id();
         Query query;
         if (targetFolder == null) {
             query = entityManager.createQuery("SELECT f FROM File f INNER JOIN f.shareFor user " +
-                    "WHERE user = :user AND f.inbin <> 1 AND f.shareInFolder = false", File.class);
+                    "WHERE user.id = :user_id AND f.inbin <> 1 AND f.shareInFolder = false", File.class);
         } else {
             query = entityManager.createQuery("SELECT f FROM File f INNER JOIN f.shareFor user " +
-                    "WHERE user = :user AND f.inbin <> 1 AND f.shareInFolder = true AND f.parentFolder.id = :targetFolder", File.class);
+                    "WHERE user.id = :user_id AND f.inbin <> 1 AND f.shareInFolder = true AND f.parentFolder.id = :targetFolder", File.class);
             query.setParameter("targetFolder", targetFolder);
         }
-        query.setParameter("user", user);
+        query.setParameter("user_id", user_id);
         return (List<File>) query.getResultList();
     }
 
     @Override
-    public List<File> getAllList(User user) {
-        int user_id = user.getId();
+    public List<File> getAllList() {
+        int user_id = AuthorizedUser.id();
         Query query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id", File.class);
         query.setParameter("user_id", user_id);
         return (List<File>) query.getResultList();
     }
 
-    public List<File> getBinList(User user) {
-        int user_id = user.getId();
+    public List<File> getBinList() {
+        int user_id = AuthorizedUser.id();
         Query query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id AND f.inbin = 1", File.class);
         query.setParameter("user_id", user_id);
         return (List<File>) query.getResultList();
@@ -195,18 +189,19 @@ public class FileDAOImpl implements FileDAO {
     }
 
     @Override
-    public File getFile(User user, String name, Folder parentFolder) {
+    public File getFile(String name, Folder parentFolder) {
+        int user_id = AuthorizedUser.id();
         Query query;
         if (parentFolder == null) {
             query = entityManager.createQuery("SELECT f FROM File f WHERE f.name = :name " +
-                    "AND f.user = :user AND f.parentFolder IS NULL", File.class);
+                    "AND f.user.id = :user_id AND f.parentFolder IS NULL", File.class);
         } else {
             query = entityManager.createQuery("SELECT f FROM File f WHERE f.name = :name " +
-                    "AND f.user = :user AND f.parentFolder = :parentFolder", File.class);
+                    "AND f.user.id = :user_id AND f.parentFolder = :parentFolder", File.class);
             query.setParameter("parentFolder", parentFolder);
         }
         query.setParameter("name", name);
-        query.setParameter("user", user);
+        query.setParameter("user_id", user_id);
         return (File) query.getSingleResult();
     }
 
@@ -219,3 +214,16 @@ public class FileDAOImpl implements FileDAO {
         query.executeUpdate();
     }
 }
+
+
+//       Restrictions.eqOrIsNull("status", status)      instead |
+//        c.add(status == null ? Restrictions.isNull("status") : Restrictions.eq("status", status));
+
+//        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+//        CriteriaQuery<File> query = cb.createQuery(File.class);
+//        Root<File> c = query.from(File.class);
+//        query.select(c).where(cb.equal(c.get("user"), user),
+//                              cb.equal(c.get("parentFolder"), parentFolder),
+//                              cb.notEqual(c.get("inbin"), 1));
+//        List<File> result = entityManager.createQuery(query).getResultList();
+//        return result;

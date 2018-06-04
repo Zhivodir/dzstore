@@ -1,7 +1,6 @@
 package com.gmail.dzhivchik.dao;
 
 import com.gmail.dzhivchik.domain.Folder;
-import com.gmail.dzhivchik.domain.User;
 
 import java.util.List;
 
@@ -10,20 +9,20 @@ import java.util.List;
  */
 public interface FolderDAO {
     Folder save(Folder folder);
-    Folder isFolder(String name, boolean inbin, User user, Folder parentFolder);
+    Folder isFolder(String name, boolean inbin, Folder parentFolder);
     Folder[] deleteGroup(int[] checked_folders_id);
     Folder getFolder(int id);
-    Folder getFolder(User user, String name, Folder parentFolder);
-    List<Folder> getList(User user, Folder parentFolder);
-    List<Folder> getList(User user, Folder parentFolder, String[] exceptionFolder);
+    Folder getFolder(String name, Folder parentFolder);
+    List<Folder> getList(Folder parentFolder);
+    List<Folder> getList(Folder parentFolder, String[] exceptionFolder);
     List<Folder> getListFoldersById(int[] listOfId);
     void changeStar(int[] checked_folders_id, boolean stateOfStar);
-    List<Folder> getStarredList(User user);
-    List<Folder> getSearchList(String whatSearch, User user);
-    void renameFolder(User userWhoWantRename, int[] checked_folders_id, String newName);
+    List<Folder> getStarredList();
+    List<Folder> getSearchList(String whatSearch);
+    void renameFolder(int[] checked_folders_id, String newName);
     void changeShare(List<Folder> targets);
-    List<Folder> getSharedList(User user, Integer targetFolder);
+    List<Folder> getSharedList(Integer targetFolder);
     void changeInBin(int[] checked_folders_id, boolean stateOfInBinStatus);
-    List<Folder> getBinList(User user);
+    List<Folder> getBinList();
     void move_to(int[] checked_folders_id, Folder target);
 }

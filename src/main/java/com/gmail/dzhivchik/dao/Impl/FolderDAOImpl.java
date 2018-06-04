@@ -26,7 +26,7 @@ public class FolderDAOImpl implements FolderDAO {
 
     @Override
     public Folder save(Folder folder) {
-        Folder searchFolder = isFolder(folder.getName(), folder.isInbin(), folder.getUser(), folder.getParentFolder());
+        Folder searchFolder = isFolder(folder.getName(), folder.isInbin(), folder.getParentFolder());
         if (searchFolder != null) {
             return entityManager.merge(folder);
         } else {
@@ -37,51 +37,54 @@ public class FolderDAOImpl implements FolderDAO {
 
 
     @Override
-    public Folder isFolder(String name, boolean inbin, User user, Folder parentFolder) {
+    public Folder isFolder(String name, boolean inbin, Folder parentFolder) {
+        int user_id = AuthorizedUser.id();
         Query query;
         if (parentFolder == null) {
             query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.name = :name " +
-                    "AND f.inbin = :inbin AND f.user = :user AND f.parentFolder IS NULL", Folder.class);
+                    "AND f.inbin = :inbin AND f.user.id = :user_id AND f.parentFolder IS NULL", Folder.class);
         } else {
             query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.name = :name " +
-                    "AND f.inbin = :inbin AND f.user = :user AND f.parentFolder = :parentFolder", Folder.class);
+                    "AND f.inbin = :inbin AND f.user.id = :user_id AND f.parentFolder = :parentFolder", Folder.class);
             query.setParameter("parentFolder", parentFolder);
         }
         query.setParameter("name", name);
         query.setParameter("inbin", inbin);
-        query.setParameter("user", user);
+        query.setParameter("user_id", user_id);
         List<Folder> resultList = ((List<Folder>) query.getResultList());
         return (resultList.size() != 0) ? resultList.get(0) : null;
     }
 
     @Override
-    public List<Folder> getList(User user, Folder parentFolder) {
+    public List<Folder> getList(Folder parentFolder) {
+        int user_id = AuthorizedUser.id();
         Query query;
         if (parentFolder == null) {
-            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder IS NULL AND c.inbin <> 1", Folder.class);
+            query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.user.id = :user_id AND f.parentFolder IS NULL AND f.inbin <> 1", Folder.class);
         } else {
-            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder = :parent AND c.inbin <> 1", Folder.class);
+            query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.user.id = :user_id AND f.parentFolder = :parent AND f.inbin <> 1", Folder.class);
             query.setParameter("parent", parentFolder);
         }
-        query.setParameter("user", user);
+        query.setParameter("user_id", user_id);
         return (List<Folder>) query.getResultList();
     }
 
     @Override
-    public List<Folder> getList(User user, Folder parentFolder, String[] exceptionFolder) {
+    public List<Folder> getList(Folder parentFolder, String[] exceptionFolder) {
         int[] tempList = Arrays.asList(exceptionFolder).stream().mapToInt(Integer::parseInt).toArray();
         List<Integer> list = Arrays.stream(tempList).boxed().collect(Collectors.toList());
+        int user_id = AuthorizedUser.id();
 
         Query query;
         if (parentFolder == null) {
-            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder IS NULL AND c.inbin <> 1" +
+            query = entityManager.createQuery("SELECT c FROM Folder f WHERE f.user.id = :user_id AND f.parentFolder IS NULL AND f.inbin <> 1" +
                     " AND c.id NOT IN :list", Folder.class);
         } else {
-            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder = :parent AND c.inbin <> 1 " +
+            query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.user.id = :user_id AND f.parentFolder = :parent AND f.inbin <> 1 " +
                     " AND c.id NOT IN :list", Folder.class);
             query.setParameter("parent", parentFolder);
         }
-        query.setParameter("user", user);
+        query.setParameter("user_id", user_id);
         query.setParameter("list", list);
         return (List<Folder>) query.getResultList();
     }
@@ -95,20 +98,19 @@ public class FolderDAOImpl implements FolderDAO {
     }
 
     @Override
-    public Folder getFolder(User user, String name, Folder parentFolder) {
+    public Folder getFolder(String name, Folder parentFolder) {
+        int user_id = AuthorizedUser.id();
         Query query;
         if (parentFolder == null) {
             query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.name = :name " +
-                    "AND f.user = :user " +
-                    "AND f.parentFolder IS NULL", Folder.class);
+                    "AND f.user.id = :user_id AND f.parentFolder IS NULL", Folder.class);
         } else {
             query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.name = :name " +
-                    "AND f.user = :user " +
-                    "AND f.parentFolder = :parentFolder", Folder.class);
+                    "AND f.user.id = :user_id AND f.parentFolder = :parentFolder", Folder.class);
             query.setParameter("parentFolder", parentFolder);
         }
         query.setParameter("name", name);
-        query.setParameter("user", user);
+        query.setParameter("user_id", user_id);
         return (Folder)query.getSingleResult();
     }
 
@@ -145,13 +147,13 @@ public class FolderDAOImpl implements FolderDAO {
     }
 
     @Override
-    public List<Folder> getStarredList(User user) {
-        int user_id = user.getId();
+    public List<Folder> getStarredList() {
+        int user_id = AuthorizedUser.id();
         Query query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.user.id = :user_id AND f.starred = 1  AND f.inbin <> 1", Folder.class);
         query.setParameter("user_id", user_id);
         Query query2 = entityManager.createQuery("SELECT f FROM Folder f INNER JOIN f.shareFor user " +
-                "WHERE user = :user AND f.inbin <> 1 AND f.starred = 1", Folder.class);
-        query2.setParameter("user", user);
+                "WHERE user.id = :user_id AND f.inbin <> 1 AND f.starred = 1", Folder.class);
+        query2.setParameter("user_id", user_id);
         List<Folder> result = new ArrayList<>();
         result.addAll((List<Folder>) query.getResultList());
         result.addAll((List<Folder>) query2.getResultList());
@@ -159,8 +161,8 @@ public class FolderDAOImpl implements FolderDAO {
     }
 
     @Override
-    public List<Folder> getSearchList(String whatSearch, User user) {
-        int user_id = user.getId();
+    public List<Folder> getSearchList(String whatSearch) {
+        int user_id = AuthorizedUser.id();
         Query query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.user.id = :user_id AND UPPER(f.name) LIKE :whatSearch  AND f.inbin <> 1", Folder.class);
         query.setParameter("user_id", user_id);
         query.setParameter("whatSearch", "%" + whatSearch.toUpperCase() + "%");
@@ -168,11 +170,12 @@ public class FolderDAOImpl implements FolderDAO {
     }
 
     @Override
-    public void renameFolder(User userWhoWantRename, int[] checked_folders_id, String newName) {
-        Query query = entityManager.createQuery("UPDATE Folder f SET f.name = :newName WHERE f.id = :id AND f.user = :userWhoWantRename");
+    public void renameFolder(int[] checked_folders_id, String newName) {
+        int user_id = AuthorizedUser.id();
+        Query query = entityManager.createQuery("UPDATE Folder f SET f.name = :newName WHERE f.id = :id AND f.user.id = :user_id");
         query.setParameter("newName", newName);
         query.setParameter("id", checked_folders_id[0]);
-        query.setParameter("userWhoWantRename", userWhoWantRename);
+        query.setParameter("user_id", user_id);
         int result = query.executeUpdate();
     }
 
@@ -184,17 +187,18 @@ public class FolderDAOImpl implements FolderDAO {
     }
 
     @Override
-    public List<Folder> getSharedList(User user, Integer targetFolder) {
+    public List<Folder> getSharedList(Integer targetFolder) {
+        int user_id = AuthorizedUser.id();
         Query query;
         if (targetFolder == null) {
             query = entityManager.createQuery("SELECT f FROM Folder f INNER JOIN f.shareFor user " +
-                    "WHERE user = :user AND f.inbin <> 1  AND f.shareInFolder = false", Folder.class);
+                    "WHERE user.id = :user_id AND f.inbin <> 1 AND f.shareInFolder = false", Folder.class);
         } else {
             query = entityManager.createQuery("SELECT f FROM Folder f INNER JOIN f.shareFor user " +
-                    "WHERE user = :user AND f.inbin <> 1 AND f.shareInFolder = true AND f.parentFolder.id = :targetFolder", Folder.class);
+                    "WHERE user.id = :user_id AND f.inbin <> 1 AND f.shareInFolder = true AND f.parentFolder.id = :targetFolder", Folder.class);
             query.setParameter("targetFolder", targetFolder);
         }
-        query.setParameter("user", user);
+        query.setParameter("user_id", user_id);
         return (List<Folder>) query.getResultList();
     }
 
@@ -208,10 +212,8 @@ public class FolderDAOImpl implements FolderDAO {
     }
 
     @Override
-    public List<Folder> getBinList(User user) {
-//        int user_id = user.getId();
+    public List<Folder> getBinList() {
         int user_id = AuthorizedUser.id();
-        System.out.println("id: " + user_id);
         Query query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.user.id = :user_id AND f.inbin = 1", Folder.class);
         query.setParameter("user_id", user_id);
         return (List<Folder>) query.getResultList();

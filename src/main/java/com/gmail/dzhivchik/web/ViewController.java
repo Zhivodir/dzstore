@@ -45,12 +45,12 @@ public class ViewController {
                 Collections.reverse(forRelativePath);
                 forRelativePath.add(currentFolder);
                 model.addAttribute("listForRelativePath", forRelativePath);
-                content = contentService.getContent(user, currentFolder);
+                content = contentService.getContent(currentFolder);
                 if(parentsFolder != null) {
                     parentsFolderID = parentsFolder.getId();
                 }
             } else {
-                content = contentService.getContent(user, null);
+                content = contentService.getContent(null);
             }
             model.addAttribute("parentsFolderID", parentsFolderID);
             model.addAttribute("content", content);
@@ -67,7 +67,7 @@ public class ViewController {
                             @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
-        model.addAttribute("content", contentService.getStarredContent(user));
+        model.addAttribute("content", contentService.getStarredContent());
         model.addAttribute("user", user);
         model.addAttribute("busySpace", showBusySpace(user));
         model.addAttribute("typeOfView", "starred");
@@ -81,7 +81,7 @@ public class ViewController {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
         if (whatSearch != null) {
-            model.addAttribute("content", contentService.getListBySearch(whatSearch, user));
+            model.addAttribute("content", contentService.getListBySearch(whatSearch));
             model.addAttribute("user", user);
         }
         model.addAttribute("busySpace", showBusySpace(user));
@@ -104,7 +104,7 @@ public class ViewController {
             model.addAttribute("listForRelativePath", forRelativePath);
         }
         model.addAttribute("currentFolderID", currentFolderID);
-        model.addAttribute("content", contentService.getSharedContent(user, currentFolderID));
+        model.addAttribute("content", contentService.getSharedContent(currentFolderID));
         model.addAttribute("user", user);
         model.addAttribute("busySpace", showBusySpace(user));
         model.addAttribute("typeOfView", "shared");
@@ -115,7 +115,7 @@ public class ViewController {
     public String toBin(Model model) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
-        model.addAttribute("content", contentService.getBinContent(user));
+        model.addAttribute("content", contentService.getBinContent());
         model.addAttribute("user", user);
         model.addAttribute("busySpace", showBusySpace(user));
         model.addAttribute("typeOfView", "bin");
@@ -133,7 +133,7 @@ public class ViewController {
 
 
     private String[] showBusySpace(User user) {
-        long filesSize = contentService.getSizeBusyMemory(user);
+        long filesSize = contentService.getSizeBusyMemory();
         long ostatok = 0;
         String[] sizes = new String[2];
         int size = 0;

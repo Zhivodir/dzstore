@@ -1,11 +1,9 @@
 package com.gmail.dzhivchik.web.ajax;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.service.Impl.ContentService;
 import com.gmail.dzhivchik.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,14 +35,12 @@ public class AjaxControllerForTree {
                            @RequestParam(value = "id", required = false) String id,
                            @RequestParam(value = "fields", required = false) String fields
     ){
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
         String[] exceptionFolders = fields.split(",");
         List[] content = null;
         if(id == "") {
-            content = contentService.getContent(user, null, exceptionFolders);
+            content = contentService.getContent(null, exceptionFolders);
         } else {
-            content = contentService.getContent(user, contentService.getFolder(Integer.valueOf(id)), exceptionFolders);
+            content = contentService.getContent(contentService.getFolder(Integer.valueOf(id)), exceptionFolders);
         }
 
         StringWriter writer = new StringWriter();
