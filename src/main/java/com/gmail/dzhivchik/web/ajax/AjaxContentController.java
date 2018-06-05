@@ -1,11 +1,11 @@
 package com.gmail.dzhivchik.web.ajax;
 
+import com.gmail.dzhivchik.AuthorizedUser;
 import com.gmail.dzhivchik.domain.Sender;
 import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.service.Impl.ContentService;
 import com.gmail.dzhivchik.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,8 +27,7 @@ public class AjaxContentController {
     public void remove(@RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
                        @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id,
                        @RequestParam String typeOfView) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
+        User user = userService.getUser(AuthorizedUser.getUserTo().getLogin());
         if (typeOfView.equals("shared")) {
             contentService.removeFromShareWithMe(checked_files_id, checked_folders_id, user);
         } else {
@@ -45,9 +44,10 @@ public class AjaxContentController {
 
     @ResponseBody
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public void delete(@RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
+    public String[] delete(@RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
                        @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id) {
         contentService.deleteCheckedContent(checked_files_id, checked_folders_id);
+        return AuthorizedUser.getUserTo().getshowBusySize();
     }
 
     @ResponseBody
@@ -102,9 +102,10 @@ public class AjaxContentController {
 
     @ResponseBody
     @RequestMapping(value = "/addToMe", method = RequestMethod.POST)
-    public void addToMe(@RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
+    public String[] addToMe(@RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
                         @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id) {
         contentService.addToMe(checked_files_id, checked_folders_id);
+        return AuthorizedUser.getUserTo().getshowBusySize();
     }
 
     private void sendMessageToEmail() {

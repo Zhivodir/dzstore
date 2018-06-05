@@ -36,5 +36,5 @@
             </c:otherwise>
         </c:choose>
     </ul>
-    <div class = "busySpace">${user.showBusySize[0]} / ${user.showBusySize[1]} </div>
+    <div class = "busySpace" id="busySpace">${user.showBusySize[0]} / ${user.showBusySize[1]} </div>
 </div>

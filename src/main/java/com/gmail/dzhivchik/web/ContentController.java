@@ -1,12 +1,12 @@
 package com.gmail.dzhivchik.web;
 
+import com.gmail.dzhivchik.AuthorizedUser;
 import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.Sender;
 import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.service.Impl.ContentService;
 import com.gmail.dzhivchik.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,10 +54,7 @@ public class ContentController {
                            @RequestParam String typeOfView,
                            @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID,
                            final RedirectAttributes redirectAttributes) {
-
         if (checked_files_id != null || checked_folders_id != null) {
-            String login = SecurityContextHolder.getContext().getAuthentication().getName();
-            User user = userService.getUser(login);
             contentService.downloadContent(checked_files_id, checked_folders_id);
         }
         redirectAttributes.addFlashAttribute("currentFolderID", currentFolderID);
@@ -72,9 +69,7 @@ public class ContentController {
                                   @RequestParam String nameOfFolder,
                                   @RequestParam Integer currentFolder,
                                   @RequestParam String typeOfView) {
-
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
+        User user = userService.getUser(AuthorizedUser.getUserTo().getLogin());
         Folder curFolder = null;
         if (currentFolder != null) {
             curFolder = contentService.getFolder(currentFolder);

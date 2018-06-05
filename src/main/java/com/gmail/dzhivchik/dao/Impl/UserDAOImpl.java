@@ -2,16 +2,13 @@ package com.gmail.dzhivchik.dao.Impl;
 
 import com.gmail.dzhivchik.AuthorizedUser;
 import com.gmail.dzhivchik.dao.UserDAO;
-import com.gmail.dzhivchik.domain.File;
 import com.gmail.dzhivchik.domain.User;
-import org.hibernate.jpa.QueryHints;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,8 +31,8 @@ public class UserDAOImpl implements UserDAO {
         query = entityManager.
                 createQuery("SELECT u FROM User u WHERE u.login = :login", User.class);
         query.setParameter("login", login);
-        List<User> temp = (List<User>) query.getResultList();
-        return (temp.size() < 1) ? null : temp.get(0);
+        User user = (User) query.getSingleResult();
+        return user;
     }
 
     @Override

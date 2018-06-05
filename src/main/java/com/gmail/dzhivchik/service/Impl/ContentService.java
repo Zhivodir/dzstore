@@ -1,5 +1,6 @@
 package com.gmail.dzhivchik.service.Impl;
 
+import com.gmail.dzhivchik.AuthorizedUser;
 import com.gmail.dzhivchik.dao.FileDAO;
 import com.gmail.dzhivchik.dao.FolderDAO;
 import com.gmail.dzhivchik.dao.UserDAO;
@@ -41,19 +42,17 @@ public class ContentService {
         return folderDAO.save(folder);
     }
 
-    @Transactional
     public Folder getFolder(Integer id) {
         return folderDAO.getFolder(id);
     }
 
-    @Transactional
     public File getFile(Integer id) {
         return fileDAO.getFile(id);
     }
 
     @Transactional
     public void uploadContent(MultipartFile file, MultipartFile[] files, String structure, Integer currentFolderID){
-        User currentUser = getCurrentUser();
+        User currentUser = userDAO.getUser(AuthorizedUser.getUserTo().getLogin());
 
         Folder curFolder = null;
         if (currentFolderID != null) {
@@ -118,12 +117,10 @@ public class ContentService {
         }
     }
 
-    @Transactional
     public List<File> getListFilesById(int[] checked_files_id) {
         return fileDAO.getListFilesById(checked_files_id);
     }
 
-    @Transactional
     public List<Folder> getListFolderById(int[] checked_folders_id) {
         return folderDAO.getListFoldersById(checked_folders_id);
     }
@@ -265,7 +262,7 @@ public class ContentService {
 
     @Transactional
     public void addToMe(int[] checked_files_id, int[] checked_folders_id) {
-        User currentUser = getCurrentUser();
+        User currentUser = userDAO.getUser(AuthorizedUser.getUserTo().getLogin());
         if (checked_files_id != null) {
             List<File> listOfAddFiles = getListFilesById(checked_files_id);
             addSharedFileToMyStore(listOfAddFiles, currentUser, null, null);
@@ -347,11 +344,6 @@ public class ContentService {
             content[1] = getListFolderById(checked_folders_id);
         }
         return content;
-    }
-
-    private User getCurrentUser() {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userDAO.getUser(login);
     }
 
     private void uploadFile(MultipartFile file, User user, Folder curFolder) {

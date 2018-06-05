@@ -1,4 +1,5 @@
 var ajaxUrl = "ajax/content/";
+var ajaxUrlBusyMemory = "ajax/";
 
 function remove() {
     $.ajax({
@@ -18,9 +19,10 @@ function deleteContent() {
         type: "POST",
         url: ajaxUrl + "delete",
         data: $("#content_form").serialize(),
-        success: function () {
+        success: function (data) {
             $('#modalForDelete').modal('hide');
             $("input.choise_checkbox:checked").parent().parent().remove();
+            $('#busySpace').empty().append(data[0] + " / " + data[1])
         }
     });
 }
@@ -140,6 +142,9 @@ function addToMe() {
     $.ajax({
         type: "POST",
         url: ajaxUrl + "addToMe",
-        data: $("#content_form").serialize()
+        data: $("#content_form").serialize(),
+        success: function (data) {
+            $('#busySpace').empty().append(data[0] + " / " + data[1]);
+        }
     });
 }

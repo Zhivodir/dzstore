@@ -53,7 +53,6 @@ public class AuthorizedUser extends org.springframework.security.core.userdetail
 
     public void updateBusySize(long additionalSize) {
         this.getUserTo().changeBusySize(additionalSize);
-        //userTo.changeSize(sizes);
     }
 
     public static String[] getShowBusySize() {

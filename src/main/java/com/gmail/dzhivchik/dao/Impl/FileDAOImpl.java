@@ -43,7 +43,9 @@ public class FileDAOImpl implements FileDAO {
             query.executeUpdate();
         } else {
             entityManager.persist(file);
+            AuthorizedUser.getUserTo().changeBusySize(file.getSize());
         }
+
     }
 
     @Override
@@ -69,12 +71,15 @@ public class FileDAOImpl implements FileDAO {
     public File[] deleteGroup(int[] checked_files_id) {
         File[] files = new File[checked_files_id.length];
         int num = 0;
+        long addFreeMemmory = 0;
         for (Integer id : checked_files_id) {
             File file = entityManager.find(File.class, id);
+            addFreeMemmory += file.getSize();
             files[num] = file;
             entityManager.remove(file);
             num++;
         }
+        AuthorizedUser.getUserTo().changeBusySize(-1 * addFreeMemmory);
         return files;
     }
 
