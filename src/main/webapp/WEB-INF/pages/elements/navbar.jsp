@@ -20,12 +20,15 @@
         <div class="col-xs-3">
             <ul class="nav navbar-nav navbar-right">
                 <button type="button" class="btn btn-lg account" data-toggle="dropdown">
-                    <sec:authentication property="principal.username"/><span class="caret"></span>
+                    <%--<sec:authentication property="principal.username"/>--%>
+                    <span>${user.login}</span>
+                    <span class="caret"></span>
                 </button>
                 <div class="dropdown-menu dropdown-menu_profile" role="menu">
                     <div class="row">
                         <div class="col-md-6 account-right-part">
-                            <p><sec:authentication property="principal.username"/></p>
+                            <p>${user.login}</p>
+                            <%--<p><sec:authentication property="principal.username"/></p>--%>
                             <p><c:out value="${user.email}"></c:out></p>
                             <a class="btn btn-lg btn-danger" href="/logout" role="button">Logout</a>
                         </div>
