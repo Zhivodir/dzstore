@@ -68,19 +68,10 @@ public class FileDAOImpl implements FileDAO {
     }
 
     @Override
-    public File[] deleteGroup(int[] checked_files_id) {
-        File[] files = new File[checked_files_id.length];
-        int num = 0;
-        long addFreeMemmory = 0;
-        for (Integer id : checked_files_id) {
-            File file = entityManager.find(File.class, id);
-            addFreeMemmory += file.getSize();
-            files[num] = file;
-            entityManager.remove(file);
-            num++;
-        }
-        AuthorizedUser.getUserTo().changeBusySize(-1 * addFreeMemmory);
-        return files;
+    public void deleteGroup(int[] checked_files_id) {
+        List<Integer> list = Arrays.stream(checked_files_id).boxed().collect(Collectors.toList());
+        Query deleteQuery = entityManager.createQuery("DELETE FROM File f WHERE f.id IN :list");
+        deleteQuery.setParameter("list", list).executeUpdate();
     }
 
     @Override

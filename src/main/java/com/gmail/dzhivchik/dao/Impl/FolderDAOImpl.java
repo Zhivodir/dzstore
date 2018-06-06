@@ -116,16 +116,10 @@ public class FolderDAOImpl implements FolderDAO {
 
 
     @Override
-    public Folder[] deleteGroup(int[] checked_folders_id) {
-        Folder[] folders = new Folder[checked_folders_id.length];
-        int num = 0;
-        for (Integer id : checked_folders_id) {
-            Folder folder = entityManager.find(Folder.class, id);
-            folders[num] = folder;
+    public void deleteGroup(List<Folder> folders) {
+        for (Folder folder:folders) {
             entityManager.remove(folder);
-            num++;
         }
-        return folders;
     }
 
     @Override

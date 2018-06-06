@@ -59,8 +59,17 @@ public class UserTo implements Serializable {
         return showBusySize;
     }
 
+    public void setBusySize(long busySize) {
+        this.busySize = busySize;
+        changeShowBusySize();
+    }
+
     public void changeBusySize(long additionalSize) {
         this.busySize += additionalSize;
+        changeShowBusySize();
+    }
+
+    public void changeShowBusySize() {
         long wholePart = busySize;
         long ostatok = 0;
         long delitel = 1;

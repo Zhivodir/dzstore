@@ -13,7 +13,7 @@ public interface FileDAO {
     void uploadGroup(File[] files);
     File getFile(int id);
     File isFile(String name, boolean inbin, Folder parentFolder);
-    File[] deleteGroup(int[] checked_files_id);
+    void deleteGroup(int[] checked_files_id);
     List<File> getList(Folder parentFolder);
     List<File> getListFilesById(int[] listOfId);
     List<File> getAllList();

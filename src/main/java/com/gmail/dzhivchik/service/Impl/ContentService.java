@@ -113,8 +113,9 @@ public class ContentService {
             fileDAO.deleteGroup(checked_files_id);
         }
         if (checked_folders_id != null) {
-            folderDAO.deleteGroup(checked_folders_id);
+            folderDAO.deleteGroup(folderDAO.getListFoldersById(checked_folders_id));
         }
+        AuthorizedUser.getUserTo().setBusySize(userDAO.getBusySize());
     }
 
     public List<File> getListFilesById(int[] checked_files_id) {
