@@ -74,7 +74,7 @@ function rename() {
                 checkbox.parent().next().find("strong")
                     .replaceWith('<strong><span class="name_of_content">' + newName + '</span></strong>');
             } else {
-                checkbox.parent().next().find("span")
+                checkbox.parent().next().find("span.name_of_content")
                     .replaceWith('<span class="name_of_content">' + newName + '</span>');
             }
         }
