@@ -77,11 +77,11 @@ public class FolderDAOImpl implements FolderDAO {
 
         Query query;
         if (parentFolder == null) {
-            query = entityManager.createQuery("SELECT c FROM Folder f WHERE f.user.id = :user_id AND f.parentFolder IS NULL AND f.inbin <> 1" +
-                    " AND c.id NOT IN :list", Folder.class);
+            query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.user.id = :user_id AND f.parentFolder IS NULL AND f.inbin <> 1" +
+                    " AND f.id NOT IN :list", Folder.class);
         } else {
             query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.user.id = :user_id AND f.parentFolder = :parent AND f.inbin <> 1 " +
-                    " AND c.id NOT IN :list", Folder.class);
+                    " AND f.id NOT IN :list", Folder.class);
             query.setParameter("parent", parentFolder);
         }
         query.setParameter("user_id", user_id);
