@@ -23,9 +23,16 @@ public class LoginController {
     private UserService userService;
 
     @ResponseBody
-    @RequestMapping(value = "/test", method = RequestMethod.POST)
-    public String androidTest(@RequestParam("code") String[] code){
-        String test = "!!!!!!!!!!!!!!!" + code[0];
+    @RequestMapping(value = "/test1", method = RequestMethod.POST)
+    public String androidTest1(@RequestParam("code") String[] code){
+        String test = "111!!!!!!!!!!!" + code[0];
+        return test;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/test1", method = RequestMethod.POST)
+    public String androidTest2(@RequestParam("code") String[] code){
+        String test = "222!!!!!!!!!!!" + code[0];
         return test;
     }
 
