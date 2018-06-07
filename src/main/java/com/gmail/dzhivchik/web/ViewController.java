@@ -27,29 +27,29 @@ public class ViewController {
     @RequestMapping(method = RequestMethod.GET)
     public String onIndex(Model model,
                           @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
-            List[] content = null;
-            Integer parentsFolderID = null;
-            if(currentFolderID != null && currentFolderID > 0) {
-                Folder currentFolder = contentService.getFolder(currentFolderID);
-                Folder parentsFolder = currentFolder.getParentFolder();
-                List<Folder> forRelativePath = new ArrayList<>();
-                getListRelativePath(currentFolder, forRelativePath);
-                Collections.reverse(forRelativePath);
-                forRelativePath.add(currentFolder);
-                model.addAttribute("listForRelativePath", forRelativePath);
-                content = contentService.getContent(currentFolder);
-                if(parentsFolder != null) {
-                    parentsFolderID = parentsFolder.getId();
-                }
-            } else {
-                content = contentService.getContent(null);
+        List[] content = null;
+        Integer parentsFolderID = null;
+        if (currentFolderID != null && currentFolderID > 0) {
+            Folder currentFolder = contentService.getFolder(currentFolderID);
+            Folder parentsFolder = currentFolder.getParentFolder();
+            List<Folder> forRelativePath = new ArrayList<>();
+            getListRelativePath(currentFolder, forRelativePath);
+            Collections.reverse(forRelativePath);
+            forRelativePath.add(currentFolder);
+            model.addAttribute("listForRelativePath", forRelativePath);
+            content = contentService.getContent(currentFolder);
+            if (parentsFolder != null) {
+                parentsFolderID = parentsFolder.getId();
             }
-            model.addAttribute("parentsFolderID", parentsFolderID);
-            model.addAttribute("content", content);
-            model.addAttribute("currentFolderID", currentFolderID);
-            model.addAttribute("user", AuthorizedUser.getUserTo());
-            model.addAttribute("typeOfView", "index");
-            return "index";
+        } else {
+            content = contentService.getContent(null);
+        }
+        model.addAttribute("parentsFolderID", parentsFolderID);
+        model.addAttribute("content", content);
+        model.addAttribute("user", AuthorizedUser.getUserTo());
+        model.addAttribute("currentFolderID", currentFolderID);
+        model.addAttribute("typeOfView", "index");
+        return "index";
     }
 
 
@@ -58,8 +58,8 @@ public class ViewController {
                             @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
         model.addAttribute("content", contentService.getStarredContent());
         model.addAttribute("user", AuthorizedUser.getUserTo());
-        model.addAttribute("typeOfView", "starred");
         model.addAttribute("currentFolderID", currentFolderID);
+        model.addAttribute("typeOfView", "starred");
         return "starred";
     }
 
@@ -78,7 +78,7 @@ public class ViewController {
     @RequestMapping(value = "/shared", method = RequestMethod.GET)
     public String shared(Model model,
                          @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
-        if(currentFolderID != null && currentFolderID > 0) {
+        if (currentFolderID != null && currentFolderID > 0) {
             Folder currentFolder = contentService.getFolder(currentFolderID);
             List<Folder> forRelativePath = new ArrayList<>();
             getListRelativePath(currentFolder, forRelativePath);
@@ -86,9 +86,9 @@ public class ViewController {
             forRelativePath.add(currentFolder);
             model.addAttribute("listForRelativePath", forRelativePath);
         }
-        model.addAttribute("currentFolderID", currentFolderID);
         model.addAttribute("content", contentService.getSharedContent(currentFolderID));
         model.addAttribute("user", AuthorizedUser.getUserTo());
+        model.addAttribute("currentFolderID", currentFolderID);
         model.addAttribute("typeOfView", "shared");
         return "shared";
     }
