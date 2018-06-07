@@ -28,13 +28,13 @@ public class LoginController {
         String test = "111!!!!!!!!!!!" + code[0];
         return test;
     }
-//
-//    @ResponseBody
-//    @RequestMapping(value = "/test1", method = RequestMethod.POST)
-//    public String androidTest2(@RequestParam("code") String[] code){
-//        String test = "222!!!!!!!!!!!" + code[0];
-//        return test;
-//    }
+
+    @ResponseBody
+    @RequestMapping(value = "/test2", method = RequestMethod.POST)
+    public String androidTest2(@RequestParam("code") String[] code){
+        String test = "222!!!!!!!!!!!" + code[0];
+        return test;
+    }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String loginPage(){
