@@ -10,9 +10,6 @@ import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by User on 09.02.2017.
- */
 
 @Repository
 public class UserDAOImpl implements UserDAO {
@@ -49,8 +46,7 @@ public class UserDAOImpl implements UserDAO {
                 sb.append("OR ");
             }
         }
-        query = entityManager.
-                createQuery("SELECT u FROM User u WHERE " + sb.toString(), User.class);
+        query = entityManager.createQuery("SELECT u FROM User u WHERE " + sb.toString(), User.class);
 
         List<User> resultList = (List<User>) query.getResultList();
         return resultList;

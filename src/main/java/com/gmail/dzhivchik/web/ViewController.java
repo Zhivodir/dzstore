@@ -2,6 +2,7 @@ package com.gmail.dzhivchik.web;
 
 import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
+import com.gmail.dzhivchik.domain.enums.PageType;
 import com.gmail.dzhivchik.service.Impl.ContentService;
 import com.gmail.dzhivchik.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by User on 15.03.2017.
- */
-
 @Controller
 @RequestMapping("/")
 public class ViewController {
@@ -29,10 +26,8 @@ public class ViewController {
     @Autowired
     private UserService userService;
 
-
     @RequestMapping(method = RequestMethod.GET)
-    public String onIndex(Model model,
-                          @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
+    public String onIndex(Model model, @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
             String login = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.getUser(login);
             List[] content = null;
@@ -52,6 +47,8 @@ public class ViewController {
             } else {
                 content = contentService.getContent(user, null);
             }
+
+            model.addAttribute("pageType", PageType.COMMON);
             model.addAttribute("parentsFolderID", parentsFolderID);
             model.addAttribute("content", content);
             model.addAttribute("currentFolderID", currentFolderID);
@@ -63,10 +60,10 @@ public class ViewController {
 
 
     @RequestMapping(value = "/starred")
-    public String onStarred(Model model,
-                            @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
+    public String onStarred(Model model, @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
+        model.addAttribute("pageType", PageType.STARRED);
         model.addAttribute("content", contentService.getStarredContent(user));
         model.addAttribute("user", user);
         model.addAttribute("busySpace", showBusySpace(user));
@@ -80,6 +77,7 @@ public class ViewController {
     public String search(Model model, @RequestParam(value = "whatSearch", required = false) String whatSearch) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
+        model.addAttribute("pageType", PageType.SEARCH);
         if (whatSearch != null) {
             model.addAttribute("content", contentService.getListBySearch(whatSearch, user));
             model.addAttribute("user", user);
@@ -91,9 +89,7 @@ public class ViewController {
 
 
     @RequestMapping(value = "/shared", method = RequestMethod.GET)
-    public String shared(Model model,
-                         @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
-        System.out.println("Текущая папка: " + currentFolderID);
+    public String shared(Model model, @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
         if(currentFolderID != null && currentFolderID > 0) {
@@ -104,6 +100,7 @@ public class ViewController {
             forRelativePath.add(currentFolder);
             model.addAttribute("listForRelativePath", forRelativePath);
         }
+        model.addAttribute("pageType", PageType.SHARED);
         model.addAttribute("currentFolderID", currentFolderID);
         model.addAttribute("content", contentService.getSharedContent(user, currentFolderID));
         model.addAttribute("user", user);
@@ -116,6 +113,7 @@ public class ViewController {
     public String toBin(Model model) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
+        model.addAttribute("pageType", PageType.BIN);
         model.addAttribute("content", contentService.getBinContent(user));
         model.addAttribute("user", user);
         model.addAttribute("busySpace", showBusySpace(user));

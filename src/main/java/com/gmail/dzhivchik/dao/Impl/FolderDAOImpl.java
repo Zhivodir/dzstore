@@ -11,9 +11,6 @@ import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by User on 27.02.2017.
- */
 
 @Repository
 public class FolderDAOImpl implements FolderDAO{
@@ -59,7 +56,6 @@ public class FolderDAOImpl implements FolderDAO{
 
     @Override
     public List<Folder> getList(User user, Folder parentFolder) {
-        int user_id = user.getId();
         Query query;
         if(parentFolder == null){
             query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder IS NULL AND c.inbin <> 1", Folder.class);
@@ -81,7 +77,6 @@ public class FolderDAOImpl implements FolderDAO{
                 sb.append(" OR c.id <>" + exceptionFolder[i]);
             }
         }
-        int user_id = user.getId();
         Query query;
         if(parentFolder == null){
             query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder IS NULL AND c.inbin <> 1" + sb.toString(), Folder.class);

@@ -12,9 +12,6 @@ import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by User on 31.01.2017.
- */
 
 @Repository
 public class FileDAOImpl implements FileDAO {

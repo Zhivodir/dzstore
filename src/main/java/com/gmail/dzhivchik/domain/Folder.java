@@ -3,15 +3,16 @@ package com.gmail.dzhivchik.domain;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by User on 27.02.2017.
- */
 
+@Data
+@NoArgsConstructor
 @JsonAutoDetect
 @Entity
 @Table(name = "folders")
@@ -54,9 +55,6 @@ public class Folder {
             inverseJoinColumns = {@JoinColumn(name = "id_user", referencedColumnName = "id")})
     private List<User> shareFor = new ArrayList<>();
 
-    public Folder() {
-    }
-
     public Folder(String name, User user, Folder parentFolder,
                   boolean starred, boolean inbin, boolean shareInFolder) {
         this.name = name;
@@ -67,29 +65,6 @@ public class Folder {
         this.shareInFolder = shareInFolder;
     }
 
-    public Integer getId() { return id; }
-    public void setId(int id) { this.id = id; }
-
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
-
-    public Folder getParentFolder() { return parentFolder; }
-    public void setParentFolder(Folder parentFolder) { this.parentFolder = parentFolder; }
-
-    public List<File> getFiles() { return files; }
-    public void setFiles(List<File> files) { this.files = files; }
-
-    public List<Folder> getFolders() { return folders; }
-    public void setFolders(List<Folder> folders) { this.folders = folders; }
-
-    public boolean isStarred() { return starred; }
-    public void setStarred(boolean starred) { this.starred = starred; }
-
-    public List<User> getShareFor() { return shareFor; }
-    public void setShareFor(List<User> shareFor) { this.shareFor = shareFor; }
     public void addToShareFor(List<User> forAdd){
         for(User newUser : forAdd){
             if(!shareFor.contains(newUser)){
@@ -97,17 +72,12 @@ public class Folder {
             }
         }
     }
+
     public void removeFromShareFor(List<User> forCancelShare){
         for(User newUser : forCancelShare){
             shareFor.remove(newUser);
         }
     }
-
-    public boolean isInbin() { return inbin; }
-    public void setInbin(boolean inbin) { this.inbin = inbin; }
-
-    public boolean isShareInFolder() { return shareInFolder; }
-    public void setShareInFolder(boolean shareInFolder) { this.shareInFolder = shareInFolder; }
 
     @Override
     public String toString() {

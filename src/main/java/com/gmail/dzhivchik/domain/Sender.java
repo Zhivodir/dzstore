@@ -5,11 +5,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
-/**
- * Created by User on 04.11.2017.
- */
-public class Sender {
 
+public class Sender {
     private String username;
     private String password;
     private Properties props;

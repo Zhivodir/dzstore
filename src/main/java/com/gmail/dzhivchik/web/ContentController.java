@@ -17,9 +17,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
-/**
- * Created by User on 21.02.2017.
- */
 
 @Controller
 @RequestMapping("/")
@@ -52,8 +49,7 @@ public class ContentController {
 
 
     @RequestMapping(value = "/actions_above_checked_files", method = RequestMethod.POST)
-    public String actionsAboveCheckedFiles(Model model,
-                                           @RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
+    public String actionsAboveCheckedFiles(@RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
                                            @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id,
                                            @RequestParam(value = "cancel_share_for_users", required = false) int[] cancel_share_for_users,
                                            @RequestParam(value = "move_to", required = false) String move_to,
@@ -123,8 +119,7 @@ public class ContentController {
     }
 
     @RequestMapping(value = "/create_folder", method = RequestMethod.POST)
-    public String createNewFolder(Model model,
-                                  @RequestParam String nameOfFolder,
+    public String createNewFolder(@RequestParam String nameOfFolder,
                                   @RequestParam Integer currentFolder,
                                   @RequestParam String typeOfView) {
 

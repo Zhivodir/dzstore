@@ -1,6 +1,3 @@
-/**
- * Created by User on 21.06.2017.
- */
 
 onload = function() { tree("tree", "/ajax/load_tree_of_catalog") }
 
