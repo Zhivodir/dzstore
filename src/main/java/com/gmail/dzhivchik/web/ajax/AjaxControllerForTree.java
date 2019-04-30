@@ -7,7 +7,6 @@ import com.gmail.dzhivchik.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,9 +16,6 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
 
-/**
- * Created by User on 15.05.2017.
- */
 
 @Controller
 @RequestMapping("/")
@@ -33,8 +29,7 @@ public class AjaxControllerForTree {
 
     @ResponseBody
     @RequestMapping(value = "/ajax/load_tree_of_catalog", method = RequestMethod.GET)
-    public String loadTree(Model model,
-                           @RequestParam(value = "id", required = false) String id,
+    public String loadTree(@RequestParam(value = "id", required = false) String id,
                            @RequestParam(value = "fields", required = false) String fields
     ){
         String[] exceptionFolders = fields.split(",");

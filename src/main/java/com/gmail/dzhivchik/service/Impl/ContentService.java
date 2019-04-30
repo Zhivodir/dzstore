@@ -6,6 +6,7 @@ import com.gmail.dzhivchik.dao.UserDAO;
 import com.gmail.dzhivchik.domain.File;
 import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
+import com.gmail.dzhivchik.web.dto.Content;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -98,11 +100,18 @@ public class ContentService {
     }
 
     @Transactional(readOnly = true)
-    public List[] getContent(User user, Folder parentFolder) {
-        List[] content = new List[2];
-        content[0] = fileDAO.getList(user, parentFolder);
-        content[1] = folderDAO.getList(user, parentFolder);
+    public List<Content> getContent(User user, Folder parentFolder) {
+        List<Content> content = folderDAO.getList(user, parentFolder).stream().map(e -> convertFolderToContentDto(e)).collect(Collectors.toList());
+        content.addAll(fileDAO.getList(user, parentFolder).stream().map(e -> convertFileToContentDto(e)).collect(Collectors.toList()));
         return content;
+    }
+
+    private Content convertFileToContentDto(File e) {
+        return new Content(e.getId(), e.getName(), e.getSize(), e.getUser().getLogin(), e.getType());
+    }
+
+    private Content convertFolderToContentDto(Folder e) {
+        return new Content(e.getId(), e.getName(), 0, e.getUser().getLogin(), "folder");
     }
 
     @Transactional(readOnly = true)

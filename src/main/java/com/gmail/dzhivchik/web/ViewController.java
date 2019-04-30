@@ -5,13 +5,14 @@ import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.domain.enums.PageType;
 import com.gmail.dzhivchik.service.Impl.ContentService;
 import com.gmail.dzhivchik.service.UserService;
+import com.gmail.dzhivchik.web.dto.Content;
+import com.gmail.dzhivchik.web.dto.datatables.DataTablesRequest;
+import com.gmail.dzhivchik.web.dto.datatables.DataTablesResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,34 +29,35 @@ public class ViewController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String onIndex(Model model, @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
-            String login = SecurityContextHolder.getContext().getAuthentication().getName();
-            User user = userService.getUser(login);
-            List[] content = null;
-            Integer parentsFolderID = null;
-            if(currentFolderID != null && currentFolderID > 0) {
-                Folder currentFolder = contentService.getFolder(currentFolderID);
-                Folder parentsFolder = currentFolder.getParentFolder();
-                List<Folder> forRelativePath = new ArrayList<>();
-                getListRelativePath(currentFolder, forRelativePath);
-                Collections.reverse(forRelativePath);
-                forRelativePath.add(currentFolder);
-                model.addAttribute("listForRelativePath", forRelativePath);
-                content = contentService.getContent(user, currentFolder);
-                if(parentsFolder != null) {
-                    parentsFolderID = parentsFolder.getId();
-                }
-            } else {
-                content = contentService.getContent(user, null);
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUser(login);
+        List<Content> content = null;
+        Integer parentsFolderID = null;
+        if (currentFolderID != null && currentFolderID > 0) {
+            Folder currentFolder = contentService.getFolder(currentFolderID);
+            Folder parentsFolder = currentFolder.getParentFolder();
+            List<Folder> forRelativePath = new ArrayList<>();
+            getListRelativePath(currentFolder, forRelativePath);
+            Collections.reverse(forRelativePath);
+            forRelativePath.add(currentFolder);
+            model.addAttribute("listForRelativePath", forRelativePath);
+//                content = contentService.getContent(user, currentFolder);
+            if (parentsFolder != null) {
+                parentsFolderID = parentsFolder.getId();
             }
+        }
+//            else {
+//                content = contentService.getContent(user, null);
+//            }
 
-            model.addAttribute("pageType", PageType.COMMON);
-            model.addAttribute("parentsFolderID", parentsFolderID);
-            model.addAttribute("content", content);
-            model.addAttribute("currentFolderID", currentFolderID);
-            model.addAttribute("user", user);
-            model.addAttribute("busySpace", showBusySpace(user));
-            model.addAttribute("typeOfView", "index");
-            return "index";
+        model.addAttribute("pageType", PageType.COMMON);
+        model.addAttribute("parentsFolderID", parentsFolderID);
+//            model.addAttribute("content", content);
+        model.addAttribute("currentFolderID", currentFolderID);
+        model.addAttribute("user", user);
+        model.addAttribute("busySpace", showBusySpace(user));
+        model.addAttribute("typeOfView", "index");
+        return "index";
     }
 
 
@@ -92,7 +94,7 @@ public class ViewController {
     public String shared(Model model, @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
-        if(currentFolderID != null && currentFolderID > 0) {
+        if (currentFolderID != null && currentFolderID > 0) {
             Folder currentFolder = contentService.getFolder(currentFolderID);
             List<Folder> forRelativePath = new ArrayList<>();
             getListRelativePath(currentFolder, forRelativePath);
@@ -146,12 +148,12 @@ public class ViewController {
             delitel = delitel * 1024;
             pow++;
         }
-        ostatok = filesSize%delitel;
-        size = (int)Math.round(Double.parseDouble(wholePart + "." + ostatok));
+        ostatok = filesSize % delitel;
+        size = (int) Math.round(Double.parseDouble(wholePart + "." + ostatok));
 
-        switch (pow){
+        switch (pow) {
             case 0:
-                if(filesSize != 0){
+                if (filesSize != 0) {
                     sizes[0] = size + " bytes";
                 }
                 break;
@@ -165,8 +167,30 @@ public class ViewController {
                 sizes[0] = size + " Gb";
                 break;
         }
-        //Доступное по условиям тарифа. Пока захардкодено
+        //Доступное по условиям тарифа. Пока захардкожено
         sizes[1] = "10 Gb";
         return sizes;
+    }
+
+    @RequestMapping(value = "/getContent/{currentFolderId}", method = RequestMethod.POST)
+    public @ResponseBody DataTablesResponse<Content> getContent(@PathVariable int currentFolderId, @RequestBody DataTablesRequest dtRequest) {
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUser(login);
+        return getAllCurrentFolderContent(user, currentFolderId, dtRequest);
+    }
+
+    private DataTablesResponse<Content> getAllCurrentFolderContent(User user, int currentFolderId, DataTablesRequest dtRequest) {
+        Folder currentFolder = currentFolderId == -1 ? null : contentService.getFolder(currentFolderId);
+        List<Content> data = contentService.getContent(user, currentFolder);
+
+        int total = data.size();
+
+        DataTablesResponse<Content> dtResponse = new DataTablesResponse<>();
+        dtResponse.setDraw(dtRequest.getDraw());
+        dtResponse.setRecordsTotal(total);
+        dtResponse.setRecordsFiltered(total);
+        dtResponse.setData(data);
+
+        return dtResponse;
     }
 }

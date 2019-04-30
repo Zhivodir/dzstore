@@ -3,109 +3,141 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-    <div class="table-responsive">
-        <form id="content_form" action="/actions_above_checked_files" method="post">
-            <input type="hidden" name="currentFolderID" value="${currentFolderID}">
-            <input type="hidden" name="typeOfView" value="${typeOfView}">
-            <table id="myTable" class="table table-striped record_table">
-                <thead>
-                    <tr>
-                        <th class="checkId"></th>
-                        <th class="checkName">Name</th>
-                        <th class="checkType">Type</th>
-                        <th class="checkOwner">Owner</th>
-                        <th class="checkSize">Size</th>
-                    </tr>
-                </thead>
-                <tbody>
-                <c:if test="${currentFolderID ne null}">
-                    <tr class="choise_field" ondblclick="window.location.href='/?currentFolderID=${parentsFolderID}'">
-                        <td></td>
-                        <td><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </c:if>
-                <c:forEach items="${content[1]}" var="currentFolder">
-                    <c:choose>
-                        <c:when test="${typeOfView.equals('bin')}">
-                            <tr class="choise_field choise_folder" ondblclick="$('#modalForOpenDataInBin').modal('show')">
-                        </c:when>
-                        <c:when test="${typeOfView.equals('shared')}">
-                            <tr class="choise_field choise_folder" ondblclick="window.location.href='/shared?currentFolderID=${currentFolder.id}'">
-                        </c:when>
-                        <c:otherwise>
-                            <tr class="choise_field choise_folder" ondblclick="window.location.href='/?currentFolderID=${currentFolder.id}'">
-                        </c:otherwise>
-                    </c:choose>
-                        <td><input hidden class="choise_checkbox choise_folder" type="checkbox" name="checked_folders_id" value="${currentFolder.id}"/></td>
-                        <td class="forContextMenu">
-                            <strong><span class="name_of_content">${currentFolder.name}</span></strong>
-                            <c:if test="${!typeOfView.equals('shared') && currentFolder.shareFor.size() ne 0}">
-                                <span class="glyphicon glyphicon-eye-open"></span>
-                            </c:if>
-                            <c:if test="${currentFolder.starred eq true && !typeOfView.equals('starred')}">
-                                <span class="glyphicon glyphicon-star"></span>
-                            </c:if>
-                        </td>
-                        <td><span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span></td>
-                        <td>${currentFolder.user.login}</td>
-                        <td>  -  </td>
-                    </tr>
-                </c:forEach>
-                <c:forEach items="${content[0]}" var="currentFile">
-                    <tr class="choise_field">
-                        <td><input hidden class="choise_checkbox choise_file" type="checkbox" name="checked_files_id" value="${currentFile.id}"/></td>
-                        <td><span class="name_of_content">${currentFile.name}</span>
-                            <c:if test="${!typeOfView.equals('shared') && currentFile.shareFor.size() ne 0}">
-                                <span class="glyphicon glyphicon-eye-open"></span>
-                            </c:if>
-                            <c:if test="${currentFile.starred eq true && !typeOfView.equals('starred')}">
-                                <span class="glyphicon glyphicon-star"></span>
-                            </c:if>
-                        </td>
-                        <td>${currentFile.type}</td>
-                        <td>${currentFile.user.login}</td>
-                        <td>
-                            <c:choose>
-                                <c:when test="${currentFile.size/1073741824 gt 1}">
-                                    <fmt:formatNumber type="number"
-                                                      pattern="###.##" value="${currentFile.size/1073741824}" /> Gb
-                                </c:when>
-                                <c:when test="${currentFile.size/1048576 gt 1}">
-                                    <fmt:formatNumber type="number"
-                                                      pattern="###.##" value="${currentFile.size/1048576}" /> Mb
-                                </c:when>
-                                <c:when test="${currentFile.size/1024 ge 1}">
-                                    <fmt:formatNumber type="number"
-                                                      pattern="###.##" value="${currentFile.size/1024}" /> Kb
-                                </c:when>
-                                <c:otherwise>
-                                    ${currentFile.size} bytes
-                                </c:otherwise>
-                            </c:choose>
-                        </td>
-                    </tr>
-                </c:forEach>
-                </tbody>
-            </table>
+<link rel="stylesheet" href="/datatables/DataTables-1.10.16/css/dataTables.bootstrap.min.css">
 
-            <c:choose>
-                <c:when test="${typeOfView.equals('bin')}">
-                    <c:import url="/WEB-INF/pages/context_menu/for_bin.jsp"/>
-                    <c:import url="/WEB-INF/pages/modalForPages/operations/delete.jsp"/>
-                    <c:import url="/WEB-INF/pages/modalForPages/errors/dataInBin.jsp"/>
-                </c:when>
-                <c:otherwise>
-                    <c:import url="/WEB-INF/pages/context_menu/general.jsp"/>
-                    <c:import url="/WEB-INF/pages/modalForPages/operations/remove.jsp"/>
-                    <c:import url="/WEB-INF/pages/modalForPages/operations/share.jsp"/>
-                    <c:import url="/WEB-INF/pages/modalForPages/operations/rename.jsp"/>
-                    <c:import url="/WEB-INF/pages/modalForPages/operations/replace.jsp"/>
-                </c:otherwise>
-            </c:choose>
-        </form>
-    </div>
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+  <div>
+    <form id="content_form" action="/actions_above_checked_files" method="post">
+      <input type="hidden" name="currentFolderID" value="${currentFolderID}">
+      <input type="hidden" name="typeOfView" value="${typeOfView}">
+      <table id="myTable" class="table table-striped record_table" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+          <th class="checkId"></th>
+          <th class="checkName">Name</th>
+          <th class="checkType">Type</th>
+          <th class="checkOwner">Owner</th>
+          <th class="checkSize">Size</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+
+      <c:choose>
+        <c:when test="${typeOfView.equals('bin')}">
+          <c:import url="/WEB-INF/pages/context_menu/for_bin.jsp"/>
+          <c:import url="/WEB-INF/pages/modalForPages/operations/delete.jsp"/>
+          <c:import url="/WEB-INF/pages/modalForPages/errors/dataInBin.jsp"/>
+        </c:when>
+        <c:otherwise>
+          <c:import url="/WEB-INF/pages/context_menu/general.jsp"/>
+          <c:import url="/WEB-INF/pages/modalForPages/operations/remove.jsp"/>
+          <c:import url="/WEB-INF/pages/modalForPages/operations/share.jsp"/>
+          <c:import url="/WEB-INF/pages/modalForPages/operations/rename.jsp"/>
+          <c:import url="/WEB-INF/pages/modalForPages/operations/replace.jsp"/>
+        </c:otherwise>
+      </c:choose>
+    </form>
+  </div>
 </div>
+
+<!-- DataTables -->
+<script src="/datatables/DataTables-1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="/datatables/DataTables-1.10.16/js/dataTables.bootstrap.min.js"></script>
+<script src="js/utils/sb-datatables.js"></script>
+
+<script type="text/javascript">
+  currentFolder = ${currentFolderID != null ? currentFolderID : -1};
+
+  $(document).ready(function () {
+
+    table = $('#myTable').DataTable(datatableOpts(
+        '/getContent/' + currentFolder,
+        [
+          {
+            data: null,
+            render: function (data, type, full) {
+              if (full.type == "folder") {
+                return '<input hidden class="choise_checkbox choise_folder" type="checkbox" name="checked_folders_id" value="' + full.id + '"/>';
+              }
+              return '<input hidden class="choise_checkbox choise_file" type="checkbox" name="checked_files_id" value="' + full.id + '"/>';
+            }
+          },
+          {
+            data: 'name',
+            render: function (data, type, full) {
+              if (full.type == "folder") {
+                return '<strong><span class="name_of_content">' + data + '</span></strong>';
+              }
+              return data;
+            }
+          },
+          {
+            data: 'type',
+            render: function (data, type, full) {
+              if (data == "folder") {
+                return '<span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>';
+              }
+              return data;
+            }
+          },
+          {data: 'owner'},
+          {
+            data: 'size',
+            render: function (data, type, full) {
+              if (full.type == "folder") {
+                return " - ";
+              }
+              return formatSize(data);
+            }
+          }
+        ]
+    ));
+
+    selection = {
+      single: function (el) {
+        $('#myTable .choise_field').not(el).removeClass(this.cl);
+        $(el).addClass(this.cl);
+      },
+      shift: function (el) {
+        var tr = $('#myTable .choise_field');
+        if (typeof this.last !== 'number') {
+          return this.single(el);
+        }
+        var till = $(el).index(this.slcr),
+            from = this.last;
+        if (from > till) till = [from, from = till][0];
+        tr.slice(from, till).add(el).addClass(this.cl);
+      },
+      ctrl: function (el) {
+        $(el).toggleClass('selected');
+        this.last = $(el).index(this.slcr);
+      },
+      slcr: '#myTable .choise_field',
+      cl: 'selected',
+      last: null
+    };
+
+    $('#myTable').on('click', '.choise_field', function (e) {
+      method = !e.shiftKey && !e.ctrlKey ? 'single' : (e.shiftKey ? 'shift' : 'ctrl');
+      selection[method](this);
+      $('#myTable tr').each(function (indx, el) {
+        $("input:checkbox").removeAttr("checked");
+      })
+      $('#myTable tr.selected').each(function (indx, el) {
+        var inp = $("input:checkbox", el)[0];
+        event.target != inp && (inp.checked = !inp.checked)
+      })
+    });
+
+    //тип отображения - корзина , чужие или свои папки
+    var typeOfView = '${typeOfView}';
+
+    $("#myTable").on('dblclick', '.choise_folder', function(e) {
+      currentFolder = $(this).find("input").val();
+      table.ajax.url('/getContent/' + currentFolder);
+      table.ajax.reload();
+    });
+  });
+</script>

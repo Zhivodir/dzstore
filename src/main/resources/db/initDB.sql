@@ -43,7 +43,7 @@ CREATE TABLE `share_folder_for_user` (
     `id_user` int(4) NOT NULL,
     PRIMARY KEY (`id_folder`, `id_user`),
     FOREIGN KEY (`id_folder`) REFERENCES `folders` (id),
-FOREIGN KEY (`id_user`) REFERENCES `users` (id)
+    FOREIGN KEY (`id_user`) REFERENCES `users` (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

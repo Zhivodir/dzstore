@@ -1,14 +1,18 @@
 package com.gmail.dzhivchik.domain;
 
 import com.gmail.dzhivchik.domain.enums.UserRoleEnum;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
+@NoArgsConstructor
 @Table(name = "users")
 public class User {
     @Id
@@ -31,9 +35,6 @@ public class User {
 
     @ManyToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Folder> foldersSharedWithMe;
-
-    public User() {
-    }
 
     public User(String login, String password, UserRoleEnum role) {
         this.login = login;
