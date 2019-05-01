@@ -22,7 +22,6 @@ input.onchange = function(e) {
     input.setAttribute("type", "hidden");
     input.setAttribute("name", "structure");
     input.setAttribute("value", structureValue);
-//append to form element that you want .
     document.getElementById("folder_upload").appendChild(input);
 
 }

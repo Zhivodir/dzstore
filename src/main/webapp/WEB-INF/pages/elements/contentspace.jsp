@@ -48,12 +48,12 @@
 <script src="js/utils/sb-datatables.js"></script>
 
 <script type="text/javascript">
-  currentFolder = ${currentFolderID != null ? currentFolderID : -1};
+  currentFolderId = ${currentFolderID != null ? currentFolderID : -1};
 
   $(document).ready(function () {
 
     table = $('#myTable').DataTable(datatableOpts(
-        '/getContent/' + currentFolder,
+        '/getContent/' + currentFolderId,
         [
           {
             data: null,
@@ -135,9 +135,21 @@
     var typeOfView = '${typeOfView}';
 
     $("#myTable").on('dblclick', '.choise_folder', function(e) {
-      currentFolder = $(this).find("input").val();
+      currentFolderId = $(this).find("input").val();
+      var currentFolderName = $(this).find(".name_of_content").text();
+      reloadContentForFolder(currentFolderId);
+      addFolderNameToPath(currentFolderId, currentFolderName);
+    });
+
+    $(".currentFolderPath").on('dblclick', '.levelPath', function(e) {
+      currentFolderId = $(this).data("current-folder-id");
+      reloadContentForFolder(currentFolderId);
+      returnFolderPath(currentFolderId);
+    });
+
+    function reloadContentForFolder(currentFolder){
       table.ajax.url('/getContent/' + currentFolder);
       table.ajax.reload();
-    });
+    }
   });
 </script>

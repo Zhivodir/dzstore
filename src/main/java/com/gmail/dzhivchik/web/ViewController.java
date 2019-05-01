@@ -36,23 +36,13 @@ public class ViewController {
         if (currentFolderID != null && currentFolderID > 0) {
             Folder currentFolder = contentService.getFolder(currentFolderID);
             Folder parentsFolder = currentFolder.getParentFolder();
-            List<Folder> forRelativePath = new ArrayList<>();
-            getListRelativePath(currentFolder, forRelativePath);
-            Collections.reverse(forRelativePath);
-            forRelativePath.add(currentFolder);
-            model.addAttribute("listForRelativePath", forRelativePath);
-//                content = contentService.getContent(user, currentFolder);
             if (parentsFolder != null) {
                 parentsFolderID = parentsFolder.getId();
             }
         }
-//            else {
-//                content = contentService.getContent(user, null);
-//            }
 
         model.addAttribute("pageType", PageType.COMMON);
         model.addAttribute("parentsFolderID", parentsFolderID);
-//            model.addAttribute("content", content);
         model.addAttribute("currentFolderID", currentFolderID);
         model.addAttribute("user", user);
         model.addAttribute("busySpace", showBusySpace(user));
