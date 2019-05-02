@@ -5,9 +5,6 @@ import com.gmail.dzhivchik.domain.User;
 
 import java.util.List;
 
-/**
- * Created by User on 27.02.2017.
- */
 public interface FolderDAO {
     Folder save(Folder folder);
     Folder isFolder(String name, boolean inbin, User user, Folder parentFolder);

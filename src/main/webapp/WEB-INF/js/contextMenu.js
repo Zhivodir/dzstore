@@ -1,13 +1,8 @@
-/**
- * Created by User on 21.03.2017.
- */
 
 (function ($, window) {
 
     $.fn.contextMenu = function (settings) {
-
         return this.each(function () {
-
             // Open context menu
             $(this).on("contextmenu", function (e) {
                 // return native menu if pressing control
@@ -87,7 +82,7 @@
     };
 })(jQuery, window);
 
-$("#myTable td").contextMenu({
+$("#myTable").contextMenu({
     menuSelector: "#contextMenu",
     menuSelected: function (invokedOn, selectedMenu) {
         var msg = "You selected the menu item '" + selectedMenu.text() +

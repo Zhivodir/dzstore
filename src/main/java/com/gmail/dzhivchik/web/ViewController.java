@@ -56,7 +56,6 @@ public class ViewController {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
         model.addAttribute("pageType", PageType.STARRED);
-        model.addAttribute("content", contentService.getStarredContent(user));
         model.addAttribute("user", user);
         model.addAttribute("busySpace", showBusySpace(user));
         model.addAttribute("typeOfView", "starred");
@@ -106,7 +105,6 @@ public class ViewController {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
         model.addAttribute("pageType", PageType.BIN);
-        model.addAttribute("content", contentService.getBinContent(user));
         model.addAttribute("user", user);
         model.addAttribute("busySpace", showBusySpace(user));
         model.addAttribute("typeOfView", "bin");
@@ -172,6 +170,27 @@ public class ViewController {
     private DataTablesResponse<Content> getAllCurrentFolderContent(User user, int currentFolderId, DataTablesRequest dtRequest) {
         Folder currentFolder = currentFolderId == -1 ? null : contentService.getFolder(currentFolderId);
         List<Content> data = contentService.getContent(user, currentFolder);
+
+        int total = data.size();
+
+        DataTablesResponse<Content> dtResponse = new DataTablesResponse<>();
+        dtResponse.setDraw(dtRequest.getDraw());
+        dtResponse.setRecordsTotal(total);
+        dtResponse.setRecordsFiltered(total);
+        dtResponse.setData(data);
+
+        return dtResponse;
+    }
+
+    @RequestMapping(value = "/getContent/bin", method = RequestMethod.POST)
+    public @ResponseBody DataTablesResponse<Content> getBinContent(@RequestBody DataTablesRequest dtRequest) {
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUser(login);
+        return getTargetContent(user, dtRequest);
+    }
+
+    private DataTablesResponse<Content> getTargetContent(User user, DataTablesRequest dtRequest) {
+        List<Content> data = contentService.getBinContent(user);
 
         int total = data.size();
 

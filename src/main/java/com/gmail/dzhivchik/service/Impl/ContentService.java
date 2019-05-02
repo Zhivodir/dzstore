@@ -164,19 +164,17 @@ public class ContentService {
 
 
     @Transactional
-    public List[] getStarredContent(User user) {
-        List[] content = new List[2];
-        content[0] = fileDAO.getStarredList(user);
-        content[1] = folderDAO.getStarredList(user);
+    public List<Content> getStarredContent(User user) {
+        List<Content> content = folderDAO.getStarredList(user).stream().map(e -> convertFolderToContentDto(e)).collect(Collectors.toList());
+        content.addAll(fileDAO.getStarredList(user).stream().map(e -> convertFileToContentDto(e)).collect(Collectors.toList()));
         return content;
     }
 
 
     @Transactional
-    public List[] getBinContent(User user) {
-        List[] content = new List[2];
-        content[0] = fileDAO.getBinList(user);
-        content[1] = folderDAO.getBinList(user);
+    public List<Content> getBinContent(User user) {
+        List<Content> content = folderDAO.getBinList(user).stream().map(e -> convertFolderToContentDto(e)).collect(Collectors.toList());
+        content.addAll(fileDAO.getBinList(user).stream().map(e -> convertFileToContentDto(e)).collect(Collectors.toList()));
         return content;
     }
 

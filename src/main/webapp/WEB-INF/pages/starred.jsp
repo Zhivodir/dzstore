@@ -8,7 +8,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -23,6 +22,7 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <script>window.jQuery || document.write('<script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"><\/script>')</script>
 </head>
 
 <body>
@@ -43,10 +43,9 @@
 </div>
 
 <c:set var="currentFolderID" value="${currentFolderID}" scope="request"/>
-<%--<c:set var="typeOfView" value="index" scope="request"/>--%>
 <c:import url="/WEB-INF/pages/modalForPages/operations/createNewFolder.jsp"/>
 <c:import url="/WEB-INF/pages/modalForPages/operations/fileUpload.jsp"/>
-    <c:import url="/WEB-INF/pages/modalForPages/operations/folderUpload.jsp"/>
+<c:import url="/WEB-INF/pages/modalForPages/operations/folderUpload.jsp"/>
 <c:import url="/WEB-INF/pages/modalForPages/operations/createNewFolder.jsp"/>
 <c:import url="/WEB-INF/pages/modalForPages/operations/newImageForProfile.jsp"/>
 
@@ -54,7 +53,6 @@
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"><\/script>')</script>
 <script src="js/bootstrap.min.js"></script>
 <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
 <script src="js/holder.min.js"></script>

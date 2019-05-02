@@ -49,11 +49,14 @@
 
 <script type="text/javascript">
   currentFolderId = ${currentFolderID != null ? currentFolderID : -1};
+  //тип отображения - корзина , чужие или свои папки
+  typeOfView = '${typeOfView}';
+  targetContent = getUrlForDataTables(typeOfView);
 
   $(document).ready(function () {
 
     table = $('#myTable').DataTable(datatableOpts(
-        '/getContent/' + currentFolderId,
+        '/getContent/' + targetContent,
         [
           {
             data: null,
@@ -66,6 +69,7 @@
           },
           {
             data: 'name',
+            class: 'forContextMenu',
             render: function (data, type, full) {
               if (full.type == "folder") {
                 return '<strong><span class="name_of_content">' + data + '</span></strong>';
@@ -82,7 +86,9 @@
               return data;
             }
           },
-          {data: 'owner'},
+          {
+            data: 'owner'
+          },
           {
             data: 'size',
             render: function (data, type, full) {
@@ -131,14 +137,15 @@
       })
     });
 
-    //тип отображения - корзина , чужие или свои папки
-    var typeOfView = '${typeOfView}';
-
     $("#myTable").on('dblclick', '.choise_folder', function(e) {
-      currentFolderId = $(this).find("input").val();
-      var currentFolderName = $(this).find(".name_of_content").text();
-      reloadContentForFolder(currentFolderId);
-      addFolderNameToPath(currentFolderId, currentFolderName);
+      if(typeOfView == "bin"){
+        $('#modalForOpenDataInBin').modal('show');
+      } else {
+        currentFolderId = $(this).find("input").val();
+        var currentFolderName = $(this).find(".name_of_content").text();
+        reloadContentForFolder(currentFolderId);
+        addFolderNameToPath(currentFolderId, currentFolderName);
+      }
     });
 
     $(".currentFolderPath").on('dblclick', '.levelPath', function(e) {
@@ -152,4 +159,13 @@
       table.ajax.reload();
     }
   });
+
+  function getUrlForDataTables(typeOfView) {
+    switch(typeOfView) {
+      case 'bin':
+        return '/bin';
+      default:
+        return currentFolderId;
+    }
+  }
 </script>

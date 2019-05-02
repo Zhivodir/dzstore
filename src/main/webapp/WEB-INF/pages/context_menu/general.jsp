@@ -1,11 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: User
-  Date: 25.04.2017
-  Time: 10:42
-  To change this template use File | Settings | File Templates.
---%>
-
 <ul id="contextMenu" class="dropdown-menu" role="menu" style="display:none" >
     <li class=""><a class="contextHref" href="#" data-toggle="modal" data-target="#modalForRemove">Remove</a></li>
     <li class="contextHref"><input type="submit" class="contextInput" name="action" value="Download"></li>
