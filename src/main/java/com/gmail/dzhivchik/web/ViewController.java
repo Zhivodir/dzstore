@@ -14,8 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -31,7 +29,6 @@ public class ViewController {
     public String onIndex(Model model, @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
-        List<Content> content = null;
         Integer parentsFolderID = null;
         if (currentFolderID != null && currentFolderID > 0) {
             Folder currentFolder = contentService.getFolder(currentFolderID);
@@ -40,7 +37,6 @@ public class ViewController {
                 parentsFolderID = parentsFolder.getId();
             }
         }
-
         model.addAttribute("pageType", PageType.COMMON);
         model.addAttribute("parentsFolderID", parentsFolderID);
         model.addAttribute("currentFolderID", currentFolderID);
@@ -48,19 +44,6 @@ public class ViewController {
         model.addAttribute("busySpace", showBusySpace(user));
         model.addAttribute("typeOfView", "index");
         return "index";
-    }
-
-
-    @RequestMapping(value = "/starred")
-    public String onStarred(Model model, @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
-        model.addAttribute("pageType", PageType.STARRED);
-        model.addAttribute("user", user);
-        model.addAttribute("busySpace", showBusySpace(user));
-        model.addAttribute("typeOfView", "starred");
-        model.addAttribute("currentFolderID", currentFolderID);
-        return "starred";
     }
 
 
@@ -83,14 +66,6 @@ public class ViewController {
     public String shared(Model model, @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
-        if (currentFolderID != null && currentFolderID > 0) {
-            Folder currentFolder = contentService.getFolder(currentFolderID);
-            List<Folder> forRelativePath = new ArrayList<>();
-            getListRelativePath(currentFolder, forRelativePath);
-            Collections.reverse(forRelativePath);
-            forRelativePath.add(currentFolder);
-            model.addAttribute("listForRelativePath", forRelativePath);
-        }
         model.addAttribute("pageType", PageType.SHARED);
         model.addAttribute("currentFolderID", currentFolderID);
         model.addAttribute("content", contentService.getSharedContent(user, currentFolderID));
@@ -111,14 +86,16 @@ public class ViewController {
         return "bin";
     }
 
-
-    private void getListRelativePath(Folder currentFolder, List<Folder> forRelativePath) {
-        Folder parentFolder = currentFolder.getParentFolder();
-
-        if (parentFolder != null) {
-            forRelativePath.add(parentFolder);
-            getListRelativePath(parentFolder, forRelativePath);
-        }
+    @RequestMapping(value = "/starred")
+    public String onStarred(Model model, @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUser(login);
+        model.addAttribute("pageType", PageType.STARRED);
+        model.addAttribute("user", user);
+        model.addAttribute("busySpace", showBusySpace(user));
+        model.addAttribute("typeOfView", "starred");
+        model.addAttribute("currentFolderID", currentFolderID);
+        return "starred";
     }
 
 
@@ -178,7 +155,6 @@ public class ViewController {
         dtResponse.setRecordsTotal(total);
         dtResponse.setRecordsFiltered(total);
         dtResponse.setData(data);
-
         return dtResponse;
     }
 
@@ -199,7 +175,27 @@ public class ViewController {
         dtResponse.setRecordsTotal(total);
         dtResponse.setRecordsFiltered(total);
         dtResponse.setData(data);
+        return dtResponse;
+    }
 
+
+    @RequestMapping(value = "/getContent/starred", method = RequestMethod.POST)
+    public @ResponseBody DataTablesResponse<Content> getStarredContent(@RequestBody DataTablesRequest dtRequest) {
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUser(login);
+        return getStarredContent(user, dtRequest);
+    }
+
+    private DataTablesResponse<Content> getStarredContent(User user, DataTablesRequest dtRequest) {
+        List<Content> data = contentService.getStarredContent(user);
+
+        int total = data.size();
+
+        DataTablesResponse<Content> dtResponse = new DataTablesResponse<>();
+        dtResponse.setDraw(dtRequest.getDraw());
+        dtResponse.setRecordsTotal(total);
+        dtResponse.setRecordsFiltered(total);
+        dtResponse.setData(data);
         return dtResponse;
     }
 }

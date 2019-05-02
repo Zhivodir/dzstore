@@ -161,11 +161,6 @@
   });
 
   function getUrlForDataTables(typeOfView) {
-    switch(typeOfView) {
-      case 'bin':
-        return '/bin';
-      default:
-        return currentFolderId;
-    }
+    return ${!typeOfView.equals("index")} ? '${typeOfView}' : currentFolderId;
   }
 </script>

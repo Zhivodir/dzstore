@@ -22,7 +22,6 @@
 
 <body>
 <%@ include file="greeting.jsp" %>
-
 <sec:authorize access="isAuthenticated()">
 <c:import url="elements/navbar.jsp"/>
 <c:import url="elements/contentMenu.jsp"/>
