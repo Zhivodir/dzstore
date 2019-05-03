@@ -51,7 +51,6 @@
 <script src="js/contextMenu.js"></script>
 <script src="js/tree.js"></script>
 <script src="js/other_scripts.js"></script>
-<script src="js/folderScripts.js"></script>
 
 </sec:authorize>
 </body>

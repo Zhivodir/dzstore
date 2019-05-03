@@ -68,7 +68,6 @@ public class ViewController {
         User user = userService.getUser(login);
         model.addAttribute("pageType", PageType.SHARED);
         model.addAttribute("currentFolderID", currentFolderID);
-        model.addAttribute("content", contentService.getSharedContent(user, currentFolderID));
         model.addAttribute("user", user);
         model.addAttribute("busySpace", showBusySpace(user));
         model.addAttribute("typeOfView", "shared");
@@ -147,15 +146,7 @@ public class ViewController {
     private DataTablesResponse<Content> getAllCurrentFolderContent(User user, int currentFolderId, DataTablesRequest dtRequest) {
         Folder currentFolder = currentFolderId == -1 ? null : contentService.getFolder(currentFolderId);
         List<Content> data = contentService.getContent(user, currentFolder);
-
-        int total = data.size();
-
-        DataTablesResponse<Content> dtResponse = new DataTablesResponse<>();
-        dtResponse.setDraw(dtRequest.getDraw());
-        dtResponse.setRecordsTotal(total);
-        dtResponse.setRecordsFiltered(total);
-        dtResponse.setData(data);
-        return dtResponse;
+        return formDataTablesResponse(data, dtRequest);
     }
 
     @RequestMapping(value = "/getContent/bin", method = RequestMethod.POST)
@@ -167,15 +158,7 @@ public class ViewController {
 
     private DataTablesResponse<Content> getTargetContent(User user, DataTablesRequest dtRequest) {
         List<Content> data = contentService.getBinContent(user);
-
-        int total = data.size();
-
-        DataTablesResponse<Content> dtResponse = new DataTablesResponse<>();
-        dtResponse.setDraw(dtRequest.getDraw());
-        dtResponse.setRecordsTotal(total);
-        dtResponse.setRecordsFiltered(total);
-        dtResponse.setData(data);
-        return dtResponse;
+        return formDataTablesResponse(data, dtRequest);
     }
 
 
@@ -188,7 +171,22 @@ public class ViewController {
 
     private DataTablesResponse<Content> getStarredContent(User user, DataTablesRequest dtRequest) {
         List<Content> data = contentService.getStarredContent(user);
+        return formDataTablesResponse(data, dtRequest);
+    }
 
+    @RequestMapping(value = "/getContent/shared/{currentFolderId}", method = RequestMethod.POST)
+    public @ResponseBody DataTablesResponse<Content> getSharedContent(@PathVariable int currentFolderId, @RequestBody DataTablesRequest dtRequest) {
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUser(login);
+        return getSharedContent(user, currentFolderId, dtRequest);
+    }
+
+    private DataTablesResponse<Content> getSharedContent(User user, int currentFolderId, DataTablesRequest dtRequest) {
+        List<Content> data = contentService.getSharedContent(user, currentFolderId);
+        return formDataTablesResponse(data, dtRequest);
+    }
+
+    private DataTablesResponse<Content> formDataTablesResponse(List<Content> data, DataTablesRequest dtRequest){
         int total = data.size();
 
         DataTablesResponse<Content> dtResponse = new DataTablesResponse<>();

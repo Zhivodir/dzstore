@@ -14,4 +14,6 @@ public class Content {
     private long size;
     private String owner;
     private String type;
+    private boolean starred;
+    private boolean inbin;
 }

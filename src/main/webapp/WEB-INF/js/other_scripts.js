@@ -129,6 +129,10 @@ function selectShareUserForEdit() {
 
 
 $(".li_rename").click(function(){
-    var oldName = $("tr.selected").find('td:nth-child(2)').find('span').html();
+    var selectedContent = $("tr.selected");
+    var oldName = selectedContent.find('td:nth-child(2)').find('span').html();
+    var selectedContentId = selectedContent.find('td:nth-child(1)').attr("value");
+
     $("#newName").prop("value", oldName);
+    $("#selectedContentId").prop("value", selectedContentId);
 });

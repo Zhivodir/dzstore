@@ -107,11 +107,11 @@ public class ContentService {
     }
 
     private Content convertFileToContentDto(File e) {
-        return new Content(e.getId(), e.getName(), e.getSize(), e.getUser().getLogin(), e.getType());
+        return new Content(e.getId(), e.getName(), e.getSize(), e.getUser().getLogin(), e.getType(), e.isStarred(), e.isInbin());
     }
 
     private Content convertFolderToContentDto(Folder e) {
-        return new Content(e.getId(), e.getName(), 0, e.getUser().getLogin(), "folder");
+        return new Content(e.getId(), e.getName(), 0, e.getUser().getLogin(), "folder", e.isStarred(), e.isInbin());
     }
 
     @Transactional(readOnly = true)
@@ -188,11 +188,11 @@ public class ContentService {
     }
 
     @Transactional
-    public void rename(int[] checked_files_id, int[] checked_folders_id, String newName) {
-        if (checked_files_id != null) {
-            fileDAO.renameFile(getCurrentUser(), checked_files_id, newName);
-        } else if (checked_folders_id != null) {
-            folderDAO.renameFolder(getCurrentUser(), checked_folders_id, newName);
+    public void rename(String contentType, int contentId, String newName) {
+        if (contentType.equals("file")) {
+            fileDAO.renameFile(getCurrentUser(), contentId, newName);
+        } else {
+            folderDAO.renameFolder(getCurrentUser(), contentId, newName);
         }
     }
 
@@ -268,10 +268,9 @@ public class ContentService {
     }
 
     @Transactional
-    public List[] getSharedContent(User user, Integer targetFolder) {
-        List[] content = new List[2];
-        content[0] = fileDAO.getSharedList(user, targetFolder);
-        content[1] = folderDAO.getSharedList(user, targetFolder);
+    public List<Content> getSharedContent(User user, Integer targetFolder) {
+        List<Content> content = folderDAO.getSharedList(user, targetFolder).stream().map(e -> convertFolderToContentDto(e)).collect(Collectors.toList());
+        content.addAll(fileDAO.getSharedList(user, targetFolder).stream().map(e -> convertFileToContentDto(e)).collect(Collectors.toList()));
         return content;
     }
 

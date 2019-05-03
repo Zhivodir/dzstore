@@ -49,7 +49,6 @@
 
 <script type="text/javascript">
   currentFolderId = ${currentFolderID != null ? currentFolderID : -1};
-  //тип отображения - корзина , чужие или свои папки
   typeOfView = '${typeOfView}';
   targetContent = getUrlForDataTables(typeOfView);
 
@@ -71,10 +70,13 @@
             data: 'name',
             class: 'forContextMenu',
             render: function (data, type, full) {
+              var icons = full.starred ? '<span class="glyphicon glyphicon-star"></span>' : '';
+              icons += full.shared ? '<span class="glyphicon glyphicon-eye-open"></span>' : '';
+
               if (full.type == "folder") {
-                return '<strong><span class="name_of_content">' + data + '</span></strong>';
+                return '<strong><span class="name_of_content">' + data + '</span></strong>' + icons;
               }
-              return data;
+              return '<span class="name_of_content">' + data + '</span>' + icons;
             }
           },
           {
@@ -137,8 +139,8 @@
       })
     });
 
-    $("#myTable").on('dblclick', '.choise_folder', function(e) {
-      if(typeOfView == "bin"){
+    $("#myTable").on('dblclick', '.choise_folder', function (e) {
+      if (typeOfView == "bin") {
         $('#modalForOpenDataInBin').modal('show');
       } else {
         currentFolderId = $(this).find("input").val();
@@ -148,19 +150,69 @@
       }
     });
 
-    $(".currentFolderPath").on('dblclick', '.levelPath', function(e) {
+    $(".currentFolderPath").on('dblclick', '.levelPath', function (e) {
       currentFolderId = $(this).data("current-folder-id");
       reloadContentForFolder(currentFolderId);
       returnFolderPath(currentFolderId);
     });
 
-    function reloadContentForFolder(currentFolder){
+    function reloadContentForFolder(currentFolder) {
       table.ajax.url('/getContent/' + currentFolder);
       table.ajax.reload();
     }
   });
 
   function getUrlForDataTables(typeOfView) {
+    if (${typeOfView.equals("shared")}) {
+      return 'shared/' + currentFolderId;
+    }
     return ${!typeOfView.equals("index")} ? '${typeOfView}' : currentFolderId;
   }
+
+  function createFolder() {
+    var newFolderName = $("#newFolder").val();
+
+    $.ajax({
+      url: "/createFolder",
+      type: 'POST',
+      data: {
+        currentFolderId: currentFolderId,
+        newFolderName: newFolderName
+      },
+      success: function (result) {
+        table.ajax.reload();
+        $("#newFolder").attr(value, "");
+      },
+      error: function (result) {
+      }
+    })
+
+    $("#modalForNewFolder").modal('hide');
+  }
+
+  function renameContent() {
+    var selectedContent = $("tr.selected").find(".choise_checkbox");
+    var selectedContentId = selectedContent.attr("value");
+    var selectedContentType = selectedContent.hasClass("choise_folder") ? "folder" : "file";
+    var newName = $("#newName").val();
+
+    $.ajax({
+      url: "/renameContent",
+      type: 'POST',
+      data: {
+        contentType: selectedContentType,
+        contentId: selectedContentId,
+        newName: newName
+      },
+      success: function (result) {
+        table.ajax.reload();
+      },
+      error: function (result) {
+      }
+    })
+
+    $("#modalForRename").modal('hide');
+  }
+
 </script>
+<%--<script src="js/operations_under_content.js"/>--%>

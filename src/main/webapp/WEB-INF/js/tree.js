@@ -1,7 +1,3 @@
-/**
- * Created by User on 15.05.2017.
- */
-
 
 function tree(id, url) {
     var element = document.getElementById(id);
