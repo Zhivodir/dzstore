@@ -15,7 +15,7 @@
                         </div>
                         <div class="modal-body">
                             <ul class="Container" id="tree">
-                                <input class="radio_move_to" type="radio" name="move_to" value="tree"/>
+                                <input id="replaceTarget" class="radio_move_to" type="radio" name="move_to" value="tree"/>
                                 <li class="Node IsRoot IsLast ExpandClosed">
                                     <div class="Expand"></div>
                                     <div class="Content">Каталог</div>
@@ -25,7 +25,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                            <button type="submit" name="action" value="replace" class="btn btn-primary">Перенести</button>
+                            <button type="button" class="btn btn-primary" onclick="replaceContent()">Перенести</button>
                         </div>
                     </div>
                 </div>
@@ -34,3 +34,34 @@
         </div>
     </div>
 </div>
+
+<script>
+    function replaceContent() {
+        var selectedFilesId = [];
+        var selectedFoldersId = [];
+        $("tr.selected").find(".choise_checkbox.choise_file").each(function() {
+            selectedFilesId.push(this.value);
+        });
+        $("tr.selected").find(".choise_checkbox.choise_folder").each(function() {
+            selectedFoldersId.push(this.value);
+        });
+        var moveTo = $("#replaceTarget").val();
+
+        $.ajax({
+            url: "/replaceContent",
+            type: 'POST',
+            data: {
+                selectedFiles: selectedFilesId,
+                selectedFolders: selectedFoldersId,
+                moveTo: moveTo
+            },
+            success: function (result) {
+                table.ajax.reload();
+            },
+            error: function (result) {
+            }
+        })
+
+        $("#modalForReplace").modal('hide');
+    }
+</script>

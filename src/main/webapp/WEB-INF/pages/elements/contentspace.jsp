@@ -7,7 +7,7 @@
 
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
   <div>
-    <form id="content_form" action="/actions_above_checked_files" method="post">
+    <form id="content_form" action="/download" method="post">
       <input type="hidden" name="currentFolderID" value="${currentFolderID}">
       <input type="hidden" name="typeOfView" value="${typeOfView}">
       <table id="myTable" class="table table-striped record_table" cellspacing="0" width="100%">
@@ -168,51 +168,4 @@
     }
     return ${!typeOfView.equals("index")} ? '${typeOfView}' : currentFolderId;
   }
-
-  function createFolder() {
-    var newFolderName = $("#newFolder").val();
-
-    $.ajax({
-      url: "/createFolder",
-      type: 'POST',
-      data: {
-        currentFolderId: currentFolderId,
-        newFolderName: newFolderName
-      },
-      success: function (result) {
-        table.ajax.reload();
-        $("#newFolder").attr(value, "");
-      },
-      error: function (result) {
-      }
-    })
-
-    $("#modalForNewFolder").modal('hide');
-  }
-
-  function renameContent() {
-    var selectedContent = $("tr.selected").find(".choise_checkbox");
-    var selectedContentId = selectedContent.attr("value");
-    var selectedContentType = selectedContent.hasClass("choise_folder") ? "folder" : "file";
-    var newName = $("#newName").val();
-
-    $.ajax({
-      url: "/renameContent",
-      type: 'POST',
-      data: {
-        contentType: selectedContentType,
-        contentId: selectedContentId,
-        newName: newName
-      },
-      success: function (result) {
-        table.ajax.reload();
-      },
-      error: function (result) {
-      }
-    })
-
-    $("#modalForRename").modal('hide');
-  }
-
 </script>
-<%--<script src="js/operations_under_content.js"/>--%>

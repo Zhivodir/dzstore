@@ -30,3 +30,29 @@
         </div>
     </div>
 </div>
+
+<script>
+    function renameContent() {
+        var selectedContent = $("tr.selected").find(".choise_checkbox");
+        var selectedContentId = selectedContent.attr("value");
+        var selectedContentType = selectedContent.hasClass("choise_folder") ? "folder" : "file";
+        var newName = $("#newName").val();
+
+        $.ajax({
+            url: "/renameContent",
+            type: 'POST',
+            data: {
+                contentType: selectedContentType,
+                contentId: selectedContentId,
+                newName: newName
+            },
+            success: function (result) {
+                table.ajax.reload();
+            },
+            error: function (result) {
+            }
+        })
+
+        $("#modalForRename").modal('hide');
+    }
+</script>

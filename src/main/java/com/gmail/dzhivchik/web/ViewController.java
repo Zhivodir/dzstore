@@ -26,20 +26,12 @@ public class ViewController {
     private UserService userService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String onIndex(Model model, @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
+    public String onIndex(Model model) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
-        Integer parentsFolderID = null;
-        if (currentFolderID != null && currentFolderID > 0) {
-            Folder currentFolder = contentService.getFolder(currentFolderID);
-            Folder parentsFolder = currentFolder.getParentFolder();
-            if (parentsFolder != null) {
-                parentsFolderID = parentsFolder.getId();
-            }
-        }
         model.addAttribute("pageType", PageType.COMMON);
-        model.addAttribute("parentsFolderID", parentsFolderID);
-        model.addAttribute("currentFolderID", currentFolderID);
+        model.addAttribute("parentsFolderID", null);
+        model.addAttribute("currentFolderID", null);
         model.addAttribute("user", user);
         model.addAttribute("busySpace", showBusySpace(user));
         model.addAttribute("typeOfView", "index");

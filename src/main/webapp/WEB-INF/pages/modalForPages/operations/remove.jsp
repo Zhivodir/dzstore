@@ -15,13 +15,11 @@
                             <h4 class="modal-title" id="myModalLabel">Перенести в корзину</h4>
                         </div>
                         <div class="modal-body">
-                            <div class="form-group">
-                                <input type="hidden" name="currentFolder" value="${f}">
-                            </div>
+                            <div class="form-group"></div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                            <button type="submit" name="action" value="remove" class="btn btn-primary">В корзину</button>
+                            <button type="button" class="btn btn-primary" onclick="removeContent()">В корзину</button>
                         </div>
                     </div>
                 </div>
@@ -30,4 +28,35 @@
         </div>
     </div>
 </div>
+
+<script>
+    function removeContent() {
+        var selectedFilesId = [];
+        var selectedFoldersId = [];
+        $("tr.selected").find(".choise_checkbox.choise_file").each(function() {
+            selectedFilesId.push(this.value);
+        });
+        $("tr.selected").find(".choise_checkbox.choise_folder").each(function() {
+            selectedFoldersId.push(this.value);
+        });
+
+        $.ajax({
+            url: "/removeContent",
+            type: 'POST',
+            traditional: true,
+            data: {
+                selectedFiles: selectedFilesId,
+                selectedFolders: selectedFoldersId,
+                typeOfView: '${typeOfView}'
+            },
+            success: function (result) {
+                table.ajax.reload();
+            },
+            error: function (result) {
+            }
+        })
+
+        $("#modalForRemove").modal('hide');
+    }
+</script>
 

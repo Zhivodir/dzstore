@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: User
-  Date: 05.04.2017
-  Time: 23:03
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -28,7 +21,7 @@
                         <div class="modal-footer">
                             <input type="hidden" name="currentFolder" value="${f}">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                            <button type="submit" name="action" value="delete" class="btn btn-primary">Удалить</button>
+                            <button type="button" class="btn btn-primary" onclick="deleteContent()">Удалить</button>
                         </div>
                     </div>
                 </div>
@@ -37,3 +30,33 @@
         </div>
     </div>
 </div>
+
+<script>
+    function deleteContent() {
+        var selectedFilesId = [];
+        var selectedFoldersId = [];
+        $("tr.selected").find(".choise_checkbox.choise_file").each(function() {
+            selectedFilesId.push(this.value);
+        });
+        $("tr.selected").find(".choise_checkbox.choise_folder").each(function() {
+            selectedFoldersId.push(this.value);
+        });
+
+        $.ajax({
+            url: "/deleteContent",
+            type: 'POST',
+            traditional: true,
+            data: {
+                selectedFiles: selectedFilesId,
+                selectedFolders: selectedFoldersId
+            },
+            success: function (result) {
+                table.ajax.reload();
+            },
+            error: function (result) {
+            }
+        })
+
+        $("#modalForDelete").modal('hide');
+    }
+</script>

@@ -40,12 +40,8 @@
 <c:import url="/WEB-INF/pages/modalForPages/operations/createNewFolder.jsp"/>
 <c:import url="/WEB-INF/pages/modalForPages/operations/fileUpload.jsp"/>
 <c:import url="/WEB-INF/pages/modalForPages/operations/folderUpload.jsp"/>
-<c:import url="/WEB-INF/pages/modalForPages/operations/createNewFolder.jsp"/>
 <c:import url="/WEB-INF/pages/modalForPages/operations/newImageForProfile.jsp"/>
 
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
 <script src="js/bootstrap.min.js"></script>
 <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
 <script src="js/holder.min.js"></script>

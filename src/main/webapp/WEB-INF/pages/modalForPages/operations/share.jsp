@@ -17,7 +17,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                            <button type="submit" name="action" value="share" class="btn btn-primary">Сохранить</button>
+                            <button type="button" class="btn btn-primary" onclick="changeSharedList()">Сохранить</button>
                         </div>
                     </div>
                 </div>
@@ -26,3 +26,39 @@
         </div>
     </div>
 </div>
+
+<script>
+    function changeSharedList() {
+        var selectedFilesId = [];
+        var selectedFoldersId = [];
+        var cancelShareForUsers = [];
+        $("tr.selected").find(".choise_checkbox.choise_file").each(function() {
+            selectedFilesId.push(this.value);
+        });
+        $("tr.selected").find(".choise_checkbox.choise_folder").each(function() {
+            selectedFoldersId.push(this.value);
+        });
+        $("tr.selected").find("#modalForShare.info_block").each(function() {
+            cancelShareForUsers.push(this.value);
+        });
+
+        $.ajax({
+            url: "/changeSharedList",
+            type: 'POST',
+            traditional: true,
+            data: {
+                selectedFiles: selectedFilesId,
+                selectedFolders: selectedFoldersId,
+                shareForUsers: $("#modalForShare input").val(),
+                cancelShareForUsers: cancelShareForUsers
+            },
+            success: function (result) {
+                table.ajax.reload();
+            },
+            error: function (result) {
+            }
+        })
+
+        $("#modalForShare").modal('hide');
+    }
+</script>
