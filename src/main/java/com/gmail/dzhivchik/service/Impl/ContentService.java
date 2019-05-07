@@ -87,16 +87,7 @@ public class ContentService {
 
     @Transactional
     public void downloadContent(int[] checked_files_id, int[] checked_folders_id){
-        List<File> listCheckedFiles = new ArrayList<>();
-        if (checked_files_id != null) {
-            listCheckedFiles = getListFilesById(checked_files_id);
-        }
-
-        List<Folder> listCheckedFolder = new ArrayList<>();
-        if (checked_folders_id != null) {
-            listCheckedFolder = getListFolderById(checked_folders_id);
-        }
-        downloadContent(listCheckedFiles, listCheckedFolder);
+        downloadContent(getListFilesById(checked_files_id), getListFolderById(checked_folders_id));
     }
 
     @Transactional(readOnly = true)
@@ -107,11 +98,11 @@ public class ContentService {
     }
 
     private Content convertFileToContentDto(File e) {
-        return new Content(e.getId(), e.getName(), e.getSize(), e.getUser().getLogin(), e.getType(), e.isStarred(), e.isInbin());
+        return new Content(e.getId(), e.getName(), e.getSize(), e.getUser().getLogin(), e.getType(), e.isStarred(), e.isShareInFolder(), e.isInbin());
     }
 
     private Content convertFolderToContentDto(Folder e) {
-        return new Content(e.getId(), e.getName(), 0, e.getUser().getLogin(), "folder", e.isStarred(), e.isInbin());
+        return new Content(e.getId(), e.getName(), 0, e.getUser().getLogin(), "folder", e.isStarred(), e.isShareInFolder(), e.isInbin());
     }
 
     @Transactional(readOnly = true)
@@ -445,7 +436,7 @@ public class ContentService {
             String archiveName = randomString(8) + ".zip";
             ZipOutputStream out = new ZipOutputStream(new FileOutputStream(archiveName));
 
-            prepareZipFileForDownload(size, out, listCheckedFiles, listCheckedFolder, structure);
+            prepareZipFileForDownload(out, listCheckedFiles, listCheckedFolder, structure);
             out.flush();
             out.close();
 
@@ -484,7 +475,7 @@ public class ContentService {
     }
 
 
-    private void prepareZipFileForDownload(long size, ZipOutputStream out, List<File> listCheckedFiles,
+    private void prepareZipFileForDownload(ZipOutputStream out, List<File> listCheckedFiles,
                                           List<Folder> listCheckedFolder, StringBuilder structure) throws IOException {
         if (listCheckedFiles.size() != 0) {
             for (File file : listCheckedFiles) {
@@ -513,7 +504,7 @@ public class ContentService {
                         out.putNextEntry(new ZipEntry(structure.toString()));
                         out.closeEntry();
                     } else {
-                        prepareZipFileForDownload(size, out, folder.getFiles(), folder.getFolders(), structure);
+                        prepareZipFileForDownload(out, folder.getFiles(), folder.getFolders(), structure);
                     }
                     structure.delete(structure.toString().lastIndexOf(folder.getName()), structure.length());
                 }

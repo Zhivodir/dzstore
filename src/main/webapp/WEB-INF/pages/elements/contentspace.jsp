@@ -156,8 +156,8 @@
       returnFolderPath(currentFolderId);
     });
 
-    function reloadContentForFolder(currentFolder) {
-      table.ajax.url('/getContent/' + currentFolder);
+    function reloadContentForFolder(currentFolder) {      ;
+      table.ajax.url('/getContent/' + getUrlForDataTables(typeOfView));
       table.ajax.reload();
     }
   });
@@ -166,6 +166,9 @@
     if (${typeOfView.equals("shared")}) {
       return 'shared/' + currentFolderId;
     }
-    return ${!typeOfView.equals("index")} ? '${typeOfView}' : currentFolderId;
+    if (${typeOfView.equals("bin")}) {
+      return 'bin';
+    }
+    return ${!typeOfView.equals("index")} ? '${typeOfView}/' + currentFolderId : currentFolderId;
   }
 </script>

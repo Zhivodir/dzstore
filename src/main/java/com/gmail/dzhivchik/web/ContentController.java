@@ -39,9 +39,7 @@ public class ContentController {
                          @RequestParam String typeOfView,
                          @RequestParam(value = "structure", required = false) String structure,
                          @RequestParam Integer currentFolderID) {
-
         contentService.uploadContent(file, files, structure, currentFolderID);
-
         model.addAttribute("currentFolderID", currentFolderID);
         if (typeOfView.equals("index")) {
             return "redirect:/";
@@ -56,10 +54,7 @@ public class ContentController {
                                            @RequestParam String typeOfView,
                                            @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID,
                                            final RedirectAttributes redirectAttributes) {
-
-        if (checked_files_id != null || checked_folders_id != null) {
-            contentService.downloadContent(checked_files_id, checked_folders_id);
-        }
+        contentService.downloadContent(checked_files_id, checked_folders_id);
         redirectAttributes.addFlashAttribute("currentFolderID", currentFolderID);
         if (typeOfView.equals("index")) {
             return "redirect:/";
@@ -132,12 +127,6 @@ public class ContentController {
         contentService.removeToFolder(selectedContent.getSelectedFiles(), selectedContent.getSelectedFolders(), moveTo);
         return new ResponseEntity(HttpStatus.OK);
     }
-
-//    @RequestMapping(value = "/downloadContent", method = RequestMethod.POST)
-//    public void downloadContent(@ModelAttribute SelectedContent selectedContent) {
-//        System.out.println("!!!!!! " + selectedContent.toString());
-//        contentService.downloadContent(selectedContent.getSelectedFiles(), selectedContent.getSelectedFolders());
-//    }
 
     @RequestMapping(value = "/addToMe", method = RequestMethod.POST)
     public ResponseEntity addToMe(@ModelAttribute SelectedContent selectedContent) {

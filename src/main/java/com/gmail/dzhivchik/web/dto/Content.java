@@ -15,5 +15,6 @@ public class Content {
     private String owner;
     private String type;
     private boolean starred;
+    private boolean shared;
     private boolean inbin;
 }

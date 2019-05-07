@@ -201,7 +201,7 @@ public class FolderDAOImpl implements FolderDAO{
         Query query;
         if(targetFolder == null ) {
             query = entityManager.createQuery("SELECT f FROM Folder f INNER JOIN f.shareFor user " +
-                    "WHERE user = :user AND f.inbin <> 1  AND f.shareInFolder = false", Folder.class);
+                    "WHERE user = :user AND f.inbin <> 1 AND f.shareInFolder = false", Folder.class);
         } else {
             query = entityManager.createQuery("SELECT f FROM Folder f INNER JOIN f.shareFor user " +
                     "WHERE user = :user AND f.inbin <> 1 AND f.shareInFolder = true AND f.parentFolder.id = :targetFolder", Folder.class);

@@ -154,10 +154,13 @@ public class ViewController {
     }
 
 
-    @RequestMapping(value = "/getContent/starred", method = RequestMethod.POST)
-    public @ResponseBody DataTablesResponse<Content> getStarredContent(@RequestBody DataTablesRequest dtRequest) {
+    @RequestMapping(value = "/getContent/starred/{currentFolderId}", method = RequestMethod.POST)
+    public @ResponseBody DataTablesResponse<Content> getStarredContent(@PathVariable int currentFolderId, @RequestBody DataTablesRequest dtRequest) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
+        if (currentFolderId != -1) {
+            return getAllCurrentFolderContent(user, currentFolderId, dtRequest);
+        }
         return getStarredContent(user, dtRequest);
     }
 
@@ -174,7 +177,7 @@ public class ViewController {
     }
 
     private DataTablesResponse<Content> getSharedContent(User user, int currentFolderId, DataTablesRequest dtRequest) {
-        List<Content> data = contentService.getSharedContent(user, currentFolderId);
+        List<Content> data = contentService.getSharedContent(user, currentFolderId == -1 ? null : currentFolderId);
         return formDataTablesResponse(data, dtRequest);
     }
 
