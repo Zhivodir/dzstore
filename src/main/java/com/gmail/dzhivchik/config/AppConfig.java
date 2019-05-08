@@ -83,17 +83,17 @@ public class AppConfig extends WebMvcConfigurerAdapter {
     public DataSource dataSource()
     {
         //for local
-        DriverManagerDataSource ds = new DriverManagerDataSource();
-        ds.setDriverClassName("com.mysql.jdbc.Driver");
-        ds.setUrl("jdbc:mysql://localhost:3306/DZStore_temp");
-        ds.setUsername("admin");
-        ds.setPassword("admin");
-        //for heroku
 //        DriverManagerDataSource ds = new DriverManagerDataSource();
 //        ds.setDriverClassName("com.mysql.jdbc.Driver");
-//        ds.setUrl("jdbc:mysql://eu-cdbr-west-01.cleardb.com:3306/heroku_2411027723b6162?useUnicode=true&characterEncoding=UTF-8");
-//        ds.setUsername("b37e2c921f7603");
-//        ds.setPassword("51d552f6");
+//        ds.setUrl("jdbc:mysql://localhost:3306/DZStore_temp");
+//        ds.setUsername("admin");
+//        ds.setPassword("admin");
+        //for heroku
+        DriverManagerDataSource ds = new DriverManagerDataSource();
+        ds.setDriverClassName("com.mysql.jdbc.Driver");
+        ds.setUrl("jdbc:mysql://eu-cdbr-west-01.cleardb.com:3306/heroku_2411027723b6162?useUnicode=true&characterEncoding=UTF-8");
+        ds.setUsername("b37e2c921f7603");
+        ds.setPassword("51d552f6");
 //test
         return ds;
     }
