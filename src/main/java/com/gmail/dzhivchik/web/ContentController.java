@@ -47,13 +47,13 @@ public class ContentController {
         return "redirect:/" + typeOfView;
     }
 
-
     @RequestMapping(value = "/download", method = RequestMethod.POST)
-    public String actionsAboveCheckedFiles(@RequestParam(value = "checked_files_id", required = false) int[] checked_files_id,
-                                           @RequestParam(value = "checked_folders_id", required = false) int[] checked_folders_id,
+    public String actionsAboveCheckedFiles(@RequestParam(value = "selectedFiles", required = false) int[] checked_files_id,
+                                           @RequestParam(value = "selectedFolders", required = false) int[] checked_folders_id,
                                            @RequestParam String typeOfView,
                                            @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID,
                                            final RedirectAttributes redirectAttributes) {
+
         contentService.downloadContent(checked_files_id, checked_folders_id);
         redirectAttributes.addFlashAttribute("currentFolderID", currentFolderID);
         if (typeOfView.equals("index")) {

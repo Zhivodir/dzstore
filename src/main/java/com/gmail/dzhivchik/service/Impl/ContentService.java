@@ -87,7 +87,16 @@ public class ContentService {
 
     @Transactional
     public void downloadContent(int[] checked_files_id, int[] checked_folders_id){
-        downloadContent(getListFilesById(checked_files_id), getListFolderById(checked_folders_id));
+        List<File> listCheckedFiles = new ArrayList<>();
+        if (checked_files_id != null) {
+            listCheckedFiles = getListFilesById(checked_files_id);
+        }
+
+        List<Folder> listCheckedFolder = new ArrayList<>();
+        if (checked_folders_id != null) {
+            listCheckedFolder = getListFolderById(checked_folders_id);
+        }
+        downloadContent(listCheckedFiles, listCheckedFolder);
     }
 
     @Transactional(readOnly = true)
@@ -103,14 +112,6 @@ public class ContentService {
 
     private Content convertFolderToContentDto(Folder e) {
         return new Content(e.getId(), e.getName(), 0, e.getUser().getLogin(), "folder", e.isStarred(), e.isShareInFolder(), e.isInbin());
-    }
-
-    @Transactional(readOnly = true)
-    public List[] getContent(User user, Folder parentFolder, String[] exceptionFolders) {
-        List[] content = new List[2];
-        content[0] = fileDAO.getList(user, parentFolder);
-        content[1] = folderDAO.getList(user, parentFolder, exceptionFolders);
-        return content;
     }
 
     @Transactional
@@ -129,9 +130,7 @@ public class ContentService {
     }
 
     @Transactional
-    public List<Folder> getListFolderById(int[] checked_folders_id) {
-        return folderDAO.getListFoldersById(checked_folders_id);
-    }
+    public List<Folder> getListFolderById(int[] checked_folders_id) { return folderDAO.getListFoldersById(checked_folders_id); }
 
     @Transactional
     public void changeStar(int[] checked_files_id, int[] checked_folders_id, boolean stateOfStar) {
@@ -430,7 +429,6 @@ public class ContentService {
 
     private void downloadSeveralFiles(List<File> listCheckedFiles, List<Folder> listCheckedFolder) {
         int BUFFER_SIZE = 1024;
-        long size = 0;
         try {
             StringBuilder structure = new StringBuilder();
             String archiveName = randomString(8) + ".zip";
@@ -475,8 +473,7 @@ public class ContentService {
     }
 
 
-    private void prepareZipFileForDownload(ZipOutputStream out, List<File> listCheckedFiles,
-                                          List<Folder> listCheckedFolder, StringBuilder structure) throws IOException {
+    private void prepareZipFileForDownload(ZipOutputStream out, List<File> listCheckedFiles, List<Folder> listCheckedFolder, StringBuilder structure) throws IOException {
         if (listCheckedFiles.size() != 0) {
             for (File file : listCheckedFiles) {
                 if (!file.isInbin()) {

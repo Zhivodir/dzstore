@@ -35,7 +35,6 @@
           <c:import url="/WEB-INF/pages/modalForPages/operations/remove.jsp"/>
           <c:import url="/WEB-INF/pages/modalForPages/operations/share.jsp"/>
           <c:import url="/WEB-INF/pages/modalForPages/operations/rename.jsp"/>
-          <c:import url="/WEB-INF/pages/modalForPages/operations/replace.jsp"/>
         </c:otherwise>
       </c:choose>
     </form>
@@ -170,5 +169,21 @@
       return 'bin';
     }
     return ${!typeOfView.equals("index")} ? '${typeOfView}/' + currentFolderId : currentFolderId;
+  }
+
+  function createSelectedFilesMassiv(){
+    var selectedFilesId = [];
+    $("tr.selected").find(".choise_checkbox.choise_file").each(function() {
+      selectedFilesId.push(this.value);
+    });
+    return selectedFilesId;
+  }
+
+  function createSelectedFoldersMassiv(){
+    var selectedFoldersId = [];
+    $("tr.selected").find(".choise_checkbox.choise_folder").each(function() {
+      selectedFoldersId.push(this.value);
+    });
+    return selectedFoldersId;
   }
 </script>

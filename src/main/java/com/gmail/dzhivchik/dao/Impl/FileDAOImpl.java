@@ -99,6 +99,10 @@ public class FileDAOImpl implements FileDAO {
 
     @Override
     public List<File> getListFilesById(int[] listOfId) {
+        if(listOfId == null || listOfId.length == 0){
+            return new ArrayList<File>();
+        }
+
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT f FROM File f WHERE ");
         for (int i = 0; i < listOfId.length; i++) {

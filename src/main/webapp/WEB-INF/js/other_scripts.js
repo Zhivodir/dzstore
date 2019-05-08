@@ -1,7 +1,3 @@
-
-onload = function() { tree("tree", "/ajax/load_tree_of_catalog") }
-
-
 document.oncontextmenu = function (){return false};
 
 /******************************/

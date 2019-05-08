@@ -31,14 +31,8 @@
 
 <script>
     function removeContent() {
-        var selectedFilesId = [];
-        var selectedFoldersId = [];
-        $("tr.selected").find(".choise_checkbox.choise_file").each(function() {
-            selectedFilesId.push(this.value);
-        });
-        $("tr.selected").find(".choise_checkbox.choise_folder").each(function() {
-            selectedFoldersId.push(this.value);
-        });
+        var selectedFilesId = createSelectedFilesMassiv();
+        var selectedFoldersId = createSelectedFoldersMassiv();
 
         $.ajax({
             url: "/removeContent",

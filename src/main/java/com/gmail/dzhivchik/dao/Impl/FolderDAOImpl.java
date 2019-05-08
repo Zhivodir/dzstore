@@ -13,14 +13,14 @@ import java.util.List;
 
 
 @Repository
-public class FolderDAOImpl implements FolderDAO{
+public class FolderDAOImpl implements FolderDAO {
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
     public Folder save(Folder folder) {
         Folder searchFolder = isFolder(folder.getName(), folder.isInbin(), folder.getUser(), folder.getParentFolder());
-        if(searchFolder != null){
+        if (searchFolder != null) {
             return entityManager.merge(folder);
         } else {
             entityManager.persist(folder);
@@ -32,10 +32,10 @@ public class FolderDAOImpl implements FolderDAO{
     @Override
     public Folder isFolder(String name, boolean inbin, User user, Folder parentFolder) {
         Query query;
-        if(parentFolder == null){
+        if (parentFolder == null) {
             query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.name = :name " +
                     "AND f.inbin = :inbin AND f.user = :user AND f.parentFolder IS NULL", Folder.class);
-        }else{
+        } else {
             query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.name = :name " +
                     "AND f.inbin = :inbin AND f.user = :user AND f.parentFolder = :parentFolder", Folder.class);
             query.setParameter("parentFolder", parentFolder);
@@ -43,8 +43,8 @@ public class FolderDAOImpl implements FolderDAO{
         query.setParameter("name", name);
         query.setParameter("inbin", inbin);
         query.setParameter("user", user);
-        List<Folder> resultList = ((List<Folder>)query.getResultList());
-        if (resultList.size() != 0){
+        List<Folder> resultList = ((List<Folder>) query.getResultList());
+        if (resultList.size() != 0) {
             return resultList.get(0);
         }
         return null;
@@ -53,34 +53,38 @@ public class FolderDAOImpl implements FolderDAO{
     @Override
     public List<Folder> getList(User user, Folder parentFolder) {
         Query query;
-        if(parentFolder == null){
+        if (parentFolder == null) {
             query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder IS NULL AND c.inbin <> 1", Folder.class);
-        }else{
+        } else {
             query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder = :parent AND c.inbin <> 1", Folder.class);
             query.setParameter("parent", parentFolder);
         }
         query.setParameter("user", user);
-        return (List<Folder>)query.getResultList();
+        return (List<Folder>) query.getResultList();
     }
 
     @Override
     public List<Folder> getList(User user, Folder parentFolder, String[] exceptionFolder) {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < exceptionFolder.length; i++) {
-            if(i == 0) {
-                sb.append("AND c.id <>" + exceptionFolder[0]);
-            }else{
-                sb.append(" OR c.id <>" + exceptionFolder[i]);
+        if (!exceptionFolder[0].equals("")) {
+            for (int i = 0; i < exceptionFolder.length; i++) {
+                if (i == 0) {
+                    sb.append("AND c.id <>" + exceptionFolder[0]);
+                } else {
+                    sb.append(" OR c.id <>" + exceptionFolder[i]);
+                }
             }
         }
+        System.out.println("!!! " + sb.toString());
         Query query;
-        if(parentFolder == null){
+        if (parentFolder == null) {
             query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder IS NULL AND c.inbin <> 1" + sb.toString(), Folder.class);
-        }else{
+        } else {
             query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder = :parent AND c.inbin <> 1" + sb.toString(), Folder.class);
             query.setParameter("parent", parentFolder);
-        }query.setParameter("user", user);
-        return (List<Folder>)query.getResultList();
+        }
+        query.setParameter("user", user);
+        return (List<Folder>) query.getResultList();
     }
 
     @Override
@@ -88,14 +92,14 @@ public class FolderDAOImpl implements FolderDAO{
         Query query;
         query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.id = :id", Folder.class);
         query.setParameter("id", id);
-        List<Folder> temp = (List<Folder>)query.getResultList();
+        List<Folder> temp = (List<Folder>) query.getResultList();
         return temp.get(0);
     }
 
     @Override
     public Folder getFolder(User user, String name, Folder parentFolder) {
         Query query;
-        if(parentFolder == null) {
+        if (parentFolder == null) {
             query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.name = :name " +
                     "AND f.user = :user " +
                     "AND f.parentFolder IS NULL", Folder.class);
@@ -107,7 +111,7 @@ public class FolderDAOImpl implements FolderDAO{
         }
         query.setParameter("name", name);
         query.setParameter("user", user);
-        List<Folder> temp = (List<Folder>)query.getResultList();
+        List<Folder> temp = (List<Folder>) query.getResultList();
         return temp.get(0);
     }
 
@@ -127,17 +131,21 @@ public class FolderDAOImpl implements FolderDAO{
 
     @Override
     public List<Folder> getListFoldersById(int[] listOfId) {
+        if(listOfId == null || listOfId.length == 0){
+            return new ArrayList<Folder>();
+        }
+
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT f FROM Folder f WHERE ");
         for (int i = 0; i < listOfId.length; i++) {
-            if(i == 0) {
+            if (i == 0) {
                 sb.append("f.id = " + listOfId[0]);
-            }else{
+            } else {
                 sb.append(" OR f.id = " + listOfId[i]);
             }
         }
         Query query = entityManager.createQuery(sb.toString(), Folder.class);
-        return (List<Folder>)query.getResultList();
+        return (List<Folder>) query.getResultList();
     }
 
 
@@ -146,9 +154,9 @@ public class FolderDAOImpl implements FolderDAO{
         StringBuilder sb = new StringBuilder();
         sb.append("UPDATE Folder f SET f.starred = :stateOfStar WHERE ");
         for (int i = 0; i < checked_folders_id.length; i++) {
-            if(i == 0) {
+            if (i == 0) {
                 sb.append("f.id = " + checked_folders_id[0]);
-            }else{
+            } else {
                 sb.append(" OR f.id = " + checked_folders_id[i]);
             }
         }
@@ -166,8 +174,8 @@ public class FolderDAOImpl implements FolderDAO{
                 "WHERE user = :user AND f.inbin <> 1 AND f.starred = 1", Folder.class);
         query2.setParameter("user", user);
         List<Folder> result = new ArrayList<>();
-        result.addAll((List<Folder>)query.getResultList());
-        result.addAll((List<Folder>)query2.getResultList());
+        result.addAll((List<Folder>) query.getResultList());
+        result.addAll((List<Folder>) query2.getResultList());
         return result;
     }
 
@@ -177,7 +185,7 @@ public class FolderDAOImpl implements FolderDAO{
         Query query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.user.id = :user_id AND UPPER(f.name) LIKE :whatSearch  AND f.inbin <> 1", Folder.class);
         query.setParameter("user_id", user_id);
         query.setParameter("whatSearch", "%" + whatSearch.toUpperCase() + "%");
-        return (List<Folder>)query.getResultList();
+        return (List<Folder>) query.getResultList();
     }
 
     @Override
@@ -199,7 +207,7 @@ public class FolderDAOImpl implements FolderDAO{
     @Override
     public List<Folder> getSharedList(User user, Integer targetFolder) {
         Query query;
-        if(targetFolder == null ) {
+        if (targetFolder == null) {
             query = entityManager.createQuery("SELECT f FROM Folder f INNER JOIN f.shareFor user " +
                     "WHERE user = :user AND f.inbin <> 1 AND f.shareInFolder = false", Folder.class);
         } else {
@@ -208,7 +216,7 @@ public class FolderDAOImpl implements FolderDAO{
             query.setParameter("targetFolder", targetFolder);
         }
         query.setParameter("user", user);
-        return  (List<Folder>)query.getResultList();
+        return (List<Folder>) query.getResultList();
     }
 
     @Override
@@ -216,9 +224,9 @@ public class FolderDAOImpl implements FolderDAO{
         StringBuilder sb = new StringBuilder();
         sb.append("UPDATE Folder f SET f.inbin = :stateOfInBinStatus WHERE ");
         for (int i = 0; i < checked_folders_id.length; i++) {
-            if(i == 0) {
+            if (i == 0) {
                 sb.append("f.id = " + checked_folders_id[0]);
-            }else{
+            } else {
                 sb.append(" OR f.id = " + checked_folders_id[i]);
             }
         }
@@ -232,7 +240,7 @@ public class FolderDAOImpl implements FolderDAO{
         int user_id = user.getId();
         Query query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.user.id = :user_id AND f.inbin = 1", Folder.class);
         query.setParameter("user_id", user_id);
-        return (List<Folder>)query.getResultList();
+        return (List<Folder>) query.getResultList();
     }
 
     @Override
@@ -240,9 +248,9 @@ public class FolderDAOImpl implements FolderDAO{
         StringBuilder sb = new StringBuilder();
         sb.append("UPDATE Folder f SET f.parentFolder = :target WHERE ");
         for (int i = 0; i < checked_folders_id.length; i++) {
-            if(i == 0) {
+            if (i == 0) {
                 sb.append("f.id = " + checked_folders_id[0]);
-            }else{
+            } else {
                 sb.append(" OR f.id = " + checked_folders_id[i]);
             }
         }
