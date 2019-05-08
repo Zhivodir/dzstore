@@ -3,6 +3,7 @@ package com.gmail.dzhivchik.dao.Impl;
 import com.gmail.dzhivchik.dao.FolderDAO;
 import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
+import com.gmail.dzhivchik.web.dto.Content;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -51,16 +52,18 @@ public class FolderDAOImpl implements FolderDAO {
     }
 
     @Override
-    public List<Folder> getList(User user, Folder parentFolder) {
+    public List<Content> getList(User user, Folder parentFolder) {
         Query query;
         if (parentFolder == null) {
-            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder IS NULL AND c.inbin <> 1", Folder.class);
+            query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(c.id, c.name, c.user.login, c.starred, c.shareInFolder, c.inbin) FROM Folder c " +
+                    "WHERE c.user = :user AND c.parentFolder IS NULL AND c.inbin <> 1", Content.class);
         } else {
-            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder = :parent AND c.inbin <> 1", Folder.class);
+            query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(c.id, c.name, c.user.login, c.starred, c.shareInFolder, c.inbin) FROM Folder c " +
+                    "WHERE c.user = :user AND c.parentFolder = :parent AND c.inbin <> 1", Content.class);
             query.setParameter("parent", parentFolder);
         }
         query.setParameter("user", user);
-        return (List<Folder>) query.getResultList();
+        return query.getResultList();
     }
 
     @Override

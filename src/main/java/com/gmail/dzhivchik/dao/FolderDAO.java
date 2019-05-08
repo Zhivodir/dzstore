@@ -2,6 +2,7 @@ package com.gmail.dzhivchik.dao;
 
 import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
+import com.gmail.dzhivchik.web.dto.Content;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public interface FolderDAO {
     Folder[] deleteGroup(int[] checked_folders_id);
     Folder getFolder(int id);
     Folder getFolder(User user, String name, Folder parentFolder);
-    List<Folder> getList(User user, Folder parentFolder);
+    List<Content> getList(User user, Folder parentFolder);
     List<Folder> getList(User user, Folder parentFolder, String[] exceptionFolder);
     List<Folder> getListFoldersById(int[] listOfId);
     void changeStar(int[] checked_folders_id, boolean stateOfStar);

@@ -16,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.security.SecureRandom;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -101,8 +103,8 @@ public class ContentService {
 
     @Transactional(readOnly = true)
     public List<Content> getContent(User user, Folder parentFolder) {
-        List<Content> content = folderDAO.getList(user, parentFolder).stream().map(e -> convertFolderToContentDto(e)).collect(Collectors.toList());
-        content.addAll(fileDAO.getList(user, parentFolder).stream().map(e -> convertFileToContentDto(e)).collect(Collectors.toList()));
+        List<Content> content = folderDAO.getList(user, parentFolder);
+        content.addAll(fileDAO.getList(user, parentFolder));
         return content;
     }
 
@@ -163,8 +165,12 @@ public class ContentService {
 
     @Transactional
     public List<Content> getBinContent(User user) {
+        Instant start = Instant.now();
         List<Content> content = folderDAO.getBinList(user).stream().map(e -> convertFolderToContentDto(e)).collect(Collectors.toList());
         content.addAll(fileDAO.getBinList(user).stream().map(e -> convertFileToContentDto(e)).collect(Collectors.toList()));
+        Instant before = Instant.now();
+        long ns = Duration.between(start, before).toNanos();
+        System.out.println("Duration: " + ns);
         return content;
     }
 

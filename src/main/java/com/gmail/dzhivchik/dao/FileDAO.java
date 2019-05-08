@@ -3,6 +3,7 @@ package com.gmail.dzhivchik.dao;
 import com.gmail.dzhivchik.domain.File;
 import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
+import com.gmail.dzhivchik.web.dto.Content;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface FileDAO {
     File getFile(int id);
     File isFile(String name, boolean inbin, User user, Folder parentFolder);
     File[] deleteGroup(int[] checked_files_id);
-    List<File> getList(User user, Folder parentFolder);
+    List<Content> getList(User user, Folder parentFolder);
     List<File> getListFilesById(int[] listOfId);
     List<File> getAllList(User user);
     File getFile(User user, String name, Folder parentFolder);

@@ -4,6 +4,7 @@ import com.gmail.dzhivchik.dao.FileDAO;
 import com.gmail.dzhivchik.domain.File;
 import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
+import com.gmail.dzhivchik.web.dto.Content;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -82,19 +83,21 @@ public class FileDAOImpl implements FileDAO {
     }
 
     @Override
-    public List<File> getList(User user, Folder parentFolder) {
+    public List<Content> getList(User user, Folder parentFolder) {
         int user_id = user.getId();
 
         Query query;
         if(parentFolder == null){
-            query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id AND f.parentFolder.id IS NULL AND f.inbin <> 1", File.class);
+            query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
+                    "WHERE f.user.id = :user_id AND f.parentFolder.id IS NULL AND f.inbin <> 1", Content.class);
         }else{
             Integer parent_id = parentFolder.getId();
-            query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id AND f.parentFolder.id = :parent_id AND f.inbin <> 1", File.class);
+            query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
+                    "WHERE f.user.id = :user_id AND f.parentFolder.id = :parent_id AND f.inbin <> 1", Content.class);
             query.setParameter("parent_id", parent_id);
         }
         query.setParameter("user_id", user_id);
-        return (List<File>)query.getResultList();
+        return query.getResultList();
     }
 
     @Override
