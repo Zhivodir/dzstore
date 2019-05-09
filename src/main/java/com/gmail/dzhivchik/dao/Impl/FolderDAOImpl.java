@@ -66,29 +66,6 @@ public class FolderDAOImpl implements FolderDAO {
         return query.getResultList();
     }
 
-    @Override
-    public List<Folder> getList(User user, Folder parentFolder, String[] exceptionFolder) {
-        StringBuilder sb = new StringBuilder();
-        if (!exceptionFolder[0].equals("")) {
-            for (int i = 0; i < exceptionFolder.length; i++) {
-                if (i == 0) {
-                    sb.append("AND c.id <>" + exceptionFolder[0]);
-                } else {
-                    sb.append(" OR c.id <>" + exceptionFolder[i]);
-                }
-            }
-        }
-        System.out.println("!!! " + sb.toString());
-        Query query;
-        if (parentFolder == null) {
-            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder IS NULL AND c.inbin <> 1" + sb.toString(), Folder.class);
-        } else {
-            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder = :parent AND c.inbin <> 1" + sb.toString(), Folder.class);
-            query.setParameter("parent", parentFolder);
-        }
-        query.setParameter("user", user);
-        return (List<Folder>) query.getResultList();
-    }
 
     @Override
     public Folder getFolder(int id) {
@@ -169,26 +146,45 @@ public class FolderDAOImpl implements FolderDAO {
     }
 
     @Override
-    public List<Folder> getStarredList(User user) {
+    public List<Content> getStarredList(User user) {
         int user_id = user.getId();
-        Query query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.user.id = :user_id AND f.starred = 1  AND f.inbin <> 1", Folder.class);
+        Query query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.user.login, f.starred, f.shareInFolder, f.inbin) FROM Folder f " +
+                "WHERE f.user.id = :user_id AND f.starred = 1  AND f.inbin <> 1", Content.class);
         query.setParameter("user_id", user_id);
-        Query query2 = entityManager.createQuery("SELECT f FROM Folder f INNER JOIN f.shareFor user " +
-                "WHERE user = :user AND f.inbin <> 1 AND f.starred = 1", Folder.class);
+        Query query2 = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.user.login, f.starred, f.shareInFolder, f.inbin) FROM Folder f INNER JOIN f.shareFor user " +
+                "WHERE user = :user AND f.inbin <> 1 AND f.starred = 1", Content.class);
         query2.setParameter("user", user);
-        List<Folder> result = new ArrayList<>();
-        result.addAll((List<Folder>) query.getResultList());
-        result.addAll((List<Folder>) query2.getResultList());
+        List<Content> result = new ArrayList<>();
+        result.addAll(query.getResultList());
+        result.addAll(query2.getResultList());
         return result;
     }
 
     @Override
-    public List<Folder> getSearchList(String whatSearch, User user) {
+    public List<Content> getSharedList(User user, Integer targetFolder) {
+        Query query;
+        if (targetFolder == null) {
+            query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.user.login, f.starred, f.shareInFolder, f.inbin) FROM Folder f " +
+                    "INNER JOIN f.shareFor user " +
+                    "WHERE user = :user AND f.inbin <> 1 AND f.shareInFolder = false", Content.class);
+        } else {
+            query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.user.login, f.starred, f.shareInFolder, f.inbin) FROM Folder f " +
+                    "INNER JOIN f.shareFor user " +
+                    "WHERE user = :user AND f.inbin <> 1 AND f.shareInFolder = true AND f.parentFolder.id = :targetFolder", Content.class);
+            query.setParameter("targetFolder", targetFolder);
+        }
+        query.setParameter("user", user);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Content> getSearchList(String whatSearch, User user) {
         int user_id = user.getId();
-        Query query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.user.id = :user_id AND UPPER(f.name) LIKE :whatSearch  AND f.inbin <> 1", Folder.class);
+        Query query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.user.login, f.starred, f.shareInFolder, f.inbin) FROM Folder f " +
+                "WHERE f.user.id = :user_id AND UPPER(f.name) LIKE :whatSearch  AND f.inbin <> 1", Content.class);
         query.setParameter("user_id", user_id);
         query.setParameter("whatSearch", "%" + whatSearch.toUpperCase() + "%");
-        return (List<Folder>) query.getResultList();
+        return query.getResultList();
     }
 
     @Override
@@ -207,20 +203,6 @@ public class FolderDAOImpl implements FolderDAO {
         }
     }
 
-    @Override
-    public List<Folder> getSharedList(User user, Integer targetFolder) {
-        Query query;
-        if (targetFolder == null) {
-            query = entityManager.createQuery("SELECT f FROM Folder f INNER JOIN f.shareFor user " +
-                    "WHERE user = :user AND f.inbin <> 1 AND f.shareInFolder = false", Folder.class);
-        } else {
-            query = entityManager.createQuery("SELECT f FROM Folder f INNER JOIN f.shareFor user " +
-                    "WHERE user = :user AND f.inbin <> 1 AND f.shareInFolder = true AND f.parentFolder.id = :targetFolder", Folder.class);
-            query.setParameter("targetFolder", targetFolder);
-        }
-        query.setParameter("user", user);
-        return (List<Folder>) query.getResultList();
-    }
 
     @Override
     public void changeInBin(int[] checked_folders_id, boolean stateOfInBinStatus) {
@@ -239,11 +221,12 @@ public class FolderDAOImpl implements FolderDAO {
     }
 
     @Override
-    public List<Folder> getBinList(User user) {
+    public List<Content> getBinList(User user) {
         int user_id = user.getId();
-        Query query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.user.id = :user_id AND f.inbin = 1", Folder.class);
+        Query query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.user.login, f.starred, f.shareInFolder, f.inbin) FROM Folder f " +
+                "WHERE f.user.id = :user_id AND f.inbin = 1", Content.class);
         query.setParameter("user_id", user_id);
-        return (List<Folder>) query.getResultList();
+        return query.getResultList();
     }
 
     @Override
@@ -260,5 +243,29 @@ public class FolderDAOImpl implements FolderDAO {
         Query query = entityManager.createQuery(sb.toString());
         query.setParameter("target", target);
         query.executeUpdate();
+    }
+
+
+    public List<Folder> getList(User user, Folder parentFolder, String[] exceptionFolder) {
+        StringBuilder sb = new StringBuilder();
+        if (!exceptionFolder[0].equals("")) {
+            for (int i = 0; i < exceptionFolder.length; i++) {
+                if (i == 0) {
+                    sb.append("AND c.id <>" + exceptionFolder[0]);
+                } else {
+                    sb.append(" OR c.id <>" + exceptionFolder[i]);
+                }
+            }
+        }
+        System.out.println("!!! " + sb.toString());
+        Query query;
+        if (parentFolder == null) {
+            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder IS NULL AND c.inbin <> 1" + sb.toString(), Folder.class);
+        } else {
+            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder = :parent AND c.inbin <> 1" + sb.toString(), Folder.class);
+            query.setParameter("parent", parentFolder);
+        }
+        query.setParameter("user", user);
+        return (List<Folder>) query.getResultList();
     }
 }

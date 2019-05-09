@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -157,29 +156,34 @@ public class ContentService {
 
     @Transactional
     public List<Content> getStarredContent(User user) {
-        List<Content> content = folderDAO.getStarredList(user).stream().map(e -> convertFolderToContentDto(e)).collect(Collectors.toList());
-        content.addAll(fileDAO.getStarredList(user).stream().map(e -> convertFileToContentDto(e)).collect(Collectors.toList()));
+        List<Content> content = folderDAO.getStarredList(user);
+        content.addAll(fileDAO.getStarredList(user));
         return content;
     }
-
 
     @Transactional
     public List<Content> getBinContent(User user) {
         Instant start = Instant.now();
-        List<Content> content = folderDAO.getBinList(user).stream().map(e -> convertFolderToContentDto(e)).collect(Collectors.toList());
-        content.addAll(fileDAO.getBinList(user).stream().map(e -> convertFileToContentDto(e)).collect(Collectors.toList()));
+        List<Content> content = folderDAO.getBinList(user);
+        content.addAll(fileDAO.getBinList(user));
         Instant before = Instant.now();
         long ns = Duration.between(start, before).toNanos();
         System.out.println("Duration: " + ns);
         return content;
     }
 
+    @Transactional
+    public List<Content> getSharedContent(User user, Integer targetFolder) {
+        List<Content> content = folderDAO.getSharedList(user, targetFolder);
+        content.addAll(fileDAO.getSharedList(user, targetFolder));
+        return content;
+    }
+
 
     @Transactional
-    public List[] getListBySearch(String whatSearch, User user) {
-        List[] content = new List[2];
-        content[0] = fileDAO.getSearchList(whatSearch, user);
-        content[1] = folderDAO.getSearchList(whatSearch, user);
+    public List<Content> getSearchContent(User user, String whatSearch) {
+        List<Content> content = folderDAO.getSearchList(whatSearch, user);
+        content.addAll(fileDAO.getSearchList(whatSearch, user));
         return content;
     }
 
@@ -263,12 +267,6 @@ public class ContentService {
         }
     }
 
-    @Transactional
-    public List<Content> getSharedContent(User user, Integer targetFolder) {
-        List<Content> content = folderDAO.getSharedList(user, targetFolder).stream().map(e -> convertFolderToContentDto(e)).collect(Collectors.toList());
-        content.addAll(fileDAO.getSharedList(user, targetFolder).stream().map(e -> convertFileToContentDto(e)).collect(Collectors.toList()));
-        return content;
-    }
 
     @Transactional
     public void addToMe(int[] checked_files_id, int[] checked_folders_id) {
@@ -299,12 +297,7 @@ public class ContentService {
     }
 
     public long getSizeBusyMemory(User user) {
-        List<File> content = fileDAO.getAllList(user);
-        long sumSize = 0;
-        for (File file : content) {
-            sumSize += file.getSize();
-        }
-        return sumSize;
+        return fileDAO.getMemoryBusySize(user);
     }
 
 

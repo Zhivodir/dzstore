@@ -26,12 +26,12 @@ public class ViewController {
     private UserService userService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String onIndex(Model model) {
+    public String onIndex(Model model, @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
         model.addAttribute("pageType", PageType.COMMON);
         model.addAttribute("parentsFolderID", null);
-        model.addAttribute("currentFolderID", null);
+        model.addAttribute("currentFolderID", currentFolderID);
         model.addAttribute("user", user);
         model.addAttribute("busySpace", showBusySpace(user));
         model.addAttribute("typeOfView", "index");
@@ -44,10 +44,8 @@ public class ViewController {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
         model.addAttribute("pageType", PageType.SEARCH);
-        if (whatSearch != null) {
-            model.addAttribute("content", contentService.getListBySearch(whatSearch, user));
-            model.addAttribute("user", user);
-        }
+        model.addAttribute("user", user);
+        model.addAttribute("whatSearch", whatSearch);
         model.addAttribute("busySpace", showBusySpace(user));
         model.addAttribute("typeOfView", "search");
         return "search";
@@ -141,19 +139,6 @@ public class ViewController {
         return formDataTablesResponse(data, dtRequest);
     }
 
-    @RequestMapping(value = "/getContent/bin", method = RequestMethod.POST)
-    public @ResponseBody DataTablesResponse<Content> getBinContent(@RequestBody DataTablesRequest dtRequest) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
-        return getTargetContent(user, dtRequest);
-    }
-
-    private DataTablesResponse<Content> getTargetContent(User user, DataTablesRequest dtRequest) {
-        List<Content> data = contentService.getBinContent(user);
-        return formDataTablesResponse(data, dtRequest);
-    }
-
-
     @RequestMapping(value = "/getContent/starred/{currentFolderId}", method = RequestMethod.POST)
     public @ResponseBody DataTablesResponse<Content> getStarredContent(@PathVariable int currentFolderId, @RequestBody DataTablesRequest dtRequest) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -169,6 +154,18 @@ public class ViewController {
         return formDataTablesResponse(data, dtRequest);
     }
 
+    @RequestMapping(value = "/getContent/bin", method = RequestMethod.POST)
+    public @ResponseBody DataTablesResponse<Content> getBinContent(@RequestBody DataTablesRequest dtRequest) {
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUser(login);
+        return getTargetContent(user, dtRequest);
+    }
+
+    private DataTablesResponse<Content> getTargetContent(User user, DataTablesRequest dtRequest) {
+        List<Content> data = contentService.getBinContent(user);
+        return formDataTablesResponse(data, dtRequest);
+    }
+
     @RequestMapping(value = "/getContent/shared/{currentFolderId}", method = RequestMethod.POST)
     public @ResponseBody DataTablesResponse<Content> getSharedContent(@PathVariable int currentFolderId, @RequestBody DataTablesRequest dtRequest) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -181,7 +178,19 @@ public class ViewController {
         return formDataTablesResponse(data, dtRequest);
     }
 
-    private DataTablesResponse<Content> formDataTablesResponse(List<Content> data, DataTablesRequest dtRequest){
+    @RequestMapping(value = "/getContent/search/{searchQuery}", method = RequestMethod.POST)
+    public @ResponseBody DataTablesResponse<Content> getSearchContent(@PathVariable String searchQuery, @RequestBody DataTablesRequest dtRequest) {
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUser(login);
+        return getSearchContent(user, searchQuery, dtRequest);
+    }
+
+    private DataTablesResponse<Content> getSearchContent(User user, String searchQuery, DataTablesRequest dtRequest) {
+        List<Content> data = contentService.getSearchContent(user, searchQuery);
+        return formDataTablesResponse(data, dtRequest);
+    }
+
+    private DataTablesResponse<Content> formDataTablesResponse(List<Content> data, DataTablesRequest dtRequest) {
         int total = data.size();
 
         DataTablesResponse<Content> dtResponse = new DataTablesResponse<>();

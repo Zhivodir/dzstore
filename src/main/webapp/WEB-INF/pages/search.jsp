@@ -22,8 +22,7 @@
 
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
     <link href="css/index.css" rel="stylesheet">
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
+    <script>window.jQuery || document.write('<script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"><\/script>')</script>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
@@ -46,16 +45,11 @@
     </div>
 </div>
 
-<%--<c:set var="currentFolderID" value="${currentFolderID}" scope="request"/>--%>
-<%--<c:set var="typeOfView" value="index" scope="request"/>--%>
     <c:import url="/WEB-INF/pages/modalForPages/operations/createNewFolder.jsp" />
     <c:import url="/WEB-INF/pages/modalForPages/operations/fileUpload.jsp"/>
     <c:import url="/WEB-INF/pages/modalForPages/operations/folderUpload.jsp"/>
     <c:import url="/WEB-INF/pages/modalForPages/operations/newImageForProfile.jsp" />
 
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"><\/script>')</script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/holder.min.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->

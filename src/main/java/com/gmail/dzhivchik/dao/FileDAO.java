@@ -7,27 +7,26 @@ import com.gmail.dzhivchik.web.dto.Content;
 
 import java.util.List;
 
-/**
- * Created by User on 31.01.2017.
- */
+
 public interface FileDAO {
     void upload(File file);
-    void uploadGroup(File[] files);
+
     File getFile(int id);
-    File isFile(String name, boolean inbin, User user, Folder parentFolder);
-    File[] deleteGroup(int[] checked_files_id);
     List<Content> getList(User user, Folder parentFolder);
+    List<Content> getBinList(User user);
+    List<Content> getStarredList(User user);
+    List<Content> getSharedList(User user, Integer targetFolder);
+    List<Content> getSearchList(String whatSearch, User user);
+    //need full file's info
     List<File> getListFilesById(int[] listOfId);
     List<File> getAllList(User user);
-    File getFile(User user, String name, Folder parentFolder);
-    void changeStar(int[] checked_files_id, boolean stateOfStar);
-    List<File> getStarredList(User user);
-    List<File> getSearchList(String whatSearch, User user);
+
+    long getMemoryBusySize(User user);
+    File isFile(String name, boolean inbin, User user, Folder parentFolder);
+    File[] deleteGroup(int[] checked_files_id);
     void renameFile(User userWhoWantRename, int folderId, String newName);
+    void changeStar(int[] checked_files_id, boolean stateOfStar);
     void changeShare(List<File> targets);
-//    List<File> getSharedList(User user);
-    List<File> getSharedList(User user, Integer targetFolder);
     void changeInBin(int[] checked_files_id, boolean stateOfInBinStatus);
-    List<File> getBinList(User user);
     void move_to(int[] checked_files_id, Folder target);
 }

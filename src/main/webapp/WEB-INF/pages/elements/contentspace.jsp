@@ -141,6 +141,9 @@
     $("#myTable").on('dblclick', '.choise_folder', function (e) {
       if (typeOfView == "bin") {
         $('#modalForOpenDataInBin').modal('show');
+      } else if (typeOfView == "search") {
+        currentFolderId = $(this).find("input").val();
+        window.location.href='/?currentFolderID=' + currentFolderId
       } else {
         currentFolderId = $(this).find("input").val();
         var currentFolderName = $(this).find(".name_of_content").text();
@@ -155,7 +158,7 @@
       returnFolderPath(currentFolderId);
     });
 
-    function reloadContentForFolder(currentFolder) {      ;
+    function reloadContentForFolder(currentFolder) {
       table.ajax.url('/getContent/' + getUrlForDataTables(typeOfView));
       table.ajax.reload();
     }
@@ -168,20 +171,23 @@
     if (${typeOfView.equals("bin")}) {
       return 'bin';
     }
+    if (${typeOfView.equals("search")}) {
+      return 'search/' + '${whatSearch}';
+    }
     return ${!typeOfView.equals("index")} ? '${typeOfView}/' + currentFolderId : currentFolderId;
   }
 
-  function createSelectedFilesMassiv(){
+  function createSelectedFilesMassiv() {
     var selectedFilesId = [];
-    $("tr.selected").find(".choise_checkbox.choise_file").each(function() {
+    $("tr.selected").find(".choise_checkbox.choise_file").each(function () {
       selectedFilesId.push(this.value);
     });
     return selectedFilesId;
   }
 
-  function createSelectedFoldersMassiv(){
+  function createSelectedFoldersMassiv() {
     var selectedFoldersId = [];
-    $("tr.selected").find(".choise_checkbox.choise_folder").each(function() {
+    $("tr.selected").find(".choise_checkbox.choise_folder").each(function () {
       selectedFoldersId.push(this.value);
     });
     return selectedFoldersId;
