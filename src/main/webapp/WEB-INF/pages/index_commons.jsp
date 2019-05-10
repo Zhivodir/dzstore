@@ -17,35 +17,27 @@
   <link href="css/index.css" rel="stylesheet">
   <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <script>window.jQuery || document.write('<script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"><\/script>')</script>
 </head>
 
 <body>
 <%@ include file="greeting.jsp" %>
-
 <sec:authorize access="isAuthenticated()">
   <c:import url="elements/navbar.jsp"/>
   <c:import url="elements/contentMenu.jsp"/>
 
   <div class="container-fluid">
     <div class="row">
-      <c:set var="content" value="${content}" scope="request"/>
-      <c:set var="typeOfView" value="bin" scope="request"/>
       <c:import url="elements/leftSideBar.jsp"/>
       <c:import url="elements/contentspace.jsp"/>
     </div>
   </div>
 
-  <c:set var="currentFolderID" value="${currentFolderID}" scope="request"/>
   <c:import url="/WEB-INF/pages/modalForPages/operations/createNewFolder.jsp"/>
   <c:import url="/WEB-INF/pages/modalForPages/operations/fileUpload.jsp"/>
   <c:import url="/WEB-INF/pages/modalForPages/operations/folderUpload.jsp"/>
   <c:import url="/WEB-INF/pages/modalForPages/operations/newImageForProfile.jsp"/>
 
-  <!-- Bootstrap core JavaScript
-  ================================================== -->
-  <!-- Placed at the end of the document so the pages load faster -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-  <script>window.jQuery || document.write('<script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"><\/script>')</script>
   <script src="js/bootstrap.min.js"></script>
   <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
   <script src="js/holder.min.js"></script>

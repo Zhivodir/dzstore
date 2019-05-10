@@ -35,7 +35,7 @@ public class ViewController {
         model.addAttribute("user", user);
         model.addAttribute("busySpace", showBusySpace(user));
         model.addAttribute("typeOfView", "index");
-        return "index";
+        return "index_commons";
     }
 
 
@@ -48,7 +48,7 @@ public class ViewController {
         model.addAttribute("whatSearch", whatSearch);
         model.addAttribute("busySpace", showBusySpace(user));
         model.addAttribute("typeOfView", "search");
-        return "search";
+        return "index_commons";
     }
 
 
@@ -61,7 +61,7 @@ public class ViewController {
         model.addAttribute("user", user);
         model.addAttribute("busySpace", showBusySpace(user));
         model.addAttribute("typeOfView", "shared");
-        return "shared";
+        return "index_commons";
     }
 
     @RequestMapping(value = "/bin")
@@ -72,7 +72,7 @@ public class ViewController {
         model.addAttribute("user", user);
         model.addAttribute("busySpace", showBusySpace(user));
         model.addAttribute("typeOfView", "bin");
-        return "bin";
+        return "index_commons";
     }
 
     @RequestMapping(value = "/starred")
@@ -84,7 +84,7 @@ public class ViewController {
         model.addAttribute("busySpace", showBusySpace(user));
         model.addAttribute("typeOfView", "starred");
         model.addAttribute("currentFolderID", currentFolderID);
-        return "starred";
+        return "index_commons";
     }
 
 
