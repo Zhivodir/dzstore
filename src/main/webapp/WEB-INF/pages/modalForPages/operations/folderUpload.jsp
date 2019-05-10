@@ -20,7 +20,7 @@
                         <div class="modal-body">
                             <div class="form-group" style="float: left" id="folder_upload">
                                 <input type="hidden" name="typeOfView" value="${typeOfView}">
-                                <input type="hidden" name="currentFolderID" value="${currentFolderID}">
+                                <input type="hidden" name="currentFolderID" value="${currentFolderID}" class="uploadCurrentFolderId">
                                 <input type="hidden" name="uploaded" value="1"/>
                                 <input type="hidden" name="structure" id="structure" value=""/>
                                 <input type="file" name="files" id="files" webkitdirectory directory multiple mozdirectory/>

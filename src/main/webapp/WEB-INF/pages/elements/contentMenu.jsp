@@ -13,9 +13,9 @@
                     <li><a href="#" class="btn btn-lg href_for_sidebar" data-toggle="modal"
                            data-target="#modalForNewFolder">New Folder</a></li>
                     <li><a href="#" class="btn btn-lg href_for_sidebar" data-toggle="modal"
-                           data-target="#modalForFileUpload">File upload</a></li>
+                           data-target="#modalForFileUpload" onclick="prepareModalForUpload()">File upload</a></li>
                     <li><a href="#" class="btn btn-lg href_for_sidebar" data-toggle="modal"
-                           data-target="#modalForFolderUpload">Folder upload</a></li>
+                           data-target="#modalForFolderUpload" onclick="prepareModalForUpload()">Folder upload</a></li>
                 </ul>
             </div>
         </div>
@@ -76,5 +76,9 @@
                 $(this).remove();
             }
         });
+    }
+
+    function prepareModalForUpload() {
+        $(".uploadCurrentFolderId").val(currentFolderId);
     }
 </script>

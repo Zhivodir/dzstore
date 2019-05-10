@@ -64,7 +64,7 @@ public class ContentService {
         User currentUser = getCurrentUser();
 
         Folder curFolder = null;
-        if (currentFolderID != null) {
+        if (currentFolderID != -1) {
             curFolder = getFolder(currentFolderID);
         }
 
