@@ -94,7 +94,7 @@ body {
 }
 
 .search_form{
-    margin-top: 8px;
+    margin-top: 8px !important;
 }
 
 .search_field{
