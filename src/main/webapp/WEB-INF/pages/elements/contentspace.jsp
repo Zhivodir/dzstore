@@ -93,7 +93,7 @@
           {
             data: 'size',
             render: function (data, type, full) {
-              if (full.type == "folder") {
+              if (full.type == "folder" || full.size == 0) {
                 return " - ";
               }
               return formatSize(data);

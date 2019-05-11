@@ -94,11 +94,15 @@ body {
 }
 
 .search_form{
-    margin-top: 5px;
+    margin-top: 8px;
 }
 
 .search_field{
     width: 80%;
+}
+
+#searchButton {
+    padding: 9px 12px;
 }
 
 /*
@@ -108,7 +112,6 @@ body {
 .main {
     padding: 20px;
     margin-top: 45px;
-    /*background-color: #1b6d85;*/
 }
 @media (min-width: 768px) {
     .main {
@@ -200,10 +203,6 @@ body {
 .selected{
     background-color: #449d44 !important;
 }
-
-/*.choise_field:hover{*/
-    /*background-color: #449d44 !important;*/
-/*}*/
 
 .folder_href, .folder_href:hover{
     color: black !important;
