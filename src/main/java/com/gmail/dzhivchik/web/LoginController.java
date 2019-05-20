@@ -11,9 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-/**
- * Created by User on 03.02.2017.
- */
 
 @Controller
 @RequestMapping("/")

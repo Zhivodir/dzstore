@@ -5,6 +5,7 @@ import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.domain.enums.PageType;
 import com.gmail.dzhivchik.service.Impl.ContentService;
 import com.gmail.dzhivchik.service.UserService;
+import com.gmail.dzhivchik.service.ViewControllerHelper;
 import com.gmail.dzhivchik.web.dto.Content;
 import com.gmail.dzhivchik.web.dto.datatables.DataTablesRequest;
 import com.gmail.dzhivchik.web.dto.datatables.DataTablesResponse;
@@ -20,8 +21,9 @@ import java.util.List;
 @RequestMapping("/")
 public class ViewController {
     @Autowired
+    private ViewControllerHelper viewHelper;
+    @Autowired
     private ContentService contentService;
-
     @Autowired
     private UserService userService;
 
@@ -29,12 +31,11 @@ public class ViewController {
     public String onIndex(Model model, @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
-        model.addAttribute("pageType", PageType.COMMON);
+        viewHelper.prepareLeftMenu(model, PageType.INDEX);
+        viewHelper.prepareCommonData(model, PageType.INDEX, user);
+
         model.addAttribute("parentsFolderID", null);
         model.addAttribute("currentFolderID", currentFolderID);
-        model.addAttribute("user", user);
-        model.addAttribute("busySpace", showBusySpace(user));
-        model.addAttribute("typeOfView", "index");
         return "index_commons";
     }
 
@@ -43,11 +44,10 @@ public class ViewController {
     public String search(Model model, @RequestParam(value = "whatSearch", required = false) String whatSearch) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
-        model.addAttribute("pageType", PageType.SEARCH);
-        model.addAttribute("user", user);
+        viewHelper.prepareLeftMenu(model, PageType.SEARCH);
+        viewHelper.prepareCommonData(model, PageType.SEARCH, user);
+
         model.addAttribute("whatSearch", whatSearch);
-        model.addAttribute("busySpace", showBusySpace(user));
-        model.addAttribute("typeOfView", "search");
         return "index_commons";
     }
 
@@ -56,11 +56,10 @@ public class ViewController {
     public String shared(Model model, @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
-        model.addAttribute("pageType", PageType.SHARED);
+        viewHelper.prepareLeftMenu(model, PageType.SHARED);
+        viewHelper.prepareCommonData(model, PageType.SHARED, user);
+
         model.addAttribute("currentFolderID", currentFolderID);
-        model.addAttribute("user", user);
-        model.addAttribute("busySpace", showBusySpace(user));
-        model.addAttribute("typeOfView", "shared");
         return "index_commons";
     }
 
@@ -68,10 +67,8 @@ public class ViewController {
     public String toBin(Model model) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
-        model.addAttribute("pageType", PageType.BIN);
-        model.addAttribute("user", user);
-        model.addAttribute("busySpace", showBusySpace(user));
-        model.addAttribute("typeOfView", "bin");
+        viewHelper.prepareLeftMenu(model, PageType.BIN);
+        viewHelper.prepareCommonData(model, PageType.BIN, user);
         return "index_commons";
     }
 
@@ -79,52 +76,15 @@ public class ViewController {
     public String onStarred(Model model, @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
-        model.addAttribute("pageType", PageType.STARRED);
-        model.addAttribute("user", user);
-        model.addAttribute("busySpace", showBusySpace(user));
-        model.addAttribute("typeOfView", "starred");
+        viewHelper.prepareLeftMenu(model, PageType.STARRED);
+        viewHelper.prepareCommonData(model, PageType.STARRED, user);
+
         model.addAttribute("currentFolderID", currentFolderID);
         return "index_commons";
     }
 
 
-    private String[] showBusySpace(User user) {
-        long filesSize = contentService.getSizeBusyMemory(user);
-        long ostatok = 0;
-        String[] sizes = new String[2];
-        int size = 0;
-        long wholePart = filesSize;
-        long delitel = 1;
-        int pow = 0;
 
-        while (wholePart / 1024 > 0) {
-            wholePart = wholePart / 1024;
-            delitel = delitel * 1024;
-            pow++;
-        }
-        ostatok = filesSize % delitel;
-        size = (int) Math.round(Double.parseDouble(wholePart + "." + ostatok));
-
-        switch (pow) {
-            case 0:
-                if (filesSize != 0) {
-                    sizes[0] = size + " bytes";
-                }
-                break;
-            case 1:
-                sizes[0] = size + " Kb";
-                break;
-            case 2:
-                sizes[0] = size + " Mb";
-                break;
-            case 3:
-                sizes[0] = size + " Gb";
-                break;
-        }
-        //Доступное по условиям тарифа. Пока захардкожено
-        sizes[1] = "10 Gb";
-        return sizes;
-    }
 
     @RequestMapping(value = "/getContent/{currentFolderId}", method = RequestMethod.POST)
     public @ResponseBody DataTablesResponse<Content> getContent(@PathVariable int currentFolderId, @RequestBody DataTablesRequest dtRequest) {

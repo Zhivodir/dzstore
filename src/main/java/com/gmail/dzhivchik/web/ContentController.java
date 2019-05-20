@@ -53,7 +53,6 @@ public class ContentController {
                                            @RequestParam String typeOfView,
                                            @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID,
                                            final RedirectAttributes redirectAttributes) {
-
         contentService.downloadContent(checked_files_id, checked_folders_id);
         redirectAttributes.addFlashAttribute("currentFolderID", currentFolderID);
         if (typeOfView.equals("index")) {
