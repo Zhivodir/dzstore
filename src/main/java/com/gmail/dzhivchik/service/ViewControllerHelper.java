@@ -12,6 +12,8 @@ import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 @Service
 public class ViewControllerHelper {
@@ -26,10 +28,11 @@ public class ViewControllerHelper {
 
     public void prepareLeftMenu(Model model, PageType pageType) {
         List<Leaf> leftMenuPoints = new ArrayList<>();
-        leftMenuPoints.add(new Leaf("/", "My store", "glyphicon-home", pageType == PageType.INDEX));
-        leftMenuPoints.add(new Leaf("/shared", "Shared with me", "glyphicon-eye-open", pageType == PageType.SHARED));
-        leftMenuPoints.add(new Leaf("/starred", "Starred", "glyphicon-star", pageType == PageType.STARRED));
-        leftMenuPoints.add(new Leaf("/bin", "Bin", "glyphicon-trash", pageType == PageType.BIN));
+        ResourceBundle texts = ResourceBundle.getBundle("lang/texts", new Locale("ua"));
+        leftMenuPoints.add(new Leaf("/", texts.getString("left.menu.my"), "glyphicon-home", pageType == PageType.INDEX));
+        leftMenuPoints.add(new Leaf("/shared", texts.getString("left.menu.shared.for.me"), "glyphicon-eye-open", pageType == PageType.SHARED));
+        leftMenuPoints.add(new Leaf("/starred", texts.getString("left.menu.starred"), "glyphicon-star", pageType == PageType.STARRED));
+        leftMenuPoints.add(new Leaf("/bin", texts.getString("left.menu.bin"), "glyphicon-trash", pageType == PageType.BIN));
         model.addAttribute("leftMenuPoints", leftMenuPoints);
     }
 }

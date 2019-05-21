@@ -23,8 +23,6 @@ import java.util.List;
 @Controller
 @RequestMapping("/")
 public class ContentController {
-    final static private long MAX_SIZE_OF_FILE = 5120;
-
     @Autowired
     private ContentService contentService;
 

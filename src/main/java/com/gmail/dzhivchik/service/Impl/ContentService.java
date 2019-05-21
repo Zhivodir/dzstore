@@ -1,5 +1,6 @@
 package com.gmail.dzhivchik.service.Impl;
 
+import com.gmail.dzhivchik.config.TempContentConfig;
 import com.gmail.dzhivchik.dao.FileDAO;
 import com.gmail.dzhivchik.dao.FolderDAO;
 import com.gmail.dzhivchik.dao.UserDAO;
@@ -29,7 +30,6 @@ import java.util.zip.ZipOutputStream;
 
 @Service
 public class ContentService {
-    final static private long MAX_SIZE_OF_FILE = 5120;
 
     @Autowired
     private FileDAO fileDAO;
@@ -68,7 +68,7 @@ public class ContentService {
             curFolder = getFolder(currentFolderID);
         }
 
-        if (file != null && file.getSize() < MAX_SIZE_OF_FILE) {
+        if (file != null && file.getSize() < TempContentConfig.MAX_SIZE_OF_FILE) {
             uploadFile(file, currentUser, curFolder);
         }
 
@@ -377,7 +377,7 @@ public class ContentService {
         Map<String, Folder> map = new HashMap<>();
         try {
             for (int i = 0; i < pathes.length; i++) {
-                if (files[i].getSize() > MAX_SIZE_OF_FILE) {
+                if (files[i].getSize() > TempContentConfig.MAX_SIZE_OF_FILE) {
                     continue;
                 } else if (!pathes[i].contains("/")) {
                     File file = new File(pathes[i], files[i].getSize(), files[i].getContentType(),
