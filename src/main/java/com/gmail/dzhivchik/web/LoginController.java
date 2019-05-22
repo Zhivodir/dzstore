@@ -1,11 +1,11 @@
 package com.gmail.dzhivchik.web;
 
 import com.gmail.dzhivchik.domain.User;
+import com.gmail.dzhivchik.domain.enums.Language;
 import com.gmail.dzhivchik.domain.enums.UserRoleEnum;
 import com.gmail.dzhivchik.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,12 +37,12 @@ public class LoginController {
     }
 
     @RequestMapping(value = "/create_new_user", method = RequestMethod.POST)
-    public String createNewUser(Model model,
-                                @RequestParam("login") String login,
+    public String createNewUser(@RequestParam("login") String login,
                                 @RequestParam("password") String password,
-                                @RequestParam("email") String email){
+                                @RequestParam("email") String email,
+                                @RequestParam("language") String language){
         if(!login.trim().isEmpty() && !password.trim().isEmpty() && !email.trim().isEmpty()) {
-            User user = new User(login, password, email, UserRoleEnum.USER);
+            User user = new User(login, password, email, UserRoleEnum.USER, Language.valueOf(language));
             boolean wasAdded = userService.addUser(user);
             if(wasAdded) {
                 return "redirect:/login";

@@ -26,9 +26,9 @@ public class ViewControllerHelper {
         model.addAttribute("busySpace", MemoryUtils.showBusySpace(contentService.getSizeBusyMemory(user)));
     }
 
-    public void prepareLeftMenu(Model model, PageType pageType) {
+    public void prepareLeftMenu(Model model, PageType pageType, User user) {
         List<Leaf> leftMenuPoints = new ArrayList<>();
-        ResourceBundle texts = ResourceBundle.getBundle("lang/texts", new Locale("ua"));
+        ResourceBundle texts = ResourceBundle.getBundle("lang/texts", new Locale(user.getLanguage().toString().toLowerCase()));
         leftMenuPoints.add(new Leaf("/", texts.getString("left.menu.my"), "glyphicon-home", pageType == PageType.INDEX));
         leftMenuPoints.add(new Leaf("/shared", texts.getString("left.menu.shared.for.me"), "glyphicon-eye-open", pageType == PageType.SHARED));
         leftMenuPoints.add(new Leaf("/starred", texts.getString("left.menu.starred"), "glyphicon-star", pageType == PageType.STARRED));

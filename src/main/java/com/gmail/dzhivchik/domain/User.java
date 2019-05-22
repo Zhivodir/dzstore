@@ -1,5 +1,6 @@
 package com.gmail.dzhivchik.domain;
 
+import com.gmail.dzhivchik.domain.enums.Language;
 import com.gmail.dzhivchik.domain.enums.UserRoleEnum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,8 @@ public class User {
     private String login;
     private String password;
     private String email;
+    @Enumerated(EnumType.STRING)
+    private Language language;
 
     @Enumerated(EnumType.STRING)
     private UserRoleEnum role;
@@ -47,6 +50,14 @@ public class User {
         this.password = password;
         this.email = email;
         this.role = role;
+    }
+
+    public User(String login, String password, String email, UserRoleEnum role, Language language) {
+        this.login = login;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+        this.language = language;
     }
 
     public User(int id, String login, String password, String email, UserRoleEnum role) {

@@ -1,5 +1,8 @@
+<%@ page import="com.gmail.dzhivchik.domain.enums.Language" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -19,8 +22,6 @@
   <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
   <script src="js/registration.js"></script>
-
-
 </head>
 
 <body>
@@ -33,7 +34,12 @@
       <input type="text" name="login" class="form-control login" id="login" placeholder="Login">
       <input type="text" name="password" class="form-control password" id="password" placeholder="Password">
       <input type="text" name="conf_password" class="form-control conf_password" id="conf_password" placeholder="Confirm password">
-      <button type="submit" class="btn btn-lg btn-primary btn-block">Confirm</button>
+      <select name="language" class="form-control" id="language" style="margin-bottom: 10px;">">
+        <c:forEach items="<%=Language.values()%>" var="language">
+          <option value="${language}"><s:message code="language.${language}"/></option>
+        </c:forEach>
+      </select>
+      <button type="submit" class="form-control btn btn-lg btn-primary btn-block">Confirm</button>
     </form>
   </div>
 </div>

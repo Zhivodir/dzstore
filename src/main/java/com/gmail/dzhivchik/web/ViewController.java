@@ -31,7 +31,7 @@ public class ViewController {
     public String onIndex(Model model, @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
-        viewHelper.prepareLeftMenu(model, PageType.INDEX);
+        viewHelper.prepareLeftMenu(model, PageType.INDEX, user);
         viewHelper.prepareCommonData(model, PageType.INDEX, user);
 
         model.addAttribute("parentsFolderID", null);
@@ -44,7 +44,7 @@ public class ViewController {
     public String search(Model model, @RequestParam(value = "whatSearch", required = false) String whatSearch) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
-        viewHelper.prepareLeftMenu(model, PageType.SEARCH);
+        viewHelper.prepareLeftMenu(model, PageType.SEARCH, user);
         viewHelper.prepareCommonData(model, PageType.SEARCH, user);
 
         model.addAttribute("whatSearch", whatSearch);
@@ -56,7 +56,7 @@ public class ViewController {
     public String shared(Model model, @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
-        viewHelper.prepareLeftMenu(model, PageType.SHARED);
+        viewHelper.prepareLeftMenu(model, PageType.SHARED, user);
         viewHelper.prepareCommonData(model, PageType.SHARED, user);
 
         model.addAttribute("currentFolderID", currentFolderID);
@@ -67,7 +67,7 @@ public class ViewController {
     public String toBin(Model model) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
-        viewHelper.prepareLeftMenu(model, PageType.BIN);
+        viewHelper.prepareLeftMenu(model, PageType.BIN, user);
         viewHelper.prepareCommonData(model, PageType.BIN, user);
         return "index_commons";
     }
@@ -76,7 +76,7 @@ public class ViewController {
     public String onStarred(Model model, @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
-        viewHelper.prepareLeftMenu(model, PageType.STARRED);
+        viewHelper.prepareLeftMenu(model, PageType.STARRED, user);
         viewHelper.prepareCommonData(model, PageType.STARRED, user);
 
         model.addAttribute("currentFolderID", currentFolderID);
