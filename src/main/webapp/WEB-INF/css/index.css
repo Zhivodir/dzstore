@@ -151,6 +151,7 @@ body {
     background-color: #f5f5f5 !important;
     top: 51px !important;
     border-bottom: 1px solid #ffffff !important;
+    z-index: 1000;
 }
 
 .newButton {
