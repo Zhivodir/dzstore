@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 
 
 <link rel="stylesheet" href="/datatables/DataTables-1.10.16/css/dataTables.bootstrap.min.css">
@@ -14,10 +15,10 @@
         <thead>
         <tr>
           <th class="checkId"></th>
-          <th class="checkName">Name</th>
-          <th class="checkType">Type</th>
-          <th class="checkOwner">Owner</th>
-          <th class="checkSize">Size</th>
+          <th class="checkName"><s:message code="contentspace.name"/></th>
+          <th class="checkType"><s:message code="contentspace.type"/></th>
+          <th class="checkOwner"><s:message code="contentspace.owner"/></th>
+          <th class="checkSize"><s:message code="contentspace.size"/></th>
         </tr>
         </thead>
         <tbody>

@@ -1,7 +1,9 @@
 package com.gmail.dzhivchik.dao.Impl;
 
 import com.gmail.dzhivchik.dao.UserDAO;
+import com.gmail.dzhivchik.domain.File;
 import com.gmail.dzhivchik.domain.User;
+import com.gmail.dzhivchik.domain.enums.Language;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -25,15 +27,9 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public User getUser(String login) {
         Query query;
-        query = entityManager.
-                createQuery("SELECT u FROM User u WHERE u.login = :login", User.class);
-        query.setParameter("login", login);
-
-        List<User> temp = (List<User>) query.getResultList();
-        if(temp.size() < 1){
-            return null;
-        }
-        return temp.get(0);
+        query = entityManager.createQuery("SELECT u FROM User u WHERE u.login = :login", User.class);
+        query.setParameter("login", login);//
+        return (User)query.getSingleResult();
     }
 
     @Override
@@ -47,9 +43,7 @@ public class UserDAOImpl implements UserDAO {
             }
         }
         query = entityManager.createQuery("SELECT u FROM User u WHERE " + sb.toString(), User.class);
-
-        List<User> resultList = (List<User>) query.getResultList();
-        return resultList;
+        return query.getResultList();
     }
 
     @Override
@@ -64,9 +58,8 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public List<User> getShareReceivers(String shareFor) {
-        Query query = entityManager.
-                createQuery(preparationShareRequest(shareFor), User.class);
-        return (List<User>) query.getResultList();
+        Query query = entityManager.createQuery(preparationShareRequest(shareFor), User.class);
+        return query.getResultList();
     }
 
 

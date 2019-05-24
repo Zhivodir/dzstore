@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 
 
 <!DOCTYPE html>
@@ -28,12 +29,14 @@
     <p id="profile-name" class="profile-name-card">DZStore</p>
     <form class="form-signin" action="/j_spring_security_check" method="post">
       <span id="reauth-email" class="reauth-email"></span>
-      <input type="text" id="inputEmail" class="form-control" name="j_username" placeholder="Email address" required autofocus value="Guest">
-      <input type="password" id="inputPassword" class="form-control" name="j_password" placeholder="Password" required value="123">
-      <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Sign in</button>
+      <input type="text" id="inputEmail" class="form-control" name="j_username" required autofocus value="Guest"
+             placeholder="<s:message code="login.placeholder.email"/>">
+      <input type="password" id="inputPassword" class="form-control" name="j_password" required value="123"
+             placeholder="<s:message code="login.placeholder.password"/>">
+      <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"><s:message code="login.button.sign.in"/></button>
     </form>
-    <a href="#" class="pull-left">Forgot the password?</a>
-    <a href="/registration" class="pull-right">Registration</a>
+    <a href="#" class="pull-left"><s:message code="login.forgot.password"/></a>
+    <a href="/registration" class="pull-right"><s:message code="login.registration"/></a>
   </div>
 </div>
 

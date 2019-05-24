@@ -37,6 +37,7 @@
   <c:import url="/WEB-INF/pages/modalForPages/operations/fileUpload.jsp"/>
   <c:import url="/WEB-INF/pages/modalForPages/operations/folderUpload.jsp"/>
   <c:import url="/WEB-INF/pages/modalForPages/operations/newImageForProfile.jsp"/>
+  <c:import url="/WEB-INF/pages/modalForPages/settings.jsp"/>
 
   <script src="js/bootstrap.min.js"></script>
   <!-- Just to make our placeholder images work. Don't actually copy the next line! -->

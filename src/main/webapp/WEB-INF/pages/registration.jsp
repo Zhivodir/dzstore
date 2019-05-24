@@ -30,16 +30,17 @@
   <div class="card card-container vert-align">
     <p id="profile-name" class="profile-name-card">DZStore</p>
     <form class="form-signin" action="create_new_user" method="post">
-      <input type="email" name="email" class="form-control mail" id="mail" placeholder="Email">
-      <input type="text" name="login" class="form-control login" id="login" placeholder="Login">
-      <input type="text" name="password" class="form-control password" id="password" placeholder="Password">
-      <input type="text" name="conf_password" class="form-control conf_password" id="conf_password" placeholder="Confirm password">
+      <input type="email" name="email" class="form-control mail" id="mail" placeholder="<s:message code="registration.placeholder.email"/>">
+      <input type="text" name="login" class="form-control login" id="login" placeholder="<s:message code="registration.placeholder.login"/>">
+      <input type="text" name="password" class="form-control password" id="password" placeholder="<s:message code="registration.placeholder.password"/>">
+      <input type="text" name="conf_password" class="form-control conf_password" id="conf_password"
+             placeholder="<s:message code="registration.placeholder.confirm.password"/>">
       <select name="language" class="form-control" id="language" style="margin-bottom: 10px;">">
         <c:forEach items="<%=Language.values()%>" var="language">
           <option value="${language}"><s:message code="language.${language}"/></option>
         </c:forEach>
       </select>
-      <button type="submit" class="form-control btn btn-lg btn-primary btn-block">Confirm</button>
+      <button type="submit" class="form-control btn btn-lg btn-primary btn-block"><s:message code="registration.placeholder.confirm.password"/></button>
     </form>
   </div>
 </div>

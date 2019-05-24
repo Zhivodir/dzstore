@@ -12,10 +12,13 @@ import com.gmail.dzhivchik.web.dto.datatables.DataTablesResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.LocaleResolver;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Locale;
 
 @Controller
 @RequestMapping("/")
@@ -26,60 +29,70 @@ public class ViewController {
     private ContentService contentService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private LocaleResolver localeResolver;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String onIndex(Model model, @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
+    public String onIndex(HttpServletRequest request, HttpServletResponse response,
+                          @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
-        viewHelper.prepareLeftMenu(model, PageType.INDEX, user);
-        viewHelper.prepareCommonData(model, PageType.INDEX, user);
+        viewHelper.prepareLeftMenu(request, PageType.INDEX, user);
+        viewHelper.prepareCommonData(request, PageType.INDEX, user);
+        localeResolver.setLocale(request, response, new Locale(user.getLanguage().toString()));
 
-        model.addAttribute("parentsFolderID", null);
-        model.addAttribute("currentFolderID", currentFolderID);
+        request.setAttribute("parentsFolderID", null);
+        request.setAttribute("currentFolderID", currentFolderID);
         return "index_commons";
     }
 
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
-    public String search(Model model, @RequestParam(value = "whatSearch", required = false) String whatSearch) {
+    public String search(HttpServletRequest request, HttpServletResponse response,
+                         @RequestParam(value = "whatSearch", required = false) String whatSearch) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
-        viewHelper.prepareLeftMenu(model, PageType.SEARCH, user);
-        viewHelper.prepareCommonData(model, PageType.SEARCH, user);
+        viewHelper.prepareLeftMenu(request, PageType.SEARCH, user);
+        viewHelper.prepareCommonData(request, PageType.SEARCH, user);
+        localeResolver.setLocale(request, response, new Locale(user.getLanguage().toString()));
 
-        model.addAttribute("whatSearch", whatSearch);
+        request.setAttribute("whatSearch", whatSearch);
         return "index_commons";
     }
 
 
     @RequestMapping(value = "/shared", method = RequestMethod.GET)
-    public String shared(Model model, @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
+    public String shared(HttpServletRequest request, HttpServletResponse response,
+                         @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
-        viewHelper.prepareLeftMenu(model, PageType.SHARED, user);
-        viewHelper.prepareCommonData(model, PageType.SHARED, user);
+        viewHelper.prepareLeftMenu(request, PageType.SHARED, user);
+        viewHelper.prepareCommonData(request, PageType.SHARED, user);
+        localeResolver.setLocale(request, response, new Locale(user.getLanguage().toString()));
 
-        model.addAttribute("currentFolderID", currentFolderID);
+        request.setAttribute("currentFolderID", currentFolderID);
         return "index_commons";
     }
 
     @RequestMapping(value = "/bin")
-    public String toBin(Model model) {
+    public String toBin(HttpServletRequest request, HttpServletResponse response) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
-        viewHelper.prepareLeftMenu(model, PageType.BIN, user);
-        viewHelper.prepareCommonData(model, PageType.BIN, user);
+        viewHelper.prepareLeftMenu(request, PageType.BIN, user);
+        viewHelper.prepareCommonData(request, PageType.BIN, user);
+        localeResolver.setLocale(request, response, new Locale(user.getLanguage().toString()));
         return "index_commons";
     }
 
     @RequestMapping(value = "/starred")
-    public String onStarred(Model model, @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
+    public String onStarred(HttpServletRequest request, HttpServletResponse response,
+                            @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
-        viewHelper.prepareLeftMenu(model, PageType.STARRED, user);
-        viewHelper.prepareCommonData(model, PageType.STARRED, user);
-
-        model.addAttribute("currentFolderID", currentFolderID);
+        viewHelper.prepareLeftMenu(request, PageType.STARRED, user);
+        viewHelper.prepareCommonData(request, PageType.STARRED, user);
+        localeResolver.setLocale(request, response, new Locale(user.getLanguage().toString()));
+        request.setAttribute("currentFolderID", currentFolderID);
         return "index_commons";
     }
 

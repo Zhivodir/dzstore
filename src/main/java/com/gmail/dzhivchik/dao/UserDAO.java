@@ -4,9 +4,6 @@ import com.gmail.dzhivchik.domain.User;
 
 import java.util.List;
 
-/**
- * Created by User on 09.02.2017.
- */
 public interface UserDAO {
     void addUser(User user);
     User getUser(String login);
