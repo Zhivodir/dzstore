@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 
 <div class="container-fluid">
     <div class="row">
@@ -11,17 +12,18 @@
                     <div class="modal-content all-modal-change">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title" id="myModalLabel">Переименование</h4>
+                            <h4 class="modal-title" id="myModalLabel"><s:message code="modal.rename.title"/></h4>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
                                 <input type="hidden" id="selectedContentId" value="">
-                                <input type="text" class="form-control" id="newName" name="name" placeholder="Enter new name">
+                                <input type="text" class="form-control" id="newName" name="name"
+                                       placeholder="<s:message code="modal.rename.placeholder"/>">
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                            <button type="button" class="btn btn-primary" onclick="renameContent()">Сохранить</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><s:message code="modal.button.cancel"/></button>
+                            <button type="button" class="btn btn-primary" onclick="renameContent()"><s:message code="modal.rename.ok"/></button>
                         </div>
                     </div>
                 </div>

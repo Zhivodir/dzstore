@@ -33,7 +33,6 @@
         </c:when>
         <c:otherwise>
           <c:import url="/WEB-INF/pages/context_menu/general.jsp"/>
-          <c:import url="/WEB-INF/pages/modalForPages/operations/remove.jsp"/>
           <c:import url="/WEB-INF/pages/modalForPages/operations/share.jsp"/>
           <c:import url="/WEB-INF/pages/modalForPages/operations/rename.jsp"/>
         </c:otherwise>

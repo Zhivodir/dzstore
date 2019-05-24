@@ -26,6 +26,8 @@
     </div>
 </div>
 
+<jsp:include page="/WEB-INF/pages/elements/i18nElements.jsp"/>
+
 <script>
     $(document).ready(function () {
         $(".currentFolderPath").append(getPathRoot());
@@ -34,13 +36,13 @@
     function getPathRoot(){
         switch('${typeOfView}') {
             case 'index':
-                return '<span class="pathElement levelPath" data-current-folder-id="-1">My store</span>';
+                return '<span class="pathElement levelPath" data-current-folder-id="-1">' + typeOfViewNames['myspaceView'] + '</span>';
             case 'shared':
-                return '<a href="/${typeOfView}" class="levelPath sharedWithMe">Shared with me</a>';
+                return '<a href="/${typeOfView}" class="levelPath sharedWithMe">' + typeOfViewNames['sharedView'] + '</a>';
             case 'starred':
-                return '<a href="/${typeOfView}" class="levelPath">Starred</a>';
+                return '<a href="/${typeOfView}" class="levelPath">' + typeOfViewNames['starredView'] + '</a>';
             case 'bin':
-                return '<a href="/${typeOfView}" class="levelPath">Bin</a>';
+                return '<a href="/${typeOfView}" class="levelPath">' + typeOfViewNames['binView'] + '</a>';
             case 'search':
                 return '<span class="levelPath">Search result</span>';
         }

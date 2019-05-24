@@ -29,10 +29,10 @@ public class ViewControllerHelper {
     public void prepareLeftMenu(HttpServletRequest request, PageType pageType, User user) {
         List<Leaf> leftMenuPoints = new ArrayList<>();
         ResourceBundle texts = ResourceBundle.getBundle("lang/texts", new Locale(user.getLanguage().toString().toLowerCase()));
-        leftMenuPoints.add(new Leaf("/", texts.getString("left.menu.my"), "glyphicon-home", pageType == PageType.INDEX));
-        leftMenuPoints.add(new Leaf("/shared", texts.getString("left.menu.shared.for.me"), "glyphicon-eye-open", pageType == PageType.SHARED));
-        leftMenuPoints.add(new Leaf("/starred", texts.getString("left.menu.starred"), "glyphicon-star", pageType == PageType.STARRED));
-        leftMenuPoints.add(new Leaf("/bin", texts.getString("left.menu.bin"), "glyphicon-trash", pageType == PageType.BIN));
+        leftMenuPoints.add(new Leaf("/", texts.getString("view.type.my.space"), "glyphicon-home", pageType == PageType.INDEX));
+        leftMenuPoints.add(new Leaf("/shared", texts.getString("view.type.shared.for.me"), "glyphicon-eye-open", pageType == PageType.SHARED));
+        leftMenuPoints.add(new Leaf("/starred", texts.getString("view.type.starred"), "glyphicon-star", pageType == PageType.STARRED));
+        leftMenuPoints.add(new Leaf("/bin", texts.getString("view.type.bin"), "glyphicon-trash", pageType == PageType.BIN));
         request.setAttribute("leftMenuPoints", leftMenuPoints);
     }
 }

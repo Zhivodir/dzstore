@@ -1,14 +1,17 @@
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+
 <ul id="contextMenu" class="dropdown-menu" role="menu" style="display:none" >
-    <li class=""><a class="contextHref" href="#" data-toggle="modal" data-target="#modalForRemove">Remove</a></li>
-    <li class="li_download"><a href="#" class="contextHref" onclick="downloadContent()">Download</a></li>
+    <li class=""><a href="#" class="contextHref"  onclick="removeContent()"><s:message code="contextmenu.remove"/></a></li>
+    <li class="li_download"><a href="#" class="contextHref" onclick="downloadContent()"><s:message code="contextmenu.download"/></a></li>
     <li class="divider"></li>
-    <li class="contextHref li_starred"><input type="button" class="contextInput" value="Add star" onclick="changeStarState(true)"></li>
-    <li class="contextHref li_removestar"><input type="button" class="contextInput" value="Remove star" onclick="changeStarState(false)"></li>
+    <li class="contextHref li_starred"><input type="button" class="contextInput" onclick="changeStarState(true)" value="<s:message code="contextmenu.add.star"/>"></li>
+    <li class="contextHref li_removestar"><input type="button" class="contextInput" onclick="changeStarState(false)" value="<s:message code="contextmenu.remove.star"/>"></li>
     <li class="divider"></li>
-    <li class="li_rename"><a class="contextHref"  href="#" data-toggle="modal" data-target="#modalForRename">Rename</a></li>
-    <li class="li_share"><a class="contextHref"  href="#" data-toggle="modal" data-target="#modalForShare">Share</a></li>
+    <li class="li_rename"><a class="contextHref"  href="#" data-toggle="modal" data-target="#modalForRename"><s:message code="contextmenu.rename"/></a></li>
+    <li class="li_share"><a class="contextHref"  href="#" data-toggle="modal" data-target="#modalForShare"><s:message code="contextmenu.share"/></a></li>
     <li class="divider"></li>
-    <li class="contextHref li_addtome"><input type="button" class="contextInput" value="Add to me" onclick="addToMe()"></li>
+    <li class="contextHref li_addtome"><input type="button" class="contextInput" onclick="addToMe()" value="<s:message code="contextmenu.add.to.me"/>"></li>
 </ul>
 
 <script>
@@ -84,5 +87,28 @@
 
         document.body.appendChild(form);
         form.submit();
+    }
+
+    function removeContent() {
+        var selectedFilesId = createSelectedFilesMassiv();
+        var selectedFoldersId = createSelectedFoldersMassiv();
+
+        $.ajax({
+            url: "/removeContent",
+            type: 'POST',
+            traditional: true,
+            data: {
+                selectedFiles: selectedFilesId,
+                selectedFolders: selectedFoldersId,
+                typeOfView: '${typeOfView}'
+            },
+            success: function (result) {
+                table.ajax.reload();
+            },
+            error: function (result) {
+            }
+        })
+
+        $("#modalForRemove").modal('hide');
     }
 </script>
