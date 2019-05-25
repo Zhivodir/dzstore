@@ -49,6 +49,8 @@
                 selectedFolders: selectedFoldersId
             },
             success: function (result) {
+                busySpace = result;
+                showBusySpace();
             },
             error: function (result) {
             }

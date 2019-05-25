@@ -96,10 +96,10 @@ public class ContentController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/deleteContent", method = RequestMethod.POST)
-    public ResponseEntity deleteContent(@ModelAttribute SelectedContent selectedContent) {
+    @RequestMapping(value = "/deleteContent", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+    public @ResponseBody String deleteContent(@ModelAttribute SelectedContent selectedContent) {
         contentService.deleteCheckedContent(selectedContent.getSelectedFiles(), selectedContent.getSelectedFolders());
-        return new ResponseEntity(HttpStatus.OK);
+        return getBusySpace() + "";
     }
 
     @RequestMapping(value = "/changeStarState", method = RequestMethod.POST)
@@ -125,14 +125,21 @@ public class ContentController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/addToMe", method = RequestMethod.POST)
-    public ResponseEntity addToMe(@ModelAttribute SelectedContent selectedContent) {
+    @RequestMapping(value = "/addToMe", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+    public @ResponseBody String addToMe(@ModelAttribute SelectedContent selectedContent) {
         contentService.addToMe(selectedContent.getSelectedFiles(), selectedContent.getSelectedFolders());
-        return new ResponseEntity(HttpStatus.OK);
+        System.out.println(getBusySpace());
+        return getBusySpace() + "";
     }
 
     private void sendMessageToEmail() {
         Sender tlsSender = new Sender("dzhproject@gmail.com", "");
         tlsSender.send("This is Subject", "TLS: This is text!", "support@dzstore.com", "");
+    }
+
+    private long getBusySpace(){
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUser(login);
+        return contentService.getSizeBusyMemory(user);
     }
 }

@@ -45,6 +45,8 @@
                 selectedFolders: selectedFoldersId
             },
             success: function (result) {
+                busySpace = result;
+                showBusySpace();
                 table.ajax.reload();
             },
             error: function (result) {
