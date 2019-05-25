@@ -50,8 +50,12 @@
   currentFolderId = ${currentFolderID != null ? currentFolderID : -1};
   typeOfView = '${typeOfView}';
   targetContent = getUrlForDataTables(typeOfView);
+  busySpace = ${busySpace[0]};
+  availableSpace = ${busySpace[1]};
 
   $(document).ready(function () {
+    //busy space progress initialization
+    showBusySpace();
 
     table = $('#myTable').DataTable(datatableOpts(
         '/getContent/' + targetContent,
@@ -143,7 +147,7 @@
         $('#modalForOpenDataInBin').modal('show');
       } else if (typeOfView == "search") {
         currentFolderId = $(this).find("input").val();
-        window.location.href='/?currentFolderID=' + currentFolderId
+        window.location.href = '/?currentFolderID=' + currentFolderId
       } else {
         currentFolderId = $(this).find("input").val();
         var currentFolderName = $(this).find(".name_of_content").text();
@@ -191,5 +195,13 @@
       selectedFoldersId.push(this.value);
     });
     return selectedFoldersId;
+  }
+
+  function increaseBusySpace(sizeOfChange) {
+    busySpace += sizeOfChange;
+  }
+
+  function reduceBusySpace(sizeOfChange) {
+    busySpace -= sizeOfChange;
   }
 </script>

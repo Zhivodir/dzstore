@@ -11,5 +11,26 @@
       </li>
     </c:forEach>
   </ul>
-  <div class="busySpace">${busySpace[0]} / ${busySpace[1]} </div>
+  <div class="progress-group">
+    <div class="progress sm" id="busySpaceDisplay">
+      <div class="progress-bar progress-bar-aqua" id="busySpaceProgress" style="width: 0%"></div>
+    </div>
+  </div>
+  <div class="busySpace">
+    <span id="busySpace">${busySpace[0]}</span>
+    <span> / </span>
+    <span id="availableSpace">${busySpace[1]}</span>
+  </div>
 </div>
+
+<script>
+  function showBusySpace(){
+    $("#busySpaceProgress").width(busyMemoryPercent());
+    $("#busySpace").text(formatSize(busySpace));
+    $("#availableSpace").text(formatSize(availableSpace));
+  }
+
+  function busyMemoryPercent(){
+    return Math.round(busySpace*100/availableSpace).toFixed(0)
+  }
+</script>

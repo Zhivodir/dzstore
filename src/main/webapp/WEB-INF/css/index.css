@@ -479,3 +479,8 @@ div.share_for.selected {
 .name_of_content:hover{
     cursor: default;
 }
+
+#busySpaceDisplay{
+    height: 10px !important;
+    margin-bottom: 0px !important;
+}
