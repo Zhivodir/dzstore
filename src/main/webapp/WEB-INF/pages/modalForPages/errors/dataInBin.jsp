@@ -1,12 +1,6 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: User
-  Date: 05.04.2017
-  Time: 22:37
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 
 <div class="container-fluid">
     <div class="row">
@@ -17,13 +11,17 @@
                 <div class="modal-dialog modalForOpenDataInBin">
                     <div class="modal-content all-modal-change">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">
-                                <span aria-hidden="true">&times;</span>
-                                <span class="sr-only">Close</span>
-                            </button>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel"><s:message code="modal.bin.open.folder.title"/></h4>
                         </div>
                         <div class="modal-body">
-                            <span>Эта папка в корзине</span>
+                            <div class="form-group">
+                                <span><s:message code="modal.bin.open.folder.warning"/></span>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><s:message code="modal.button.cancel"/></button>
+                            <button type="submit" class="btn btn-primary"><s:message code="modal.bin.open.button.restore"/></button>
                         </div>
                     </div>
                 </div>

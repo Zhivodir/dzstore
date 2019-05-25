@@ -14,11 +14,11 @@
             <form action="settings/changeLanguage" method="post">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Создание папки</h4>
+                <h4 class="modal-title" id="myModalLabel"><s:message code="modal.settings"/></h4>
               </div>
               <div class="modal-body">
                 <div class="form-group">
-                  <label class="sr-only" for="language">Выбрать язык</label>
+                  <label class="sr-only" for="language"><s:message code="modal.choose.language"/></label>
                   <input name="typeOfView" value="${typeOfView}" type="hidden"/>
                   <select name="language" class="form-control" id="language" style="margin-bottom: 10px;">">
                     <c:forEach items="<%=Language.values()%>" var="language">
@@ -28,8 +28,8 @@
                 </div>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                <button type="submit" class="btn btn-primary">Сохранить</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><s:message code="modal.button.cancel"/></button>
+                <button type="submit" class="btn btn-primary"><s:message code="modal.button.save"/></button>
               </div>
             </form>
           </div>
