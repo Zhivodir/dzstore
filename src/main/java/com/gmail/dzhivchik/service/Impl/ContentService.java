@@ -101,9 +101,9 @@ public class ContentService {
     }
 
     @Transactional(readOnly = true)
-    public List<Content> getContent(User user, Folder parentFolder) {
-        List<Content> content = folderDAO.getList(user, parentFolder);
-        content.addAll(fileDAO.getList(user, parentFolder));
+    public List<Content> getContent(int userId, Folder parentFolder) {
+        List<Content> content = folderDAO.getList(userId, parentFolder);
+        content.addAll(fileDAO.getList(userId, parentFolder));
         return content;
     }
 
@@ -162,10 +162,10 @@ public class ContentService {
     }
 
     @Transactional
-    public List<Content> getBinContent(User user) {
+    public List<Content> getBinContent(int userId) {
         Instant start = Instant.now();
-        List<Content> content = folderDAO.getBinList(user);
-        content.addAll(fileDAO.getBinList(user));
+        List<Content> content = folderDAO.getBinList(userId);
+        content.addAll(fileDAO.getBinList(userId));
         Instant before = Instant.now();
         long ns = Duration.between(start, before).toNanos();
         System.out.println("Duration: " + ns);
@@ -173,26 +173,26 @@ public class ContentService {
     }
 
     @Transactional
-    public List<Content> getSharedContent(User user, Integer targetFolder) {
-        List<Content> content = folderDAO.getSharedList(user, targetFolder);
-        content.addAll(fileDAO.getSharedList(user, targetFolder));
+    public List<Content> getSharedContent(int userId, Integer targetFolder) {
+        List<Content> content = folderDAO.getSharedList(userId, targetFolder);
+        content.addAll(fileDAO.getSharedList(userId, targetFolder));
         return content;
     }
 
 
     @Transactional
-    public List<Content> getSearchContent(User user, String whatSearch) {
-        List<Content> content = folderDAO.getSearchList(whatSearch, user);
-        content.addAll(fileDAO.getSearchList(whatSearch, user));
+    public List<Content> getSearchContent(int userId, String whatSearch) {
+        List<Content> content = folderDAO.getSearchList(userId, whatSearch);
+        content.addAll(fileDAO.getSearchList(userId, whatSearch));
         return content;
     }
 
     @Transactional
-    public void rename(String contentType, int contentId, String newName) {
+    public void rename(String contentType, int contentId, String newName, int userId) {
         if (contentType.equals("file")) {
-            fileDAO.renameFile(getCurrentUser(), contentId, newName);
+            fileDAO.renameFile(userId, contentId, newName);
         } else {
-            folderDAO.renameFolder(getCurrentUser(), contentId, newName);
+            folderDAO.renameFolder(userId, contentId, newName);
         }
     }
 
@@ -296,8 +296,8 @@ public class ContentService {
         }
     }
 
-    public long getSizeBusyMemory(User user) {
-        return fileDAO.getMemoryBusySize(user);
+    public long getSizeBusyMemory(int userId) {
+        return fileDAO.getMemoryBusySize(userId);
     }
 
 
@@ -315,7 +315,7 @@ public class ContentService {
         for (File file : listOfAddFiles) {
             StringBuilder relativePath = new StringBuilder();
             createPathForElement(relativePath, curFolder);
-            if (file.getSize() <= all - getSizeBusyMemory(user)) {
+            if (file.getSize() <= all - getSizeBusyMemory(user.getId())) {
                 fileDAO.upload(new File(file.getName(), file.getSize(), file.getType(), user, addFolder, false, false, file.getData(), false));
             } else {
                 System.out.println("Havn't need memory");
@@ -359,7 +359,7 @@ public class ContentService {
         long size = file.getSize();
         long all = (long) 10 * 1024 * 1024 * 1024;
         String mimeType = file.getContentType();
-        if (size <= all - getSizeBusyMemory(user)) {
+        if (size <= all - getSizeBusyMemory(user.getId())) {
             String type = mimeType;
             File fileForDAO = null;
             try {

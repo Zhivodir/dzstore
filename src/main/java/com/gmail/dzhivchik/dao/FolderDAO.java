@@ -14,15 +14,15 @@ public interface FolderDAO {
     Folder getFolder(int id);
     Folder getFolder(User user, String name, Folder parentFolder);
 
-    List<Content> getList(User user, Folder parentFolder);
+    List<Content> getList(int userId, Folder parentFolder);
     List<Content> getStarredList(User user);
-    List<Content> getBinList(User user);
-    List<Content> getSharedList(User user, Integer targetFolder);
-    List<Content> getSearchList(String whatSearch, User user);
+    List<Content> getBinList(int userId);
+    List<Content> getSharedList(int userId, Integer targetFolder);
+    List<Content> getSearchList(int userId, String whatSearch);
     List<Folder> getListFoldersById(int[] listOfId);
 
     void changeStar(int[] checked_folders_id, boolean stateOfStar);
-    void renameFolder(User userWhoWantRename, int fileId, String newName);
+    void renameFolder(int userId, int fileId, String newName);
     void changeShare(List<Folder> targets);
     void changeInBin(int[] checked_folders_id, boolean stateOfInBinStatus);
     void move_to(int[] checked_folders_id, Folder target);

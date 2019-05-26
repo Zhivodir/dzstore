@@ -76,20 +76,18 @@ public class FileDAOImpl implements FileDAO {
     }
 
     @Override
-    public List<Content> getList(User user, Folder parentFolder) {
-        int user_id = user.getId();
-
+    public List<Content> getList(int userId, Folder parentFolder) {
         Query query;
         if(parentFolder == null){
             query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
-                    "WHERE f.user.id = :user_id AND f.parentFolder.id IS NULL AND f.inbin <> 1", Content.class);
+                    "WHERE f.user.id = :userId AND f.parentFolder.id IS NULL AND f.inbin <> 1", Content.class);
         }else{
             Integer parent_id = parentFolder.getId();
             query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
-                    "WHERE f.user.id = :user_id AND f.parentFolder.id = :parent_id AND f.inbin <> 1", Content.class);
+                    "WHERE f.user.id = :userId AND f.parentFolder.id = :parent_id AND f.inbin <> 1", Content.class);
             query.setParameter("parent_id", parent_id);
         }
-        query.setParameter("user_id", user_id);
+        query.setParameter("userId", userId);
         return query.getResultList();
     }
 
@@ -110,29 +108,28 @@ public class FileDAOImpl implements FileDAO {
     }
 
     @Override
-    public List<Content> getSharedList(User user, Integer targetFolder) {
+    public List<Content> getSharedList(int userId, Integer targetFolder) {
         Query query;
         if(targetFolder == null ) {
             query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
                     "INNER JOIN f.shareFor user " +
-                    "WHERE user = :user AND f.inbin <> 1 AND f.shareInFolder = false", Content.class);
+                    "WHERE user.id = :userId AND f.inbin <> 1 AND f.shareInFolder = false", Content.class);
         } else {
             query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
                     "INNER JOIN f.shareFor user " +
-                    "WHERE user = :user AND f.inbin <> 1 AND f.shareInFolder = true AND f.parentFolder.id = :targetFolder", Content.class);
+                    "WHERE user.id = :userId AND f.inbin <> 1 AND f.shareInFolder = true AND f.parentFolder.id = :targetFolder", Content.class);
             query.setParameter("targetFolder", targetFolder);
         }
-        query.setParameter("user", user);
+        query.setParameter("userId", userId);
         return  query.getResultList();
     }
 
 
     @Override
-    public List<Content> getSearchList(String whatSearch, User user) {
-        int user_id = user.getId();
+    public List<Content> getSearchList(int userId, String whatSearch) {
         Query query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
-                "WHERE f.user.id = :user_id AND UPPER(f.name) LIKE :whatSearch AND f.inbin <> 1", Content.class);
-        query.setParameter("user_id", user_id);
+                "WHERE f.user.id = :userId AND UPPER(f.name) LIKE :whatSearch AND f.inbin <> 1", Content.class);
+        query.setParameter("userId", userId);
         query.setParameter("whatSearch", "%" + whatSearch.toUpperCase() + "%");
         return query.getResultList();
     }
@@ -154,7 +151,7 @@ public class FileDAOImpl implements FileDAO {
             }
         }
         Query query = entityManager.createQuery(sb.toString(), File.class);
-        return (List<File>)query.getResultList();
+        return query.getResultList();
     }
 
     @Override
@@ -175,11 +172,11 @@ public class FileDAOImpl implements FileDAO {
 
 
     @Override
-    public void renameFile(User userWhoWantRename ,int fileId , String newName) {
-        Query query = entityManager.createQuery("UPDATE File f SET f.name = :newName WHERE f.id = :id AND f.user = :userWhoWantRename");
+    public void renameFile(int userId , int fileId, String newName) {
+        Query query = entityManager.createQuery("UPDATE File f SET f.name = :newName WHERE f.id = :id AND f.user.id = :userId");
         query.setParameter("newName", newName);
         query.setParameter("id", fileId);
-        query.setParameter("userWhoWantRename", userWhoWantRename);
+        query.setParameter("userId", userId);
         query.executeUpdate();
     }
 
@@ -196,14 +193,13 @@ public class FileDAOImpl implements FileDAO {
         int user_id = user.getId();
         Query query = entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id", File.class);
         query.setParameter("user_id", user_id);
-        return (List<File>)query.getResultList();
+        return query.getResultList();
     }
 
-    public List<Content> getBinList(User user){
-        int user_id = user.getId();
+    public List<Content> getBinList(int userId){
         Query query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
-                "WHERE f.user.id = :user_id AND f.inbin = 1", Content.class);
-        query.setParameter("user_id", user_id);
+                "WHERE f.user.id = :userId AND f.inbin = 1", Content.class);
+        query.setParameter("userId", userId);
         return query.getResultList();
     }
 
@@ -259,9 +255,9 @@ public class FileDAOImpl implements FileDAO {
     }
 
     @Override
-    public long getMemoryBusySize(User user) {
-        Query query = entityManager.createQuery("SELECT sum(f.size) FROM File f WHERE f.user = :user");
-        query.setParameter("user", user);
+    public long getMemoryBusySize(int userId) {
+        Query query = entityManager.createQuery("SELECT sum(f.size) FROM File f WHERE f.user.id = :userId");
+        query.setParameter("userId", userId);
         return (Long)query.getSingleResult();
     }
 }

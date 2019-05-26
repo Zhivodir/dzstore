@@ -52,17 +52,17 @@ public class FolderDAOImpl implements FolderDAO {
     }
 
     @Override
-    public List<Content> getList(User user, Folder parentFolder) {
+    public List<Content> getList(int userId, Folder parentFolder) {
         Query query;
         if (parentFolder == null) {
             query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(c.id, c.name, c.user.login, c.starred, c.shareInFolder, c.inbin) FROM Folder c " +
-                    "WHERE c.user = :user AND c.parentFolder IS NULL AND c.inbin <> 1", Content.class);
+                    "WHERE c.user.id = :userId AND c.parentFolder IS NULL AND c.inbin <> 1", Content.class);
         } else {
             query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(c.id, c.name, c.user.login, c.starred, c.shareInFolder, c.inbin) FROM Folder c " +
-                    "WHERE c.user = :user AND c.parentFolder = :parent AND c.inbin <> 1", Content.class);
+                    "WHERE c.user.id = :userId AND c.parentFolder = :parent AND c.inbin <> 1", Content.class);
             query.setParameter("parent", parentFolder);
         }
-        query.setParameter("user", user);
+        query.setParameter("userId", userId);
         return query.getResultList();
     }
 
@@ -161,38 +161,37 @@ public class FolderDAOImpl implements FolderDAO {
     }
 
     @Override
-    public List<Content> getSharedList(User user, Integer targetFolder) {
+    public List<Content> getSharedList(int userId, Integer targetFolder) {
         Query query;
         if (targetFolder == null) {
             query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.user.login, f.starred, f.shareInFolder, f.inbin) FROM Folder f " +
                     "INNER JOIN f.shareFor user " +
-                    "WHERE user = :user AND f.inbin <> 1 AND f.shareInFolder = false", Content.class);
+                    "WHERE user.id = :userId AND f.inbin <> 1 AND f.shareInFolder = false", Content.class);
         } else {
             query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.user.login, f.starred, f.shareInFolder, f.inbin) FROM Folder f " +
                     "INNER JOIN f.shareFor user " +
-                    "WHERE user = :user AND f.inbin <> 1 AND f.shareInFolder = true AND f.parentFolder.id = :targetFolder", Content.class);
+                    "WHERE user.id = :userId AND f.inbin <> 1 AND f.shareInFolder = true AND f.parentFolder.id = :targetFolder", Content.class);
             query.setParameter("targetFolder", targetFolder);
         }
-        query.setParameter("user", user);
+        query.setParameter("userId", userId);
         return query.getResultList();
     }
 
     @Override
-    public List<Content> getSearchList(String whatSearch, User user) {
-        int user_id = user.getId();
+    public List<Content> getSearchList(int userId, String whatSearch) {
         Query query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.user.login, f.starred, f.shareInFolder, f.inbin) FROM Folder f " +
-                "WHERE f.user.id = :user_id AND UPPER(f.name) LIKE :whatSearch  AND f.inbin <> 1", Content.class);
-        query.setParameter("user_id", user_id);
+                "WHERE f.user.id = :userId AND UPPER(f.name) LIKE :whatSearch  AND f.inbin <> 1", Content.class);
+        query.setParameter("userId", userId);
         query.setParameter("whatSearch", "%" + whatSearch.toUpperCase() + "%");
         return query.getResultList();
     }
 
     @Override
-    public void renameFolder(User userWhoWantRename, int folderId, String newName) {
-        Query query = entityManager.createQuery("UPDATE Folder f SET f.name = :newName WHERE f.id = :id AND f.user = :userWhoWantRename");
+    public void renameFolder(int userId, int folderId, String newName) {
+        Query query = entityManager.createQuery("UPDATE Folder f SET f.name = :newName WHERE f.id = :id AND f.user.id = :userId");
         query.setParameter("newName", newName);
         query.setParameter("id", folderId);
-        query.setParameter("userWhoWantRename", userWhoWantRename);
+        query.setParameter("userId", userId);
         int result = query.executeUpdate();
     }
 
@@ -221,11 +220,10 @@ public class FolderDAOImpl implements FolderDAO {
     }
 
     @Override
-    public List<Content> getBinList(User user) {
-        int user_id = user.getId();
+    public List<Content> getBinList(int userId) {
         Query query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.user.login, f.starred, f.shareInFolder, f.inbin) FROM Folder f " +
-                "WHERE f.user.id = :user_id AND f.inbin = 1", Content.class);
-        query.setParameter("user_id", user_id);
+                "WHERE f.user.id = :userId AND f.inbin = 1", Content.class);
+        query.setParameter("userId", userId);
         return query.getResultList();
     }
 

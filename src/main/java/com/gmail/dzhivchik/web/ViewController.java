@@ -1,6 +1,7 @@
 package com.gmail.dzhivchik.web;
 
 import com.gmail.dzhivchik.domain.Folder;
+import com.gmail.dzhivchik.domain.SpringSecurityUser;
 import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.domain.enums.PageType;
 import com.gmail.dzhivchik.service.Impl.ContentService;
@@ -35,8 +36,7 @@ public class ViewController {
     @RequestMapping(method = RequestMethod.GET)
     public String onIndex(HttpServletRequest request, HttpServletResponse response,
                           @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
+        SpringSecurityUser user = (SpringSecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         viewHelper.prepareLeftMenu(request, PageType.INDEX, user);
         viewHelper.prepareCommonData(request, PageType.INDEX, user);
         localeResolver.setLocale(request, response, new Locale(user.getLanguage().toString()));
@@ -50,8 +50,7 @@ public class ViewController {
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public String search(HttpServletRequest request, HttpServletResponse response,
                          @RequestParam(value = "whatSearch", required = false) String whatSearch) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
+        SpringSecurityUser user = (SpringSecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         viewHelper.prepareLeftMenu(request, PageType.SEARCH, user);
         viewHelper.prepareCommonData(request, PageType.SEARCH, user);
         localeResolver.setLocale(request, response, new Locale(user.getLanguage().toString()));
@@ -64,8 +63,7 @@ public class ViewController {
     @RequestMapping(value = "/shared", method = RequestMethod.GET)
     public String shared(HttpServletRequest request, HttpServletResponse response,
                          @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
+        SpringSecurityUser user = (SpringSecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         viewHelper.prepareLeftMenu(request, PageType.SHARED, user);
         viewHelper.prepareCommonData(request, PageType.SHARED, user);
         localeResolver.setLocale(request, response, new Locale(user.getLanguage().toString()));
@@ -76,8 +74,7 @@ public class ViewController {
 
     @RequestMapping(value = "/bin")
     public String toBin(HttpServletRequest request, HttpServletResponse response) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
+        SpringSecurityUser user = (SpringSecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         viewHelper.prepareLeftMenu(request, PageType.BIN, user);
         viewHelper.prepareCommonData(request, PageType.BIN, user);
         localeResolver.setLocale(request, response, new Locale(user.getLanguage().toString()));
@@ -87,8 +84,7 @@ public class ViewController {
     @RequestMapping(value = "/starred")
     public String onStarred(HttpServletRequest request, HttpServletResponse response,
                             @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
+        SpringSecurityUser user = (SpringSecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         viewHelper.prepareLeftMenu(request, PageType.STARRED, user);
         viewHelper.prepareCommonData(request, PageType.STARRED, user);
         localeResolver.setLocale(request, response, new Locale(user.getLanguage().toString()));
@@ -97,29 +93,25 @@ public class ViewController {
     }
 
 
-
-
     @RequestMapping(value = "/getContent/{currentFolderId}", method = RequestMethod.POST)
     public @ResponseBody DataTablesResponse<Content> getContent(@PathVariable int currentFolderId, @RequestBody DataTablesRequest dtRequest) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
+        SpringSecurityUser user = (SpringSecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return getAllCurrentFolderContent(user, currentFolderId, dtRequest);
-    }
-
-    private DataTablesResponse<Content> getAllCurrentFolderContent(User user, int currentFolderId, DataTablesRequest dtRequest) {
-        Folder currentFolder = currentFolderId == -1 ? null : contentService.getFolder(currentFolderId);
-        List<Content> data = contentService.getContent(user, currentFolder);
-        return formDataTablesResponse(data, dtRequest);
     }
 
     @RequestMapping(value = "/getContent/starred/{currentFolderId}", method = RequestMethod.POST)
     public @ResponseBody DataTablesResponse<Content> getStarredContent(@PathVariable int currentFolderId, @RequestBody DataTablesRequest dtRequest) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
+        SpringSecurityUser user = (SpringSecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (currentFolderId != -1) {
             return getAllCurrentFolderContent(user, currentFolderId, dtRequest);
         }
-        return getStarredContent(user, dtRequest);
+        return getStarredContent(user.getId(), dtRequest);
+    }
+
+    private DataTablesResponse<Content> getAllCurrentFolderContent(SpringSecurityUser user, int currentFolderId, DataTablesRequest dtRequest) {
+        Folder currentFolder = currentFolderId == -1 ? null : contentService.getFolder(currentFolderId);
+        List<Content> data = contentService.getContent(user.getId(), currentFolder);
+        return formDataTablesResponse(data, dtRequest);
     }
 
     private DataTablesResponse<Content> getStarredContent(User user, DataTablesRequest dtRequest) {
@@ -129,37 +121,34 @@ public class ViewController {
 
     @RequestMapping(value = "/getContent/bin", method = RequestMethod.POST)
     public @ResponseBody DataTablesResponse<Content> getBinContent(@RequestBody DataTablesRequest dtRequest) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
-        return getTargetContent(user, dtRequest);
+        SpringSecurityUser user = (SpringSecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return getTargetContent(user.getId(), dtRequest);
     }
 
-    private DataTablesResponse<Content> getTargetContent(User user, DataTablesRequest dtRequest) {
-        List<Content> data = contentService.getBinContent(user);
+    private DataTablesResponse<Content> getTargetContent(int userId, DataTablesRequest dtRequest) {
+        List<Content> data = contentService.getBinContent(userId);
         return formDataTablesResponse(data, dtRequest);
     }
 
     @RequestMapping(value = "/getContent/shared/{currentFolderId}", method = RequestMethod.POST)
     public @ResponseBody DataTablesResponse<Content> getSharedContent(@PathVariable int currentFolderId, @RequestBody DataTablesRequest dtRequest) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
-        return getSharedContent(user, currentFolderId, dtRequest);
+        SpringSecurityUser user = (SpringSecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return getSharedContent(user.getId(), currentFolderId, dtRequest);
     }
 
-    private DataTablesResponse<Content> getSharedContent(User user, int currentFolderId, DataTablesRequest dtRequest) {
-        List<Content> data = contentService.getSharedContent(user, currentFolderId == -1 ? null : currentFolderId);
+    private DataTablesResponse<Content> getSharedContent(int userId, int currentFolderId, DataTablesRequest dtRequest) {
+        List<Content> data = contentService.getSharedContent(userId, currentFolderId == -1 ? null : currentFolderId);
         return formDataTablesResponse(data, dtRequest);
     }
 
     @RequestMapping(value = "/getContent/search/{searchQuery}", method = RequestMethod.POST)
     public @ResponseBody DataTablesResponse<Content> getSearchContent(@PathVariable String searchQuery, @RequestBody DataTablesRequest dtRequest) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
-        return getSearchContent(user, searchQuery, dtRequest);
+        SpringSecurityUser user = (SpringSecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return getSearchContent(user.getId(), searchQuery, dtRequest);
     }
 
-    private DataTablesResponse<Content> getSearchContent(User user, String searchQuery, DataTablesRequest dtRequest) {
-        List<Content> data = contentService.getSearchContent(user, searchQuery);
+    private DataTablesResponse<Content> getSearchContent(int userId, String searchQuery, DataTablesRequest dtRequest) {
+        List<Content> data = contentService.getSearchContent(userId, searchQuery);
         return formDataTablesResponse(data, dtRequest);
     }
 

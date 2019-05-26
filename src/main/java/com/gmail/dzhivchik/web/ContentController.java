@@ -2,6 +2,7 @@ package com.gmail.dzhivchik.web;
 
 import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.Sender;
+import com.gmail.dzhivchik.domain.SpringSecurityUser;
 import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.service.Impl.ContentService;
 import com.gmail.dzhivchik.service.UserService;
@@ -74,7 +75,8 @@ public class ContentController {
 
     @RequestMapping(value = "/renameContent", method = RequestMethod.POST)
     public ResponseEntity renameContent(@RequestParam String newName, @RequestParam String contentType, @RequestParam int contentId) {
-        contentService.rename(contentType, contentId, newName);
+        SpringSecurityUser user = (SpringSecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        contentService.rename(contentType, contentId, newName, user.getId());
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -128,7 +130,6 @@ public class ContentController {
     @RequestMapping(value = "/addToMe", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
     public @ResponseBody String addToMe(@ModelAttribute SelectedContent selectedContent) {
         contentService.addToMe(selectedContent.getSelectedFiles(), selectedContent.getSelectedFolders());
-        System.out.println(getBusySpace());
         return getBusySpace() + "";
     }
 
@@ -138,8 +139,7 @@ public class ContentController {
     }
 
     private long getBusySpace(){
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
-        return contentService.getSizeBusyMemory(user);
+        SpringSecurityUser user = (SpringSecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return contentService.getSizeBusyMemory(user.getId());
     }
 }

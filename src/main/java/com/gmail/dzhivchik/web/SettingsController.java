@@ -1,5 +1,6 @@
 package com.gmail.dzhivchik.web;
 
+import com.gmail.dzhivchik.domain.SpringSecurityUser;
 import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.domain.enums.Language;
 import com.gmail.dzhivchik.service.UserService;
@@ -22,6 +23,8 @@ public class SettingsController {
         User user = userService.getUser(login);
         user.setLanguage(language);
         userService.editUser(user);
+        SpringSecurityUser springUser = (SpringSecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        springUser.setLanguage(language);
         return "redirect:/";
     }
 }
