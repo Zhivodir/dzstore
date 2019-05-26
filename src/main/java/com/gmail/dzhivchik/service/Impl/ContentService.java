@@ -27,7 +27,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 
-
 @Service
 public class ContentService {
 
@@ -107,14 +106,6 @@ public class ContentService {
         return content;
     }
 
-    private Content convertFileToContentDto(File e) {
-        return new Content(e.getId(), e.getName(), e.getSize(), e.getUser().getLogin(), e.getType(), e.isStarred(), e.isShareInFolder(), e.isInbin());
-    }
-
-    private Content convertFolderToContentDto(Folder e) {
-        return new Content(e.getId(), e.getName(), 0, e.getUser().getLogin(), "folder", e.isStarred(), e.isShareInFolder(), e.isInbin());
-    }
-
     @Transactional
     public void deleteCheckedContent(int[] checked_files_id, int[] checked_folders_id) {
         if (checked_files_id != null) {
@@ -153,7 +144,6 @@ public class ContentService {
         }
     }
 
-
     @Transactional
     public List<Content> getStarredContent(User user) {
         List<Content> content = folderDAO.getStarredList(user);
@@ -178,7 +168,6 @@ public class ContentService {
         content.addAll(fileDAO.getSharedList(userId, targetFolder));
         return content;
     }
-
 
     @Transactional
     public List<Content> getSearchContent(int userId, String whatSearch) {
@@ -267,7 +256,6 @@ public class ContentService {
         }
     }
 
-
     @Transactional
     public void addToMe(int[] checked_files_id, int[] checked_folders_id) {
         User currentUser = getCurrentUser();
@@ -300,7 +288,6 @@ public class ContentService {
         return fileDAO.getMemoryBusySize(userId);
     }
 
-
     private void createPathForElement(StringBuilder sb, Folder curFolder) {
         if (curFolder != null) {
             createPathForElement(sb, curFolder.getParentFolder());
@@ -308,7 +295,6 @@ public class ContentService {
             sb.append("/");
         }
     }
-
 
     private void addSharedFileToMyStore(List<File> listOfAddFiles, User user, Folder curFolder, Folder addFolder) {
         long all = (long) 10 * 1024 * 1024 * 1024;
@@ -425,7 +411,6 @@ public class ContentService {
         }
     }
 
-
     private void downloadSeveralFiles(List<File> listCheckedFiles, List<Folder> listCheckedFolder) {
         int BUFFER_SIZE = 1024;
         try {
@@ -471,7 +456,6 @@ public class ContentService {
         }
     }
 
-
     private void prepareZipFileForDownload(ZipOutputStream out, List<File> listCheckedFiles, List<Folder> listCheckedFolder, StringBuilder structure) throws IOException {
         if (listCheckedFiles.size() != 0) {
             for (File file : listCheckedFiles) {
@@ -507,7 +491,6 @@ public class ContentService {
             }
         }
     }
-
     private static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     private static SecureRandom rnd = new SecureRandom();
 

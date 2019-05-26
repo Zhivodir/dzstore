@@ -29,7 +29,6 @@ public class FolderDAOImpl implements FolderDAO {
         }
     }
 
-
     @Override
     public Folder isFolder(String name, boolean inbin, User user, Folder parentFolder) {
         Query query;
@@ -66,7 +65,6 @@ public class FolderDAOImpl implements FolderDAO {
         return query.getResultList();
     }
 
-
     @Override
     public Folder getFolder(int id) {
         Query query;
@@ -94,7 +92,6 @@ public class FolderDAOImpl implements FolderDAO {
         List<Folder> temp = (List<Folder>) query.getResultList();
         return temp.get(0);
     }
-
 
     @Override
     public Folder[] deleteGroup(int[] checked_folders_id) {
@@ -127,7 +124,6 @@ public class FolderDAOImpl implements FolderDAO {
         Query query = entityManager.createQuery(sb.toString(), Folder.class);
         return (List<Folder>) query.getResultList();
     }
-
 
     @Override
     public void changeStar(int[] checked_folders_id, boolean stateOfStar) {
@@ -202,7 +198,6 @@ public class FolderDAOImpl implements FolderDAO {
         }
     }
 
-
     @Override
     public void changeInBin(int[] checked_folders_id, boolean stateOfInBinStatus) {
         StringBuilder sb = new StringBuilder();
@@ -255,7 +250,6 @@ public class FolderDAOImpl implements FolderDAO {
                 }
             }
         }
-        System.out.println("!!! " + sb.toString());
         Query query;
         if (parentFolder == null) {
             query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder IS NULL AND c.inbin <> 1" + sb.toString(), Folder.class);

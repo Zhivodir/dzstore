@@ -20,6 +20,12 @@ public class ViewControllerHelper {
     @Autowired
     private ContentService contentService;
 
+
+    public void prepareView(HttpServletRequest request, PageType pageType, SpringSecurityUser user) {
+        prepareLeftMenu(request, pageType, user);
+        prepareCommonData(request, pageType, user);
+    }
+
     public void prepareCommonData(HttpServletRequest request, PageType pageType, SpringSecurityUser user) {
         request.setAttribute("typeOfView", pageType.toString().toLowerCase());
         request.setAttribute("user", user);
