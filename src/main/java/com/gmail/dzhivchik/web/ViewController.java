@@ -36,6 +36,7 @@ public class ViewController {
         SpringSecurityUser user = (SpringSecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         viewHelper.prepareView(request, PageType.INDEX, user);
         localeResolver.setLocale(request, response, new Locale(user.getLanguage().toString()));
+//
 
         request.setAttribute("parentsFolderID", null);
         request.setAttribute("currentFolderID", currentFolderID);
