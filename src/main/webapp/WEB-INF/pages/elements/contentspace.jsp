@@ -54,7 +54,6 @@
   availableSpace = ${busySpace[1]};
 
   $(document).ready(function () {
-    //busy space progress initialization
     showBusySpace();
 
     table = $('#myTable').DataTable(datatableOpts(

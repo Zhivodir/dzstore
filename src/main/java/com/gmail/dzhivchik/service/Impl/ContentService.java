@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import static com.gmail.dzhivchik.MemoryUtils.GBYTE;
+
 
 @Service
 public class ContentService {
@@ -297,7 +299,7 @@ public class ContentService {
     }
 
     private void addSharedFileToMyStore(List<File> listOfAddFiles, User user, Folder curFolder, Folder addFolder) {
-        long all = (long) 10 * 1024 * 1024 * 1024;
+        long all = (long) 10 * GBYTE;
         for (File file : listOfAddFiles) {
             StringBuilder relativePath = new StringBuilder();
             createPathForElement(relativePath, curFolder);
@@ -343,7 +345,7 @@ public class ContentService {
     private void uploadFile(MultipartFile file, User user, Folder curFolder) {
         String fileName = file.getOriginalFilename();
         long size = file.getSize();
-        long all = (long) 10 * 1024 * 1024 * 1024;
+        long all = (long) 10 * GBYTE;
         String mimeType = file.getContentType();
         if (size <= all - getSizeBusyMemory(user.getId())) {
             String type = mimeType;
