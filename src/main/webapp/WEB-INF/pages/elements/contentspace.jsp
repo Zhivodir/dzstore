@@ -50,8 +50,8 @@
   currentFolderId = ${currentFolderID != null ? currentFolderID : -1};
   typeOfView = '${typeOfView}';
   targetContent = getUrlForDataTables(typeOfView);
-  busySpace = ${busySpace[0]};
-  availableSpace = ${busySpace[1]};
+  busySpace = ${busySpace};
+  availableSpace = ${availableSpace};
 
   $(document).ready(function () {
     showBusySpace();

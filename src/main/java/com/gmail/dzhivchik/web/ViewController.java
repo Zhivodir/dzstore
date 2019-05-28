@@ -18,7 +18,6 @@ import org.springframework.web.servlet.LocaleResolver;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Locale;
 
 @Controller
 @RequestMapping("/")
@@ -34,9 +33,7 @@ public class ViewController {
     public String onIndex(HttpServletRequest request, HttpServletResponse response,
                           @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
         SpringSecurityUser user = (SpringSecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        viewHelper.prepareView(request, PageType.INDEX, user);
-        localeResolver.setLocale(request, response, new Locale(user.getLanguage().toString()));
-//
+        viewHelper.prepareView(request, response, localeResolver, PageType.INDEX, user);
 
         request.setAttribute("parentsFolderID", null);
         request.setAttribute("currentFolderID", currentFolderID);
@@ -48,8 +45,7 @@ public class ViewController {
     public String search(HttpServletRequest request, HttpServletResponse response,
                          @RequestParam(value = "whatSearch", required = false) String whatSearch) {
         SpringSecurityUser user = (SpringSecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        viewHelper.prepareView(request, PageType.SEARCH, user);
-        localeResolver.setLocale(request, response, new Locale(user.getLanguage().toString()));
+        viewHelper.prepareView(request, response, localeResolver, PageType.SEARCH, user);
 
         request.setAttribute("whatSearch", whatSearch);
         return "index_commons";
@@ -60,8 +56,7 @@ public class ViewController {
     public String shared(HttpServletRequest request, HttpServletResponse response,
                          @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
         SpringSecurityUser user = (SpringSecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        viewHelper.prepareView(request, PageType.SHARED, user);
-        localeResolver.setLocale(request, response, new Locale(user.getLanguage().toString()));
+        viewHelper.prepareView(request, response, localeResolver, PageType.SHARED, user);
 
         request.setAttribute("currentFolderID", currentFolderID);
         return "index_commons";
@@ -70,8 +65,7 @@ public class ViewController {
     @RequestMapping(value = "/bin")
     public String toBin(HttpServletRequest request, HttpServletResponse response) {
         SpringSecurityUser user = (SpringSecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        viewHelper.prepareView(request, PageType.BIN, user);
-        localeResolver.setLocale(request, response, new Locale(user.getLanguage().toString()));
+        viewHelper.prepareView(request, response, localeResolver, PageType.BIN, user);
         return "index_commons";
     }
 
@@ -79,8 +73,8 @@ public class ViewController {
     public String onStarred(HttpServletRequest request, HttpServletResponse response,
                             @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
         SpringSecurityUser user = (SpringSecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        viewHelper.prepareView(request, PageType.STARRED, user);
-        localeResolver.setLocale(request, response, new Locale(user.getLanguage().toString()));
+        viewHelper.prepareView(request, response, localeResolver, PageType.STARRED, user);
+
         request.setAttribute("currentFolderID", currentFolderID);
         return "index_commons";
     }

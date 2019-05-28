@@ -17,9 +17,9 @@
     </div>
   </div>
   <div class="busySpace">
-    <span id="busySpace">${busySpace[0]}</span>
+    <span id="busySpace">${busySpace}</span>
     <span> / </span>
-    <span id="availableSpace">${busySpace[1]}</span>
+    <span id="availableSpace">${availableSpace}</span>
   </div>
 </div>
 
