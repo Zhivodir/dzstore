@@ -22,7 +22,8 @@
                   <input name="typeOfView" value="${typeOfView}" type="hidden"/>
                   <select name="language" class="form-control" id="language" style="margin-bottom: 10px;">">
                     <c:forEach items="<%=Language.values()%>" var="language">
-                      <option value="${language}"><s:message code="language.${language}"/></option>
+                      <c:set var="isSelected" value="${user.language == language}"/>
+                      <option value="${language}" ${isSelected ? "selected" : ""}><s:message code="language.${language}"/></option>
                     </c:forEach>
                   </select>
                 </div>

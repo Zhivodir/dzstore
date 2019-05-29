@@ -5,9 +5,4 @@ public class MemoryUtils {
     public static final long KBYTE = 1024*BYTE;
     public static final long MBYTE = 1024*KBYTE;
     public static final long GBYTE = 1024*MBYTE;
-
-    public static long[] showBusySpace(long filesSize) {
-        long[] sizes = {filesSize, 1*MBYTE};
-        return sizes;
-    }
 }
