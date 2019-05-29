@@ -12,6 +12,7 @@
     <li class="li_share"><a class="contextHref"  href="#" data-toggle="modal" data-target="#modalForShare"><s:message code="contextmenu.share"/></a></li>
     <li class="divider"></li>
     <li class="contextHref li_addtome"><input type="button" class="contextInput" onclick="addToMe()" value="<s:message code="contextmenu.add.to.me"/>"></li>
+    <%--<li class="li_moveTo"><a class="contextHref"  href="#" data-toggle="modal" data-target="#modalForMoveTo"><s:message code="contextmenu.move.to"/></a></li>--%>
 </ul>
 
 <script>
