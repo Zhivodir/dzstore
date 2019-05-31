@@ -121,9 +121,9 @@ public class ContentController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/replaceContent", method = RequestMethod.POST)
-    public ResponseEntity replaceContent(@ModelAttribute SelectedContent selectedContent, @RequestParam String moveTo) {
-        contentService.removeToFolder(selectedContent.getSelectedFiles(), selectedContent.getSelectedFolders(), moveTo);
+    @RequestMapping(value = "/moveTo", method = RequestMethod.POST)
+    public ResponseEntity replaceContent(@ModelAttribute SelectedContent selectedContent, @RequestParam int moveTo) {
+        contentService.moveToFolder(selectedContent.getSelectedFiles(), selectedContent.getSelectedFolders(), moveTo);
         return new ResponseEntity(HttpStatus.OK);
     }
 

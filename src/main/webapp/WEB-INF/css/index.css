@@ -172,7 +172,7 @@ body {
     color: black;
 }
 
-.levelPath:hover {
+ .levelPath:hover {
     background-color: #449d44;
     text-decoration: none;
     color: black;
@@ -484,3 +484,15 @@ div.share_for.selected {
     height: 10px !important;
     margin-bottom: 0px !important;
 }
+
+/*
+ * Modal 'Move to'
+ */
+
+.levelPathMoveTo {
+    padding: 6px 12px;
+    text-decoration: none;
+    font-size: 16px;
+    color: black;
+}
+

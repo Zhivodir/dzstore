@@ -37,6 +37,9 @@
           <c:import url="/WEB-INF/pages/modalForPages/operations/rename.jsp"/>
         </c:otherwise>
       </c:choose>
+      <c:if test="${typeOfView.equals('index') || typeOfView.equals('starred')}">
+        <c:import url="/WEB-INF/pages/modalForPages/operations/moveTo.jsp"/>
+      </c:if>
     </form>
   </div>
 </div>

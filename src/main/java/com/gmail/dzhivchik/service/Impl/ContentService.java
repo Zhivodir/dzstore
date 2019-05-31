@@ -51,7 +51,7 @@ public class ContentService {
     }
 
     @Transactional
-    public Folder getFolder(Integer id) {
+    public Folder getFolder(int id) {
         return folderDAO.getFolder(id);
     }
 
@@ -273,11 +273,8 @@ public class ContentService {
     }
 
     @Transactional
-    public void removeToFolder(int[] checked_files_id, int[] checked_folders_id, String move_to) {
-        Folder target = null;
-        if (!move_to.equals("tree")) {
-            target = getFolder(Integer.valueOf(move_to));
-        }
+    public void moveToFolder(int[] checked_files_id, int[] checked_folders_id, int move_to) {
+        Folder target = getFolder(move_to);
         if (checked_files_id != null) {
             fileDAO.move_to(checked_files_id, target);
         }
