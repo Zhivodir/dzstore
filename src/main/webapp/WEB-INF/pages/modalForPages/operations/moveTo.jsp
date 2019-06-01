@@ -69,7 +69,7 @@
   }
 
   $(document).ready(function () {
-    table2 = $('#tableForMoveTo').DataTable(datatableOpts(
+    table2 = $('#tableForMoveTo').DataTable(datatableOpts2(
         '/getContent/' + currentFolderId,
         [
           {
@@ -86,7 +86,7 @@
             class: 'forContextMenu',
             render: function (data, type, full) {
               if (full.type == "folder") {
-                return '<strong><span class="name_of_content">' + data + '</span></strong>';
+                return '<strong><span class="name_of_content" data-current-folder-id="' + full.id + '">' + data + '</span></strong>';
               }
               return '<span class="name_of_content">' + data + '</span>';
             }
@@ -122,11 +122,13 @@
       if ($("#modalForMoveTo .pathElement").length > 1) {
         moveTo_RemoveFolderFromPath();
         comeBackToPrevFolder();
-//        $('#tableForMoveTo').show();
-//        $('#rootTable').hide();
       } else {
-//        $('#tableForMoveTo').hide();
-//        $('#rootTable').show();
+        table2.rows().remove().draw(false);
+        table2.row.add( {
+          "null":'<input hidden class="moveto_checkbox choise_folder" type="checkbox" name="checked_folders_id" value="-1">',
+          "name":'<strong><span class="name_of_content">Disk</span></strong>'
+        } ).draw();
+        $('#tableForMoveTo tr').addClass("choise_field").addClass("choise_folder");
       }
     });
 
@@ -134,6 +136,7 @@
     $("#tableForMoveTo").on('dblclick', '.choise_folder', function (e) {
       currentFolderId = $(this).find("input").val();
       var currentFolderName = $(this).find(".name_of_content").text();
+      alert(currentFolderId + " : " + currentFolderName);
       reloadMoveToContent(currentFolderId);
       moveTo_AddFolderNameToPath(currentFolderId, currentFolderName)
     });
