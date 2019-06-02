@@ -48,7 +48,7 @@
   }
 
   function moveTo() {
-    var moveToFolderId = $('#tableForMoveTo').find("tr.selected").find(".moveto_checkbox")[0].value;
+    var moveToFolderId = $('#tableForMoveTo').find("tr.selected .name_of_content").data("current-folder-id");
 
     $.ajax({
       url: "/moveTo",
@@ -72,15 +72,6 @@
     table2 = $('#tableForMoveTo').DataTable(datatableOpts2(
         '/getContent/' + currentFolderId,
         [
-          {
-            data: null,
-            render: function (data, type, full) {
-              if (full.type == "folder") {
-                return '<input hidden class="moveto_checkbox choise_folder" type="checkbox" name="checked_folders_id" value="' + full.id + '"/>';
-              }
-              return "";
-            }
-          },
           {
             data: 'name',
             class: 'forContextMenu',
@@ -108,13 +99,6 @@
       if ($(this).hasClass("choise_folder")) {
         method = !e.shiftKey && !e.ctrlKey ? 'single' : (e.shiftKey ? 'shift' : 'ctrl');
         selectionMoveTo[method](this);
-        $('#tableForMoveTo tr').each(function (indx, el) {
-          $("input:checkbox").removeAttr("checked");
-        })
-        $('#tableForMoveTo tr.selected').each(function (indx, el) {
-          var inp = $("input:checkbox", el)[0];
-          event.target != inp && (inp.checked = !inp.checked)
-        })
       }
     });
 
@@ -125,18 +109,18 @@
       } else {
         table2.rows().remove().draw(false);
         table2.row.add( {
-          "null":'<input hidden class="moveto_checkbox choise_folder" type="checkbox" name="checked_folders_id" value="-1">',
-          "name":'<strong><span class="name_of_content">Disk</span></strong>'
+          "name":'Disk'
         } ).draw();
+        $('#tableForMoveTo tr .name_of_content').data("current-folder-id", -1);
         $('#tableForMoveTo tr').addClass("choise_field").addClass("choise_folder");
       }
     });
 
 
     $("#tableForMoveTo").on('dblclick', '.choise_folder', function (e) {
-      currentFolderId = $(this).find("input").val();
-      var currentFolderName = $(this).find(".name_of_content").text();
-      alert(currentFolderId + " : " + currentFolderName);
+      var content = $(this).find(".name_of_content");
+      currentFolderId = content.data("current-folder-id");
+      var currentFolderName = content.text();
       reloadMoveToContent(currentFolderId);
       moveTo_AddFolderNameToPath(currentFolderId, currentFolderName)
     });

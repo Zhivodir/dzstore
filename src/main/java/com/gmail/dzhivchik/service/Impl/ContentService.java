@@ -274,7 +274,7 @@ public class ContentService {
 
     @Transactional
     public void moveToFolder(int[] checked_files_id, int[] checked_folders_id, int move_to) {
-        Folder target = getFolder(move_to);
+        Folder target = move_to == -1 ? null : getFolder(move_to);
         if (checked_files_id != null) {
             fileDAO.move_to(checked_files_id, target);
         }

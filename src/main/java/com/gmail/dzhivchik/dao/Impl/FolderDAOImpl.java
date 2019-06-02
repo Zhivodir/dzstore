@@ -43,7 +43,7 @@ public class FolderDAOImpl implements FolderDAO {
         query.setParameter("name", name);
         query.setParameter("inbin", inbin);
         query.setParameter("user", user);
-        List<Folder> resultList = ((List<Folder>) query.getResultList());
+        List<Folder> resultList = query.getResultList();
         if (resultList.size() != 0) {
             return resultList.get(0);
         }
@@ -70,8 +70,7 @@ public class FolderDAOImpl implements FolderDAO {
         Query query;
         query = entityManager.createQuery("SELECT f FROM Folder f WHERE f.id = :id", Folder.class);
         query.setParameter("id", id);
-        List<Folder> temp = (List<Folder>) query.getResultList();
-        return temp.get(0);
+        return (Folder)query.getSingleResult();
     }
 
     @Override
@@ -89,8 +88,7 @@ public class FolderDAOImpl implements FolderDAO {
         }
         query.setParameter("name", name);
         query.setParameter("user", user);
-        List<Folder> temp = (List<Folder>) query.getResultList();
-        return temp.get(0);
+        return (Folder)query.getSingleResult();
     }
 
     @Override
@@ -122,7 +120,7 @@ public class FolderDAOImpl implements FolderDAO {
             }
         }
         Query query = entityManager.createQuery(sb.toString(), Folder.class);
-        return (List<Folder>) query.getResultList();
+        return query.getResultList();
     }
 
     @Override
@@ -258,6 +256,6 @@ public class FolderDAOImpl implements FolderDAO {
             query.setParameter("parent", parentFolder);
         }
         query.setParameter("user", user);
-        return (List<Folder>) query.getResultList();
+        return query.getResultList();
     }
 }
