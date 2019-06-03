@@ -38,12 +38,14 @@
 
 <script>
   pathBlock = $("#modalForMoveTo .currentFolderPath");
+  nestingLevel = 0;
 
   function initStartingPath() {
+    levelPaths = $(".contentmenu-place .currentFolderPath .levelPath");
+    nestingLevel = levelPaths.length;
     pathBlock.empty();
     pathBlock.append('<span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>')
-    $(".contentmenu-place .currentFolderPath .levelPath").clone()
-        .removeClass("levelPath").addClass("levelPathMoveTo").appendTo("#modalForMoveTo .currentFolderPath");
+    levelPaths.clone().removeClass("levelPath").addClass("levelPathMoveTo").appendTo("#modalForMoveTo .currentFolderPath");
     $("#modalForMoveTo .pathElement").not(":last").hide();
   }
 
@@ -103,26 +105,34 @@
     });
 
     $('#modalForMoveTo').on('click', '.glyphicon-circle-arrow-left', function (e) {
-      if ($("#modalForMoveTo .pathElement").length > 1) {
+      if (nestingLevel > 1) {
         moveTo_RemoveFolderFromPath();
         comeBackToPrevFolder();
       } else {
+        pathBlock.empty();
+        pathBlock.append('<span class="pathElement levelPathMoveTo">' + typeOfViewNames['space'] + '</span>');
         table2.rows().remove().draw(false);
-        table2.row.add( {
-          "name":'Disk'
-        } ).draw();
+        table2.row.add({
+          "name": typeOfViewNames['myspaceView']
+        }).draw();
         $('#tableForMoveTo tr .name_of_content').data("current-folder-id", -1);
         $('#tableForMoveTo tr').addClass("choise_field").addClass("choise_folder");
       }
+      nestingLevel--;
     });
 
 
     $("#tableForMoveTo").on('dblclick', '.choise_folder', function (e) {
+      if (nestingLevel == 0) {
+        pathBlock.append('<span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>')
+        levelPaths.clone().removeClass("levelPath").addClass("levelPathMoveTo").appendTo("#modalForMoveTo .currentFolderPath");
+      }
       var content = $(this).find(".name_of_content");
       currentFolderId = content.data("current-folder-id");
       var currentFolderName = content.text();
       reloadMoveToContent(currentFolderId);
-      moveTo_AddFolderNameToPath(currentFolderId, currentFolderName)
+      moveTo_AddFolderNameToPath(currentFolderId, currentFolderName);
+      nestingLevel++;
     });
 
     $(".li_moveTo").on("click", function () {

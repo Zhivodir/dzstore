@@ -3,6 +3,7 @@
 
 <script type="text/javascript">
   var typeOfViewNames = {
+    "space": "<s:message code="view.space"/>",
     "myspaceView": "<s:message code="view.type.my.space"/>",
     "sharedView": "<s:message code="view.type.shared.for.me"/>",
     "starredView": "<s:message code="view.type.starred"/>",
