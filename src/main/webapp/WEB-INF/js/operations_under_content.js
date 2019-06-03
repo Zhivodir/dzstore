@@ -18,3 +18,4 @@ function createFolder() {
 
   $("#modalForNewFolder").modal('hide');
 }
+

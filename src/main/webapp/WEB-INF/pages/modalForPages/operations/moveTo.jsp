@@ -6,8 +6,7 @@
   <div class="row">
     <div class="col-md-12">
       <!-- start of Modal -->
-      <div class="modal fade modal-coordinate" id="modalForMoveTo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-           aria-hidden="true">
+      <div class="modal fade modal-coordinate" id="modalForMoveTo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content all-modal-change">
             <div class="modal-header">
@@ -25,7 +24,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal"><s:message code="modal.button.cancel"/></button>
-              <button type="button" class="btn btn-primary" onclick="moveTo()"><s:message code="modal.button.move"/></button>
+              <button type="button" class="btn btn-primary" onclick="moveToByButton()"><s:message code="modal.button.move"/></button>
             </div>
           </div>
         </div>
@@ -40,25 +39,31 @@
   pathBlock = $("#modalForMoveTo .currentFolderPath");
   nestingLevel = 0;
 
+  filesForMove = [];
+  foldersForMove = [];
+  typeOfMoving = 'c';
+
   function initStartingPath() {
     levelPaths = $(".contentmenu-place .currentFolderPath .levelPath");
     nestingLevel = levelPaths.length;
     pathBlock.empty();
-    pathBlock.append('<span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>')
+    pathBlock.append('<span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>');
     levelPaths.clone().removeClass("levelPath").addClass("levelPathMoveTo").appendTo("#modalForMoveTo .currentFolderPath");
     $("#modalForMoveTo .pathElement").not(":last").hide();
   }
 
-  function moveTo() {
+  function moveToByButton() {
     var moveToFolderId = $('#tableForMoveTo').find("tr.selected .name_of_content").data("current-folder-id");
+    var selectedFiles = createSelectedFilesMassiv();
+    var selectedFolders = createSelectedFoldersMassiv();
 
     $.ajax({
       url: "/moveTo",
       type: 'POST',
       traditional: true,
       data: {
-        selectedFiles: createSelectedFilesMassiv(),
-        selectedFolders: createSelectedFoldersMassiv(),
+        selectedFiles: selectedFiles,
+        selectedFolders: selectedFolders,
         moveTo: moveToFolderId
       },
       success: function (result) {
@@ -68,6 +73,31 @@
       error: function (result) {
       }
     })
+  }
+
+  function moveToByKeys() {
+    var moveToFolderId = $(".contentmenu-place .levelPath:last").data("current-folder-id");
+    var selectedFiles = filesForMove;
+    var selectedFolders = foldersForMove;
+
+    if (filesForMove.length != 0 || foldersForMove != 0) {
+      $.ajax({
+        url: "/moveTo",
+        type: 'POST',
+        traditional: true,
+        data: {
+          selectedFiles: filesForMove,
+          selectedFolders: foldersForMove,
+          moveTo: moveToFolderId
+        },
+        success: function (result) {
+          table.ajax.reload();
+          $("#modalForMoveTo").modal("hide");
+        },
+        error: function (result) {
+        }
+      })
+    }
   }
 
   $(document).ready(function () {
@@ -163,4 +193,22 @@
       reloadMoveToContent(prevFolderId);
     }
   })
+
+  $(document).keydown(function (e) {
+    if (e.ctrlKey && (e.keyCode == 67 || e.keyCode == 88)) {
+      filesForMove = createSelectedFilesMassiv();
+      foldersForMove = createSelectedFoldersMassiv();
+
+      if (e.keyCode == 67) {
+        typeOfMoving = 'c';
+      }
+      if (e.keyCode == 88) {
+        typeOfMoving = 'x';
+      }
+    }
+
+    if (e.keyCode == 86 && e.ctrlKey) {
+      moveToByKeys();
+    }
+  });
 </script>
