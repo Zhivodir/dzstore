@@ -113,7 +113,7 @@
         pathBlock.append('<span class="pathElement levelPathMoveTo">' + typeOfViewNames['space'] + '</span>');
         table2.rows().remove().draw(false);
         table2.row.add({
-          "name": typeOfViewNames['myspaceView']
+          "name": "<strong>" + typeOfViewNames['myspaceView'] + "<strong>"
         }).draw();
         $('#tableForMoveTo tr .name_of_content').data("current-folder-id", -1);
         $('#tableForMoveTo tr').addClass("choise_field").addClass("choise_folder");
