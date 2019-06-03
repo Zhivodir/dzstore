@@ -57,6 +57,23 @@
     var selectedFiles = createSelectedFilesMassiv();
     var selectedFolders = createSelectedFoldersMassiv();
 
+    ajaxMoveTo(moveToFolderId, selectedFiles, selectedFolders)
+  }
+
+  function moveToByKeys() {
+    var moveToFolderId = $(".contentmenu-place .levelPath:last").data("current-folder-id");
+
+    if (filesForMove.length != 0 || foldersForMove != 0) {
+      if (typeOfMoving == 'x') {
+        ajaxMoveTo(moveToFolderId, filesForMove, foldersForMove)
+      }
+      if (typeOfMoving == 'c') {
+        ajaxMoveTo(moveToFolderId, filesForMove, foldersForMove)
+      }
+    }
+  }
+
+  function ajaxMoveTo(moveToFolderId, selectedFiles, selectedFolders) {
     $.ajax({
       url: "/moveTo",
       type: 'POST',
@@ -73,31 +90,6 @@
       error: function (result) {
       }
     })
-  }
-
-  function moveToByKeys() {
-    var moveToFolderId = $(".contentmenu-place .levelPath:last").data("current-folder-id");
-    var selectedFiles = filesForMove;
-    var selectedFolders = foldersForMove;
-
-    if (filesForMove.length != 0 || foldersForMove != 0) {
-      $.ajax({
-        url: "/moveTo",
-        type: 'POST',
-        traditional: true,
-        data: {
-          selectedFiles: filesForMove,
-          selectedFolders: foldersForMove,
-          moveTo: moveToFolderId
-        },
-        success: function (result) {
-          table.ajax.reload();
-          $("#modalForMoveTo").modal("hide");
-        },
-        error: function (result) {
-        }
-      })
-    }
   }
 
   $(document).ready(function () {
