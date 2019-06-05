@@ -107,4 +107,22 @@
 
     $("#modalForRemove").modal('hide');
   }
+
+  function removeContentByKeys() {
+    $.ajax({
+      url: "/removeContent",
+      type: 'POST',
+      traditional: true,
+      data: {
+        selectedFiles: filesForMove,
+        selectedFolders: foldersForMove,
+        typeOfView: '${typeOfView}'
+      },
+      success: function (result) {
+        table.ajax.reload();
+      },
+      error: function (result) {
+      }
+    })
+  }
 </script>

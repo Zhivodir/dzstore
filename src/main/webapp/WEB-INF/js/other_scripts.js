@@ -15,6 +15,7 @@ input.onchange = function(e) {
         structureValue  = structureValue + files[i].webkitRelativePath + ";";
     }
     var input = document.createElement("input");
+    input.setAttribute("id", "shareFor");
     input.setAttribute("type", "hidden");
     input.setAttribute("name", "structure");
     input.setAttribute("value", structureValue);

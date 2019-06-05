@@ -28,6 +28,10 @@
     </div>
 </div>
 
+<!-- Amsify Plugin -->
+<link rel="stylesheet" href="/taggingSystems/amsify.suggestags.css">
+<script src="/taggingSystems/jquery.amsify.suggestags.js"></script>
+
 <script>
     function changeSharedList() {
         var selectedFilesId = [];

@@ -56,7 +56,6 @@
     var moveToFolderId = $('#tableForMoveTo').find("tr.selected .name_of_content").data("current-folder-id");
     var selectedFiles = createSelectedFilesMassiv();
     var selectedFolders = createSelectedFoldersMassiv();
-
     ajaxMoveTo(moveToFolderId, selectedFiles, selectedFolders)
   }
 
@@ -185,22 +184,4 @@
       reloadMoveToContent(prevFolderId);
     }
   })
-
-  $(document).keydown(function (e) {
-    if (e.ctrlKey && (e.keyCode == 67 || e.keyCode == 88)) {
-      filesForMove = createSelectedFilesMassiv();
-      foldersForMove = createSelectedFoldersMassiv();
-
-      if (e.keyCode == 67) {
-        typeOfMoving = 'c';
-      }
-      if (e.keyCode == 88) {
-        typeOfMoving = 'x';
-      }
-    }
-
-    if (e.keyCode == 86 && e.ctrlKey) {
-      moveToByKeys();
-    }
-  });
 </script>

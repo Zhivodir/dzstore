@@ -206,4 +206,43 @@
   function reduceBusySpace(sizeOfChange) {
     busySpace -= sizeOfChange;
   }
+
+  $(document).keydown(function (e) {
+    if (e.ctrlKey && (e.keyCode == 67 || e.keyCode == 88)) {
+      filesForMove = createSelectedFilesMassiv();
+      foldersForMove = createSelectedFoldersMassiv();
+
+      if (e.keyCode == 67) {
+        typeOfMoving = 'c';
+      }
+      if (e.keyCode == 88) {
+        typeOfMoving = 'x';
+      }
+    }
+
+    //ctr+V
+    if (e.keyCode == 86 && e.ctrlKey) {
+      moveToByKeys();
+    }
+
+    //Delete
+    if (e.keyCode == 46) {
+      filesForMove = createSelectedFilesMassiv();
+      foldersForMove = createSelectedFoldersMassiv();
+      if (!${typeOfView.equals("bin")}) {
+        removeContentByKeys();
+      } else {
+        $("#modalForDelete").modal("show");
+      }
+    }
+
+    //Enter
+    if (e.keyCode == 13) {
+      filesForMove = createSelectedFilesMassiv();
+      foldersForMove = createSelectedFoldersMassiv();
+      if (filesForMove.length == 0 && foldersForMove.length == 1) {
+        alert($("#modalForMoveTo").hasClass('in'));
+      }
+    }
+  });
 </script>
