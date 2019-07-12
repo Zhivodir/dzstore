@@ -8,6 +8,8 @@ import com.gmail.dzhivchik.service.Impl.ContentService;
 import com.gmail.dzhivchik.service.UserService;
 import com.gmail.dzhivchik.web.dto.ChangesInAccessForUsers;
 import com.gmail.dzhivchik.web.dto.SelectedContent;
+import com.gmail.dzhivchik.web.dto.datatables.DataTablesRequest;
+import com.gmail.dzhivchik.web.dto.datatables.DataTablesResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -61,7 +64,8 @@ public class ContentController {
     }
 
     @RequestMapping(value = "/createFolder", method = RequestMethod.POST)
-    public @ResponseBody String createNewFolder(@RequestParam int currentFolderId, @RequestParam String newFolderName) {
+    public @ResponseBody
+    String createNewFolder(@RequestParam int currentFolderId, @RequestParam String newFolderName) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
         Folder curFolder = null;
@@ -75,7 +79,7 @@ public class ContentController {
 
     @RequestMapping(value = "/renameContent", method = RequestMethod.POST)
     public ResponseEntity renameContent(@RequestParam String newName, @RequestParam String contentType, @RequestParam int contentId) {
-        SpringSecurityUser user = (SpringSecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        SpringSecurityUser user = (SpringSecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         contentService.rename(contentType, contentId, newName, user.getId());
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -99,7 +103,8 @@ public class ContentController {
     }
 
     @RequestMapping(value = "/deleteContent", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
-    public @ResponseBody String deleteContent(@ModelAttribute SelectedContent selectedContent) {
+    public @ResponseBody
+    String deleteContent(@ModelAttribute SelectedContent selectedContent) {
         contentService.deleteCheckedContent(selectedContent.getSelectedFiles(), selectedContent.getSelectedFolders());
         return getBusySpace() + "";
     }
@@ -123,6 +128,7 @@ public class ContentController {
 
     @RequestMapping(value = "/moveTo", method = RequestMethod.POST)
     public ResponseEntity replaceContent(@ModelAttribute SelectedContent selectedContent, @RequestParam int moveTo) {
+        System.out.println(selectedContent);
         contentService.moveToFolder(selectedContent.getSelectedFiles(), selectedContent.getSelectedFolders(), moveTo);
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -133,13 +139,41 @@ public class ContentController {
         return getBusySpace() + "";
     }
 
+    @RequestMapping(value = "/getUsersWithAccess", method = RequestMethod.POST)
+    public @ResponseBody DataTablesResponse<User> loadListOfAccount(@RequestBody DataTablesRequest dtRequest,
+//                                                                    @RequestParam(value = "selectedFiles", required = false) int[] selectedFiles,
+//                                                                    @RequestParam(value = "selectedFolders", required = false) int[] selectedFolders){
+                                                                    @ModelAttribute SelectedContent selectedContent) {
+        List<User> users = new ArrayList<>();
+        System.out.println(selectedContent);
+
+
+//        if (selectedContent.getSelectedFolders().length != 0) {
+//            users = contentService.getFolder(selectedContent.getSelectedFolders()[0]).getShareFor();
+//        } else if (selectedContent.getSelectedFiles().length != 0) {
+//            users = contentService.getFile(selectedContent.getSelectedFiles()[0]).getShareFor();
+//        }
+        return formDataTablesResponse(users, dtRequest);
+    }
+
+    private DataTablesResponse<User> formDataTablesResponse(List<User> data, DataTablesRequest dtRequest) {
+        int total = data.size();
+
+        DataTablesResponse<User> dtResponse = new DataTablesResponse<>();
+        dtResponse.setDraw(dtRequest.getDraw());
+        dtResponse.setRecordsTotal(total);
+        dtResponse.setRecordsFiltered(total);
+        dtResponse.setData(data);
+        return dtResponse;
+    }
+
     private void sendMessageToEmail() {
         Sender tlsSender = new Sender("dzhproject@gmail.com", "");
         tlsSender.send("This is Subject", "TLS: This is text!", "support@dzstore.com", "");
     }
 
-    private long getBusySpace(){
-        SpringSecurityUser user = (SpringSecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    private long getBusySpace() {
+        SpringSecurityUser user = (SpringSecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return contentService.getSizeBusyMemory(user.getId());
     }
 }

@@ -49,6 +49,36 @@ function datatableOpts2(url, columns) {
   }
 }
 
+
+function datatableOpts3(url, columns) {
+
+  return {
+    ajax: {
+      url: url,
+      type: 'POST',
+      contentType: 'application/json; charset=utf-8',
+      data: function (selectedContent) {
+        selectedContent.selectedFiles = createSelectedFilesMassiv();
+        selectedContent.selectedFolders = createSelectedFoldersMassiv();
+        alert(JSON.stringify(selectedContent))
+        return JSON.stringify(selectedContent);
+      },
+      // data: JSON.stringify({
+      //   // data: {
+      //       //   selectedContent: createSelectedFilesMassiv(),
+      //       //   selectedContent: createSelectedFoldersMassiv()
+      //       // }
+    },
+    columns: columns,
+    bFilter: false,
+    ordering: false,
+    order: [[0, 'asc']],
+    paging: false,
+    bInfo: false
+  }
+}
+
+
 function formatSize(length) {
   var i = 0, type = ['б', 'Кб', 'Мб', 'Гб', 'Тб', 'Пб'];
   while ((length / 1000 | 0) && i < type.length - 1) {

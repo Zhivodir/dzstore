@@ -81,7 +81,7 @@ public class ViewController {
 
 
     @RequestMapping(value = "/getContent/{currentFolderId}", method = RequestMethod.POST)
-    public @ResponseBody DataTablesResponse<Content> getContent(@PathVariable int currentFolderId, @RequestBody DataTablesRequest dtRequest) {
+    public @ResponseBody DataTablesResponse<Content> getContent(@PathVariable int currentFolderId,  DataTablesRequest dtRequest) {
         SpringSecurityUser user = (SpringSecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return getAllCurrentFolderContent(user.getId(), currentFolderId, dtRequest);
     }

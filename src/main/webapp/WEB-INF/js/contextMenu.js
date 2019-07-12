@@ -11,8 +11,8 @@
         var countOfSelectedWithStar = $(".selected .glyphicon-star").length;
         var countOfSelectedForShare = $(".selected .glyphicon-eye-open").length;
 
-
         $(".li_rename").attr("hidden", countOfSelected != 1);
+        $(".li_share").attr("hidden", !(countOfSelected > 0));
         $(".li_starred").attr("hidden", !(countOfSelected - countOfSelectedWithStar > 0));
         $(".li_removestar").attr("hidden", countOfSelected - countOfSelectedWithStar > 0);
         // $(".li_replace").attr("hidden", $(".currentFolderPath a.sharedWithMe").length != 0);
