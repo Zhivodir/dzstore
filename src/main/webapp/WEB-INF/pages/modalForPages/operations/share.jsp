@@ -117,4 +117,13 @@
       }
     }
   });
+
+
+  function formUrlForUsersWithAccessTable() {
+    var url = '/getUsersWithAccess/';
+    var selectedContent = $("#myTable tr.selected");
+    var selectedContentId = selectedContent.find(".choise_checkbox").attr("value");
+    var selectedContentType = selectedContent.hasClass("choise_folder") ? "folder" : "file";
+    return url + selectedContentType + '/' + selectedContentId;
+  }
 </script>

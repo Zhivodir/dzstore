@@ -51,7 +51,6 @@ function datatableOpts2(url, columns) {
 
 
 function datatableOpts3(url, columns) {
-
   return {
     ajax: {
       url: url,
