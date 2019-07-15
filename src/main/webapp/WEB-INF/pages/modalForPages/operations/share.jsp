@@ -86,15 +86,10 @@
     $("#modalForShare").modal('hide');
   }
 
-  function reloadListUsersWithAccess(selectedFiles, selectedFolders) {
-    // usersWithAccess.ajax.data(selectedFiles, selectedFolders);
-    usersWithAccess.ajax.reload();
-  }
 
   $(document).ready(function () {
-
     usersWithAccess = $('#sharedForUsersTable').DataTable(datatableOpts3(
-      '/getUsersWithAccess',
+      '/getUsersWithAccess/noSelect/-1',
       [
         {
           data: 'login',
@@ -104,5 +99,22 @@
         }
       ]
     ));
+
+    $(".li_share").click(function () {
+      var selectedFiles = createSelectedFilesMassiv();
+      var selectedFolders = createSelectedFoldersMassiv();
+      var isSelectedOnlyOneObjects = selectedFolders.length + selectedFiles.length == 1;
+
+      $("#alreadyShareFor").attr('hidden', !isSelectedOnlyOneObjects);
+      prepareListUsersWithAccess(isSelectedOnlyOneObjects);
+    });
+
+    function prepareListUsersWithAccess(isSelectedOnlyOneObjects) {
+      usersWithAccess.clear().draw();
+      if (isSelectedOnlyOneObjects) {
+        usersWithAccess.ajax.url(formUrlForUsersWithAccessTable());
+        usersWithAccess.ajax.reload();
+      }
+    }
   });
 </script>

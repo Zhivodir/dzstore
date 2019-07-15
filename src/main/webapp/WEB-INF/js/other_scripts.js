@@ -31,27 +31,6 @@ input.onchange = function (e) {
 /* for share content            */
 /********************************/
 
-$(".li_share").click(function () {
-  var selectedFiles = createSelectedFilesMassiv();
-  var selectedFolders = createSelectedFoldersMassiv();
-
-  //Если выбран только один элемент контента - то можно увидеть
-  // , для каких пользователей он расшарен
-  var isSelectedSingleObject = selectedFolders.length + selectedFiles.length != 1;
-
-  // if (selectedSingleObject) {
-    // var res = $.post(
-    //     "/ajax/load_share_account_for_content",
-    //     {folders: folders.toString(), files: files.toString()},
-    //     onLoaded,
-    //     'json'
-    // );
-  // }
-  $("#alreadyShareFor").attr('hidden', isSelectedSingleObject);
-  reloadListUsersWithAccess(selectedFiles, selectedFolders);
-});
-
-
 function onLoaded(data) {
   showFormForNewShare(data);
 

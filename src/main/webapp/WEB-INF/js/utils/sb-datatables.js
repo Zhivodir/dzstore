@@ -57,17 +57,9 @@ function datatableOpts3(url, columns) {
       url: url,
       type: 'POST',
       contentType: 'application/json; charset=utf-8',
-      data: function (selectedContent) {
-        selectedContent.selectedFiles = createSelectedFilesMassiv();
-        selectedContent.selectedFolders = createSelectedFoldersMassiv();
-        alert(JSON.stringify(selectedContent))
-        return JSON.stringify(selectedContent);
-      },
-      // data: JSON.stringify({
-      //   // data: {
-      //       //   selectedContent: createSelectedFilesMassiv(),
-      //       //   selectedContent: createSelectedFoldersMassiv()
-      //       // }
+      data: function (d) {
+        return JSON.stringify(d);
+      }
     },
     columns: columns,
     bFilter: false,

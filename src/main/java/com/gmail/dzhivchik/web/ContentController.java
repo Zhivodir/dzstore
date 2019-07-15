@@ -139,20 +139,16 @@ public class ContentController {
         return getBusySpace() + "";
     }
 
-    @RequestMapping(value = "/getUsersWithAccess", method = RequestMethod.POST)
+    @RequestMapping(value = "/getUsersWithAccess/{contentType}/{contentId}", method = RequestMethod.POST)
     public @ResponseBody DataTablesResponse<User> loadListOfAccount(@RequestBody DataTablesRequest dtRequest,
-//                                                                    @RequestParam(value = "selectedFiles", required = false) int[] selectedFiles,
-//                                                                    @RequestParam(value = "selectedFolders", required = false) int[] selectedFolders){
-                                                                    @ModelAttribute SelectedContent selectedContent) {
+                                                                    @PathVariable("contentType") String contentType, @PathVariable("contentId") int contentId) {
         List<User> users = new ArrayList<>();
-        System.out.println(selectedContent);
 
-
-//        if (selectedContent.getSelectedFolders().length != 0) {
-//            users = contentService.getFolder(selectedContent.getSelectedFolders()[0]).getShareFor();
-//        } else if (selectedContent.getSelectedFiles().length != 0) {
-//            users = contentService.getFile(selectedContent.getSelectedFiles()[0]).getShareFor();
-//        }
+        if (("folder").equals(contentType) && contentId != -1) {
+            users = contentService.getFolder(contentId).getShareFor();
+        } else if (("file").equals(contentType) && contentId != -1) {
+            users = contentService.getFile(contentId).getShareFor();
+        }
         return formDataTablesResponse(users, dtRequest);
     }
 
