@@ -25,7 +25,7 @@
                      placeholder="-------------" data-email-pattern="${serverConfig.bot.emailPattern}">
               <div id="alreadyShareForUsers" hidden><a><s:message code="modal.share.list.href"/></a></div>
 
-              <table id="sharedForUsersTable" class="table record_table" cellspacing="0" width="90%">
+              <table id="sharedForUsersTable" class="table record_table" cellspacing="0" width="100%">
                 <tbody>
                 </tbody>
               </table>
@@ -60,11 +60,7 @@
   function changeSharedList() {
     var selectedFiles = createSelectedFilesMassiv();
     var selectedFolders = createSelectedFoldersMassiv();
-    var cancelShareForUsers = [];
-
-    $("tr.selected").find("#modalForShare.info_block").each(function () {
-      cancelShareForUsers.push(this.value);
-    });
+    var cancelShareForUsers = getSelectedUsersList();
 
     $.ajax({
       url: "/changeSharedList",
@@ -92,9 +88,10 @@
       '/getUsersWithAccess/noSelect/-1',
       [
         {
-          data: 'login',
+          data: null,
           render: function (data, type, full) {
-            return data;
+            return '<strong><span class="userLogin">' + full.login + '</span></strong> <span>(<span class="userEmail">' + full.email + '</span>)</span>';
+            // return data;
           }
         }
       ]
@@ -125,5 +122,17 @@
     var selectedContentId = selectedContent.find(".choise_checkbox").attr("value");
     var selectedContentType = selectedContent.hasClass("choise_folder") ? "folder" : "file";
     return url + selectedContentType + '/' + selectedContentId;
+  }
+
+  $("#sharedForUsersTable").on("click", "tr", function () {
+    $(this).toggleClass("selected");
+  })
+
+  function getSelectedUsersList(){
+    var selectedUsersList = [];
+    $("#sharedForUsersTable").find("tr.selected").each(function () {
+      selectedUsersList.push($(this).find(".userEmail").text());
+    });
+    return selectedUsersList;
   }
 </script>

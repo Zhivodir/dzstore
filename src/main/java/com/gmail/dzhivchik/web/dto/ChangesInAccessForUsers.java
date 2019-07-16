@@ -7,5 +7,5 @@ import lombok.Setter;
 @Getter
 public class ChangesInAccessForUsers {
     private String shareForUsers;
-    private int[] cancelShareForUsers;
+    private String[] cancelShareForUsers;
 }

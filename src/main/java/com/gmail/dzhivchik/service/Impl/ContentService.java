@@ -191,6 +191,7 @@ public class ContentService {
     public void shareForCheckedUsers(List<File> checked_files, List<Folder> checked_folders, String shareFor, boolean shareInFolder) {
         List<User> receivers = userDAO.getShareReceivers(shareFor);
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
+
         for (int i = 0; i < receivers.size(); i++) {
             if (receivers.get(i).getLogin().equals(login)) {
                 receivers.remove(receivers.get(i));
@@ -217,8 +218,8 @@ public class ContentService {
     }
 
     @Transactional
-    public void cancelShareForCheckedUsers(List<File> checked_files, List<Folder> checked_folders, int[] cancel_share_for_users) {
-        List<User> receivers = userDAO.getUsersById(cancel_share_for_users);
+    public void cancelShareForCheckedUsers(List<File> checked_files, List<Folder> checked_folders, String[] cancel_share_for_users) {
+        List<User> receivers = userDAO.getUsersByEmail(cancel_share_for_users);
 
         if (checked_files != null) {
             for (File file : checked_files) {
@@ -231,6 +232,7 @@ public class ContentService {
             for (Folder folder : checked_folders) {
                 folder.removeFromShareFor(receivers);
             }
+            folderDAO.changeShare(checked_folders);
         }
     }
 

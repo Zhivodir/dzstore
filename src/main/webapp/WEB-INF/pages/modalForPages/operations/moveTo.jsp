@@ -97,7 +97,6 @@
         [
           {
             data: 'name',
-            class: 'forContextMenu',
             render: function (data, type, full) {
               if (full.type == "folder") {
                 return '<strong><span class="name_of_content" data-current-folder-id="' + full.id + '">' + data + '</span></strong>';

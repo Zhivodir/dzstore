@@ -1,9 +1,7 @@
 package com.gmail.dzhivchik.dao.Impl;
 
 import com.gmail.dzhivchik.dao.UserDAO;
-import com.gmail.dzhivchik.domain.File;
 import com.gmail.dzhivchik.domain.User;
-import com.gmail.dzhivchik.domain.enums.Language;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -38,6 +36,20 @@ public class UserDAOImpl implements UserDAO {
         StringBuilder sb = new StringBuilder();
         for (int j = 0; j < cancel_share_for_users.length; j++) {
             sb.append("u.id = '" + cancel_share_for_users[j] + "' ");
+            if (j != cancel_share_for_users.length - 1) {
+                sb.append("OR ");
+            }
+        }
+        query = entityManager.createQuery("SELECT u FROM User u WHERE " + sb.toString(), User.class);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<User> getUsersByEmail(String[] cancel_share_for_users) {
+        Query query;
+        StringBuilder sb = new StringBuilder();
+        for (int j = 0; j < cancel_share_for_users.length; j++) {
+            sb.append("u.email = '" + cancel_share_for_users[j] + "' ");
             if (j != cancel_share_for_users.length - 1) {
                 sb.append("OR ");
             }
