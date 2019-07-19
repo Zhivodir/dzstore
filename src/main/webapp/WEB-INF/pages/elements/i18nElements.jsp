@@ -9,4 +9,10 @@
     "starredView": "<s:message code="view.type.starred"/>",
     "binView": "<s:message code="view.type.bin"/>"
   }
+
+  var shareText = {
+    "showUsersWithAccess": "<s:message code="modal.show.list.href"/>",
+    "hideUsersWithAccess": "<s:message code="modal.hide.list.href"/>",
+    "noShareUsers": "<s:message code="modal.share.no.users"/>"
+  }
 </script>

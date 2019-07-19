@@ -67,8 +67,7 @@ function datatableOpts3(url, columns) {
       $("#sharedForUsersTable").hide();
       $("#sharedForUsersTable thead").remove();
       var hasUsersWithAccess = $("#sharedForUsersTable").find(".shareUserRow").length > 0;
-      $("#showShareForUsers").attr('hidden', !hasUsersWithAccess);
-      $("#noShared").attr('hidden', hasUsersWithAccess);
+      showUsersTableStateInfo(hasUsersWithAccess);
     },
     columns: columns,
     bFilter: false,
@@ -79,6 +78,15 @@ function datatableOpts3(url, columns) {
   }
 }
 
+function showUsersTableStateInfo(hasUsersWithAccess){
+  var textBlock = $("#usersTableStateInfo")
+  textBlock.empty();
+  if(hasUsersWithAccess) {
+    textBlock.append('<a onclick="showShareForUsers()" class="showInfo">' + shareText['showUsersWithAccess'] + '</a>')
+  } else {
+    textBlock.append(shareText['noShareUsers']);
+  }
+}
 
 function formatSize(length) {
   var i = 0, type = ['б', 'Кб', 'Мб', 'Гб', 'Тб', 'Пб'];

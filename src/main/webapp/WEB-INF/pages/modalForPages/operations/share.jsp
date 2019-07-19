@@ -23,9 +23,7 @@
             <div class="modal-body" id="modal_share">
               <input name="blockShareFor" type="text" class="form-control" id="shareFor" placeholder="<s:message code="modal.share.input.placeholder"/>"
                      data-email-pattern="${serverConfig.bot.emailPattern}">
-              <div id="showShareForUsers" hidden><a onclick="showShareForUsers()"><s:message code="modal.show.list.href"/></a></div>
-              <div id="hideShareForUsers" hidden><a onclick="hideShareForUsers()"><s:message code="modal.hide.list.href"/></a></div>
-              <div id="noShared" hidden><s:message code="modal.share.no.users"/></div>
+              <div id="usersTableStateInfo"></div>
               <table id="sharedForUsersTable" class="table" cellspacing="0" width="100%" hidden>
                 <tbody>
                 </tbody>
