@@ -2,12 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 
-<style>
-  #alreadyShareFor {
-    padding: 5px;
-  }
-</style>
-
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
@@ -21,7 +15,8 @@
               <h4 class="modal-title" id="myModalLabel"><s:message code="modal.share.title"/></h4>
             </div>
             <div class="modal-body" id="modal_share">
-              <input name="blockShareFor" type="text" class="form-control" id="shareFor" placeholder="<s:message code="modal.share.input.placeholder"/>"
+              <input name="blockShareFor" type="text" class="form-control" id="shareFor"
+                     placeholder="<s:message code="modal.share.input.placeholder"/>"
                      data-email-pattern="${serverConfig.bot.emailPattern}">
               <div id="usersTableStateInfo"></div>
               <table id="sharedForUsersTable" class="table" cellspacing="0" width="100%" hidden>
@@ -62,7 +57,7 @@
     var selectedFiles = createSelectedFilesMassiv();
     var selectedFolders = createSelectedFoldersMassiv();
     var cancelShareForUsers = [];
-    if(!isUsersWithAccessTableHidden) {
+    if (!isUsersWithAccessTableHidden) {
       cancelShareForUsers = getSelectedUsersList();
     }
 
@@ -79,8 +74,7 @@
       success: function (result) {
         table.ajax.reload();
       },
-      error: function (result) {
-      }
+      error: function (result) {}
     })
 
     $("#modalForShare").modal('hide');
@@ -138,14 +132,17 @@
   }
 
   function showShareForUsers() {
+    var textBlock = $("#usersTableStateInfo")
+    textBlock.empty();
+    textBlock.append('<a onclick="hideShareForUsers()" class="hideInfo">' + shareText['hideUsersWithAccess'] + '</a>');
     $("#sharedForUsersTable").show();
-    $("#hideShareForUsers").show();
-    $("#showShareForUsers").hide();
   }
 
   function hideShareForUsers() {
+    var textBlock = $("#usersTableStateInfo")
+    textBlock.empty();
+    textBlock.append('<a onclick="showShareForUsers()" class="showInfo">' + shareText['showUsersWithAccess'] + '</a>');
     $("#sharedForUsersTable").hide();
-    $("#hideShareForUsers").hide();
-    $("#showShareForUsers").show();
   }
+
 </script>

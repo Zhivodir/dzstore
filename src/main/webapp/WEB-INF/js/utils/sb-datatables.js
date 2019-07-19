@@ -64,6 +64,7 @@ function datatableOpts3(url, columns) {
       $(row).addClass('shareUserRow');
     },
     drawCallback: function (settings) {
+      $("#modal_share .amsify-select-tag").remove();
       $("#sharedForUsersTable").hide();
       $("#sharedForUsersTable thead").remove();
       var hasUsersWithAccess = $("#sharedForUsersTable").find(".shareUserRow").length > 0;
