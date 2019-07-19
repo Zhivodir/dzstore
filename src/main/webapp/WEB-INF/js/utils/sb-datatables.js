@@ -60,6 +60,16 @@ function datatableOpts3(url, columns) {
         return JSON.stringify(d);
       }
     },
+    createdRow: function (row, data, index) {
+      $(row).addClass('shareUserRow');
+    },
+    drawCallback: function (settings) {
+      $("#sharedForUsersTable").hide();
+      $("#sharedForUsersTable thead").remove();
+      var hasUsersWithAccess = $("#sharedForUsersTable").find(".shareUserRow").length > 0;
+      $("#showShareForUsers").attr('hidden', !hasUsersWithAccess);
+      $("#noShared").attr('hidden', hasUsersWithAccess);
+    },
     columns: columns,
     bFilter: false,
     ordering: false,

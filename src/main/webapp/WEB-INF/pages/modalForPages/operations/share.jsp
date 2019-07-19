@@ -21,11 +21,12 @@
               <h4 class="modal-title" id="myModalLabel"><s:message code="modal.share.title"/></h4>
             </div>
             <div class="modal-body" id="modal_share">
-              <input name="blockShareFor" type="text" class="form-control" id="shareFor"
-                     placeholder="-------------" data-email-pattern="${serverConfig.bot.emailPattern}">
-              <div id="alreadyShareForUsers" hidden><a><s:message code="modal.share.list.href"/></a></div>
-
-              <table id="sharedForUsersTable" class="table record_table" cellspacing="0" width="100%">
+              <input name="blockShareFor" type="text" class="form-control" id="shareFor" placeholder="<s:message code="modal.share.input.placeholder"/>"
+                     data-email-pattern="${serverConfig.bot.emailPattern}">
+              <div id="showShareForUsers" hidden><a onclick="showShareForUsers()"><s:message code="modal.show.list.href"/></a></div>
+              <div id="hideShareForUsers" hidden><a onclick="hideShareForUsers()"><s:message code="modal.hide.list.href"/></a></div>
+              <div id="noShared" hidden><s:message code="modal.share.no.users"/></div>
+              <table id="sharedForUsersTable" class="table" cellspacing="0" width="100%" hidden>
                 <tbody>
                 </tbody>
               </table>
@@ -58,9 +59,14 @@
   });
 
   function changeSharedList() {
+    var isUsersWithAccessTableHidden = $("#sharedForUsersTable").attr("hidden") == true;
+
     var selectedFiles = createSelectedFilesMassiv();
     var selectedFolders = createSelectedFoldersMassiv();
-    var cancelShareForUsers = getSelectedUsersList();
+    var cancelShareForUsers = [];
+    if(!isUsersWithAccessTableHidden) {
+      cancelShareForUsers = getSelectedUsersList();
+    }
 
     $.ajax({
       url: "/changeSharedList",
@@ -91,22 +97,19 @@
           data: null,
           render: function (data, type, full) {
             return '<strong><span class="userLogin">' + full.login + '</span></strong> <span>(<span class="userEmail">' + full.email + '</span>)</span>';
-            // return data;
           }
         }
       ]
     ));
 
     $(".li_share").click(function () {
+      prepareShareModal();
+    });
+
+    function prepareShareModal() {
       var selectedFiles = createSelectedFilesMassiv();
       var selectedFolders = createSelectedFoldersMassiv();
       var isSelectedOnlyOneObjects = selectedFolders.length + selectedFiles.length == 1;
-
-      $("#alreadyShareFor").attr('hidden', !isSelectedOnlyOneObjects);
-      prepareListUsersWithAccess(isSelectedOnlyOneObjects);
-    });
-
-    function prepareListUsersWithAccess(isSelectedOnlyOneObjects) {
       usersWithAccess.clear().draw();
       if (isSelectedOnlyOneObjects) {
         usersWithAccess.ajax.url(formUrlForUsersWithAccessTable());
@@ -128,11 +131,23 @@
     $(this).toggleClass("selected");
   })
 
-  function getSelectedUsersList(){
+  function getSelectedUsersList() {
     var selectedUsersList = [];
     $("#sharedForUsersTable").find("tr.selected").each(function () {
       selectedUsersList.push($(this).find(".userEmail").text());
     });
     return selectedUsersList;
+  }
+
+  function showShareForUsers() {
+    $("#sharedForUsersTable").show();
+    $("#hideShareForUsers").show();
+    $("#showShareForUsers").hide();
+  }
+
+  function hideShareForUsers() {
+    $("#sharedForUsersTable").hide();
+    $("#hideShareForUsers").hide();
+    $("#showShareForUsers").show();
   }
 </script>
