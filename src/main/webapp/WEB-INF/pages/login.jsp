@@ -35,7 +35,7 @@
              placeholder="<s:message code="login.placeholder.password"/>">
       <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"><s:message code="login.button.sign.in"/></button>
     </form>
-    <a href="#" class="pull-left"><s:message code="login.forgot.password"/></a>
+<%--    <a href="#" class="pull-left"><s:message code="login.forgot.password"/></a>--%>
     <a href="/registration" class="pull-right"><s:message code="login.registration"/></a>
   </div>
 </div>
