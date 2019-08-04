@@ -12,11 +12,11 @@
     </div>
     <div class="col-xs-6 search_form">
       <div id="navbar" class="navbar-collapse collapse">
-        <form action="/search" method="post" class="search-form">
+        <form class="search-form">
           <div class="input-group">
             <input type="text" name="whatSearch" class="form-control search_field" placeholder="<s:message code="navbar.search"/>">
             <div class="input-group-btn">
-              <button type="submit" name="search" id="searchButton" class="btn btn-warning btn-flat">
+              <button type="button" id="searchButton" class="btn btn-warning btn-flat" onclick="search()">
                 <i class="fa fa-search"></i>
               </button>
             </div>
@@ -50,3 +50,22 @@
     </div>
   </div>
 </nav>
+
+<%--<script>--%>
+    <%--function search() {--%>
+        <%--var whatSearch = $("form.search-form input[name=whatSearch]").val();--%>
+
+        <%--$.ajax({--%>
+            <%--url: "/search",--%>
+            <%--type: 'POST',--%>
+            <%--data: {--%>
+                <%--whatSearch: whatSearch--%>
+            <%--},--%>
+            <%--success: function (result) {--%>
+                <%--alert(1)--%>
+            <%--},--%>
+            <%--error: function (result) {--%>
+            <%--}--%>
+        <%--})--%>
+    <%--}--%>
+<%--</script>--%>

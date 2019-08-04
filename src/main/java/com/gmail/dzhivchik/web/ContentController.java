@@ -64,8 +64,7 @@ public class ContentController {
     }
 
     @RequestMapping(value = "/createFolder", method = RequestMethod.POST)
-    public @ResponseBody
-    String createNewFolder(@RequestParam int currentFolderId, @RequestParam String newFolderName) {
+    public @ResponseBody String createNewFolder(@RequestParam int currentFolderId, @RequestParam String newFolderName) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUser(login);
         Folder curFolder = null;
@@ -103,8 +102,7 @@ public class ContentController {
     }
 
     @RequestMapping(value = "/deleteContent", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
-    public @ResponseBody
-    String deleteContent(@ModelAttribute SelectedContent selectedContent) {
+    public @ResponseBody String deleteContent(@ModelAttribute SelectedContent selectedContent) {
         contentService.deleteCheckedContent(selectedContent.getSelectedFiles(), selectedContent.getSelectedFolders());
         return getBusySpace() + "";
     }
@@ -128,7 +126,6 @@ public class ContentController {
 
     @RequestMapping(value = "/moveTo", method = RequestMethod.POST)
     public ResponseEntity replaceContent(@ModelAttribute SelectedContent selectedContent, @RequestParam int moveTo) {
-        System.out.println(selectedContent);
         contentService.moveToFolder(selectedContent.getSelectedFiles(), selectedContent.getSelectedFolders(), moveTo);
         return new ResponseEntity(HttpStatus.OK);
     }

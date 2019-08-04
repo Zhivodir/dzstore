@@ -10,6 +10,8 @@ import com.gmail.dzhivchik.web.dto.Content;
 import com.gmail.dzhivchik.web.dto.datatables.DataTablesRequest;
 import com.gmail.dzhivchik.web.dto.datatables.DataTablesResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +41,13 @@ public class ViewController {
         request.setAttribute("currentFolderID", currentFolderID);
         return "index_commons";
     }
+
+//    @RequestMapping(value = "/search", method = RequestMethod.POST)
+//    public ResponseEntity<List<Content>> search(@RequestParam(value = "whatSearch", required = false) String whatSearch) {
+//        SpringSecurityUser user = (SpringSecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        List<Content> foundContent = contentService.getSearchContent(user.getId(), whatSearch);
+//        return new ResponseEntity<List<Content>>(foundContent, HttpStatus.OK);
+//    }
 
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
