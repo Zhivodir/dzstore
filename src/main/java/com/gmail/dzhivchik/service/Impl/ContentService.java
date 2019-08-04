@@ -147,9 +147,9 @@ public class ContentService {
     }
 
     @Transactional
-    public List<Content> getStarredContent(User user) {
-        List<Content> content = folderDAO.getStarredList(user);
-        content.addAll(fileDAO.getStarredList(user));
+    public List<Content> getStarredContent(int userId) {
+        List<Content> content = folderDAO.getStarredList(userId);
+        content.addAll(fileDAO.getStarredList(userId));
         return content;
     }
 

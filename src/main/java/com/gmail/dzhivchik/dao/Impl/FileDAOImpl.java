@@ -92,15 +92,16 @@ public class FileDAOImpl implements FileDAO {
     }
 
     @Override
-    public List<Content> getStarredList(User user) {
-        int user_id = user.getId();
+    public List<Content> getStarredList(int userId) {
         Query query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
-                "WHERE f.user.id = :user_id AND f.starred = 1 AND f.inbin <> 1", Content.class);
-        query.setParameter("user_id", user_id);
+                "WHERE f.user.id = :userId AND f.starred = 1 AND f.inbin <> 1", Content.class);
+        query.setParameter("userId", userId);
+
         Query query2 = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
                 "INNER JOIN f.shareFor user " +
-                "WHERE user = :user AND f.inbin <> 1 AND f.starred = 1", Content.class);
-        query2.setParameter("user", user);
+                "WHERE f.user.id = :userId AND f.inbin <> 1 AND f.starred = 1", Content.class);
+        query2.setParameter("userId", userId);
+
         List<Content> result = new ArrayList<>();
         result.addAll(query.getResultList());
         result.addAll(query2.getResultList());

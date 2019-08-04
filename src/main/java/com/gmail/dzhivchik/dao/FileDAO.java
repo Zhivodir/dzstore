@@ -14,7 +14,7 @@ public interface FileDAO {
     File getFile(int id);
     List<Content> getList(int userId, Folder parentFolder);
     List<Content> getBinList(int userId);
-    List<Content> getStarredList(User user);
+    List<Content> getStarredList(int userId);
     List<Content> getSharedList(int userId, Integer targetFolder);
     List<Content> getSearchList(int userId, String whatSearch);
     //need full file's info

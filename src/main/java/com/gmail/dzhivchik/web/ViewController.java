@@ -92,7 +92,7 @@ public class ViewController {
         if (currentFolderId != -1) {
             return getAllCurrentFolderContent(user.getId(), currentFolderId, dtRequest);
         }
-        return getStarredContent(user.getId(), dtRequest);
+        return getStarredContentList(user.getId(), dtRequest);
     }
 
     private DataTablesResponse<Content> getAllCurrentFolderContent(int userId, int currentFolderId, DataTablesRequest dtRequest) {
@@ -101,8 +101,8 @@ public class ViewController {
         return formDataTablesResponse(data, dtRequest);
     }
 
-    private DataTablesResponse<Content> getStarredContent(User user, DataTablesRequest dtRequest) {
-        List<Content> data = contentService.getStarredContent(user);
+    private DataTablesResponse<Content> getStarredContentList(int userId, DataTablesRequest dtRequest) {
+        List<Content> data = contentService.getStarredContent(userId);
         return formDataTablesResponse(data, dtRequest);
     }
 

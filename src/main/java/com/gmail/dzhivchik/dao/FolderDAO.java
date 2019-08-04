@@ -15,7 +15,7 @@ public interface FolderDAO {
     Folder getFolder(User user, String name, Folder parentFolder);
 
     List<Content> getList(int userId, Folder parentFolder);
-    List<Content> getStarredList(User user);
+    List<Content> getStarredList(int userId);
     List<Content> getBinList(int userId);
     List<Content> getSharedList(int userId, Integer targetFolder);
     List<Content> getSearchList(int userId, String whatSearch);
