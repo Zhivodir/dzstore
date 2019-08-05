@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Repository
@@ -105,7 +106,7 @@ public class FileDAOImpl implements FileDAO {
         List<Content> result = new ArrayList<>();
         result.addAll(query.getResultList());
         result.addAll(query2.getResultList());
-        return result;
+        return  result.stream().distinct().collect(Collectors.toList());
     }
 
     @Override
