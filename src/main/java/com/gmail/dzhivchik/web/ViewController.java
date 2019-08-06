@@ -30,10 +30,12 @@ public class ViewController {
     private LocaleResolver localeResolver;
 
     @RequestMapping(value="test", method = RequestMethod.GET)
-    public String test(HttpServletRequest request, HttpServletResponse response) {
+    public String test(HttpServletRequest request, HttpServletResponse response,
+                       @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
         SpringSecurityUser user = (SpringSecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         viewHelper.prepareView(request, response, localeResolver, PageType.INDEX, user);
-
+        request.setAttribute("parentsFolderID", null);
+        request.setAttribute("currentFolderID", currentFolderID);
         return "test";
     }
 
