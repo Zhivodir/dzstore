@@ -93,22 +93,25 @@
 
                 <li class="dropdown user-menu tasks-menu" >
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <img src="img/lang/Ua.png" class="lang-icon">
+                        <img src="img/lang/${user.language}.png" class="lang-icon">
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu lang_menu">
                         <li>
                             <a href="/settings/${typeOfView}/UA">
-                                <img src="img/lang/Ua.png" class="lang-icon">
+                                <img src="img/lang/UA.png" class="lang-icon">
+                                <s:message code="language.UA"/>
                             </a>
                         </li>
                         <li>
                             <a href="/settings/${typeOfView}/EN">
-                                <img src="img/lang/En.png" class="lang-icon">
+                                <img src="img/lang/EN.png" class="lang-icon">
+                                <s:message code="language.EN"/>
                             </a>
                         </li>
                         <li>
                             <a href="/settings/${typeOfView}/RU">
-                                <img src="img/lang/Ru.png" class="lang-icon">
+                                <img src="img/lang/RU.png" class="lang-icon">
+                                <s:message code="language.RU"/>
                             </a>
                         </li>
                     </ul>

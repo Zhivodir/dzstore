@@ -26,6 +26,10 @@
     height: auto !important;
 }
 
+.lang_menu {
+    width: 150px !important;
+}
+
 .lang-icon {
     height: 20px !important;
 }
