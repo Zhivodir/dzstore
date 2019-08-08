@@ -16,6 +16,11 @@ public class UserDAOImpl implements UserDAO {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Override
+    public User getUserReference(int userId){
+        return entityManager.getReference(User.class, userId);
+    }
+
 
     @Override
     public void addUser(User user) {

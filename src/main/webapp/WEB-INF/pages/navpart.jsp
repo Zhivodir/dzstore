@@ -3,11 +3,52 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 
 <section class="content-header">
-    <h1>
-        Dashboard
-    </h1>
-    <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Dashboard</li>
-    </ol>
+    <div class="pull-left">
+        <ol class="breadcrumb currentFolderPath"></ol>
+    </div>
 </section>
+
+<script>
+    $(document).ready(function () {
+        $(".currentFolderPath").append(getPathRoot());
+    });
+
+    function getPathRoot() {
+        switch ('${typeOfView}') {
+            case 'index':
+                return '<li><span class="pathElement levelPath" data-current-folder-id="-1">' + typeOfViewNames['myspaceView'] + '</span></li>';
+            case 'shared':
+                return '<li><a href="/${typeOfView}" class="levelPath sharedWithMe">' + typeOfViewNames['sharedView'] + '</a></li>';
+            case 'starred':
+                return '<li><a href="/${typeOfView}" class="levelPath">' + typeOfViewNames['starredView'] + '</a></li>';
+            case 'bin':
+                return '<li><a href="/${typeOfView}" class="levelPath">' + typeOfViewNames['binView'] + '</a></li>';
+            case 'search':
+                return '<li><span class="levelPath">Search result</span></li>';
+        }
+    }
+
+    function addFolderNameToPath(targetFolderId, targetFolderName) {
+        $(".currentFolderPath").append('<span class="pathElement glyphicon glyphicon glyphicon-chevron-right" aria-hidden="true"></span>');
+        $(".currentFolderPath").append('<span class="pathElement levelPath" data-current-folder-id="' + targetFolderId + '">' + targetFolderName + '</span>');
+    }
+
+    function returnFolderPath(targetFolderId) {
+        var lastFolder = false;
+
+        $(".pathElement ").each(function (index, value) {
+            if (!lastFolder) {
+                if (targetFolderId == $(this).data("current-folder-id")) {
+                    lastFolder = true;
+                }
+            } else {
+                $(this)
+                $(this).remove();
+            }
+        });
+    }
+
+    function prepareModalForUpload() {
+        $(".uploadCurrentFolderId").val(currentFolderId);
+    }
+</script>

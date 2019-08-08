@@ -17,6 +17,7 @@ import org.springframework.web.servlet.LocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -28,16 +29,6 @@ public class ViewController {
     private ContentService contentService;
     @Autowired
     private LocaleResolver localeResolver;
-
-    @RequestMapping(value="test", method = RequestMethod.GET)
-    public String test(HttpServletRequest request, HttpServletResponse response,
-                       @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
-        SpringSecurityUser user = (SpringSecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        viewHelper.prepareView(request, response, localeResolver, PageType.INDEX, user);
-        request.setAttribute("parentsFolderID", null);
-        request.setAttribute("currentFolderID", currentFolderID);
-        return "test";
-    }
 
     @RequestMapping(method = RequestMethod.GET)
     public String onIndex(HttpServletRequest request, HttpServletResponse response,
@@ -145,7 +136,7 @@ public class ViewController {
     }
 
     private DataTablesResponse<Content> getSearchContent(int userId, String searchQuery, DataTablesRequest dtRequest) {
-        List<Content> data = contentService.getSearchContent(userId, searchQuery);
+        List<Content> data = !searchQuery.isEmpty() ? contentService.getSearchContent(userId, searchQuery) : new ArrayList<>();
         return formDataTablesResponse(data, dtRequest);
     }
 

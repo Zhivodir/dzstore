@@ -6,6 +6,7 @@ import com.gmail.dzhivchik.dao.FolderDAO;
 import com.gmail.dzhivchik.dao.UserDAO;
 import com.gmail.dzhivchik.domain.File;
 import com.gmail.dzhivchik.domain.Folder;
+import com.gmail.dzhivchik.domain.SpringSecurityUser;
 import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.web.dto.Content;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,10 +63,11 @@ public class ContentService {
 
     @Transactional
     public void uploadContent(MultipartFile file, MultipartFile[] files, String structure, Integer currentFolderID){
-        User currentUser = getCurrentUser();
+        SpringSecurityUser secUser = (SpringSecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = userDAO.getUserReference(secUser.getId());
 
         Folder curFolder = null;
-        if (currentFolderID != -1) {
+        if (currentFolderID != null && currentFolderID != -1) {
             curFolder = getFolder(currentFolderID);
         }
 

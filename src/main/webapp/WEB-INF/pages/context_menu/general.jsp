@@ -5,16 +5,14 @@
   <li class=""><a href="#" class="contextHref" onclick="removeContent()"><s:message code="contextmenu.remove"/></a></li>
   <li class="li_download"><a href="#" class="contextHref" onclick="downloadContent()"><s:message code="contextmenu.download"/></a></li>
   <li class="divider"></li>
-  <li class="contextHref li_starred"><input type="button" class="contextInput" onclick="changeStarState(true)"
-                                            value="<s:message code="contextmenu.add.star"/>"></li>
-  <li class="contextHref li_removestar"><input type="button" class="contextInput" onclick="changeStarState(false)"
-                                               value="<s:message code="contextmenu.remove.star"/>"></li>
+  <li class="li_starred"><a href="#" class="contextHref" onclick="changeStarState(true)"><s:message code="contextmenu.add.star"/></a></li>
+  <li class="li_removestar"><a href="#" class="contextHref" onclick="changeStarState(false)"><s:message code="contextmenu.remove.star"/></a></li>
   <li class="divider"></li>
   <li class="li_rename"><a class="contextHref" href="#" data-toggle="modal" data-target="#modalForRename"><s:message code="contextmenu.rename"/></a>
   </li>
   <li class="li_share"><a class="contextHref" href="#" data-toggle="modal" data-target="#modalForShare"><s:message code="contextmenu.share"/></a></li>
   <li class="divider"></li>
-  <li class="contextHref li_addtome"><input type="button" class="contextInput" onclick="addToMe()" value="<s:message code="contextmenu.add.to.me"/>">
+  <li class="li_addtome"><a class="contextHref" href="" onclick="addToMe()"><s:message code="contextmenu.add.to.me"/></a>
   </li>
   <li class="li_moveTo"><a class="contextHref" href="#" data-toggle="modal" onclick="initStartingPath()" data-target="#modalForMoveTo"><s:message
       code="contextmenu.move.to"/></a></li>
