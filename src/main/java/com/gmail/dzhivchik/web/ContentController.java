@@ -2,7 +2,6 @@ package com.gmail.dzhivchik.web;
 
 import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.Sender;
-import com.gmail.dzhivchik.domain.SpringSecurityUser;
 import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.service.Impl.ContentService;
 import com.gmail.dzhivchik.service.UserService;
@@ -22,6 +21,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.gmail.dzhivchik.web.util.SpringSecurityUtil.getSecurityUser;
 
 
 @Controller
@@ -66,11 +67,11 @@ public class ContentController {
     @RequestMapping(value = "/createFolder", method = RequestMethod.POST)
     public @ResponseBody
     String createNewFolder(@RequestParam int currentFolderId, @RequestParam String newFolderName) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
+        int userId = getSecurityUser().getId();
+        User user = userService.getReferenceUser(userId);
         Folder curFolder = null;
         if (currentFolderId != -1) {
-            curFolder = contentService.getFolder(currentFolderId);
+            curFolder = contentService.getReferenceFolder(currentFolderId);
         }
         Folder folder = new Folder(newFolderName, user, curFolder, false, false, false);
         contentService.createFolder(folder);
@@ -79,8 +80,7 @@ public class ContentController {
 
     @RequestMapping(value = "/renameContent", method = RequestMethod.POST)
     public ResponseEntity renameContent(@RequestParam String newName, @RequestParam String contentType, @RequestParam int contentId) {
-        SpringSecurityUser user = (SpringSecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        contentService.rename(contentType, contentId, newName, user.getId());
+        contentService.rename(contentType, contentId, newName, getSecurityUser().getId());
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -169,7 +169,6 @@ public class ContentController {
     }
 
     private long getBusySpace() {
-        SpringSecurityUser user = (SpringSecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return contentService.getSizeBusyMemory(user.getId());
+        return contentService.getSizeBusyMemory(getSecurityUser().getId());
     }
 }

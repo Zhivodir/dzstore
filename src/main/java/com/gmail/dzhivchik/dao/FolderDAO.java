@@ -11,6 +11,7 @@ public interface FolderDAO {
     Folder isFolder(String name, boolean inbin, User user, Folder parentFolder);
     Folder[] deleteGroup(int[] checked_folders_id);
 
+    Folder getReferenceFolder(int id);
     Folder getFolder(int id);
     Folder getFolder(User user, String name, Folder parentFolder);
 

@@ -21,6 +21,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getReferenceUser(int userId) {
+        return userDAO.getUserReference(userId);
+    }
+
+    @Override
     @Transactional
     public boolean addUser(User user) {
         boolean wasAdded = false;

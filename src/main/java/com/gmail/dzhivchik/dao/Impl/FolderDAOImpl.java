@@ -93,6 +93,11 @@ public class FolderDAOImpl implements FolderDAO {
     }
 
     @Override
+    public Folder getReferenceFolder(int id) {
+        return entityManager.getReference(Folder.class, id);
+    }
+
+    @Override
     public Folder[] deleteGroup(int[] checked_folders_id) {
         Folder[] folders = new Folder[checked_folders_id.length];
         int num = 0;
@@ -137,7 +142,7 @@ public class FolderDAOImpl implements FolderDAO {
         }
         Query query = entityManager.createQuery(sb.toString());
         query.setParameter("stateOfStar", stateOfStar);
-        int result = query.executeUpdate();
+        query.executeUpdate();
     }
 
     @Override

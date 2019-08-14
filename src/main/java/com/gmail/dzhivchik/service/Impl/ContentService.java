@@ -6,7 +6,6 @@ import com.gmail.dzhivchik.dao.FolderDAO;
 import com.gmail.dzhivchik.dao.UserDAO;
 import com.gmail.dzhivchik.domain.File;
 import com.gmail.dzhivchik.domain.Folder;
-import com.gmail.dzhivchik.domain.SpringSecurityUser;
 import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.web.dto.Content;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +27,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import static com.gmail.dzhivchik.MemoryUtils.GBYTE;
+import static com.gmail.dzhivchik.web.util.SpringSecurityUtil.getSecurityUser;
 
 
 @Service
@@ -56,6 +56,10 @@ public class ContentService {
         return folderDAO.getFolder(id);
     }
 
+    public Folder getReferenceFolder(int id) {
+        return folderDAO.getReferenceFolder(id);
+    }
+
     @Transactional
     public File getFile(Integer id) {
         return fileDAO.getFile(id);
@@ -63,12 +67,11 @@ public class ContentService {
 
     @Transactional
     public void uploadContent(MultipartFile file, MultipartFile[] files, String structure, Integer currentFolderID){
-        SpringSecurityUser secUser = (SpringSecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User currentUser = userDAO.getUserReference(secUser.getId());
+        User currentUser = userDAO.getUserReference(getSecurityUser().getId());
 
         Folder curFolder = null;
         if (currentFolderID != null && currentFolderID != -1) {
-            curFolder = getFolder(currentFolderID);
+            curFolder = getReferenceFolder(currentFolderID);
         }
 
         if (file != null && file.getSize() < TempContentConfig.MAX_SIZE_OF_FILE) {

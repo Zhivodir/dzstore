@@ -33,6 +33,17 @@
             </ul>
         </div>
 
+        <%--<form id="searchInput" class="navbar-form navbar-left">--%>
+            <%--<div class="input-group">--%>
+                <%--<input type="text" name="whatSearch" class="form-control"--%>
+                       <%--placeholder="<s:message code="navbar.search"/>">--%>
+                <%--<span class="input-group-btn">--%>
+                <%--<button type="button" name="search" id="search-btn" class="btn btn-flat" onclick="searchContent()" ><i class="fa fa-search"></i>--%>
+                <%--</button>--%>
+              <%--</span>--%>
+            <%--</div>--%>
+        <%--</form>--%>
+
         <form action="/search" method="post" class="navbar-form navbar-left">
             <div class="input-group">
                 <input type="text" name="whatSearch" class="form-control"
@@ -122,3 +133,13 @@
 </header>
 
 <jsp:include page="/WEB-INF/pages/elements/i18nElements.jsp"/>
+
+<%--<script>--%>
+    <%--function searchContent() {--%>
+        <%--$.ajax({--%>
+            <%--type: "GET",--%>
+            <%--url: "/search",--%>
+            <%--data: $("#searchInput").serialize()--%>
+        <%--}).done(updateTableByData);--%>
+    <%--}--%>
+<%--</script>--%>

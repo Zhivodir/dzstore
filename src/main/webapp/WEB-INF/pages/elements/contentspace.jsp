@@ -168,6 +168,10 @@
             table.ajax.url('/getContent/' + getUrlForDataTables(typeOfView));
             table.ajax.reload();
         }
+
+        // function updateTableByData(data) {
+        //     table.clear().rows.add(data).draw();
+        // }
     });
 
     function getUrlForDataTables(typeOfView) {
