@@ -33,23 +33,11 @@
             </ul>
         </div>
 
-        <%--<form id="searchInput" class="navbar-form navbar-left">--%>
-            <%--<div class="input-group">--%>
-                <%--<input type="text" name="whatSearch" class="form-control"--%>
-                       <%--placeholder="<s:message code="navbar.search"/>">--%>
-                <%--<span class="input-group-btn">--%>
-                <%--<button type="button" name="search" id="search-btn" class="btn btn-flat" onclick="searchContent()" ><i class="fa fa-search"></i>--%>
-                <%--</button>--%>
-              <%--</span>--%>
-            <%--</div>--%>
-        <%--</form>--%>
-
-        <form action="/search" method="post" class="navbar-form navbar-left">
+        <form action="/search" id="search-form" method="post" class="navbar-form navbar-left">
             <div class="input-group">
-                <input type="text" name="whatSearch" class="form-control"
-                       placeholder="<s:message code="navbar.search"/>">
+                <input type="text" name="whatSearch" id="search-input" class="form-control" placeholder="<s:message code="navbar.search"/>">
                 <span class="input-group-btn">
-                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                <button type="button" onclick="isQueryEmpty()" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
                 </button>
               </span>
             </div>
@@ -143,3 +131,14 @@
         <%--}).done(updateTableByData);--%>
     <%--}--%>
 <%--</script>--%>
+
+
+<script>
+    function isQueryEmpty(){
+        event.preventDefault();
+        var input = $.trim($("#search-input").val());
+        if(input){
+            $("#search-form").submit();
+        }
+    }
+</script>
