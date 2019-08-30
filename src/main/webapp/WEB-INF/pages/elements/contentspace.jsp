@@ -47,6 +47,7 @@
 <!-- DataTables -->
 <script src="/datatables/DataTables-1.10.16/js/jquery.dataTables.min.js"></script>
 <script src="/datatables/DataTables-1.10.16/js/dataTables.bootstrap.min.js"></script>
+<script src="/datatables/Select-1.2.5/js/dataTables.select.min.js"></script>
 <script src="js/utils/sb-datatables.js"></script>
 
 <script type="text/javascript">
@@ -108,41 +109,6 @@
             ]
         ));
 
-        selection = {
-            single: function (el) {
-                $('#myTable .choise_field').not(el).removeClass(this.cl);
-                $(el).addClass(this.cl);
-            },
-            shift: function (el) {
-                var tr = $('#myTable .choise_field');
-                if (typeof this.last !== 'number') {
-                    return this.single(el);
-                }
-                var till = $(el).index(this.slcr),
-                    from = this.last;
-                if (from > till) till = [from, from = till][0];
-                tr.slice(from, till).add(el).addClass(this.cl);
-            },
-            ctrl: function (el) {
-                $(el).toggleClass('selected');
-                this.last = $(el).index(this.slcr);
-            },
-            slcr: '#myTable .choise_field',
-            cl: 'selected',
-            last: null
-        };
-
-        $('#myTable').on('click', '.choise_field', function (e) {
-            method = !e.shiftKey && !e.ctrlKey ? 'single' : (e.shiftKey ? 'shift' : 'ctrl');
-            selection[method](this);
-            $('#myTable tr').each(function (indx, el) {
-                $("input:checkbox").removeAttr("checked");
-            })
-            $('#myTable tr.selected').each(function (indx, el) {
-                var inp = $("input:checkbox", el)[0];
-                event.target != inp && (inp.checked = !inp.checked)
-            })
-        });
 
         $("#myTable").on('dblclick', '.choise_folder', function (e) {
             if (typeOfView == "bin") {

@@ -16,8 +16,8 @@
         </a>
 
         <div id="addContent" class="btn-group pull-left">
-            <button type="button" class="btn btn-default"><s:message code="contentmenu.new"/></button>
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <s:message code="contentmenu.new"/>
                 <span class="caret"></span>
                 <span class="sr-only">Toggle Dropdown</span>
             </button>

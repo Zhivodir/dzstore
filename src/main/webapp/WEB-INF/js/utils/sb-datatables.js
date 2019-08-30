@@ -1,6 +1,7 @@
 function datatableOpts(url, columns) {
   return {
     serverSide: true,
+    select: true,
     ajax: {
       url: url,
       type: 'POST',
