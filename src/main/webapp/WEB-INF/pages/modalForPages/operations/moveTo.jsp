@@ -45,10 +45,10 @@
 
     filesForMove = [];
     foldersForMove = [];
-    typeOfMoving = 'c';
+    typeOfMoving = '';
 
     function initStartingPath() {
-        levelPaths = $(".contentmenu-place .currentFolderPath .levelPath");
+        levelPaths = $(".currentFolderPath .levelPath");
         nestingLevel = levelPaths.length;
         pathBlock.empty();
         pathBlock.append('<span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>');
@@ -60,11 +60,12 @@
         var moveToFolderId = $('#tableForMoveTo').find("tr.selected .name_of_content").data("current-folder-id");
         var selectedFiles = createSelectedFilesMassiv();
         var selectedFolders = createSelectedFoldersMassiv();
-        ajaxMoveTo(moveToFolderId, selectedFiles, selectedFolders)
+        ajaxMoveTo(moveToFolderId, selectedFiles, selectedFolders);
     }
 
     function moveToByKeys() {
-        var moveToFolderId = $(".contentmenu-place .levelPath:last").data("current-folder-id");
+        var moveToFolderId = $(".currentFolderPath .levelPath:last").data("current-folder-id");
+        alert(moveToFolderId)
 
         if (filesForMove.length != 0 || foldersForMove != 0) {
             if (typeOfMoving == 'x') {
@@ -89,6 +90,25 @@
             success: function (result) {
                 table.ajax.reload();
                 $("#modalForMoveTo").modal("hide");
+            },
+            error: function (result) {
+            }
+        })
+    }
+
+
+    function ajaxCopyTo(moveToFolderId, selectedFiles, selectedFolders) {
+        $.ajax({
+            url: "/copyTo",
+            type: 'POST',
+            traditional: true,
+            data: {
+                selectedFiles: selectedFiles,
+                selectedFolders: selectedFolders,
+                copyTo: moveToFolderId
+            },
+            success: function (result) {
+                table.ajax.reload();
             },
             error: function (result) {
             }

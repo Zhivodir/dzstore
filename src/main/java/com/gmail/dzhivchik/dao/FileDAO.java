@@ -28,5 +28,6 @@ public interface FileDAO {
     void changeStar(int[] checked_files_id, boolean stateOfStar);
     void changeShare(List<File> targets);
     void changeInBin(int[] checked_files_id, boolean stateOfInBinStatus);
-    void move_to(int[] checked_files_id, Folder target);
+    void moveTo(int[] checked_files_id, Folder target);
+    void copyTo(int[] checked_files_id, Folder target);
 }

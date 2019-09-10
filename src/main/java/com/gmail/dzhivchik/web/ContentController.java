@@ -128,8 +128,13 @@ public class ContentController {
 
     @RequestMapping(value = "/moveTo", method = RequestMethod.POST)
     public ResponseEntity replaceContent(@ModelAttribute SelectedContent selectedContent, @RequestParam int moveTo) {
-        System.out.println(selectedContent);
         contentService.moveToFolder(selectedContent.getSelectedFiles(), selectedContent.getSelectedFolders(), moveTo);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/copyTo", method = RequestMethod.POST)
+    public ResponseEntity copyContentTo(@ModelAttribute SelectedContent selectedContent, @RequestParam int copyTo) {
+        contentService.copyToFolder(selectedContent.getSelectedFiles(), selectedContent.getSelectedFolders(), copyTo);
         return new ResponseEntity(HttpStatus.OK);
     }
 

@@ -283,10 +283,21 @@ public class ContentService {
     public void moveToFolder(int[] checked_files_id, int[] checked_folders_id, int move_to) {
         Folder target = move_to == -1 ? null : getFolder(move_to);
         if (checked_files_id != null) {
-            fileDAO.move_to(checked_files_id, target);
+            fileDAO.moveTo(checked_files_id, target);
         }
         if (checked_folders_id != null) {
-            folderDAO.move_to(checked_folders_id, target);
+            folderDAO.moveTo(checked_folders_id, target);
+        }
+    }
+
+    @Transactional
+    public void copyToFolder(int[] checked_files_id, int[] checked_folders_id, int copy_to) {
+        Folder target = copy_to == -1 ? null : getReferenceFolder(copy_to);
+        if (checked_files_id != null) {
+            fileDAO.copyTo(checked_files_id, target);
+        }
+        if (checked_folders_id != null) {
+            folderDAO.copyTo(checked_folders_id, target);
         }
     }
 

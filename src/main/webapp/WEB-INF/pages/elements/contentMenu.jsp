@@ -3,7 +3,7 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 
 <div class="top-part">
-    <div class="navbar navbar-inverse navbar-fixed-top contentmenu-place">
+    <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="col-sm-3 col-md-2">
             <div class="btn-group">
                 <button type="button" class="btn btn-default newButton" data-toggle="dropdown">
