@@ -17,7 +17,7 @@ public class UserDAOImpl implements UserDAO {
     private EntityManager entityManager;
 
     @Override
-    public User getUserReference(int userId){
+    public User getUserReference(int userId) {
         return entityManager.getReference(User.class, userId);
     }
 
@@ -29,15 +29,13 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User getUser(String login) {
-        Query query;
-        query = entityManager.createQuery("SELECT u FROM User u WHERE u.login = :login", User.class);
-        query.setParameter("login", login);//
-        return (User)query.getSingleResult();
+        return entityManager.createQuery("SELECT u FROM User u WHERE u.login = :login", User.class)
+                .setParameter("login", login)
+                .getSingleResult();
     }
 
     @Override
     public List<User> getUsersById(int[] cancel_share_for_users) {
-        Query query;
         StringBuilder sb = new StringBuilder();
         for (int j = 0; j < cancel_share_for_users.length; j++) {
             sb.append("u.id = '" + cancel_share_for_users[j] + "' ");
@@ -45,13 +43,12 @@ public class UserDAOImpl implements UserDAO {
                 sb.append("OR ");
             }
         }
-        query = entityManager.createQuery("SELECT u FROM User u WHERE " + sb.toString(), User.class);
-        return query.getResultList();
+        return entityManager.createQuery("SELECT u FROM User u WHERE " + sb.toString(), User.class)
+                .getResultList();
     }
 
     @Override
     public List<User> getUsersByEmail(String[] cancel_share_for_users) {
-        Query query;
         StringBuilder sb = new StringBuilder();
         for (int j = 0; j < cancel_share_for_users.length; j++) {
             sb.append("u.email = '" + cancel_share_for_users[j] + "' ");
@@ -59,8 +56,8 @@ public class UserDAOImpl implements UserDAO {
                 sb.append("OR ");
             }
         }
-        query = entityManager.createQuery("SELECT u FROM User u WHERE " + sb.toString(), User.class);
-        return query.getResultList();
+        return entityManager.createQuery("SELECT u FROM User u WHERE " + sb.toString(), User.class)
+                .getResultList();
     }
 
     @Override
@@ -75,8 +72,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public List<User> getShareReceivers(String shareFor) {
-        Query query = entityManager.createQuery(preparationShareRequest(shareFor), User.class);
-        return query.getResultList();
+        return entityManager.createQuery(preparationShareRequest(shareFor), User.class).getResultList();
     }
 
 
