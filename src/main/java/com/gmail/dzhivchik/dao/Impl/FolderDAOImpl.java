@@ -41,10 +41,13 @@ public class FolderDAOImpl implements FolderDAO {
                     "AND f.inbin = :inbin AND f.user = :user AND f.parentFolder = :parentFolder", Folder.class);
             query.setParameter("parentFolder", parentFolder);
         }
-        return (Folder) query.setParameter("name", name)
+        List<Folder> resultList = query.setParameter("name", name)
                 .setParameter("inbin", inbin)
-                .setParameter("user", user)
-                .getSingleResult();
+                .setParameter("user", user).getResultList();
+        if (resultList.size() != 0) {
+            return resultList.get(0);
+        }
+        return null;
     }
 
     @Override

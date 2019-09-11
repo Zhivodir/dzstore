@@ -78,7 +78,7 @@ public class ContentService {
             uploadFile(file, currentUser, curFolder);
         }
 
-        if (files != null && structure != null) {
+        if (files != null && files.length > 0 && structure != null && !structure.isEmpty()) {
             String[] pathes = null;
             if (structure.startsWith(",")) {
                 structure = structure.substring(1);
@@ -165,7 +165,6 @@ public class ContentService {
         content.addAll(fileDAO.getBinList(userId));
         Instant before = Instant.now();
         long ns = Duration.between(start, before).toNanos();
-        System.out.println("Duration: " + ns);
         return content;
     }
 

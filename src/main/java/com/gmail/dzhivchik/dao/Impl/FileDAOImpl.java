@@ -48,13 +48,17 @@ public class FileDAOImpl implements FileDAO {
                     "AND f.inbin = :inbin AND f.user = :user AND f.parentFolder IS NULL", File.class);
         } else {
             query = entityManager.createQuery("SELECT f FROM File f WHERE f.name = :name " +
-                    "AND f.inbin = :inbin AND f.user = :user AND f.parentFolder = :parentFolder", File.class);
-            query.setParameter("parentFolder", parentFolder);
+                    "AND f.inbin = :inbin AND f.user = :user AND f.parentFolder = :parentFolder", File.class)
+                    .setParameter("parentFolder", parentFolder);
         }
-        return (File) query.setParameter("name", name)
+        List<File> resultList = query.setParameter("name", name)
                 .setParameter("inbin", inbin)
                 .setParameter("user", user)
-                .getSingleResult();
+                .getResultList();
+        if (resultList.size() != 0) {
+            return resultList.get(0);
+        }
+        return null;
     }
 
     @Override
@@ -79,8 +83,8 @@ public class FileDAOImpl implements FileDAO {
         } else {
             Integer parent_id = parentFolder.getId();
             query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
-                    "WHERE f.user.id = :userId AND f.parentFolder.id = :parent_id AND f.inbin <> 1", Content.class);
-            query.setParameter("parent_id", parent_id);
+                    "WHERE f.user.id = :userId AND f.parentFolder.id = :parent_id AND f.inbin <> 1", Content.class)
+                    .setParameter("parent_id", parent_id);
         }
         return query.setParameter("userId", userId).getResultList();
     }
@@ -88,13 +92,13 @@ public class FileDAOImpl implements FileDAO {
     @Override
     public List<Content> getStarredList(int userId) {
         Query query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
-                "WHERE f.user.id = :userId AND f.starred = 1 AND f.inbin <> 1", Content.class);
-        query.setParameter("userId", userId);
+                "WHERE f.user.id = :userId AND f.starred = 1 AND f.inbin <> 1", Content.class)
+                .setParameter("userId", userId);
 
         Query query2 = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
                 "INNER JOIN f.shareFor user " +
-                "WHERE f.user.id = :userId AND f.inbin <> 1 AND f.starred = 1", Content.class);
-        query2.setParameter("userId", userId);
+                "WHERE f.user.id = :userId AND f.inbin <> 1 AND f.starred = 1", Content.class)
+                .setParameter("userId", userId);
 
         List<Content> result = new ArrayList<>();
         result.addAll(query.getResultList());
@@ -243,8 +247,7 @@ public class FileDAOImpl implements FileDAO {
                 sb.append(" OR f.id = " + checked_files_id[i]);
             }
         }
-        entityManager.createQuery(sb.toString())
-                .setParameter("target", target).executeUpdate();
+        entityManager.createQuery(sb.toString()).setParameter("target", target).executeUpdate();
     }
 
     @Override
@@ -258,8 +261,7 @@ public class FileDAOImpl implements FileDAO {
                 sb.append(" OR f.id = " + checked_files_id[i]);
             }
         }
-        entityManager.createQuery(sb.toString())
-                .setParameter("target", target).executeUpdate();
+        entityManager.createQuery(sb.toString()).setParameter("target", target).executeUpdate();
     }
 
     @Override
