@@ -79,6 +79,21 @@ public class Folder {
         }
     }
 
+    public void addFile(File file){
+        files.add(file);
+    }
+
+    public void addFolder(Folder folder){
+        folders.add(folder);
+    }
+    public int getNestedFilesQuantity(){
+        return files.size();
+    }
+
+    public int getNestedFoldersQuantity(){
+        return folders.size();
+    }
+
     @Override
     public String toString() {
         return "Folder{" +

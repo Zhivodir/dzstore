@@ -27,6 +27,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import static com.gmail.dzhivchik.MemoryUtils.GBYTE;
+import static com.gmail.dzhivchik.config.TempContentConfig.isExceedMaximumFileSize;
 import static com.gmail.dzhivchik.web.util.SpringSecurityUtil.getSecurityUser;
 
 
@@ -66,34 +67,33 @@ public class ContentService {
     }
 
     @Transactional
-    public void uploadContent(MultipartFile file, MultipartFile[] files, String structure, Integer currentFolderID){
+    public void uploadContent(MultipartFile file, MultipartFile[] files, String structure, Integer currentFolderID) {
         User currentUser = userDAO.getUserReference(getSecurityUser().getId());
-
-        Folder curFolder = null;
-        if (currentFolderID != null && currentFolderID != -1) {
-            curFolder = getReferenceFolder(currentFolderID);
-        }
+        Folder curFolder = (currentFolderID != -1) ? getReferenceFolder(currentFolderID) : null;
 
         if (file != null && file.getSize() < TempContentConfig.MAX_SIZE_OF_FILE) {
             uploadFile(file, currentUser, curFolder);
         }
 
-        if (files != null && files.length > 0 && structure != null && !structure.isEmpty()) {
-            String[] pathes = null;
+        if (files != null && structure != null) {
             if (structure.startsWith(",")) {
                 structure = structure.substring(1);
             }
-            String targetFolderName = structure.substring(0, structure.indexOf("/"));
-            structure = structure.replaceAll(targetFolderName + "/", "");
-            Folder targetFolder = new Folder(targetFolderName, currentUser, curFolder, false, false, false);
-            pathes = structure.split(";");
-            prepareNewFolderForUpload(files, pathes, currentUser, targetFolder, structure);
-            folderDAO.save(targetFolder);
+            String nameOfUploadFolder = structure.substring(0, structure.indexOf("/"));
+            Folder uploadFolder = new Folder(nameOfUploadFolder, currentUser, curFolder, false, false, false);
+            //так как выгружаемая папка уже создана удаляем её из структуры и выделяем относительные пути ко всем вложенным папкам
+            String[] pathes = structure.replaceAll(nameOfUploadFolder + "/", "").split(";");
+            try {
+                prepareNewFolderForUpload(files, pathes, currentUser, uploadFolder);
+            } catch (IOException e) {
+                //ToDo - реакция на ошибку
+            }
+            folderDAO.save(uploadFolder);
         }
     }
 
     @Transactional
-    public void downloadContent(int[] checked_files_id, int[] checked_folders_id){
+    public void downloadContent(int[] checked_files_id, int[] checked_folders_id) {
         List<File> listCheckedFiles = new ArrayList<>();
         if (checked_files_id != null) {
             listCheckedFiles = getListFilesById(checked_files_id);
@@ -129,7 +129,9 @@ public class ContentService {
     }
 
     @Transactional
-    public List<Folder> getListFolderById(int[] checked_folders_id) { return folderDAO.getListFoldersById(checked_folders_id); }
+    public List<Folder> getListFolderById(int[] checked_folders_id) {
+        return folderDAO.getListFoldersById(checked_folders_id);
+    }
 
     @Transactional
     public void changeStar(int[] checked_files_id, int[] checked_folders_id, boolean stateOfStar) {
@@ -160,11 +162,8 @@ public class ContentService {
 
     @Transactional
     public List<Content> getBinContent(int userId) {
-        Instant start = Instant.now();
         List<Content> content = folderDAO.getBinList(userId);
         content.addAll(fileDAO.getBinList(userId));
-        Instant before = Instant.now();
-        long ns = Duration.between(start, before).toNanos();
         return content;
     }
 
@@ -330,11 +329,11 @@ public class ContentService {
             folderDAO.save(new Folder(folder.getName(), user, addFolder, false, false, false));
             Folder tf = folderDAO.getFolder(user, folder.getName(), addFolder);
 
-            if (folder.getFiles().size() != 0) {
+            if (folder.getNestedFilesQuantity() != 0) {
                 addSharedFileToMyStore(folder.getFiles(), user, folder, tf);
             }
 
-            if (folder.getFolders().size() != 0) {
+            if (folder.getNestedFoldersQuantity() != 0) {
                 addSharedFolderToMyStore(folder.getFolders(), user, folder, tf);
             }
         }
@@ -357,67 +356,56 @@ public class ContentService {
     }
 
     private void uploadFile(MultipartFile file, User user, Folder curFolder) {
-        String fileName = file.getOriginalFilename();
         long size = file.getSize();
-        long all = (long) 10 * GBYTE;
-        String mimeType = file.getContentType();
-        if (size <= all - getSizeBusyMemory(user.getId())) {
-            String type = mimeType;
-            File fileForDAO = null;
+        long allAvailableSize = (long) 10 * GBYTE;
+        if (size <= allAvailableSize - getSizeBusyMemory(user.getId())) {
             try {
-                fileForDAO = new File(fileName, size, type, user, curFolder, false, false, file.getBytes(), false);
+                fileDAO.upload(new File(file, user, curFolder));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            fileDAO.upload(fileForDAO);
         } else {
             System.out.println("Havn't need memory");
         }
     }
 
-    private void prepareNewFolderForUpload(MultipartFile[] files, String[] pathes, User user, Folder curFolder, String structure) {
+    private void prepareNewFolderForUpload(MultipartFile[] files, String[] pathes, User user, Folder currentFolder) throws IOException {
         Map<String, Folder> map = new HashMap<>();
-        try {
-            for (int i = 0; i < pathes.length; i++) {
-                if (files[i].getSize() > TempContentConfig.MAX_SIZE_OF_FILE) {
-                    continue;
-                } else if (!pathes[i].contains("/")) {
-                    File file = new File(pathes[i], files[i].getSize(), files[i].getContentType(),
-                            user, curFolder, false, false, files[i].getBytes(), false);
-                    curFolder.getFiles().add(file);
-                } else if (pathes[i].contains("/")) {
-                    String pathToFolderWithThisFile = pathes[i].substring(0, pathes[i].lastIndexOf("/"));
-                    //точка начала имени родительской папки файла
-                    int startOfTargetFolderName = pathToFolderWithThisFile.lastIndexOf("/") + 1;
-                    String targetFolderNameAndFileName = pathes[i].substring(startOfTargetFolderName);
-                    String targetFolderName = targetFolderNameAndFileName.substring(0, targetFolderNameAndFileName.indexOf("/"));
-                    if (map.containsKey(pathToFolderWithThisFile)) {
-                        //если папка уже есть в нее просто добавляеться файл
-                        map.get(pathToFolderWithThisFile).getFiles().add(new File(targetFolderNameAndFileName.substring(targetFolderNameAndFileName.lastIndexOf("/") + 1), files[i].getSize(), files[i].getContentType(),
-                                user, map.get(pathToFolderWithThisFile), false, false, files[i].getBytes(), false));
-                    } else {
-                        //если такой папки еще нет
-                        //изначально считаеться ,что добавляемая пользователем папка родительская для текущей папки
-                        Folder parentFolderForFolderWithThisFile = curFolder;
 
-                        //если добавляемая пользователем папка не родительская для
-                        // текущей папки ,то определяем родительскую и достаем её из карты
-                        if (startOfTargetFolderName > 0) {
-                            String parentFolderPath = pathToFolderWithThisFile.substring(0, pathToFolderWithThisFile.indexOf("/"));
-                            parentFolderForFolderWithThisFile = map.get(parentFolderPath);
-                        }
-                        Folder newFolder = new Folder(targetFolderName, user, parentFolderForFolderWithThisFile, false, false, false);
-                        parentFolderForFolderWithThisFile.getFolders().add(newFolder);
-                        map.put(pathToFolderWithThisFile, newFolder);
+        for (int i = 0; i < pathes.length; i++) {
+            if (isExceedMaximumFileSize(files[i].getSize())) {
+                continue;
+            } else if (!isInNestedFolder(pathes[i])) {
+                currentFolder.addFile(new File(files[i], user, currentFolder));
+            } else {
+                String pathToParentFolder = pathes[i].substring(0, pathes[i].lastIndexOf("/"));
+                int indexOfParentFolderName = pathToParentFolder.lastIndexOf("/") + 1;
+                String parentFolderNameAndFileName = pathes[i].substring(indexOfParentFolderName);
+                String parentFolderName = parentFolderNameAndFileName.substring(0, parentFolderNameAndFileName.indexOf("/"));
+
+                if (!map.containsKey(pathToParentFolder)) {
+                    Folder parentFolderForFolderWithThisFile = currentFolder;
+                    //если добавляемая пользователем папка не родительская для
+                    // текущей папки ,то определяем родительскую и достаем её из карты
+                    if (indexOfParentFolderName > 0) {
+                        String parentFolderPath = pathToParentFolder.substring(0, pathToParentFolder.indexOf("/"));
+                        parentFolderForFolderWithThisFile = map.get(parentFolderPath);
                     }
+                    Folder newFolder = new Folder(parentFolderName, user, parentFolderForFolderWithThisFile, false, false, false);
+                    parentFolderForFolderWithThisFile.addFolder(newFolder);
+                    map.put(pathToParentFolder, newFolder);
                 }
+                Folder parentFolder = map.get(pathToParentFolder);
+                parentFolder.addFile(new File(files[i], user, parentFolder));
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
-                             /*   DOWNLOAD  */
+    private boolean isInNestedFolder(String path) {
+        return path.contains("/");
+    }
+
+    /*   DOWNLOAD  */
 
     private void downloadContent(List<File> listCheckedFiles, List<Folder> listCheckedFolder) {
         if ((listCheckedFolder.size() != 0) || (listCheckedFiles.size() > 1)) {
@@ -496,7 +484,7 @@ public class ContentService {
             for (Folder folder : listCheckedFolder) {
                 if (!folder.isInbin()) {
                     structure.append(folder.getName() + "/");
-                    if (folder.getFiles().size() == 0 && folder.getFolders().size() == 0) {
+                    if (folder.getNestedFilesQuantity() == 0 && folder.getNestedFoldersQuantity() == 0) {
                         out.putNextEntry(new ZipEntry(structure.toString()));
                         out.closeEntry();
                     } else {
@@ -507,6 +495,7 @@ public class ContentService {
             }
         }
     }
+
     private static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     private static SecureRandom rnd = new SecureRandom();
 

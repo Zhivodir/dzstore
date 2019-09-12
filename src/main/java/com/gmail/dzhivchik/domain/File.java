@@ -5,8 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +68,19 @@ public class File implements Serializable {
         this.data = data;
         this.shareInFolder = shareInFolder;
     }
+
+    public File(MultipartFile file, User user, Folder parentFolder) throws IOException {
+        this.name = file.getOriginalFilename();
+        this.size = file.getSize();
+        this.type = file.getContentType();
+        this.user = user;
+        this.parentFolder = parentFolder;
+        this.starred = false;
+        this.inbin = false;
+        this.data = file.getBytes();
+        this.shareInFolder = false;
+    }
+
 
     public void addToShareFor(List<User> forAdd){
         for(User newUser : forAdd){
