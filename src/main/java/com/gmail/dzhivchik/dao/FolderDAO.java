@@ -27,5 +27,4 @@ public interface FolderDAO {
     void changeShare(List<Folder> targets);
     void changeInBin(int[] checked_folders_id, boolean stateOfInBinStatus);
     void moveTo(int[] checked_folders_id, Folder target);
-    void copyTo(int[] checked_folders_id, Folder target);
 }

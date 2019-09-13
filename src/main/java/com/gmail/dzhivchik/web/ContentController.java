@@ -22,7 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.gmail.dzhivchik.web.util.SpringSecurityUtil.getSecurityUser;
+import static com.gmail.dzhivchik.utils.SpringSecurityUtil.getSecurityUser;
 
 
 @Controller
@@ -130,9 +130,9 @@ public class ContentController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/copyTo", method = RequestMethod.POST)
-    public ResponseEntity copyContentTo(@ModelAttribute SelectedContent selectedContent, @RequestParam int copyTo) {
-        contentService.copyToFolder(selectedContent.getSelectedFiles(), selectedContent.getSelectedFolders(), copyTo);
+    @RequestMapping(value = "/makeCopy", method = RequestMethod.POST)
+    public ResponseEntity makeCopy(@ModelAttribute SelectedContent selectedContent) {
+        contentService.makeCopy(selectedContent.getSelectedFiles());
         return new ResponseEntity(HttpStatus.OK);
     }
 

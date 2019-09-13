@@ -8,19 +8,16 @@ import com.gmail.dzhivchik.web.dto.Content;
 import com.gmail.dzhivchik.web.dto.datatables.DataTablesRequest;
 import com.gmail.dzhivchik.web.dto.datatables.DataTablesResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.LocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.gmail.dzhivchik.web.util.SpringSecurityUtil.getSecurityUser;
+import static com.gmail.dzhivchik.utils.SpringSecurityUtil.getSecurityUser;
 
 @Controller
 @RequestMapping("/")

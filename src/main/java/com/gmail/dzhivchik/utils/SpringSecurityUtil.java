@@ -1,4 +1,4 @@
-package com.gmail.dzhivchik.web.util;
+package com.gmail.dzhivchik.utils;
 
 import com.gmail.dzhivchik.domain.SpringSecurityUser;
 import org.springframework.security.core.context.SecurityContextHolder;

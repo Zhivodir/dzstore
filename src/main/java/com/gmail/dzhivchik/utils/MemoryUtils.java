@@ -1,4 +1,4 @@
-package com.gmail.dzhivchik;
+package com.gmail.dzhivchik.utils;
 
 public class MemoryUtils {
     public static final long BYTE = 8;

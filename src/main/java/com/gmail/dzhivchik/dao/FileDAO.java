@@ -9,7 +9,7 @@ import java.util.List;
 
 
 public interface FileDAO {
-    void upload(File file);
+    void save(File file);
 
     File getFile(int id);
     List<Content> getList(int userId, Folder parentFolder);
@@ -29,5 +29,4 @@ public interface FileDAO {
     void changeShare(List<File> targets);
     void changeInBin(int[] checked_files_id, boolean stateOfInBinStatus);
     void moveTo(int[] checked_files_id, Folder target);
-    void copyTo(int[] checked_files_id, Folder target);
 }

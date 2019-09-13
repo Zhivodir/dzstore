@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import static com.gmail.dzhivchik.web.util.SpringSecurityUtil.getSecurityUser;
+import static com.gmail.dzhivchik.utils.SpringSecurityUtil.getSecurityUser;
 
 @Controller
 @RequestMapping("/settings")

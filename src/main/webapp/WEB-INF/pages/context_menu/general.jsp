@@ -16,9 +16,25 @@
   </li>
   <li class="li_moveTo"><a class="contextHref" href="#" data-toggle="modal" onclick="initStartingPath()" data-target="#modalForMoveTo"><s:message
       code="contextmenu.move.to"/></a></li>
+  <li class="li_makeCopy"><a class="contextHref" href="#" onclick="makeCopy()"><s:message code="contextmenu.make.copy"/></a></li>
 </ul>
 
 <script>
+    function makeCopy() {
+        $.ajax({
+            url: "/makeCopy",
+            type: 'POST',
+            traditional: true,
+            data: {
+                selectedFiles: createSelectedFilesMassiv(),
+                selectedFolders: []
+            },
+            success: function (result) {
+                table.ajax.reload();
+            }
+        })
+    }
+
   function changeStarState(state) {
     $.ajax({
       url: "/changeStarState",

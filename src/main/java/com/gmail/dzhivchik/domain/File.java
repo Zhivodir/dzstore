@@ -81,6 +81,13 @@ public class File implements Serializable {
         this.shareInFolder = false;
     }
 
+    public static File makeCopy(File file){
+        int indexOfPointDelimiter = file.name.lastIndexOf(".");
+        String name = file.name.substring(0,indexOfPointDelimiter);
+        String extension = file.name.substring(indexOfPointDelimiter);
+        return new File(name + "_copy" + extension, file.size, file.type, file.user, file.parentFolder, false, false,
+                file.data, false);
+    }
 
     public void addToShareFor(List<User> forAdd){
         for(User newUser : forAdd){

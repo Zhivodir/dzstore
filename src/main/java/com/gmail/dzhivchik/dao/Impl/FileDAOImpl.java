@@ -28,7 +28,7 @@ public class FileDAOImpl implements FileDAO {
     }
 
     @Override
-    public void upload(File file) {
+    public void save(File file) {
         File searchFile = isFile(file.getName(), file.isInbin(), file.getUser(), file.getParentFolder());
         if (searchFile != null) {
             entityManager.createQuery("UPDATE File f SET f.size = :size, f.inbin = :inbin WHERE f.id = :id")
@@ -238,20 +238,6 @@ public class FileDAOImpl implements FileDAO {
 
     @Override
     public void moveTo(int[] checked_files_id, Folder target) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("UPDATE File f SET f.parentFolder = :target WHERE ");
-        for (int i = 0; i < checked_files_id.length; i++) {
-            if (i == 0) {
-                sb.append("f.id = " + checked_files_id[0]);
-            } else {
-                sb.append(" OR f.id = " + checked_files_id[i]);
-            }
-        }
-        entityManager.createQuery(sb.toString()).setParameter("target", target).executeUpdate();
-    }
-
-    @Override
-    public void copyTo(int[] checked_files_id, Folder target) {
         StringBuilder sb = new StringBuilder();
         sb.append("UPDATE File f SET f.parentFolder = :target WHERE ");
         for (int i = 0; i < checked_files_id.length; i++) {

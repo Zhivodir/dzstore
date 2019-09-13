@@ -236,11 +236,6 @@ public class FolderDAOImpl implements FolderDAO {
         entityManager.createQuery(sb.toString()).setParameter("target", target).executeUpdate();
     }
 
-    @Override
-    public void copyTo(int[] checked_folders_id, Folder target) {
-
-    }
-
     public List<Folder> getList(User user, Folder parentFolder, String[] exceptionFolder) {
         StringBuilder sb = new StringBuilder();
         if (!exceptionFolder[0].equals("")) {

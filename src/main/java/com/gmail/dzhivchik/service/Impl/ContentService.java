@@ -17,20 +17,16 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.security.SecureRandom;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import static com.gmail.dzhivchik.MemoryUtils.GBYTE;
+import static com.gmail.dzhivchik.utils.MemoryUtils.GBYTE;
 import static com.gmail.dzhivchik.config.TempContentConfig.BUFFER_SIZE;
 import static com.gmail.dzhivchik.config.TempContentConfig.SYMBOL_FOR_ARCHIEVE_NAME;
 import static com.gmail.dzhivchik.config.TempContentConfig.isExceedMaximumFileSize;
-import static com.gmail.dzhivchik.web.util.SpringSecurityUtil.getSecurityUser;
+import static com.gmail.dzhivchik.utils.SpringSecurityUtil.getSecurityUser;
 
 
 @Service
@@ -153,6 +149,12 @@ public class ContentService {
         if (checked_folders_id != null) {
             folderDAO.changeInBin(checked_folders_id, stateOfInBinStatus);
         }
+    }
+
+    @Transactional
+    public void makeCopy(int[] selectedFiles) {
+        List<File> copyContent = fileDAO.getListFilesById(selectedFiles);
+        copyContent.stream().forEach(file -> fileDAO.save(File.makeCopy(file)));
     }
 
     @Transactional
@@ -290,16 +292,6 @@ public class ContentService {
         }
     }
 
-    @Transactional
-    public void copyToFolder(int[] checked_files_id, int[] checked_folders_id, int copy_to) {
-        Folder target = copy_to == -1 ? null : getReferenceFolder(copy_to);
-        if (checked_files_id != null) {
-            fileDAO.copyTo(checked_files_id, target);
-        }
-        if (checked_folders_id != null) {
-            folderDAO.copyTo(checked_folders_id, target);
-        }
-    }
 
     public long getSizeBusyMemory(int userId) {
         return fileDAO.getMemoryBusySize(userId);
@@ -319,7 +311,7 @@ public class ContentService {
             StringBuilder relativePath = new StringBuilder();
             createPathForElement(relativePath, curFolder);
             if (file.getSize() <= all - getSizeBusyMemory(user.getId())) {
-                fileDAO.upload(new File(file.getName(), file.getSize(), file.getType(), user, addFolder, false, false, file.getData(), false));
+                fileDAO.save(new File(file.getName(), file.getSize(), file.getType(), user, addFolder, false, false, file.getData(), false));
             } else {
                 System.out.println("Havn't need memory");
             }
@@ -362,7 +354,7 @@ public class ContentService {
         long allAvailableSize = (long) 10 * GBYTE;
         if (size <= allAvailableSize - getSizeBusyMemory(user.getId())) {
             try {
-                fileDAO.upload(new File(file, user, curFolder));
+                fileDAO.save(new File(file, user, curFolder));
             } catch (IOException e) {
                 e.printStackTrace();
             }
