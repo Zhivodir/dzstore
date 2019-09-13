@@ -27,6 +27,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import static com.gmail.dzhivchik.MemoryUtils.GBYTE;
+import static com.gmail.dzhivchik.config.TempContentConfig.BUFFER_SIZE;
+import static com.gmail.dzhivchik.config.TempContentConfig.SYMBOL_FOR_ARCHIEVE_NAME;
 import static com.gmail.dzhivchik.config.TempContentConfig.isExceedMaximumFileSize;
 import static com.gmail.dzhivchik.web.util.SpringSecurityUtil.getSecurityUser;
 
@@ -416,12 +418,10 @@ public class ContentService {
     }
 
     private void downloadSeveralFiles(List<File> listCheckedFiles, List<Folder> listCheckedFolder) {
-        int BUFFER_SIZE = 1024;
         try {
             StringBuilder structure = new StringBuilder();
             String archiveName = randomString(8) + ".zip";
             ZipOutputStream out = new ZipOutputStream(new FileOutputStream(archiveName));
-
             prepareZipFileForDownload(out, listCheckedFiles, listCheckedFolder, structure);
             out.flush();
             out.close();
@@ -441,7 +441,7 @@ public class ContentService {
             os.close();
             inputStream.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            //ToDo - обработку ошибок
         }
     }
 
@@ -449,9 +449,9 @@ public class ContentService {
         httpServletResponse.setContentType(file.getType());
         httpServletResponse.setContentLength((int) file.getSize());
         httpServletResponse.setHeader("Content-Disposition", "attachment;filename=" + file.getName());
-        OutputStream os = null;
+
         try {
-            os = httpServletResponse.getOutputStream();
+            OutputStream os = httpServletResponse.getOutputStream();
             os.write(file.getData());
             os.flush();
             os.close();
@@ -470,7 +470,7 @@ public class ContentService {
 
                     InputStream is = new ByteArrayInputStream(file.getData());
                     int bytesIn;
-                    byte[] readBuffer = new byte[512];
+                    byte[] readBuffer = new byte[BUFFER_SIZE];
                     while ((bytesIn = is.read(readBuffer)) != -1) {
                         out.write(readBuffer, 0, bytesIn);
                     }
@@ -496,13 +496,12 @@ public class ContentService {
         }
     }
 
-    private static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     private static SecureRandom rnd = new SecureRandom();
 
     private String randomString(int len) {
         StringBuilder sb = new StringBuilder(len);
         for (int i = 0; i < len; i++)
-            sb.append(AB.charAt(rnd.nextInt(AB.length())));
+            sb.append(SYMBOL_FOR_ARCHIEVE_NAME.charAt(rnd.nextInt(SYMBOL_FOR_ARCHIEVE_NAME.length())));
         return sb.toString();
     }
 }
