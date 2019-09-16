@@ -6,7 +6,7 @@
     <div class="pull-left">
         <ol class="breadcrumb currentFolderPath">
             <li id="pathRoot">
-
+                <span class="pathElement levelPath" data-current-folder-id="-1"></span>
             </li>
         </ol>
     </div>
@@ -14,18 +14,7 @@
 
 <script>
     function getPathRoot(){
-        switch(typeOfView) {
-            case 'mydisk':
-                return '<span class="pathElement levelPath" data-current-folder-id="-1">' + typeOfViewNames['myspaceView'] + '</span>';
-            case 'shared':
-                return '<a href="' + '\' + typeOfView + " class="levelPath sharedWithMe">' + typeOfViewNames['sharedView'] + '</a>';
-            case 'starred':
-                return '<a href="' + '\' + typeOfView + " class="levelPath">' + typeOfViewNames['starredView'] + '</a>';
-            case 'bin':
-                return '<a href="' + '\' + typeOfView + " class="levelPath">' + typeOfViewNames['binView'] + '</a>';
-            case 'search':
-                return '<span class="levelPath">Search result</span>';
-        }
+        return typeOfViewNames[typeOfView];
     }
 
     function addFolderNameToPath(targetFolderId, targetFolderName) {
@@ -42,7 +31,6 @@
                     lastFolder = true;
                 }
             } else {
-                $(this)
                 $(this).remove();
             }
         });

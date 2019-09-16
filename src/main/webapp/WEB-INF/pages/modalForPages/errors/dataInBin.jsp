@@ -21,7 +21,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal"><s:message code="modal.button.cancel"/></button>
-                            <button type="submit" class="btn btn-primary"><s:message code="modal.bin.open.button.restore"/></button>
+                            <button type="button" class="btn btn-primary" onclick="restoreContent()"><s:message code="modal.bin.open.button.restore"/></button>
                         </div>
                     </div>
                 </div>

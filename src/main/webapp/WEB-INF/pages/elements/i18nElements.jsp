@@ -4,10 +4,10 @@
 <script type="text/javascript">
   var typeOfViewNames = {
     "space": "<s:message code="view.space"/>",
-    "myspaceView": "<s:message code="view.type.my.space"/>",
-    "sharedView": "<s:message code="view.type.shared.for.me"/>",
-    "starredView": "<s:message code="view.type.starred"/>",
-    "binView": "<s:message code="view.type.bin"/>"
+    "mydisk": "<s:message code="view.type.my.space"/>",
+    "shared": "<s:message code="view.type.shared.for.me"/>",
+    "starred": "<s:message code="view.type.starred"/>",
+    "bin": "<s:message code="view.type.bin"/>"
   }
 
   var shareText = {

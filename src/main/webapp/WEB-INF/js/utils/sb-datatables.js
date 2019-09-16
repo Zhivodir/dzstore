@@ -23,8 +23,7 @@ function datatableOpts(url, columns) {
             }
         },
         drawCallback:function( settings, json){
-            $(".currentFolderPath").empty();
-            $(".currentFolderPath").append(getPathRoot());
+            $("#pathRoot .pathElement").text(getPathRoot());
         }
     }
 }

@@ -39,16 +39,16 @@ public class ViewController {
         return "index_commons";
     }
 
-    @RequestMapping(value = "/{typeOfView}", method = RequestMethod.GET)
-    public String onPage(HttpServletRequest request, HttpServletResponse response,
-                         @PathVariable(value = "typeOfView") String typeOfView,
-                          @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
-        viewHelper.prepareView(request, response, localeResolver, PageType.MYDISK, getSecurityUser());
-
-        request.setAttribute("parentsFolderID", null);
-        request.setAttribute("currentFolderID", currentFolderID);
-        return "index_commons";
-    }
+//    @RequestMapping(value = "/{typeOfView}", method = RequestMethod.GET)
+//    public String onPage(HttpServletRequest request, HttpServletResponse response,
+//                         @PathVariable(value = "typeOfView") String typeOfView,
+//                          @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
+//        viewHelper.prepareView(request, response, localeResolver, PageType.MYDISK, getSecurityUser());
+//
+//        request.setAttribute("parentsFolderID", null);
+//        request.setAttribute("currentFolderID", currentFolderID);
+//        return "index_commons";
+//    }
 
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
@@ -59,32 +59,6 @@ public class ViewController {
         request.setAttribute("whatSearch", whatSearch);
         return "index_commons";
     }
-
-
-    @RequestMapping(value = "/shared", method = RequestMethod.GET)
-    public String shared(HttpServletRequest request, HttpServletResponse response,
-                         @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
-        viewHelper.prepareView(request, response, localeResolver, PageType.SHARED, getSecurityUser());
-
-        request.setAttribute("currentFolderID", currentFolderID);
-        return "index_commons";
-    }
-
-    @RequestMapping(value = "/bin")
-    public String toBin(HttpServletRequest request, HttpServletResponse response) {
-        viewHelper.prepareView(request, response, localeResolver, PageType.BIN, getSecurityUser());
-        return "index_commons";
-    }
-
-    @RequestMapping(value = "/starred")
-    public String onStarred(HttpServletRequest request, HttpServletResponse response,
-                            @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
-        viewHelper.prepareView(request, response, localeResolver, PageType.STARRED, getSecurityUser());
-
-        request.setAttribute("currentFolderID", currentFolderID);
-        return "index_commons";
-    }
-
 
     @RequestMapping(value = "/getContent/mydisk/{currentFolderId}", method = RequestMethod.POST)
     public @ResponseBody DataTablesResponse<Content> getContent(@PathVariable int currentFolderId,  DataTablesRequest dtRequest) {

@@ -8,7 +8,6 @@
         <ul class="sidebar-menu" data-widget="tree">
             <c:forEach items="${leftMenuPoints}" var="menuPoint">
                 <li ${menuPoint.active ? 'class="active"' : ""}>
-                    <%--<a href="${menuPoint.path}" class="purposeOfTransit" onclick="changeTypeOfView(${menuPoint.path.replace("/", "")})">--%>
                         <a href="#" class="purposeOfTransit" data-view-type="${menuPoint.path.replace("/", "")}">
 
                         <i class="fa ${menuPoint.icon}"></i> <span>${menuPoint.name}</span>

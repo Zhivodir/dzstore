@@ -44,7 +44,7 @@ public class ContentController {
                          @RequestParam Integer currentFolderID) {
         contentService.uploadContent(file, files, structure, currentFolderID);
         model.addAttribute("currentFolderID", currentFolderID);
-        if (typeOfView.equals("index")) {
+        if (typeOfView.equals("mydisk")) {
             return "redirect:/";
         }
         return "redirect:/" + typeOfView;

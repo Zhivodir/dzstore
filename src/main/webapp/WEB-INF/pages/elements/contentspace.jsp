@@ -25,21 +25,12 @@
                 </tbody>
             </table>
 
-            <c:choose>
-                <c:when test="${typeOfView.equals('bin')}">
-                    <c:import url="/WEB-INF/pages/context_menu/for_bin.jsp"/>
-                    <c:import url="/WEB-INF/pages/modalForPages/operations/delete.jsp"/>
-                    <c:import url="/WEB-INF/pages/modalForPages/errors/dataInBin.jsp"/>
-                </c:when>
-                <c:otherwise>
-                    <c:import url="/WEB-INF/pages/context_menu/general.jsp"/>
-                    <c:import url="/WEB-INF/pages/modalForPages/operations/share.jsp"/>
-                    <c:import url="/WEB-INF/pages/modalForPages/operations/rename.jsp"/>
-                </c:otherwise>
-            </c:choose>
-            <c:if test="${typeOfView.equals('index') || typeOfView.equals('starred')}">
-                <c:import url="/WEB-INF/pages/modalForPages/operations/moveTo.jsp"/>
-            </c:if>
+            <c:import url="/WEB-INF/pages/modalForPages/operations/delete.jsp"/>
+            <c:import url="/WEB-INF/pages/modalForPages/errors/dataInBin.jsp"/>
+            <c:import url="/WEB-INF/pages/elements/contextMenu.jsp"/>
+            <c:import url="/WEB-INF/pages/modalForPages/operations/share.jsp"/>
+            <c:import url="/WEB-INF/pages/modalForPages/operations/rename.jsp"/>
+            <c:import url="/WEB-INF/pages/modalForPages/operations/moveTo.jsp"/>
         </form>
     </div>
 </section>
@@ -114,7 +105,9 @@
             $(".purposeOfTransit").parent().removeClass("active");
             $(this).parent().addClass("active");
             typeOfView = $(this).data("view-type");
-            reloadContentForFolder(-1);
+            currentFolderId = -1;
+            reloadContentForFolder();
+            $('.currentFolderPath').children().not('#pathRoot').remove();
         });
 
         $("#myTable").on('dblclick', '.choise_folder', function (e) {
@@ -126,34 +119,34 @@
             } else {
                 currentFolderId = $(this).find("input").val();
                 var currentFolderName = $(this).find(".name_of_content").text();
-                reloadContentForFolder(currentFolderId);
+                reloadContentForFolder();
                 addFolderNameToPath(currentFolderId, currentFolderName);
             }
         });
 
         $(".currentFolderPath").on('dblclick', '.levelPath', function (e) {
             currentFolderId = $(this).data("current-folder-id");
-            reloadContentForFolder(currentFolderId);
+            reloadContentForFolder();
             returnFolderPath(currentFolderId);
         });
 
-        function reloadContentForFolder(currentFolder) {
+        function reloadContentForFolder() {
             table.ajax.url('/getContent/' + getUrlForDataTables(typeOfView));
             table.ajax.reload();
         }
     });
 
     function getUrlForDataTables(typeOfView) {
-        if (typeOfView == "shared") {
-            return 'shared/' + currentFolderId;
-        }
+        // if (typeOfView == "shared") {
+        //     return 'shared/' + currentFolderId;
+        // }
         if (typeOfView == "bin") {
             return 'bin';
         }
         if (typeOfView == "search") {
             return 'search/' + '${whatSearch}';
         }
-        return ${typeOfView != "index"} ? typeOfView + '/' + currentFolderId : currentFolderId;
+        return typeOfView + '/' + currentFolderId;
     }
 
     function createSelectedFilesMassiv() {

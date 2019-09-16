@@ -65,7 +65,6 @@
 
     function moveToByKeys() {
         var moveToFolderId = $(".currentFolderPath .levelPath:last").data("current-folder-id");
-        alert(moveToFolderId)
 
         if (filesForMove.length != 0 || foldersForMove != 0) {
             if (typeOfMoving == 'x') {
@@ -117,7 +116,7 @@
 
     $(document).ready(function () {
         table2 = $('#tableForMoveTo').DataTable(datatableOpts2(
-            '/getContent/' + currentFolderId,
+            '/getContent/mydisk/' + currentFolderId,
             [
                 {
                     data: 'name',
