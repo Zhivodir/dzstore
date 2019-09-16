@@ -15,13 +15,14 @@
                             <h4 class="modal-title" id="myModalLabel"><s:message code="modal.bin.open.folder.title"/></h4>
                         </div>
                         <div class="modal-body">
-                            <div class="form-group">
+                            <input id="idFolderForRestore" type="hidden" value="">
+                            <div class="form-group" >
                                 <span><s:message code="modal.bin.open.folder.warning"/></span>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal"><s:message code="modal.button.cancel"/></button>
-                            <button type="button" class="btn btn-primary" onclick="restoreContent()"><s:message code="modal.bin.open.button.restore"/></button>
+                            <button type="button" class="btn btn-primary" onclick="modalRestoreContent()"><s:message code="modal.bin.open.button.restore"/></button>
                         </div>
                     </div>
                 </div>

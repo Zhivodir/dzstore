@@ -74,3 +74,22 @@ function restoreContent() {
     })
 }
 
+function modalRestoreContent(){
+    var selectedFilesId = [];
+    var selectedFoldersId = [$('#idFolderForRestore').val()];
+
+    $.ajax({
+        url: "/restoreContent",
+        type: 'POST',
+        traditional: true,
+        data: {
+            selectedFiles: selectedFilesId,
+            selectedFolders: selectedFoldersId
+        },
+        success: function (result) {
+            $("#modalForOpenDataInBin").modal("hide");
+            table.ajax.reload();
+        }
+    })
+}
+

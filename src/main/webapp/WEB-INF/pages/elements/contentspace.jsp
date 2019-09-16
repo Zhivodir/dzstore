@@ -112,6 +112,8 @@
 
         $("#myTable").on('dblclick', '.choise_folder', function (e) {
             if (typeOfView == "bin") {
+                var clickedFolderId = $(this).find('input[name=checked_folders_id]').val();
+                $('#idFolderForRestore').val(clickedFolderId);
                 $('#modalForOpenDataInBin').modal('show');
             } else if (typeOfView == "search") {
                 currentFolderId = $(this).find("input").val();
