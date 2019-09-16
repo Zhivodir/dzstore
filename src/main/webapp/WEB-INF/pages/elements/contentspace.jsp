@@ -110,6 +110,13 @@
         ));
 
 
+        $(".sidebar-menu").on('click', '.purposeOfTransit', function (e) {
+            $(".purposeOfTransit").parent().removeClass("active");
+            $(this).parent().addClass("active");
+            typeOfView = $(this).data("view-type");
+            reloadContentForFolder(-1);
+        });
+
         $("#myTable").on('dblclick', '.choise_folder', function (e) {
             if (typeOfView == "bin") {
                 $('#modalForOpenDataInBin').modal('show');
@@ -137,16 +144,16 @@
     });
 
     function getUrlForDataTables(typeOfView) {
-        if (${typeOfView.equals("shared")}) {
+        if (typeOfView == "shared") {
             return 'shared/' + currentFolderId;
         }
-        if (${typeOfView.equals("bin")}) {
+        if (typeOfView == "bin") {
             return 'bin';
         }
-        if (${typeOfView.equals("search")}) {
+        if (typeOfView == "search") {
             return 'search/' + '${whatSearch}';
         }
-        return ${!typeOfView.equals("index")} ? '${typeOfView}/' + currentFolderId : currentFolderId;
+        return ${typeOfView != "index"} ? typeOfView + '/' + currentFolderId : currentFolderId;
     }
 
     function createSelectedFilesMassiv() {

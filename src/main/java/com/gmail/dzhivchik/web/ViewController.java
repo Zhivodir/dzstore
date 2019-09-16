@@ -32,7 +32,18 @@ public class ViewController {
     @RequestMapping(method = RequestMethod.GET)
     public String onIndex(HttpServletRequest request, HttpServletResponse response,
                           @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
-        viewHelper.prepareView(request, response, localeResolver, PageType.INDEX, getSecurityUser());
+        viewHelper.prepareView(request, response, localeResolver, PageType.MYDISK, getSecurityUser());
+
+        request.setAttribute("parentsFolderID", null);
+        request.setAttribute("currentFolderID", currentFolderID);
+        return "index_commons";
+    }
+
+    @RequestMapping(value = "/{typeOfView}", method = RequestMethod.GET)
+    public String onPage(HttpServletRequest request, HttpServletResponse response,
+                         @PathVariable(value = "typeOfView") String typeOfView,
+                          @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
+        viewHelper.prepareView(request, response, localeResolver, PageType.MYDISK, getSecurityUser());
 
         request.setAttribute("parentsFolderID", null);
         request.setAttribute("currentFolderID", currentFolderID);
@@ -75,7 +86,7 @@ public class ViewController {
     }
 
 
-    @RequestMapping(value = "/getContent/{currentFolderId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/getContent/mydisk/{currentFolderId}", method = RequestMethod.POST)
     public @ResponseBody DataTablesResponse<Content> getContent(@PathVariable int currentFolderId,  DataTablesRequest dtRequest) {
         return getAllCurrentFolderContent(getSecurityUser().getId(), currentFolderId, dtRequest);
     }

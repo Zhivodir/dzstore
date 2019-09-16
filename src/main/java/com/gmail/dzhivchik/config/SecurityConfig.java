@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable()
                 .authorizeRequests()
                 .antMatchers("/registration", "/create_new_user", "/test").permitAll()
-                .antMatchers("/**", "/index").hasAnyRole("USER","ADMIN")
+                .antMatchers("/**").hasAnyRole("USER","ADMIN")
                 .anyRequest().permitAll()
                 .and();
 

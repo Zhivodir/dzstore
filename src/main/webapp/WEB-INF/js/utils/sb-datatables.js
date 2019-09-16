@@ -21,6 +21,10 @@ function datatableOpts(url, columns) {
             if (data.type == "folder") {
                 $(row).addClass('choise_folder');
             }
+        },
+        drawCallback:function( settings, json){
+            $(".currentFolderPath").empty();
+            $(".currentFolderPath").append(getPathRoot());
         }
     }
 }

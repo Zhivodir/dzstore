@@ -35,11 +35,11 @@
 <sec:authorize access="isAuthenticated()">
     <div class="wrapper">
 
-        <c:import url="toppart.jsp"/>
+        <c:import url="elements/toppart.jsp"/>
         <c:import url="elements/leftSideBar.jsp"/>
 
         <div class="content-wrapper">
-            <c:import url="navpart.jsp"/>
+            <c:import url="elements/navpart.jsp"/>
             <c:import url="elements/contentspace.jsp"/>
         </div>
         <!-- /.content-wrapper -->
@@ -47,8 +47,6 @@
             <div class="pull-right hidden-xs">
                 <b>Version</b> 2.4.13
             </div>
-            <strong>Copyright &copy; 2014-2019 <a href="https://adminlte.io">AdminLTE</a>.</strong> All rights
-            reserved.
         </footer>
     </div>
 

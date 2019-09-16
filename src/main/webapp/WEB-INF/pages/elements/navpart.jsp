@@ -4,27 +4,27 @@
 
 <section class="content-header">
     <div class="pull-left">
-        <ol class="breadcrumb currentFolderPath"></ol>
+        <ol class="breadcrumb currentFolderPath">
+            <li id="pathRoot">
+
+            </li>
+        </ol>
     </div>
 </section>
 
 <script>
-    $(document).ready(function () {
-        $(".currentFolderPath").append(getPathRoot());
-    });
-
-    function getPathRoot() {
-        switch ('${typeOfView}') {
-            case 'index':
-                return '<li><span class="pathElement levelPath" data-current-folder-id="-1">' + typeOfViewNames['myspaceView'] + '</span></li>';
+    function getPathRoot(){
+        switch(typeOfView) {
+            case 'mydisk':
+                return '<span class="pathElement levelPath" data-current-folder-id="-1">' + typeOfViewNames['myspaceView'] + '</span>';
             case 'shared':
-                return '<li><a href="/${typeOfView}" class="levelPath sharedWithMe">' + typeOfViewNames['sharedView'] + '</a></li>';
+                return '<a href="' + '\' + typeOfView + " class="levelPath sharedWithMe">' + typeOfViewNames['sharedView'] + '</a>';
             case 'starred':
-                return '<li><a href="/${typeOfView}" class="levelPath">' + typeOfViewNames['starredView'] + '</a></li>';
+                return '<a href="' + '\' + typeOfView + " class="levelPath">' + typeOfViewNames['starredView'] + '</a>';
             case 'bin':
-                return '<li><a href="/${typeOfView}" class="levelPath">' + typeOfViewNames['binView'] + '</a></li>';
+                return '<a href="' + '\' + typeOfView + " class="levelPath">' + typeOfViewNames['binView'] + '</a>';
             case 'search':
-                return '<li><span class="levelPath">Search result</span></li>';
+                return '<span class="levelPath">Search result</span>';
         }
     }
 

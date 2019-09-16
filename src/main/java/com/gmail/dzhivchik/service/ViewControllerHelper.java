@@ -40,7 +40,7 @@ public class ViewControllerHelper {
     public void prepareLeftMenu(HttpServletRequest request, PageType pageType, SpringSecurityUser user) {
         List<Leaf> leftMenuPoints = new ArrayList<>();
         ResourceBundle texts = ResourceBundle.getBundle("lang/texts", new Locale(user.getLanguage().toString().toLowerCase()));
-        leftMenuPoints.add(new Leaf("/", texts.getString("view.type.my.space"), "fa-home", pageType == PageType.INDEX));
+        leftMenuPoints.add(new Leaf("/mydisk", texts.getString("view.type.my.space"), "fa-home", pageType == PageType.MYDISK));
         leftMenuPoints.add(new Leaf("/shared", texts.getString("view.type.shared.for.me"), "fa-users", pageType == PageType.SHARED));
         leftMenuPoints.add(new Leaf("/starred", texts.getString("view.type.starred"), "fa-star", pageType == PageType.STARRED));
         leftMenuPoints.add(new Leaf("/bin", texts.getString("view.type.bin"), "fa-bitbucket", pageType == PageType.BIN));
