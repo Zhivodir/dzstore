@@ -36,18 +36,12 @@ public class ContentController {
 
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public String upload(Model model,
+    public @ResponseBody void upload(Model model,
                          @RequestParam(value = "file", required = false) MultipartFile file,
                          @RequestParam(value = "files", required = false) MultipartFile[] files,
-                         @RequestParam String typeOfView,
                          @RequestParam(value = "structure", required = false) String structure,
                          @RequestParam Integer currentFolderID) {
         contentService.uploadContent(file, files, structure, currentFolderID);
-        model.addAttribute("currentFolderID", currentFolderID);
-        if (typeOfView.equals("mydisk")) {
-            return "redirect:/";
-        }
-        return "redirect:/" + typeOfView;
     }
 
     @RequestMapping(value = "/download", method = RequestMethod.POST)
