@@ -95,25 +95,6 @@
         })
     }
 
-
-    function ajaxCopyTo(moveToFolderId, selectedFiles, selectedFolders) {
-        $.ajax({
-            url: "/copyTo",
-            type: 'POST',
-            traditional: true,
-            data: {
-                selectedFiles: selectedFiles,
-                selectedFolders: selectedFolders,
-                copyTo: moveToFolderId
-            },
-            success: function (result) {
-                table.ajax.reload();
-            },
-            error: function (result) {
-            }
-        })
-    }
-
     $(document).ready(function () {
         table2 = $('#tableForMoveTo').DataTable(datatableOpts2(
             '/getContent/mydisk/' + currentFolderId,
@@ -147,7 +128,7 @@
                 pathBlock.append('<span class="pathElement levelPathMoveTo">' + typeOfViewNames['space'] + '</span>');
                 table2.rows().remove().draw(false);
                 table2.row.add({
-                    "name": "<strong>" + typeOfViewNames['myspaceView'] + "<strong>"
+                    "name": "<strong>" + typeOfViewNames['mydisk'] + "<strong>"
                 }).draw();
                 $('#tableForMoveTo tr .name_of_content').data("current-folder-id", -1);
                 $('#tableForMoveTo tr').addClass("choise_field").addClass("choise_folder");
@@ -174,7 +155,7 @@
         })
 
         function reloadMoveToContent(currentFolderId) {
-            table2.ajax.url('/getContent/' + currentFolderId);
+            table2.ajax.url('/getContent/mydisk/' + currentFolderId);
             table2.ajax.reload();
         }
 
