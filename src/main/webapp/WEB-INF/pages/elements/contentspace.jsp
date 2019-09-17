@@ -209,7 +209,7 @@
         if (e.keyCode == 46) {
             filesForMove = createSelectedFilesMassiv();
             foldersForMove = createSelectedFoldersMassiv();
-            if (!${typeOfView.equals("bin")}) {
+            if (typeOfView != "bin") {
                 removeContentByKeys();
             } else {
                 $("#modalForDelete").modal("show");
