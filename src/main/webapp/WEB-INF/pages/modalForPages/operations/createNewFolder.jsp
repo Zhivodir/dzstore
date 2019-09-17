@@ -16,7 +16,7 @@
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="newFolder"
+                                <input type="text" class="form-control" id="newFolder" value=""
                                        placeholder="<s:message code="modal.create.folder.placeholder"/>">
                             </div>
                         </div>
@@ -45,7 +45,7 @@
             },
             success: function (result) {
                 table.ajax.reload();
-                $("#newFolder").attr(value, "");
+                $("#newFolder").attr("value", "");
             },
             error: function (result) {
             }

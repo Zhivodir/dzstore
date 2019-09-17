@@ -39,27 +39,6 @@ public class ViewController {
         return "index_commons";
     }
 
-//    @RequestMapping(value = "/{typeOfView}", method = RequestMethod.GET)
-//    public String onPage(HttpServletRequest request, HttpServletResponse response,
-//                         @PathVariable(value = "typeOfView") String typeOfView,
-//                          @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
-//        viewHelper.prepareView(request, response, localeResolver, PageType.MYDISK, getSecurityUser());
-//
-//        request.setAttribute("parentsFolderID", null);
-//        request.setAttribute("currentFolderID", currentFolderID);
-//        return "index_commons";
-//    }
-
-
-    @RequestMapping(value = "/search", method = RequestMethod.POST)
-    public String search(HttpServletRequest request, HttpServletResponse response,
-                         @RequestParam(value = "whatSearch", required = false) String whatSearch) {
-        viewHelper.prepareView(request, response, localeResolver, PageType.SEARCH, getSecurityUser());
-
-        request.setAttribute("whatSearch", whatSearch);
-        return "index_commons";
-    }
-
     @RequestMapping(value = "/getContent/mydisk/{currentFolderId}", method = RequestMethod.POST)
     public @ResponseBody DataTablesResponse<Content> getContent(@PathVariable int currentFolderId,  DataTablesRequest dtRequest) {
         return getAllCurrentFolderContent(getSecurityUser().getId(), currentFolderId, dtRequest);
@@ -124,9 +103,4 @@ public class ViewController {
         dtResponse.setData(data);
         return dtResponse;
     }
-//
-//    @RequestMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-//    public List<Content> search(@RequestParam(value = "searchQuery", required = false) String searchQuery) {
-//        return contentService.getSearchContent(getSecurityUser().getId(), searchQuery);
-//    }
 }

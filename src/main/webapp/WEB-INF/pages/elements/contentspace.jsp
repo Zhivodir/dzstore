@@ -119,6 +119,9 @@
                 currentFolderId = $(this).find("input").val();
                 window.location.href = '/?currentFolderID=' + currentFolderId
             } else {
+                if (typeOfView != "shared") {
+                    typeOfView = "mydisk";
+                }
                 currentFolderId = $(this).find("input").val();
                 var currentFolderName = $(this).find(".name_of_content").text();
                 reloadContentForFolder();
@@ -136,17 +139,26 @@
             table.ajax.url('/getContent/' + getUrlForDataTables(typeOfView));
             table.ajax.reload();
         }
+
+        $("#search-btn").on('click', function (e) {
+            var searchString = $.trim($("#search-input").val());
+                if (searchString) {
+                    reloadContentForSearch(searchString);
+                }
+        });
+
+        function reloadContentForSearch(searchString) {
+            table.ajax.url('/getContent/search/' + searchString);
+            table.ajax.reload();
+        }
     });
 
     function getUrlForDataTables(typeOfView) {
-        // if (typeOfView == "shared") {
-        //     return 'shared/' + currentFolderId;
-        // }
         if (typeOfView == "bin") {
             return 'bin';
         }
         if (typeOfView == "search") {
-            return 'search/' + '${whatSearch}';
+            return 'search/' + $("#search-input").val();
         }
         return typeOfView + '/' + currentFolderId;
     }

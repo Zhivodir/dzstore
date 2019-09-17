@@ -33,11 +33,11 @@
             </ul>
         </div>
 
-        <form action="/search" id="search-form" method="post" class="navbar-form navbar-left">
+        <form id="search-form" class="navbar-form navbar-left">
             <div class="input-group">
                 <input type="text" name="whatSearch" id="search-input" class="form-control" placeholder="<s:message code="navbar.search"/>">
                 <span class="input-group-btn">
-                <button type="button" onclick="isQueryEmpty()" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                <button type="button" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
                 </button>
               </span>
             </div>
@@ -121,24 +121,3 @@
 </header>
 
 <jsp:include page="/WEB-INF/pages/elements/i18nElements.jsp"/>
-
-<%--<script>--%>
-    <%--function searchContent() {--%>
-        <%--$.ajax({--%>
-            <%--type: "GET",--%>
-            <%--url: "/search",--%>
-            <%--data: $("#searchInput").serialize()--%>
-        <%--}).done(updateTableByData);--%>
-    <%--}--%>
-<%--</script>--%>
-
-
-<script>
-    function isQueryEmpty(){
-        event.preventDefault();
-        var input = $.trim($("#search-input").val());
-        if(input){
-            $("#search-form").submit();
-        }
-    }
-</script>
