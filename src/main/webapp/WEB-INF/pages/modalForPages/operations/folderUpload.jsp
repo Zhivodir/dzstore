@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 
 <div class="container-fluid">
     <div class="row">
@@ -15,7 +16,7 @@
                                     <span aria-hidden="true">&times;</span>
                                     <span class="sr-only">Close</span>
                                 </button>
-                                <h4 class="modal-title">Upload folder</h4>
+                                <h4 class="modal-title"><s:message code="modal.upload.folder.title"/></h4>
                             </div>
                             <div class="modal-body">
                                 <div class="form-group" style="float: left" id="folder_upload">
@@ -25,8 +26,8 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                                <button type="submit" class="btn btn-primary">Upload</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal"><s:message code="modal.button.cancel"/></button>
+                                <button type="submit" class="btn btn-primary"><s:message code="modal.button.upload"/></button>
                             </div>
                         </form>
                     </div>

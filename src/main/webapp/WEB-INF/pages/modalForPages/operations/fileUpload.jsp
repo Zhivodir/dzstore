@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 
 <div class="container-fluid">
     <div class="row">
@@ -13,7 +14,7 @@
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
                                 </button>
-                                <h4 class="modal-title" id="myModalLabel">Загрузить файл</h4>
+                                <h4 class="modal-title" id="myModalLabel"><s:message code="modal.upload.file.title"/></h4>
                             </div>
                             <div class="modal-body">
                                 <div class="form-group">
@@ -23,8 +24,8 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                                <button type="submit" class="btn btn-primary">Upload</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal"><s:message code="modal.button.cancel"/></button>
+                                <button type="submit" class="btn btn-primary"><s:message code="modal.button.upload"/></button>
                             </div>
                         </form>
                     </div>
