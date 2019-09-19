@@ -65,24 +65,33 @@ public class ContentService {
     }
 
     @Transactional
-    public void uploadContent(MultipartFile file, MultipartFile[] files, String structure, Integer currentFolderID) {
+    public void uploadContent(MultipartFile file, MultipartFile[] files, String structure, Integer currentFolderId) {
         User currentUser = userDAO.getUserReference(getSecurityUser().getId());
-        Folder curFolder = (currentFolderID != -1) ? getReferenceFolder(currentFolderID) : null;
+        Folder parentFolder = null;
 
         if (file != null && file.getSize() < TempContentConfig.MAX_SIZE_OF_FILE) {
-            uploadFile(file, currentUser, curFolder);
+            parentFolder = getReferenceFolder(currentFolderId);
+            uploadFile(file, currentUser, parentFolder);
         }
 
         if (files != null && structure != null) {
+            String path = null;
+
+            if (currentFolderId != -1) {
+                parentFolder = getFolder(currentFolderId);
+                path = parentFolder.getFullPath();
+            }
+
             if (structure.startsWith(",")) {
                 structure = structure.substring(1);
             }
             String nameOfUploadFolder = structure.substring(0, structure.indexOf("/"));
-            Folder uploadFolder = new Folder(nameOfUploadFolder, currentUser, curFolder, false, false, false);
+            Folder uploadFolder = new Folder(nameOfUploadFolder, currentUser, parentFolder, false, false, false, path);
             //так как выгружаемая папка уже создана удаляем её из структуры и выделяем относительные пути ко всем вложенным папкам
+            String pathToUploadFolder = path != null ? path + "/" + nameOfUploadFolder : nameOfUploadFolder;
             String[] pathes = structure.replaceAll(nameOfUploadFolder + "/", "").split(";");
             try {
-                prepareNewFolderForUpload(files, pathes, currentUser, uploadFolder);
+                prepareNewFolderForUpload(files, pathToUploadFolder, pathes, currentUser, uploadFolder);
             } catch (IOException e) {
                 //ToDo - реакция на ошибку
             }
@@ -320,7 +329,7 @@ public class ContentService {
 
     private void addSharedFolderToMyStore(List<Folder> listOfAddFolders, User user, Folder shareFolder, Folder addFolder) {
         for (Folder folder : listOfAddFolders) {
-            folderDAO.save(new Folder(folder.getName(), user, addFolder, false, false, false));
+            folderDAO.save(new Folder(folder.getName(), user, addFolder, false, false, false, folder.getPath()));
             Folder tf = folderDAO.getFolder(user, folder.getName(), addFolder);
 
             if (folder.getNestedFilesQuantity() != 0) {
@@ -363,7 +372,7 @@ public class ContentService {
         }
     }
 
-    private void prepareNewFolderForUpload(MultipartFile[] files, String[] pathes, User user, Folder currentFolder) throws IOException {
+    private void prepareNewFolderForUpload(MultipartFile[] files, String mainPath, String[] pathes, User user, Folder currentFolder) throws IOException {
         Map<String, Folder> map = new HashMap<>();
 
         for (int i = 0; i < pathes.length; i++) {
@@ -385,7 +394,15 @@ public class ContentService {
                         String parentFolderPath = pathToParentFolder.substring(0, pathToParentFolder.indexOf("/"));
                         parentFolderForFolderWithThisFile = map.get(parentFolderPath);
                     }
-                    Folder newFolder = new Folder(parentFolderName, user, parentFolderForFolderWithThisFile, false, false, false);
+
+                    String path = "";
+                    if (mainPath != null) {
+                        path = mainPath  + "/" + pathToParentFolder;
+                    } else {
+                        path = pathToParentFolder;
+                    }
+
+                    Folder newFolder = new Folder(parentFolderName, user, parentFolderForFolderWithThisFile, false, false, false, path);
                     parentFolderForFolderWithThisFile.addFolder(newFolder);
                     map.put(pathToParentFolder, newFolder);
                 }

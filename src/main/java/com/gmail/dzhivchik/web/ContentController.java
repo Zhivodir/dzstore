@@ -60,13 +60,14 @@ public class ContentController {
 
     @RequestMapping(value = "/createFolder", method = RequestMethod.POST)
     public @ResponseBody String createNewFolder(@RequestParam int currentFolderId, @RequestParam String newFolderName) {
-        int userId = getSecurityUser().getId();
-        User user = userService.getReferenceUser(userId);
-        Folder curFolder = null;
+        User user = userService.getReferenceUser(getSecurityUser().getId());
+        Folder parentFolder = null;
+        String path = null;
         if (currentFolderId != -1) {
-            curFolder = contentService.getReferenceFolder(currentFolderId);
+            parentFolder = contentService.getFolder(currentFolderId);
+            path = parentFolder.getPath() != null ? parentFolder.getPath() + "/" + parentFolder.getName() : parentFolder.getName();
         }
-        Folder folder = new Folder(newFolderName, user, curFolder, false, false, false);
+        Folder folder = new Folder(newFolderName, user, parentFolder, false, false, false, path);
         contentService.createFolder(folder);
         return "Ok";
     }

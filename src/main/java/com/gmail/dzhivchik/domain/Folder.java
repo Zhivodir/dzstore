@@ -38,6 +38,7 @@ public class Folder {
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private Folder parentFolder;
+    private String path;
 
     @JsonIgnore
     @OneToMany(mappedBy = "parentFolder", cascade = CascadeType.ALL)
@@ -56,13 +57,14 @@ public class Folder {
     private List<User> shareFor = new ArrayList<>();
 
     public Folder(String name, User user, Folder parentFolder,
-                  boolean starred, boolean inbin, boolean shareInFolder) {
+                  boolean starred, boolean inbin, boolean shareInFolder, String path) {
         this.name = name;
         this.user = user;
         this.parentFolder = parentFolder;
         this.starred = starred;
         this.inbin = inbin;
         this.shareInFolder = shareInFolder;
+        this.path = path;
     }
 
     public void addToShareFor(List<User> forAdd){
@@ -92,6 +94,14 @@ public class Folder {
 
     public int getNestedFoldersQuantity(){
         return folders.size();
+    }
+
+    public String getFullPath(){
+        if(parentFolder != null) {
+            return parentFolder.getPath() != null ? parentFolder.getPath() + "/" + parentFolder.getName() : parentFolder.getName();
+        }
+        return name;
+
     }
 
     @Override

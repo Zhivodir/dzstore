@@ -252,8 +252,9 @@ public class FileDAOImpl implements FileDAO {
 
     @Override
     public long getMemoryBusySize(int userId) {
-        return (Long) entityManager.createQuery("SELECT sum(f.size) FROM File f WHERE f.user.id = :userId")
+        Object sum = entityManager.createQuery("SELECT sum(f.size) FROM File f WHERE f.user.id = :userId")
                 .setParameter("userId", userId)
                 .getSingleResult();
+        return sum != null ? (Long) sum: 0;
     }
 }
