@@ -39,4 +39,31 @@
     function prepareModalForUpload() {
         $(".uploadCurrentFolderId").val(currentFolderId);
     }
+
+
+    function getPathToFolder(folderId){
+        $.ajax({
+            url: "/getPathToFolder",
+            type: 'POST',
+            traditional: true,
+            data: {
+                folderId: folderId
+            },
+            success: function (result) {
+                formAndShowPath(result["response"]);
+            }
+        })
+    }
+
+    function formAndShowPath(stringPath){
+        changeRootOfPath()
+        var folders = stringPath.split("/");
+        for(i = 0; i < folders.length; i++){
+            addFolderNameToPath(0, folders[i]);
+        }
+    }
+
+    function changeRootOfPath(){
+        $("#pathRoot .pathElement").text(getPathRoot());
+    }
 </script>

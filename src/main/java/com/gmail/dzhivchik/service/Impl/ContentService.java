@@ -70,7 +70,9 @@ public class ContentService {
         Folder parentFolder = null;
 
         if (file != null && file.getSize() < TempContentConfig.MAX_SIZE_OF_FILE) {
-            parentFolder = getReferenceFolder(currentFolderId);
+            if (currentFolderId != -1) {
+                parentFolder = getReferenceFolder(currentFolderId);
+            }
             uploadFile(file, currentUser, parentFolder);
         }
 

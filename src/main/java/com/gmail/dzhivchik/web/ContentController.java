@@ -11,6 +11,7 @@ import com.gmail.dzhivchik.web.dto.datatables.DataTablesRequest;
 import com.gmail.dzhivchik.web.dto.datatables.DataTablesResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -20,7 +21,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static com.gmail.dzhivchik.utils.SpringSecurityUtil.getSecurityUser;
 
@@ -88,6 +91,20 @@ public class ContentController {
             contentService.removeInBin(selectedContent.getSelectedFiles(), selectedContent.getSelectedFolders(), true);
         }
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/isCurrentUserOwner", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody Map isCurrentUserOwner(@RequestParam int folderId) {
+        int currentUserId = getSecurityUser().getId();
+        //ToDo - optimization
+        Folder targetFolder = contentService.getFolder(folderId);
+        boolean isOwner = currentUserId == targetFolder.getUser().getId();
+        return Collections.singletonMap("isOwner", isOwner);
+    }
+
+    @RequestMapping(value = "/getPathToFolder", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody Map getPathToFolder(@RequestParam int folderId) {
+        return Collections.singletonMap("response", contentService.getFolder(folderId).getPath());
     }
 
     @RequestMapping(value = "/restoreContent", method = RequestMethod.POST)

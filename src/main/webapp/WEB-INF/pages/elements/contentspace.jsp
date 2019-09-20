@@ -111,23 +111,44 @@
         });
 
         $("#myTable").on('dblclick', '.choise_folder', function (e) {
+            currentFolderId = $(this).find("input").val();
+
             if (typeOfView == "bin") {
-                var clickedFolderId = $(this).find('input[name=checked_folders_id]').val();
-                $('#idFolderForRestore').val(clickedFolderId);
+                $('#idFolderForRestore').val(currentFolderId);
                 $('#modalForOpenDataInBin').modal('show');
-            } else if (typeOfView == "search") {
-                currentFolderId = $(this).find("input").val();
-                window.location.href = '/?currentFolderID=' + currentFolderId
+            } else if (typeOfView == "search" || typeOfView == "starred") {
+                reloadContentWithChangeViewForFolder(currentFolderId);
+                typeOfView = "mydisk";
+                getPathToFolder(currentFolderId);
             } else {
                 if (typeOfView != "shared") {
                     typeOfView = "mydisk";
                 }
-                currentFolderId = $(this).find("input").val();
                 var currentFolderName = $(this).find(".name_of_content").text();
                 reloadContentForFolder();
                 addFolderNameToPath(currentFolderId, currentFolderName);
             }
         });
+
+        function reloadContentWithChangeViewForFolder(folderId){
+            $.ajax({
+                url: "/isCurrentUserOwner",
+                type: 'POST',
+                traditional: true,
+                data: {
+                    folderId: folderId
+                },
+                success: function (result) {
+                    if(result["isOwner"]) {
+                        typeOfView = "mydisk";
+                    } else {
+                        typeOfView = "shared";
+                    }
+
+                    reloadContentForFolder();
+                }
+            })
+        }
 
         $(".currentFolderPath").on('dblclick', '.levelPath', function (e) {
             currentFolderId = $(this).data("current-folder-id");
@@ -142,9 +163,11 @@
 
         $("#search-btn").on('click', function (e) {
             var searchString = $.trim($("#search-input").val());
-                if (searchString) {
-                    reloadContentForSearch(searchString);
-                }
+            if (searchString) {
+                typeOfView = "search";
+                $('.currentFolderPath').children().not('#pathRoot').remove();
+                reloadContentForSearch(searchString);
+            }
         });
 
         function reloadContentForSearch(searchString) {
