@@ -104,8 +104,8 @@ public class ContentController {
         //ToDo - need id's of folders from path
         Folder folder = contentService.getFolder(folderId);
         Map<String, List<PathElement>> map = Collections.singletonMap("response", contentService.getIdsAndPathesForFolders(folder));
-//        return map;
-        return Collections.singletonMap("response", contentService.getFolder(folderId).getPath());
+        return map;
+//        return Collections.singletonMap("response", contentService.getFolder(folderId).getPath());
     }
 
     @RequestMapping(value = "/restoreContent", method = RequestMethod.POST)

@@ -4,6 +4,7 @@ import com.gmail.dzhivchik.dao.FolderDAO;
 import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.web.dto.Content;
+import com.gmail.dzhivchik.web.dto.PathElement;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -259,17 +260,17 @@ public class FolderDAOImpl implements FolderDAO {
     }
 
     @Override
-    public List<Folder> getPathElements(List<String> pathes, int userId) {
+    public List<PathElement> getPathElements(List<String> pathes, int userId) {
         StringBuilder sb = new StringBuilder();
-        sb.append("SELECT f FROM Folder f WHERE f.user.id = " + userId + " AND ");
+        sb.append("SELECT new com.gmail.dzhivchik.web.dto.PathElement(f.name, f.id) FROM Folder f WHERE f.user.id = " + userId + " AND ");
         for (int i = 0; i < pathes.size(); i++) {
             if (i == 0) {
                 sb.append(" f.name = '" + pathes.get(i) + "'");
             } else {
                 sb.append(" OR f.name = '" + pathes.get(i) + "'");
             }
+            System.out.println(pathes.get(i));
         }
-        System.out.println(sb.toString());
-        return entityManager.createQuery(sb.toString(), Folder.class).getResultList();
+        return entityManager.createQuery(sb.toString(), PathElement.class).getResultList();
     }
 }

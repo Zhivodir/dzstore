@@ -16,7 +16,7 @@ public interface FolderDAO {
     Folder getFolder(int id);
     Folder getFolder(User user, String name, Folder parentFolder);
 
-    List<Folder> getPathElements(List<String> pathes, int userId);
+    List<PathElement> getPathElements(List<String> pathes, int userId);
 
     List<Content> getList(int userId, Folder parentFolder);
     List<Content> getStarredList(int userId);

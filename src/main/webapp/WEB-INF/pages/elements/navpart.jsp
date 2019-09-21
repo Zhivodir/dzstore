@@ -55,11 +55,11 @@
         })
     }
 
-    function formAndShowPath(stringPath){
-        changeRootOfPath()
-        var folders = stringPath.split("/");
-        for(i = 0; i < folders.length; i++){
-            addFolderNameToPath(0, folders[i]);
+    function formAndShowPath(pathElements){
+        changeRootOfPath();
+        // var folders = stringPath.split("/");
+        for(i = 0; i < pathElements.length; i++){
+            addFolderNameToPath(pathElements[i].folderId, pathElements[i].folderName);
         }
     }
 

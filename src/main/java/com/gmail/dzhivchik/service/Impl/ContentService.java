@@ -518,8 +518,8 @@ public class ContentService {
     }
 
     public List<PathElement> getIdsAndPathesForFolders(Folder folder) {
-        int userId = folder.getId();
-        String path = folder.getPath();
+        int userId = folder.getUser().getId();
+        String path = folder.getPath() + "/" + folder.getName();
         StringBuilder sb = new StringBuilder(path);
         List<String> pathes = new ArrayList<>();
         String folderName = path;
@@ -537,7 +537,6 @@ public class ContentService {
             }
         }
         Collections.reverse(pathes);
-        System.out.println(folderDAO.getPathElements(pathes, userId).size());
-        return new ArrayList<PathElement>();
+        return folderDAO.getPathElements(pathes, userId);
     }
 }
