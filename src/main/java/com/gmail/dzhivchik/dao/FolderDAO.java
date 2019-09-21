@@ -3,6 +3,7 @@ package com.gmail.dzhivchik.dao;
 import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.web.dto.Content;
+import com.gmail.dzhivchik.web.dto.PathElement;
 
 import java.util.List;
 
@@ -14,6 +15,8 @@ public interface FolderDAO {
     Folder getReferenceFolder(int id);
     Folder getFolder(int id);
     Folder getFolder(User user, String name, Folder parentFolder);
+
+    List<Folder> getPathElements(List<String> pathes, int userId);
 
     List<Content> getList(int userId, Folder parentFolder);
     List<Content> getStarredList(int userId);

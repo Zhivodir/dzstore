@@ -257,4 +257,19 @@ public class FolderDAOImpl implements FolderDAO {
         query.setParameter("user", user);
         return query.getResultList();
     }
+
+    @Override
+    public List<Folder> getPathElements(List<String> pathes, int userId) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT f FROM Folder f WHERE f.user.id = " + userId + " AND ");
+        for (int i = 0; i < pathes.size(); i++) {
+            if (i == 0) {
+                sb.append(" f.name = '" + pathes.get(i) + "'");
+            } else {
+                sb.append(" OR f.name = '" + pathes.get(i) + "'");
+            }
+        }
+        System.out.println(sb.toString());
+        return entityManager.createQuery(sb.toString(), Folder.class).getResultList();
+    }
 }

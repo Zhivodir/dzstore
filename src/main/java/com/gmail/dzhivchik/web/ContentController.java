@@ -6,6 +6,7 @@ import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.service.Impl.ContentService;
 import com.gmail.dzhivchik.service.UserService;
 import com.gmail.dzhivchik.web.dto.ChangesInAccessForUsers;
+import com.gmail.dzhivchik.web.dto.PathElement;
 import com.gmail.dzhivchik.web.dto.SelectedContent;
 import com.gmail.dzhivchik.web.dto.datatables.DataTablesRequest;
 import com.gmail.dzhivchik.web.dto.datatables.DataTablesResponse;
@@ -20,10 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.gmail.dzhivchik.utils.SpringSecurityUtil.getSecurityUser;
 
@@ -39,11 +37,10 @@ public class ContentController {
 
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public @ResponseBody void upload(Model model,
-                         @RequestParam(value = "file", required = false) MultipartFile file,
-                         @RequestParam(value = "files", required = false) MultipartFile[] files,
-                         @RequestParam(value = "structure", required = false) String structure,
-                         @RequestParam Integer currentFolderID) {
+    public @ResponseBody void upload(@RequestParam(value = "file", required = false) MultipartFile file,
+                @RequestParam(value = "files", required = false) MultipartFile[] files,
+                @RequestParam(value = "structure", required = false) String structure,
+                @RequestParam Integer currentFolderID) {
         contentService.uploadContent(file, files, structure, currentFolderID);
     }
 
@@ -104,6 +101,10 @@ public class ContentController {
 
     @RequestMapping(value = "/getPathToFolder", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody Map getPathToFolder(@RequestParam int folderId) {
+        //ToDo - need id's of folders from path
+        Folder folder = contentService.getFolder(folderId);
+        Map<String, List<PathElement>> map = Collections.singletonMap("response", contentService.getIdsAndPathesForFolders(folder));
+//        return map;
         return Collections.singletonMap("response", contentService.getFolder(folderId).getPath());
     }
 
@@ -156,7 +157,7 @@ public class ContentController {
 
     @RequestMapping(value = "/getUsersWithAccess/{contentType}/{contentId}", method = RequestMethod.POST)
     public @ResponseBody DataTablesResponse<User> loadListOfAccount(@RequestBody DataTablesRequest dtRequest,
-                                                                    @PathVariable("contentType") String contentType, @PathVariable("contentId") int contentId) {
+                                               @PathVariable("contentType") String contentType, @PathVariable("contentId") int contentId) {
         List<User> users = new ArrayList<>();
 
         if (("folder").equals(contentType) && contentId != -1) {

@@ -8,6 +8,7 @@ import com.gmail.dzhivchik.domain.File;
 import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.web.dto.Content;
+import com.gmail.dzhivchik.web.dto.PathElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -514,5 +515,29 @@ public class ContentService {
         for (int i = 0; i < len; i++)
             sb.append(SYMBOL_FOR_ARCHIEVE_NAME.charAt(rnd.nextInt(SYMBOL_FOR_ARCHIEVE_NAME.length())));
         return sb.toString();
+    }
+
+    public List<PathElement> getIdsAndPathesForFolders(Folder folder) {
+        int userId = folder.getId();
+        String path = folder.getPath();
+        StringBuilder sb = new StringBuilder(path);
+        List<String> pathes = new ArrayList<>();
+        String folderName = path;
+
+        while (sb.length() > 0) {
+            pathes.add(folderName);
+            int index = sb.lastIndexOf("/");
+
+            if (index != -1) {
+                folderName = sb.substring(0, index);
+                sb.delete(index, sb.length());
+            } else {
+                folderName = sb.substring(0, sb.length());
+                sb.delete(0, sb.length());
+            }
+        }
+        Collections.reverse(pathes);
+        System.out.println(folderDAO.getPathElements(pathes, userId).size());
+        return new ArrayList<PathElement>();
     }
 }
