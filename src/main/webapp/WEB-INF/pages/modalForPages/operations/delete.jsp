@@ -46,7 +46,7 @@
             },
             success: function (result) {
                 busySpace = result;
-                showBusySpace();
+                // showBusySpace();
                 table.ajax.reload();
             },
             error: function (result) {

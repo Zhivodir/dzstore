@@ -517,9 +517,10 @@ public class ContentService {
         return sb.toString();
     }
 
+
     public List<PathElement> getIdsAndPathesForFolders(Folder folder) {
         int userId = folder.getUser().getId();
-        String path = folder.getPath() + "/" + folder.getName();
+        String path = folder.getPath();
         StringBuilder sb = new StringBuilder(path);
         List<String> pathes = new ArrayList<>();
         String folderName = path;

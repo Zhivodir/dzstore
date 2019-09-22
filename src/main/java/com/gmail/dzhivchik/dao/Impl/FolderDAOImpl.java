@@ -265,12 +265,12 @@ public class FolderDAOImpl implements FolderDAO {
         sb.append("SELECT new com.gmail.dzhivchik.web.dto.PathElement(f.name, f.id) FROM Folder f WHERE f.user.id = " + userId + " AND ");
         for (int i = 0; i < pathes.size(); i++) {
             if (i == 0) {
-                sb.append(" f.name = '" + pathes.get(i) + "'");
+                sb.append(" f.path = '" + pathes.get(i) + "'");
             } else {
-                sb.append(" OR f.name = '" + pathes.get(i) + "'");
+                sb.append(" OR f.path = '" + pathes.get(i) + "'");
             }
-            System.out.println(pathes.get(i));
         }
+        List<PathElement> list = entityManager.createQuery(sb.toString(), PathElement.class).getResultList();
         return entityManager.createQuery(sb.toString(), PathElement.class).getResultList();
     }
 }
