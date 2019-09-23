@@ -78,20 +78,20 @@ public class ContentService {
         }
 
         if (files != null && structure != null) {
-            String path = null;
-
-            if (currentFolderId != -1) {
-                parentFolder = getFolder(currentFolderId);
-                path = parentFolder.getFullPath();
-            }
-
             if (structure.startsWith(",")) {
                 structure = structure.substring(1);
             }
             String nameOfUploadFolder = structure.substring(0, structure.indexOf("/"));
-            Folder uploadFolder = new Folder(nameOfUploadFolder, currentUser, parentFolder, false, false, false, path);
+            String pathToUploadFolder = nameOfUploadFolder;
+
+            if (currentFolderId != -1) {
+                parentFolder = getFolder(currentFolderId);
+                pathToUploadFolder = parentFolder.getFullPath();
+            }
+
+            Folder uploadFolder = new Folder(nameOfUploadFolder, currentUser, parentFolder, false, false, false, pathToUploadFolder);
             //так как выгружаемая папка уже создана удаляем её из структуры и выделяем относительные пути ко всем вложенным папкам
-            String pathToUploadFolder = path != null ? path + "/" + nameOfUploadFolder : nameOfUploadFolder;
+//            String pathToUploadFolder = path != null ? path + "/" + nameOfUploadFolder : nameOfUploadFolder;
             String[] pathes = structure.replaceAll(nameOfUploadFolder + "/", "").split(";");
             try {
                 prepareNewFolderForUpload(files, pathToUploadFolder, pathes, currentUser, uploadFolder);
@@ -384,37 +384,32 @@ public class ContentService {
             } else if (!isInNestedFolder(pathes[i])) {
                 currentFolder.addFile(new File(files[i], user, currentFolder));
             } else {
-                String pathToCurrentFile = pathes[i].substring(0, pathes[i].lastIndexOf("/"));
-                int indexOfCurrentFolderName = pathToCurrentFile.lastIndexOf("/") + 1;
-                String currentFolderNameAndFileName = pathes[i].substring(indexOfCurrentFolderName);
-                String currentFolderName = currentFolderNameAndFileName.substring(0, currentFolderNameAndFileName.indexOf("/"));
+                String pathToParentFolder = pathes[i].substring(0, pathes[i].lastIndexOf("/"));
+                int indexOfParentFolderName = pathToParentFolder.lastIndexOf("/") + 1;
+                String parentFolderNameAndFileName = pathes[i].substring(indexOfParentFolderName);
+                String parentFolderName = parentFolderNameAndFileName.substring(0, parentFolderNameAndFileName.indexOf("/"));
 
-                int index = pathToCurrentFile.lastIndexOf("/");
-                String pathToCurrentFolder = "";
-                if(index != -1) {
-                    pathToCurrentFolder = "/" + pathToCurrentFile.substring(0, index);
-                }
-                if (!map.containsKey(pathToCurrentFile)) {
+                if (!map.containsKey(pathToParentFolder)) {
                     Folder parentFolderForFolderWithThisFile = currentFolder;
                     //если добавляемая пользователем папка не родительская для
                     // текущей папки ,то определяем родительскую и достаем её из карты
-                    if (indexOfCurrentFolderName > 0) {
-                        String parentFolderPath = pathToCurrentFile.substring(0, pathToCurrentFile.indexOf("/"));
+                    if (indexOfParentFolderName > 0) {
+                        String parentFolderPath = pathToParentFolder.substring(0, pathToParentFolder.indexOf("/"));
                         parentFolderForFolderWithThisFile = map.get(parentFolderPath);
                     }
 
                     String path = "";
                     if (mainPath != null) {
-                        path = mainPath  + pathToCurrentFolder;
+                        path = mainPath  + "/" + pathToParentFolder;
                     } else {
-                        path = pathToCurrentFolder;
+                        path = pathToParentFolder;
                     }
 
-                    Folder newFolder = new Folder(currentFolderName, user, parentFolderForFolderWithThisFile, false, false, false, path);
+                    Folder newFolder = new Folder(parentFolderName, user, parentFolderForFolderWithThisFile, false, false, false, path);
                     parentFolderForFolderWithThisFile.addFolder(newFolder);
-                    map.put(pathToCurrentFile, newFolder);
+                    map.put(pathToParentFolder, newFolder);
                 }
-                Folder parentFolder = map.get(pathToCurrentFile);
+                Folder parentFolder = map.get(pathToParentFolder);
                 parentFolder.addFile(new File(files[i], user, parentFolder));
             }
         }

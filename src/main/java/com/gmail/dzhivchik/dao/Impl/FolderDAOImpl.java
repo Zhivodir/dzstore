@@ -270,7 +270,6 @@ public class FolderDAOImpl implements FolderDAO {
                 sb.append(" OR f.path = '" + pathes.get(i) + "'");
             }
         }
-        List<PathElement> list = entityManager.createQuery(sb.toString(), PathElement.class).getResultList();
         return entityManager.createQuery(sb.toString(), PathElement.class).getResultList();
     }
 }
