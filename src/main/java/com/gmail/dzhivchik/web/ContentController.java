@@ -37,11 +37,12 @@ public class ContentController {
 
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public @ResponseBody void upload(@RequestParam(value = "file", required = false) MultipartFile file,
+    public @ResponseBody String upload(@RequestParam(value = "file", required = false) MultipartFile file,
                 @RequestParam(value = "files", required = false) MultipartFile[] files,
                 @RequestParam(value = "structure", required = false) String structure,
                 @RequestParam Integer currentFolderID) {
         contentService.uploadContent(file, files, structure, currentFolderID);
+        return getBusySpace() + "";
     }
 
     @RequestMapping(value = "/download", method = RequestMethod.POST)
@@ -101,11 +102,9 @@ public class ContentController {
 
     @RequestMapping(value = "/getPathToFolder", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody Map getPathToFolder(@RequestParam int folderId) {
-        //ToDo - need id's of folders from path
+        //ToDo - optimization
         Folder folder = contentService.getFolder(folderId);
-        Map<String, List<PathElement>> map = Collections.singletonMap("response", contentService.getIdsAndPathesForFolders(folder));
-        return map;
-//        return Collections.singletonMap("response", contentService.getFolder(folderId).getPath());
+        return Collections.singletonMap("response", contentService.getIdsAndPathesForFolders(folder));
     }
 
     @RequestMapping(value = "/restoreContent", method = RequestMethod.POST)
@@ -144,9 +143,9 @@ public class ContentController {
     }
 
     @RequestMapping(value = "/makeCopy", method = RequestMethod.POST)
-    public ResponseEntity makeCopy(@ModelAttribute SelectedContent selectedContent) {
+    public @ResponseBody String makeCopy(@ModelAttribute SelectedContent selectedContent) {
         contentService.makeCopy(selectedContent.getSelectedFiles());
-        return new ResponseEntity(HttpStatus.OK);
+        return getBusySpace() + "";
     }
 
     @RequestMapping(value = "/addToMe", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")

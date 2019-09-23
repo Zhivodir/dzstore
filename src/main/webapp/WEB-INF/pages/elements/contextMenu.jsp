@@ -42,6 +42,7 @@
                 selectedFolders: []
             },
             success: function (result) {
+                busySpace = result;
                 table.ajax.reload();
             }
         })

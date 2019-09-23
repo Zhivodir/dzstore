@@ -47,7 +47,8 @@
             data: new FormData(this),
             processData: false,
             contentType: false,
-            success: function () {
+            success: function (result) {
+                busySpace = result;
                 table.ajax.reload();
             }
         });

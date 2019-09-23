@@ -24,6 +24,7 @@ function datatableOpts(url, columns) {
         },
         drawCallback:function( settings, json){
             changeRootOfPath();
+            showBusySpace();
         }
     }
 }
