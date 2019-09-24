@@ -38,7 +38,7 @@
 <script>
     $('#fileUploadForm').submit(function (e) {
         $.ajax({
-            url: '/upload',
+            url: '/uploadFile',
             type: 'POST',
             data: new FormData(this),
             processData: false,

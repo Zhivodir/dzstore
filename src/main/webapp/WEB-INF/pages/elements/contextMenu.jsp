@@ -25,7 +25,7 @@
     <li class="li_makeCopy general"><a class="contextHref" href="#" onclick="makeCopy()"><s:message
             code="contextmenu.make.copy"/></a></li>
 
-    <li class="for_bin"><a href="#" class="contextHref" onclick="restoreContent()"><s:message
+    <li class="for_bin"><a href="#" class="contextHref" onclick="restoreContentHref()"><s:message
             code="contextmenu.restore"/></a></li>
     <li class="for_bin"><a href="#" class="contextHref" data-toggle="modal" data-target="#modalForDelete"><s:message
             code="contextmenu.delete"/></a></li>

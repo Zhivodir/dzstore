@@ -42,7 +42,7 @@
 <script>
     $('#folderUploadForm').submit(function (e) {
         $.ajax({
-            url: '/upload',
+            url: '/uploadFolder',
             type: 'POST',
             data: new FormData(this),
             processData: false,

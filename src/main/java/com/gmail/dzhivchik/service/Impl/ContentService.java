@@ -66,7 +66,7 @@ public class ContentService {
     }
 
     @Transactional
-    public void uploadContent(MultipartFile file, MultipartFile[] files, String structure, Integer currentFolderId) {
+    public void uploadFile(MultipartFile file, Integer currentFolderId) {
         User currentUser = userDAO.getUserReference(getSecurityUser().getId());
         Folder parentFolder = null;
 
@@ -76,6 +76,12 @@ public class ContentService {
             }
             uploadFile(file, currentUser, parentFolder);
         }
+    }
+
+    @Transactional
+    public void uploadFolder(MultipartFile[] files, String structure, Integer currentFolderId) {
+        User currentUser = userDAO.getUserReference(getSecurityUser().getId());
+        Folder parentFolder = null;
 
         if (files != null && structure != null) {
             if (structure.startsWith(",")) {
@@ -90,8 +96,6 @@ public class ContentService {
             }
 
             Folder uploadFolder = new Folder(nameOfUploadFolder, currentUser, parentFolder, false, false, false, pathToUploadFolder);
-            //так как выгружаемая папка уже создана удаляем её из структуры и выделяем относительные пути ко всем вложенным папкам
-//            String pathToUploadFolder = path != null ? path + "/" + nameOfUploadFolder : nameOfUploadFolder;
             String[] pathes = structure.replaceAll(nameOfUploadFolder + "/", "").split(";");
             try {
                 prepareNewFolderForUpload(files, pathToUploadFolder, pathes, currentUser, uploadFolder);

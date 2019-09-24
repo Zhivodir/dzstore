@@ -211,7 +211,7 @@
     }
 
     $(document).keydown(function (e) {
-        if (e.ctrlKey && (e.keyCode == 67 || e.keyCode == 88)) {
+        if (((e.ctrlKey || e.metaKey) && (e.keyCode == 67 || e.keyCode == 88))) {
             filesForMove = createSelectedFilesMassiv();
             foldersForMove = createSelectedFoldersMassiv();
 

@@ -36,13 +36,20 @@ public class ContentController {
     private UserService userService;
 
 
-    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
     public @ResponseBody String upload(@RequestParam(value = "file", required = false) MultipartFile file,
-                @RequestParam(value = "files", required = false) MultipartFile[] files,
-                @RequestParam(value = "structure", required = false) String structure,
-                @RequestParam Integer currentFolderID) {
-        contentService.uploadContent(file, files, structure, currentFolderID);
-        return getBusySpace() + "";
+                                       @RequestParam(value = "structure", required = false) String structure,
+                                       @RequestParam Integer currentFolderID) {
+        contentService.uploadFile(file, currentFolderID);
+        return String.valueOf(getBusySpace());
+    }
+
+    @RequestMapping(value = "/uploadFolder", method = RequestMethod.POST)
+    public @ResponseBody String uploadFolder(@RequestParam(value = "files", required = false) MultipartFile[] files,
+                                       @RequestParam(value = "structure", required = false) String structure,
+                                       @RequestParam Integer currentFolderID) {
+        contentService.uploadFolder(files, structure, currentFolderID);
+        return String.valueOf(getBusySpace());
     }
 
     @RequestMapping(value = "/download", method = RequestMethod.POST)
@@ -60,7 +67,7 @@ public class ContentController {
     }
 
     @RequestMapping(value = "/createFolder", method = RequestMethod.POST)
-    public @ResponseBody String createNewFolder(@RequestParam int currentFolderId, @RequestParam String newFolderName) {
+    public ResponseEntity createNewFolder(@RequestParam int currentFolderId, @RequestParam String newFolderName) {
         User user = userService.getReferenceUser(getSecurityUser().getId());
         Folder parentFolder = null;
         String path = null;
@@ -70,7 +77,7 @@ public class ContentController {
         }
         Folder folder = new Folder(newFolderName, user, parentFolder, false, false, false, path);
         contentService.createFolder(folder);
-        return "Ok";
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/renameContent", method = RequestMethod.POST)
@@ -81,8 +88,7 @@ public class ContentController {
 
     @RequestMapping(value = "/removeContent", method = RequestMethod.POST)
     public ResponseEntity removeContent(@ModelAttribute SelectedContent selectedContent, @RequestParam String typeOfView) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
+        User user = userService.getReferenceUser(getSecurityUser().getId());
         if (typeOfView.equals("shared")) {
             contentService.removeFromShareWithMe(selectedContent.getSelectedFiles(), selectedContent.getSelectedFolders(), user);
         } else {
@@ -116,7 +122,7 @@ public class ContentController {
     @RequestMapping(value = "/deleteContent", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
     public @ResponseBody String deleteContent(@ModelAttribute SelectedContent selectedContent) {
         contentService.deleteCheckedContent(selectedContent.getSelectedFiles(), selectedContent.getSelectedFolders());
-        return getBusySpace() + "";
+        return String.valueOf(getBusySpace());
     }
 
     @RequestMapping(value = "/changeStarState", method = RequestMethod.POST)
@@ -145,13 +151,13 @@ public class ContentController {
     @RequestMapping(value = "/makeCopy", method = RequestMethod.POST)
     public @ResponseBody String makeCopy(@ModelAttribute SelectedContent selectedContent) {
         contentService.makeCopy(selectedContent.getSelectedFiles());
-        return getBusySpace() + "";
+        return String.valueOf(getBusySpace());
     }
 
     @RequestMapping(value = "/addToMe", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
     public @ResponseBody String addToMe(@ModelAttribute SelectedContent selectedContent) {
         contentService.addToMe(selectedContent.getSelectedFiles(), selectedContent.getSelectedFolders());
-        return getBusySpace() + "";
+        return String.valueOf(getBusySpace());
     }
 
     @RequestMapping(value = "/getUsersWithAccess/{contentType}/{contentId}", method = RequestMethod.POST)
