@@ -88,6 +88,7 @@ public class Folder {
     public void addFolder(Folder folder){
         folders.add(folder);
     }
+
     public int getNestedFilesQuantity(){
         return files.size();
     }

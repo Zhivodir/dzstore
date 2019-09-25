@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,6 +25,7 @@ import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Locale;
+import java.util.Properties;
 
 @Configuration
 @ComponentScan("com.gmail.dzhivchik")
@@ -61,11 +61,12 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory
-            (DataSource dataSource, JpaVendorAdapter jpaVendorAdapter)
+            (DataSource dataSource, Properties hibernateProperties)
     {
         LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactory.setDataSource(dataSource);
-        entityManagerFactory.setJpaVendorAdapter(jpaVendorAdapter);
+        entityManagerFactory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        entityManagerFactory.setJpaProperties(hibernateProperties);
         entityManagerFactory.setPackagesToScan("com.gmail.dzhivchik.domain");//здесь лежат entity-классы
         return entityManagerFactory;
     }
@@ -76,14 +77,15 @@ public class AppConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public JpaVendorAdapter jpaVendorAdapter()
-    {
-        HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
-        adapter.setShowSql(true);
-        adapter.setGenerateDdl(true);
-        adapter.setDatabasePlatform("org.hibernate.dialect.MySQLDialect");
-
-        return adapter;
+    public Properties hibernateProperties(){
+        final Properties properties = new Properties();
+        properties.put( "hibernate.dialect", "org.hibernate.dialect.MySQLDialect" );
+//        properties.put( "hibernate.connection.driver_class", "org.postgresql.Driver" );
+//        properties.put( "hibernate.hbm2ddl.auto", "create-drop" );
+        properties.put("hibernate.show_sql", true);
+        properties.put("hibernate.format_sql", true);
+        properties.put("hibernate.use_sql_comments", true);
+        return properties;
     }
 
     @Bean
