@@ -43,6 +43,8 @@ public class AppConfig extends WebMvcConfigurerAdapter {
         return resolver;
     }
 
+    //jkj
+
     @Bean
     public CommonsMultipartResolver multipartResolver() {
         return new CommonsMultipartResolver();
