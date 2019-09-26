@@ -1,66 +1,91 @@
-/**
- * Created by User on 21.03.2017.
- */
-(function ($, window) {
+$(document).ready(function () {
+    var menu = $('#contextMenu');//get the menu
+    var contentTable = $("#myTable tbody");
 
-    $.fn.contextMenu = function (settings) {
+    contentTable.on('contextmenu', function (e) {
+        e.preventDefault();
+        var countContentRow = contentTable.find(".choise_field").length;
 
-        return this.each(function () {
+        if (countContentRow == 0) return;
 
-            // Open context menu
-            $(this).on("contextmenu", function (e) {
-                // return native menu if pressing control
-                if (e.ctrlKey) return;
+        var allOfSelected = contentTable.find(".selected");
+        var countOfSelected = contentTable.length;
+        var countOfSelectedWithStar = allOfSelected.find(".glyphicon-star").length;
+        var countOfSelectedForShare = allOfSelected.find(".glyphicon-eye-open").length;
 
-                //open menu
-                var $menu = $(settings.menuSelector)
-                    .data("invokedOn", $(e.target))
-                    .show()
-                    .css({
-                        position: "absolute",
-                        left: getMenuPosition(e.clientX - $("div.sidebar").outerWidth(), 'width', 'scrollLeft'),
-                        top: getMenuPosition(e.clientY - $("div.navbar").outerHeight()*2, 'height', 'scrollTop')
-                    })
-                    .off('click')
-                    .on('click', 'a', function (e) {
-                        $menu.hide();
+        if (typeOfView == "shared") {
+            $(".for_remove").attr("hidden", false);
+            $(".li_rename").attr("hidden", true);
+            $(".li_moveTo").attr("hidden", true);
+            $(".for_bin").attr("hidden", true);
+            $(".li_makeCopy").attr("hidden", createSelectedFilesMassiv().length == 0 && createSelectedFoldersMassiv().length > 0);
 
-                        var $invokedOn = $menu.data("invokedOn");
-                        var $selectedMenu = $(e.target);
-
-                        settings.menuSelected.call(this, $invokedOn, $selectedMenu);
-                    });
-
-                return false;
-            });
-
-            //make sure menu closes on any click
-            $('body').click(function () {
-                $(settings.menuSelector).hide();
-            });
-        });
-
-        function getMenuPosition(mouse, direction, scrollDir) {
-            var win = $(window)[direction](),
-                scroll = $(window)[scrollDir](),
-                menu = $(settings.menuSelector)[direction](),
-                position = mouse + scroll;
-
-            // opening menu would pass the side of the page
-            if (mouse + menu > win && menu < mouse)
-                position -= menu;
-
-            return position;
+        } else if (typeOfView == "bin") {
+            $(".for_bin").attr("hidden", false);
+            $(".general").attr("hidden", true);
+        } else {
+            $(".for_remove").attr("hidden", false);
+            $(".for_bin").attr("hidden", true);
+            $(".li_rename").attr("hidden", countOfSelected != 1);
+            $(".li_share").attr("hidden", !isSelectedContent());
+            $(".li_starred").attr("hidden", !isAmongSelectedContentNotStarred());
+            $(".li_removestar").attr("hidden", isSelectedContent() && !isAmongSelectedContentStarred());
+            $(".li_addtome").attr("hidden", $("input[name='typeOfView']").val() != "shared");
+            $(".li_makeCopy").attr("hidden", createSelectedFilesMassiv().length == 0 && createSelectedFoldersMassiv().length > 0);
+            $(".li_moveTo").attr("hidden", !isSelectedContent());
         }
 
-    };
-})(jQuery, window);
+        menu.css({
+            display: 'block',//show the menu
+            top: e.pageY,
+            left: e.pageX
+        });
 
-$("#myTable td").contextMenu({
-    menuSelector: "#contextMenu",
-    menuSelected: function (invokedOn, selectedMenu) {
-        var msg = "You selected the menu item '" + selectedMenu.text() +
-            "' on the value '" + invokedOn.text() + "'";
-        //alert($("div.top-part").outerHeight());
-    }
+        function isSelectedContent() {
+            return countOfSelected > 0;
+        }
+
+        function isAmongSelectedContentNotStarred() {
+            return countOfSelected - countOfSelectedWithStar > 0;
+        }
+
+        function isAmongSelectedContentStarred() {
+            return countOfSelectedWithStar > 0;
+        }
+    });
+
+
+    $(document).click(function () { //When you left-click
+        menu.css({display: 'none'});//Hide the menu
+    });
 });
+
+
+function restoreContentHref() {
+    var selectedFilesId = createSelectedFilesMassiv();
+    var selectedFoldersId = createSelectedFoldersMassiv();
+    restoreContent(selectedFiles, selectedFoldersId)
+}
+
+function modalRestoreContent() {
+    var selectedFilesId = [];
+    var selectedFoldersId = [$('#idFolderForRestore').val()];
+    restoreContent(selectedFiles, selectedFoldersId)
+    $("#modalForOpenDataInBin").modal("hide");
+}
+
+function restoreContent(selectedFiles, selectedFoldersId) {
+    $.ajax({
+        url: "/restoreContent",
+        type: 'POST',
+        traditional: true,
+        data: {
+            selectedFiles: selectedFilesId,
+            selectedFolders: selectedFoldersId
+        },
+        success: function (result) {
+            table.ajax.reload();
+        }
+    })
+}
+

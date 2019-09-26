@@ -4,6 +4,9 @@
 
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
     padding-top: 50px;
 }
 
@@ -90,8 +93,16 @@ body {
     background-color: #255625 !important;
 }
 
+.search_form{
+    margin-top: 8px !important;
+}
+
 .search_field{
     width: 80%;
+}
+
+#searchButton {
+    padding: 9px 12px;
 }
 
 /*
@@ -101,7 +112,6 @@ body {
 .main {
     padding: 20px;
     margin-top: 45px;
-    /*background-color: #1b6d85;*/
 }
 @media (min-width: 768px) {
     .main {
@@ -141,6 +151,7 @@ body {
     background-color: #f5f5f5 !important;
     top: 51px !important;
     border-bottom: 1px solid #ffffff !important;
+    z-index: 1000 !important;
 }
 
 .newButton {
@@ -161,7 +172,7 @@ body {
     color: black;
 }
 
-.levelPath:hover {
+ .levelPath:hover {
     background-color: #449d44;
     text-decoration: none;
     color: black;
@@ -191,10 +202,6 @@ body {
  */
 
 .selected{
-    background-color: #449d44 !important;
-}
-
-.choise_field:hover{
     background-color: #449d44 !important;
 }
 
@@ -264,11 +271,15 @@ body {
     width: 100px;
 }
 
-.profile-header-img > img.img-circle {
-    width: 80px;
-    border: 2px solid #51D2B7;
-}
+/*.profile-header-img > img.img-circle {*/
+    /*width: 35px;*/
+    /*border: 2px solid #000000;*/
+/*}*/
 
+.img-circle {
+    width: 40px !important;
+    border: 2px solid #5e5e5e;
+}
 /**
  * Left side bar
  */
@@ -320,7 +331,15 @@ body {
     width: 395px !important;
 }
 
-.modal-Account{
+.modal-Account {
+    width: 320px !important;
+}
+
+.modalForOpenDataInBin {
+    width: 320px !important;
+}
+
+.modal-standart {
     width: 320px !important;
 }
 
@@ -346,69 +365,71 @@ body {
     list-style-type: none;
 }
 
-/* indent for all tree children excepts root */
-.Node {
-    margin-left: 18px;
-    zoom: 1;
-
-}
-
-.IsRoot {
-    margin-left: 0;
-}
-
-.ExpandOpen .Expand {
-    background-image: url(../img/for_tree/minus.gif);
-}
-
-/* closed is higher priority than open */
-.ExpandClosed .Expand {
-    background-image: url(../img/for_tree/plus.gif);
-}
-
-/* highest priority */
-.ExpandLeaf .Expand {
-    background-image: url(../img/for_tree/leaf.gif);
-}
-
-.Content {
-    min-height: 18px;
-    margin-left:18px;
-}
-* html  .Content {
-    height: 18px;
-}
-
-
-.ExpandLoading   {
-    width: 18px;
-    height: 18px;
-    float: left;
-    background-image: url(../img/for_tree/loading.gif);
-}
-
-.Expand {
-    width: 18px;
-    height: 18px;
-    float: left;
-}
-
-.ExpandOpen .Container {
-    display: block;
-}
-
-.ExpandClosed .Container {
-    display: none;
-}
-
-.ExpandOpen .Expand, .ExpandClosed .Expand {
-    cursor: pointer;
-}
-
-.ExpandLeaf .Expand {
-    cursor: auto;
-}
-
 .radio_move_to {
     float:left;
 }
+
+.modal-coordinate {
+    margin-top: 12%;
+}
+
+.info_block {
+    margin-left: 1px;
+    background-color: #d9edf7;
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.share_for_account:hover {
+    cursor: pointer;
+}
+
+.left-float {
+    float: left;
+}
+
+.share_for{
+    padding: 2px;
+}
+
+.share_for:hover {
+    cursor: pointer;
+    background-color: #F0FFF0;
+}
+
+div.share_for.selected {
+    background-color: #985f0d;
+}
+
+.name_of_content:hover{
+    cursor: default;
+}
+
+#busySpaceDisplay{
+    height: 10px !important;
+    margin-bottom: 0px !important;
+}
+
+/*
+ * Modal 'Move to'
+ */
+
+.levelPathMoveTo {
+    padding: 6px 12px;
+    text-decoration: none;
+    font-size: 16px;
+    color: black;
+}
+

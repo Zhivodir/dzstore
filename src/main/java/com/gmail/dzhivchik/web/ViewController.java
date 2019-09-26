@@ -1,156 +1,106 @@
 package com.gmail.dzhivchik.web;
 
 import com.gmail.dzhivchik.domain.Folder;
-import com.gmail.dzhivchik.domain.User;
+import com.gmail.dzhivchik.domain.enums.PageType;
 import com.gmail.dzhivchik.service.Impl.ContentService;
-import com.gmail.dzhivchik.service.UserService;
+import com.gmail.dzhivchik.service.ViewControllerHelper;
+import com.gmail.dzhivchik.web.dto.Content;
+import com.gmail.dzhivchik.web.dto.datatables.DataTablesRequest;
+import com.gmail.dzhivchik.web.dto.datatables.DataTablesResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.LocaleResolver;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by User on 15.03.2017.
- */
+import static com.gmail.dzhivchik.utils.SpringSecurityUtil.getSecurityUser;
 
 @Controller
 @RequestMapping("/")
 public class ViewController {
     @Autowired
-    private ContentService contentService;
-
+    private ViewControllerHelper viewHelper;
     @Autowired
-    private UserService userService;
+    private ContentService contentService;
+    @Autowired
+    private LocaleResolver localeResolver;
 
-    @RequestMapping(value = "/index")
-    public String onIndex(Model model) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
-        model.addAttribute("content", contentService.getContent(user, null));
-        model.addAttribute("user", user);
-        model.addAttribute("busySpace", showBusySpace(user));
-        model.addAttribute("typeOfView", "index");
-        return "index";
+    @RequestMapping(method = RequestMethod.GET)
+    public String onIndex(HttpServletRequest request, HttpServletResponse response,
+                          @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
+        viewHelper.prepareView(request, response, localeResolver, PageType.MYDISK, getSecurityUser());
+
+        request.setAttribute("parentsFolderID", null);
+        request.setAttribute("currentFolderID", currentFolderID);
+        return "index_commons";
     }
 
-    @RequestMapping(value = "/folder", method = RequestMethod.GET)
-    public String inFolder(Model model, @ModelAttribute("f") final Integer f) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
-        Folder currentFolder = contentService.getFolder(f);
-
-        List<Folder> forRelativePath = new ArrayList<>();
-        getListRelativePath(currentFolder, forRelativePath);
-        Collections.reverse(forRelativePath);
-        forRelativePath.add(currentFolder);
-        //id-shnik folder vnutr' kotoroy zaxodim
-        model.addAttribute("f", f);
-        model.addAttribute("content", contentService.getContent(user, currentFolder));
-        model.addAttribute("listForRelativePath", forRelativePath);
-        model.addAttribute("user", user);
-        model.addAttribute("busySpace", showBusySpace(user));
-        model.addAttribute("typeOfView", "folder");
-        return "folder";
+    @RequestMapping(value = "/getContent/mydisk/{currentFolderId}", method = RequestMethod.POST)
+    public @ResponseBody DataTablesResponse<Content> getContent(@PathVariable int currentFolderId,  DataTablesRequest dtRequest) {
+        return getAllCurrentFolderContent(getSecurityUser().getId(), currentFolderId, dtRequest);
     }
 
-    @RequestMapping(value = "/starred")
-    public String onStarred(Model model) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
-        model.addAttribute("content", contentService.getStarredContent(user));
-        model.addAttribute("user", user);
-        model.addAttribute("busySpace", showBusySpace(user));
-        model.addAttribute("typeOfView", "starred");
-        return "starred";
-    }
-
-    @RequestMapping(value = "/search", method = RequestMethod.POST)
-    public String search(Model model, @RequestParam(value = "whatSearch", required = false) String whatSearch) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
-        if (whatSearch != null) {
-            model.addAttribute("content", contentService.getListBySearch(whatSearch, user));
-            model.addAttribute("user", user);
+    @RequestMapping(value = "/getContent/starred/{currentFolderId}", method = RequestMethod.POST)
+    public @ResponseBody DataTablesResponse<Content> getStarredContent(@PathVariable int currentFolderId, @RequestBody DataTablesRequest dtRequest) {
+        if (currentFolderId != -1) {
+            return getAllCurrentFolderContent(getSecurityUser().getId(), currentFolderId, dtRequest);
         }
-        model.addAttribute("busySpace", showBusySpace(user));
-        model.addAttribute("typeOfView", "search");
-        return "search";
+        return getStarredContentList(getSecurityUser().getId(), dtRequest);
     }
 
-    @RequestMapping(value = "/shared")
-    public String shared(Model model) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
-        model.addAttribute("content", contentService.getSharedContent(user));
-        model.addAttribute("user", user);
-        model.addAttribute("busySpace", showBusySpace(user));
-        model.addAttribute("typeOfView", "shared");
-        return "shared";
+    private DataTablesResponse<Content> getAllCurrentFolderContent(int userId, int currentFolderId, DataTablesRequest dtRequest) {
+        Folder currentFolder = currentFolderId == -1 ? null : contentService.getFolder(currentFolderId);
+        List<Content> data = contentService.getContent(userId, currentFolder);
+        return formDataTablesResponse(data, dtRequest);
     }
 
-    @RequestMapping(value = "/bin")
-    public String toBin(Model model) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
-        model.addAttribute("content", contentService.getBinContent(user));
-        model.addAttribute("user", user);
-        model.addAttribute("busySpace", showBusySpace(user));
-        model.addAttribute("typeOfView", "bin");
-        return "bin";
+    private DataTablesResponse<Content> getStarredContentList(int userId, DataTablesRequest dtRequest) {
+        List<Content> data = contentService.getStarredContent(userId);
+        return formDataTablesResponse(data, dtRequest);
     }
 
-    public void getListRelativePath(Folder currentFolder, List<Folder> forRelativePath) {
-        Folder parentFolder = currentFolder.getParentFolder();
-
-        if (parentFolder != null) {
-            forRelativePath.add(parentFolder);
-            getListRelativePath(parentFolder, forRelativePath);
-        }
+    @RequestMapping(value = "/getContent/bin", method = RequestMethod.POST)
+    public @ResponseBody DataTablesResponse<Content> getBinContent(@RequestBody DataTablesRequest dtRequest) {
+        return getTargetContent(getSecurityUser().getId(), dtRequest);
     }
 
-    //all code change on query to DB
-    public String[] showBusySpace(User user) {
-        long filesSize = contentService.getSizeBusyMemory(user);
-        String[] sizes = new String[2];
-        long wholePart = filesSize;
-        long delitel = 1;
-        int pow = 0;
+    private DataTablesResponse<Content> getTargetContent(int userId, DataTablesRequest dtRequest) {
+        List<Content> data = contentService.getBinContent(userId);
+        return formDataTablesResponse(data, dtRequest);
+    }
 
-        while (wholePart / 1024 > 0) {
-            wholePart = wholePart / 1024;
-            delitel = delitel * 1024;
-            pow++;
-        }
-        sizes[0] = wholePart + "";
-        if(filesSize%delitel != 0){
-            sizes[0] = sizes[0] + "." + String.valueOf(filesSize % (delitel)).substring(0, 2);
-        }
-        switch (pow){
-            case 0:
-                if(filesSize != 0){
-                    sizes[0] = sizes[0] + " bytes";
-                }
-                break;
-            case 1:
-                sizes[0] = sizes[0] + " Kb";
-                break;
-            case 2:
-                sizes[0] = sizes[0] + " Mb";
-                break;
-            case 3:
-                sizes[0] = sizes[0] + " Gb";
-                break;
-        }
-        //Доступное по условиям тарифа. Пока захардкодено
-        sizes[1] = "10 Gb";
-        return sizes;
+    @RequestMapping(value = "/getContent/shared/{currentFolderId}", method = RequestMethod.POST)
+    public @ResponseBody DataTablesResponse<Content> getSharedContent(@PathVariable int currentFolderId, @RequestBody DataTablesRequest dtRequest) {
+        return getSharedContent(getSecurityUser().getId(), currentFolderId, dtRequest);
+    }
+
+    private DataTablesResponse<Content> getSharedContent(int userId, int currentFolderId, DataTablesRequest dtRequest) {
+        List<Content> data = contentService.getSharedContent(userId, currentFolderId == -1 ? null : currentFolderId);
+        return formDataTablesResponse(data, dtRequest);
+    }
+
+    @RequestMapping(value = "/getContent/search/{searchQuery}", method = RequestMethod.POST)
+    public @ResponseBody DataTablesResponse<Content> getSearchContent(@PathVariable String searchQuery, @RequestBody DataTablesRequest dtRequest) {
+        return getSearchContent(getSecurityUser().getId(), searchQuery, dtRequest);
+    }
+
+    private DataTablesResponse<Content> getSearchContent(int userId, String searchQuery, DataTablesRequest dtRequest) {
+        List<Content> data = !searchQuery.isEmpty() ? contentService.getSearchContent(userId, searchQuery) : new ArrayList<>();
+        return formDataTablesResponse(data, dtRequest);
+    }
+
+    private DataTablesResponse<Content> formDataTablesResponse(List<Content> data, DataTablesRequest dtRequest) {
+        int total = data.size();
+
+        DataTablesResponse<Content> dtResponse = new DataTablesResponse<>();
+        dtResponse.setDraw(dtRequest.getDraw());
+        dtResponse.setRecordsTotal(total);
+        dtResponse.setRecordsFiltered(total);
+        dtResponse.setData(data);
+        return dtResponse;
     }
 }

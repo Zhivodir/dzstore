@@ -8,9 +8,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
-/**
- * Created by User on 06.02.2017.
- */
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -24,19 +21,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
-    public void addUser(User user) {
-        userDAO.addUser(user);
-    }
-
-    @Override
-    public boolean existsByLogin(String login) {
-        return false;
+    public User getReferenceUser(int userId) {
+        return userDAO.getUserReference(userId);
     }
 
     @Override
     @Transactional
-    public void changeIsProfileImage(String login, boolean isImage) {
-        userDAO.changeProfileImage(userDAO.getUser(login), isImage);
+    public boolean addUser(User user) {
+        boolean wasAdded = false;
+        if(getUser(user.getLogin()) == null) {
+            userDAO.addUser(user);
+            wasAdded = true;
+        }
+        return wasAdded;
+    }
+
+    @Override
+    @Transactional
+    public void editUser(User user) {
+        userDAO.editUser(user);
     }
 }

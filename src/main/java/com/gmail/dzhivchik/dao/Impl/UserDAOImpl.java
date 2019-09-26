@@ -10,14 +10,17 @@ import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by User on 09.02.2017.
- */
 
 @Repository
 public class UserDAOImpl implements UserDAO {
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Override
+    public User getUserReference(int userId) {
+        return entityManager.getReference(User.class, userId);
+    }
+
 
     @Override
     public void addUser(User user) {
@@ -26,13 +29,35 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User getUser(String login) {
-        Query query;
-        query = entityManager.
-                createQuery("SELECT u FROM User u WHERE u.login = :login", User.class);
-        query.setParameter("login", login);
+        return entityManager.createQuery("SELECT u FROM User u WHERE u.login = :login", User.class)
+                .setParameter("login", login)
+                .getSingleResult();
+    }
 
-        List<User> temp = (List<User>) query.getResultList();
-        return temp.get(0);
+    @Override
+    public List<User> getUsersById(int[] cancel_share_for_users) {
+        StringBuilder sb = new StringBuilder();
+        for (int j = 0; j < cancel_share_for_users.length; j++) {
+            sb.append("u.id = '" + cancel_share_for_users[j] + "' ");
+            if (j != cancel_share_for_users.length - 1) {
+                sb.append("OR ");
+            }
+        }
+        return entityManager.createQuery("SELECT u FROM User u WHERE " + sb.toString(), User.class)
+                .getResultList();
+    }
+
+    @Override
+    public List<User> getUsersByEmail(String[] cancel_share_for_users) {
+        StringBuilder sb = new StringBuilder();
+        for (int j = 0; j < cancel_share_for_users.length; j++) {
+            sb.append("u.email = '" + cancel_share_for_users[j] + "' ");
+            if (j != cancel_share_for_users.length - 1) {
+                sb.append("OR ");
+            }
+        }
+        return entityManager.createQuery("SELECT u FROM User u WHERE " + sb.toString(), User.class)
+                .getResultList();
     }
 
     @Override
@@ -47,9 +72,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public List<User> getShareReceivers(String shareFor) {
-        Query query = entityManager.
-                createQuery(preparationShareRequest(shareFor), User.class);
-        return (List<User>) query.getResultList();
+        return entityManager.createQuery(preparationShareRequest(shareFor), User.class).getResultList();
     }
 
 
@@ -58,7 +81,8 @@ public class UserDAOImpl implements UserDAO {
         List<String> forEmail = new ArrayList<>();
         List<String> forLogin = new ArrayList<>();
         for (String receiver : tempListForShare) {
-            if (receiver.trim().contains("@")) {
+            receiver = receiver.trim();
+            if (receiver.contains("@")) {
                 forEmail.add(receiver);
             } else {
                 forLogin.add(receiver);
@@ -86,13 +110,5 @@ public class UserDAOImpl implements UserDAO {
             }
         }
         return sb.toString();
-    }
-
-    @Override
-    public void changeProfileImage(User user, boolean isImage) {
-        Query query = entityManager.createQuery("UPDATE User user SET user.avatar = :isImage WHERE user.id = :id");
-        query.setParameter("isImage", isImage);
-        query.setParameter("id", user.getId());
-        int result = query.executeUpdate();
     }
 }
