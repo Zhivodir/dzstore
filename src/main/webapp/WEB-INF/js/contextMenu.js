@@ -64,17 +64,17 @@ $(document).ready(function () {
 function restoreContentHref() {
     var selectedFilesId = createSelectedFilesMassiv();
     var selectedFoldersId = createSelectedFoldersMassiv();
-    restoreContent(selectedFiles, selectedFoldersId)
+    restoreContent(selectedFilesId, selectedFoldersId)
 }
 
 function modalRestoreContent() {
     var selectedFilesId = [];
     var selectedFoldersId = [$('#idFolderForRestore').val()];
-    restoreContent(selectedFiles, selectedFoldersId)
+    restoreContent(selectedFilesId, selectedFoldersId)
     $("#modalForOpenDataInBin").modal("hide");
 }
 
-function restoreContent(selectedFiles, selectedFoldersId) {
+function restoreContent(selectedFilesId, selectedFoldersId) {
     $.ajax({
         url: "/restoreContent",
         type: 'POST',
