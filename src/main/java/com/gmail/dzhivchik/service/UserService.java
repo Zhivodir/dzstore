@@ -5,7 +5,7 @@ import com.gmail.dzhivchik.domain.User;
 
 public interface UserService {
     User getReferenceUser(int userId);
-    User getUser(String login);
-    boolean addUser(User user);
-    void editUser(User user);
+    User get(String login);
+    boolean create(User user);
+    void edit(User user);
 }

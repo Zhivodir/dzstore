@@ -12,6 +12,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <lombok.version>1.16.10</lombok.version>
+        <hibernate-validator.version>6.0.17.Final</hibernate-validator.version>
     </properties>
 
     <dependencies>
@@ -87,6 +88,7 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.34</version>
         </dependency>
+
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
@@ -101,6 +103,11 @@
             <groupId>org.hibernate.javax.persistence</groupId>
             <artifactId>hibernate-jpa-2.1-api</artifactId>
             <version>1.0.0.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate-validator.version}</version>
         </dependency>
 
         <dependency>

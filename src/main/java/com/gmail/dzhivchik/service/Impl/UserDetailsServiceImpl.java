@@ -23,7 +23,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        User user = userService.getUser(login);
+        User user = userService.get(login);
         if(user == null){
             System.out.println("---------------Takogo usera net v base----------------");
         }

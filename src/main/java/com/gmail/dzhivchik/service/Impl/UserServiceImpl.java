@@ -16,8 +16,8 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User getUser(String login) {
-        return userDAO.getUser(login);
+    public User get(String login) {
+        return userDAO.get(login);
     }
 
     @Override
@@ -27,18 +27,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public boolean addUser(User user) {
-        boolean wasAdded = false;
-        if(getUser(user.getLogin()) == null) {
-            userDAO.addUser(user);
-            wasAdded = true;
-        }
-        return wasAdded;
+    public boolean create(User user) {
+        return userDAO.save(user) != null;
     }
 
     @Override
     @Transactional
-    public void editUser(User user) {
-        userDAO.editUser(user);
+    public void edit(User user) {
+        userDAO.save(user);
     }
 }

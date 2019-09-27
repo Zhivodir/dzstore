@@ -21,9 +21,9 @@ public class SettingsController {
     @RequestMapping(value = "/{typeOfView}/{language}", method = RequestMethod.GET)
     public String createNewUser(@PathVariable("typeOfView") String typeOfView, @PathVariable("language") Language language) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(login);
+        User user = userService.get(login);
         user.setLanguage(language);
-        userService.editUser(user);
+        userService.edit(user);
         getSecurityUser().setLanguage(language);
         return "redirect:/";
     }

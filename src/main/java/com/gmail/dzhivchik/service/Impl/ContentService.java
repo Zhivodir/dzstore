@@ -362,7 +362,7 @@ public class ContentService {
 
     private User getCurrentUser() {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userDAO.getUser(login);
+        return userDAO.get(login);
     }
 
     private void uploadFile(MultipartFile file, User user, Folder curFolder) {

@@ -29,8 +29,8 @@
 <div class="container registration">
   <div class="card card-container vert-align">
     <p id="profile-name" class="profile-name-card">DZStore</p>
-    <form class="form-signin" action="create_new_user" method="post">
-      <input type="email" name="email" class="form-control mail" id="mail" placeholder="<s:message code="registration.placeholder.email"/>">
+    <form class="form-signin" action="/createNewUser" method="post">
+      <input type="text" name="email" class="form-control mail" id="mail" placeholder="<s:message code="registration.placeholder.email"/>">
       <input type="text" name="login" class="form-control login" id="login" placeholder="<s:message code="registration.placeholder.login"/>">
       <input type="text" name="password" class="form-control password" id="password" placeholder="<s:message code="registration.placeholder.password"/>">
       <input type="text" name="conf_password" class="form-control conf_password" id="conf_password"

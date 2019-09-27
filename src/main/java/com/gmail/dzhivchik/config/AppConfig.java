@@ -43,8 +43,6 @@ public class AppConfig extends WebMvcConfigurerAdapter {
         return resolver;
     }
 
-    //jkj
-
     @Bean
     public CommonsMultipartResolver multipartResolver() {
         return new CommonsMultipartResolver();
@@ -85,7 +83,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 //        properties.put( "hibernate.connection.driver_class", "org.postgresql.Driver" );
 //        properties.put( "hibernate.hbm2ddl.auto", "create-drop" );
         properties.put("hibernate.show_sql", true);
-        properties.put("hibernate.format_sql", true);
+//        properties.put("hibernate.format_sql", true);
         properties.put("hibernate.use_sql_comments", true);
         return properties;
     }

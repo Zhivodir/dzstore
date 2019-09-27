@@ -23,12 +23,21 @@ public class UserDAOImpl implements UserDAO {
 
 
     @Override
-    public void addUser(User user) {
-        entityManager.persist(user);
+    public User save(User user) {
+        if (user.getId() == null) {
+            entityManager.persist(user);
+            return user;
+        } else {
+            return entityManager.merge(user);
+        }
+    }
+
+    public User get(int userId) {
+        return entityManager.find(User.class, userId);
     }
 
     @Override
-    public User getUser(String login) {
+    public User get(String login) {
         return entityManager.createQuery("SELECT u FROM User u WHERE u.login = :login", User.class)
                 .setParameter("login", login)
                 .getSingleResult();
@@ -61,7 +70,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public void editUser(User user) {
+    public void edit(User user) {
         entityManager.merge(user);
     }
 
