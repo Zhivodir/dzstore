@@ -36,14 +36,14 @@ public class LoginController {
         return "registration";
     }
 
-    @RequestMapping(value = "/create_new_user", method = RequestMethod.POST)
+    @RequestMapping(value = "/createNewUser", method = RequestMethod.POST)
     public String createNewUser(@RequestParam("login") String login,
                                 @RequestParam("password") String password,
                                 @RequestParam("email") String email,
                                 @RequestParam("language") String language){
         if(!login.trim().isEmpty() && !password.trim().isEmpty() && !email.trim().isEmpty()) {
             User user = new User(login, password, email, UserRoleEnum.USER, Language.valueOf(language));
-            boolean wasAdded = userService.addUser(user);
+            boolean wasAdded = userService.create(user);
             if(wasAdded) {
                 return "redirect:/login";
             }

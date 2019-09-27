@@ -5,8 +5,10 @@ import com.gmail.dzhivchik.domain.enums.UserRoleEnum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.NotFound;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,10 +19,11 @@ public class User {
     @Id
     @GeneratedValue
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
     private String login;
     private String password;
+    @Email
     private String email;
     @Enumerated(EnumType.STRING)
     private Language language;
@@ -32,10 +35,10 @@ public class User {
     private List<File> files = new ArrayList<>();
 
     @ManyToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<File> filesSharedWithMe;
+    private List<File> filesSharedWithMe = new ArrayList<>();
 
     @ManyToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Folder> foldersSharedWithMe;
+    private List<Folder> foldersSharedWithMe = new ArrayList<>();
 
     public User(String login, String password, UserRoleEnum role) {
         this.login = login;
