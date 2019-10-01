@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable()
                 .authorizeRequests()
                 .antMatchers("/registration", "/createNewUser", "/test").permitAll()
-                .antMatchers("/**").hasAnyRole("USER","ADMIN")
+                .antMatchers("/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().permitAll()
                 .and();
 
@@ -70,13 +70,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/css/**")
                 .antMatchers("/js/**")
                 .antMatchers("/fonts/**")
-                .antMatchers("/img/**");
+                .antMatchers("/img/**")
+                .antMatchers("/panel/**");
     }
 
     // Указываем Spring контейнеру, что надо инициализировать <b></b>ShaPasswordEncoder
     // Это можно вынести в WebAppConfig, но для понимаемости оставил тут
     @Bean
-    public ShaPasswordEncoder getShaPasswordEncoder(){
+    public ShaPasswordEncoder getShaPasswordEncoder() {
         return new ShaPasswordEncoder();
     }
 }

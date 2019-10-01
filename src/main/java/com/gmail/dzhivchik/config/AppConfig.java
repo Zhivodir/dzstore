@@ -57,6 +57,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/datatables/**").addResourceLocations("/WEB-INF/datatables/");
         registry.addResourceHandler("/taggingSystems/**").addResourceLocations("/WEB-INF/taggingSystems/");
         registry.addResourceHandler("/adminLTE/**").addResourceLocations("/WEB-INF/adminLTE/");
+        registry.addResourceHandler("/panel/**").addResourceLocations("/WEB-INF/panel/");
     }
 
     @Bean

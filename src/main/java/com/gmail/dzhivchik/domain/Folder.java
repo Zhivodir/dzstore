@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class Folder {
     @Id
     @GeneratedValue
     private Integer id;
+    @NotBlank
     @JsonProperty("title")
     private String name;
     @JsonIgnore
