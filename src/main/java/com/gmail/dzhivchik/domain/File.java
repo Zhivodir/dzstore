@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class File implements Serializable {
     @Id
     @GeneratedValue
     private Integer id;
+    @NotBlank
     @JsonProperty("title")
     private String name;
     @JsonIgnore
@@ -34,6 +36,7 @@ public class File implements Serializable {
 
     @JsonIgnore
     private byte[] data;
+
     @JsonIgnore
     private long size;
     private String type;

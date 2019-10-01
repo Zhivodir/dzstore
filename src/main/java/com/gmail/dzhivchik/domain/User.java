@@ -9,6 +9,8 @@ import org.hibernate.annotations.NotFound;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,9 +24,15 @@ public class User {
     private Integer id;
 
     private String login;
+
+    @NotBlank
+    @Size(min = 6, max = 12)
     private String password;
+
     @Email
+    @NotBlank
     private String email;
+
     @Enumerated(EnumType.STRING)
     private Language language;
 
