@@ -48,7 +48,6 @@
                 <span class="glyphicon glyphicon-user form-control-feedback"></span>
             </div>
             <div class="alert alert-danger alert-dismissible"  id="loginError" hidden>
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                 <i class="icon fa fa-ban"></i><s:message code="registration.error.incorrect.login"/>
             </div>
 
@@ -58,7 +57,6 @@
                 <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
             </div>
             <div class="alert alert-danger alert-dismissible"  id="emailError" hidden>
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                 <i class="icon fa fa-ban"></i><s:message code="registration.error.incorrect.email"/>
             </div>
 
@@ -68,7 +66,6 @@
                 <span class="glyphicon glyphicon-lock form-control-feedback"></span>
             </div>
             <div class="alert alert-danger alert-dismissible"  id="pswdError" hidden>
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                 <i class="icon fa fa-ban"></i><s:message code="registration.error.incorrect.pswd"/>
             </div>
 
