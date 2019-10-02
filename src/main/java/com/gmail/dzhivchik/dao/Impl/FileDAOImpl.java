@@ -11,6 +11,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -140,31 +142,18 @@ public class FileDAOImpl implements FileDAO {
             return new ArrayList<File>();
         }
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("SELECT f FROM File f WHERE ");
-        for (int i = 0; i < listOfId.length; i++) {
-            if (i == 0) {
-                sb.append("f.id = " + listOfId[0]);
-            } else {
-                sb.append(" OR f.id = " + listOfId[i]);
-            }
-        }
-        return entityManager.createQuery(sb.toString(), File.class).getResultList();
+        List<Integer> list = Arrays.stream(listOfId).boxed().collect(Collectors.toList());
+        return entityManager.createQuery("SELECT f FROM File f WHERE f.id in (:list)", File.class)
+                .setParameter("list", list)
+                .getResultList();
     }
 
     @Override
     public void changeStar(int[] checked_files_id, boolean stateOfStar) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("UPDATE File f SET f.starred = :stateOfStar WHERE ");
-        for (int i = 0; i < checked_files_id.length; i++) {
-            if (i == 0) {
-                sb.append("f.id = " + checked_files_id[0]);
-            } else {
-                sb.append(" OR f.id = " + checked_files_id[i]);
-            }
-        }
-        entityManager.createQuery(sb.toString())
+        List<Integer> list = Arrays.stream(checked_files_id).boxed().collect(Collectors.toList());
+        entityManager.createQuery("UPDATE File f SET f.starred = :stateOfStar WHERE f.id in (:list)")
                 .setParameter("stateOfStar", stateOfStar)
+                .setParameter("list", list)
                 .executeUpdate();
     }
 
@@ -185,15 +174,6 @@ public class FileDAOImpl implements FileDAO {
         }
     }
 
-
-    @Override
-    public List<File> getAllList(User user) {
-        int user_id = user.getId();
-        return entityManager.createQuery("SELECT f FROM File f WHERE f.user.id = :user_id", File.class)
-                .setParameter("user_id", user_id)
-                .getResultList();
-    }
-
     public List<Content> getBinList(int userId) {
         return entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
                 "WHERE f.user.id = :userId AND f.inbin = 1", Content.class)
@@ -203,51 +183,20 @@ public class FileDAOImpl implements FileDAO {
 
     @Override
     public void changeInBin(int[] checked_files_id, boolean stateOfInBinStatus) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("UPDATE File f SET f.inbin = :stateOfInBinStatus WHERE ");
-        for (int i = 0; i < checked_files_id.length; i++) {
-            if (i == 0) {
-                sb.append("f.id = " + checked_files_id[0]);
-            } else {
-                sb.append(" OR f.id = " + checked_files_id[i]);
-            }
-        }
-        entityManager.createQuery(sb.toString())
+        List<Integer> list = Arrays.stream(checked_files_id).boxed().collect(Collectors.toList());
+        entityManager.createQuery("UPDATE File f SET f.inbin = :stateOfInBinStatus WHERE f.id in (:list)")
                 .setParameter("stateOfInBinStatus", stateOfInBinStatus)
+                .setParameter("list", list)
                 .executeUpdate();
-    }
-
-
-    public File getFile(User user, String name, Folder parentFolder) {
-        Query query;
-        if (parentFolder == null) {
-            query = entityManager.createQuery("SELECT f FROM File f WHERE f.name = :name " +
-                    "AND f.user = :user " +
-                    "AND f.parentFolder IS NULL", File.class);
-        } else {
-            query = entityManager.createQuery("SELECT f FROM File f WHERE f.name = :name " +
-                    "AND f.user = :user " +
-                    "AND f.parentFolder = :parentFolder", File.class);
-            query.setParameter("parentFolder", parentFolder);
-        }
-        query.setParameter("name", name);
-        query.setParameter("user", user);
-        List<File> temp = (List<File>) query.getResultList();
-        return temp.get(0);
     }
 
     @Override
     public void moveTo(int[] checked_files_id, Folder target) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("UPDATE File f SET f.parentFolder = :target WHERE ");
-        for (int i = 0; i < checked_files_id.length; i++) {
-            if (i == 0) {
-                sb.append("f.id = " + checked_files_id[0]);
-            } else {
-                sb.append(" OR f.id = " + checked_files_id[i]);
-            }
-        }
-        entityManager.createQuery(sb.toString()).setParameter("target", target).executeUpdate();
+        List<Integer> list = Arrays.stream(checked_files_id).boxed().collect(Collectors.toList());
+        entityManager.createQuery("UPDATE File f SET f.parentFolder = :target WHERE f.id in (:list)")
+                .setParameter("target", target)
+                .setParameter("list", list)
+                .executeUpdate();
     }
 
     @Override

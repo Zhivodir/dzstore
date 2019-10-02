@@ -17,9 +17,7 @@ public interface FileDAO {
     List<Content> getStarredList(int userId);
     List<Content> getSharedList(int userId, Integer targetFolder);
     List<Content> getSearchList(int userId, String whatSearch);
-    //need full file's info
     List<File> getListFilesById(int[] listOfId);
-    List<File> getAllList(User user);
 
     long getMemoryBusySize(int userId);
     File isFile(String name, boolean inbin, User user, Folder parentFolder);
