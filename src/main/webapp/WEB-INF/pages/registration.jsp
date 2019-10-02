@@ -41,7 +41,7 @@
     <div class="register-box-body">
         <p class="login-box-msg"><s:message code="registration.form.description"/></p>
 
-        <form action="/createNewUser" method="post">
+        <form action="/createNewUser" method="post" id="createUser">
             <div class="form-group has-feedback">
                 <input type="text" class="form-control login" name="login" id="login"
                        placeholder="<s:message code="registration.placeholder.login"/>">
@@ -52,7 +52,7 @@
             </div>
 
             <div class="form-group has-feedback">
-                <input type="email" class="form-control mail" name="email" id="mail"
+                <input type="text" class="form-control mail" name="email" id="mail"
                        placeholder="<s:message code="registration.placeholder.email"/>">
                 <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
             </div>
@@ -82,7 +82,8 @@
                 </div>
                 <!-- /.col -->
                 <div class="col-xs-6">
-                    <button type="submit" class="btn btn-primary btn-block btn-flat"><s:message code="registration.button.register"/></button>
+                    <button type="submit" class="btn btn-primary btn-block btn-flat">
+                        <s:message code="registration.button.register"/></button>
                 </div>
                 <!-- /.col -->
             </div>
@@ -97,15 +98,56 @@
 <script src="panel/bower_components/jquery/dist/jquery.min.js"></script>
 <script src="panel/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="panel/plugins/iCheck/icheck.min.js"></script>
-<script src="js/registration.js"></script>
 
 <script>
+    var nameOfLastField;
+    var valueOfLastField;
+    var emailPattern = /^[a-z0-9_-]+@[a-z0-9-]+\.[a-z]{2,6}$/i;
+
     $(function () {
         $('input').iCheck({
             checkboxClass: 'icheckbox_square-blue',
             radioClass: 'iradio_square-blue',
             increaseArea: '20%' /* optional */
         });
+    });
+
+    $('#createUser').submit(function (e) {
+        e.preventDefault();
+        $("#emailError").prop("hidden", $("#mail").val().search(emailPattern) == 0);
+        $("#pswdError").prop("hidden", $("#password").val().length > 6);
+        $("#loginError").prop("hidden", $("#login").val().length > 0);
+        var hiddenAlertsQuantity = $(".alert-danger:hidden").length;
+        if(hiddenAlertsQuantity == 3) {
+            $('#createUser').submit();
+        }
+    });
+
+    $(document).ready(function () {
+        $("input.form-control").focusout(function () {
+            nameOfLastField = whatFieldInFocus($(this));
+            valueOfLastField = document.getElementById(nameOfLastField).value;
+
+            if (nameOfLastField == "mail") {
+                $("#emailError").prop("hidden", valueOfLastField.search(emailPattern) == 0);
+            } else if (nameOfLastField == "password") {
+                $("#pswdError").prop("hidden", valueOfLastField.length > 6);
+            } else if (nameOfLastField == 'login') {
+                $("#loginError").prop("hidden", valueOfLastField.length > 0);
+            }
+        });
+
+        function whatFieldInFocus(field) {
+            var fieldsName = "";
+            if (field.hasClass("mail")) {
+                fieldsName = "mail";
+            } else if (field.hasClass("login")) {
+                fieldsName = "login";
+            } else if (field.hasClass("password")) {
+                fieldsName = "password";
+            }
+            return fieldsName;
+        }
     });
 </script>
 

@@ -53,19 +53,9 @@
     <c:import url="/WEB-INF/pages/modalForPages/operations/newImageForProfile.jsp"/>
     <c:import url="/WEB-INF/pages/modalForPages/settings.jsp"/>
 
-    <!-- jQuery UI 1.11.4 -->
-    <%--<script src="bower_components/jquery-ui/jquery-ui.min.js"></script>--%>
-    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-    <%--<script>--%>
-    <%--$.widget.bridge('uibutton', $.ui.button);--%>
-    <%--</script>--%>
     <script src="js/bootstrap.min.js"></script>
-    <%--<script src="js/ie10-viewport-bug-workaround.js"></script>--%>
     <script src="js/contextMenu.js"></script>
     <script src="js/other_scripts.js"></script>
-    <!-- Bootstrap WYSIHTML5 -->
-    <%--<script src="plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>--%>
-    <!-- AdminLTE App -->
     <script src="adminLTE/js/adminlte.min.js"></script>
 </sec:authorize>
 
