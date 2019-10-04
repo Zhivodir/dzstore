@@ -1,6 +1,7 @@
 package com.gmail.dzhivchik.dao.Impl;
 
 import com.gmail.dzhivchik.dao.FolderDAO;
+import com.gmail.dzhivchik.domain.File;
 import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.web.dto.Content;
@@ -11,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -96,49 +98,28 @@ public class FolderDAOImpl implements FolderDAO {
     }
 
     @Override
-    public Folder[] deleteGroup(int[] checked_folders_id) {
-        Folder[] folders = new Folder[checked_folders_id.length];
-        int num = 0;
-        for (Integer id : checked_folders_id) {
-            Folder folder = entityManager.find(Folder.class, id);
-            folders[num] = folder;
-            entityManager.remove(folder);
-            num++;
+    public void deleteGroup(List<Integer> checkedFoldersId) {
+        for (Integer id : checkedFoldersId) {            ;
+            entityManager.remove(getReferenceFolder(id));
         }
-        return folders;
     }
 
     @Override
-    public List<Folder> getListFoldersById(int[] listOfId) {
-        if (listOfId == null || listOfId.length == 0) {
+    public List<Folder> getListFoldersById(List<Integer> listOfId) {
+        if (listOfId == null || listOfId.size() == 0) {
             return new ArrayList<Folder>();
         }
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("SELECT f FROM Folder f WHERE ");
-        for (int i = 0; i < listOfId.length; i++) {
-            if (i == 0) {
-                sb.append("f.id = " + listOfId[0]);
-            } else {
-                sb.append(" OR f.id = " + listOfId[i]);
-            }
-        }
-        return entityManager.createQuery(sb.toString(), Folder.class).getResultList();
+        return entityManager.createQuery("SELECT f FROM Folder f WHERE f.id in (:list)", Folder.class)
+                .setParameter("list", listOfId)
+                .getResultList();
     }
 
     @Override
-    public void changeStar(int[] checked_folders_id, boolean stateOfStar) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("UPDATE Folder f SET f.starred = :stateOfStar WHERE ");
-        for (int i = 0; i < checked_folders_id.length; i++) {
-            if (i == 0) {
-                sb.append("f.id = " + checked_folders_id[0]);
-            } else {
-                sb.append(" OR f.id = " + checked_folders_id[i]);
-            }
-        }
-        entityManager.createQuery(sb.toString())
+    public void changeStar(List<Integer> checkedFoldersId, boolean stateOfStar) {
+        entityManager.createQuery("UPDATE Folder f SET f.starred = :stateOfStar WHERE f.id in (:list)")
                 .setParameter("stateOfStar", stateOfStar)
+                .setParameter("list", checkedFoldersId)
                 .executeUpdate();
     }
 
@@ -200,18 +181,10 @@ public class FolderDAOImpl implements FolderDAO {
     }
 
     @Override
-    public void changeInBin(int[] checked_folders_id, boolean stateOfInBinStatus) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("UPDATE Folder f SET f.inbin = :stateOfInBinStatus WHERE ");
-        for (int i = 0; i < checked_folders_id.length; i++) {
-            if (i == 0) {
-                sb.append("f.id = " + checked_folders_id[0]);
-            } else {
-                sb.append(" OR f.id = " + checked_folders_id[i]);
-            }
-        }
-        entityManager.createQuery(sb.toString())
+    public void changeInBin(List<Integer> checkedFoldersId, boolean stateOfInBinStatus) {
+        entityManager.createQuery("UPDATE Folder f SET f.inbin = :stateOfInBinStatus WHERE f.id in (:list)")
                 .setParameter("stateOfInBinStatus", stateOfInBinStatus)
+                .setParameter("list", checkedFoldersId)
                 .executeUpdate();
     }
 
@@ -224,52 +197,18 @@ public class FolderDAOImpl implements FolderDAO {
     }
 
     @Override
-    public void moveTo(int[] checked_folders_id, Folder target) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("UPDATE Folder f SET f.parentFolder = :target WHERE ");
-        for (int i = 0; i < checked_folders_id.length; i++) {
-            if (i == 0) {
-                sb.append("f.id = " + checked_folders_id[0]);
-            } else {
-                sb.append(" OR f.id = " + checked_folders_id[i]);
-            }
-        }
-        entityManager.createQuery(sb.toString()).setParameter("target", target).executeUpdate();
-    }
-
-    public List<Folder> getList(User user, Folder parentFolder, String[] exceptionFolder) {
-        StringBuilder sb = new StringBuilder();
-        if (!exceptionFolder[0].equals("")) {
-            for (int i = 0; i < exceptionFolder.length; i++) {
-                if (i == 0) {
-                    sb.append("AND c.id <>" + exceptionFolder[0]);
-                } else {
-                    sb.append(" OR c.id <>" + exceptionFolder[i]);
-                }
-            }
-        }
-        Query query;
-        if (parentFolder == null) {
-            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder IS NULL AND c.inbin <> 1" + sb.toString(), Folder.class);
-        } else {
-            query = entityManager.createQuery("SELECT c FROM Folder c WHERE c.user = :user AND c.parentFolder = :parent AND c.inbin <> 1" + sb.toString(), Folder.class);
-            query.setParameter("parent", parentFolder);
-        }
-        query.setParameter("user", user);
-        return query.getResultList();
+    public void moveTo(List<Integer> checkedFoldersId, Folder target) {
+        entityManager.createQuery("UPDATE Folder f SET f.parentFolder = :target WHERE f.id in (:list)")
+                .setParameter("target", target)
+                .setParameter("list", checkedFoldersId)
+                .executeUpdate();
     }
 
     @Override
     public List<PathElement> getPathElements(List<String> pathes, int userId) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("SELECT new com.gmail.dzhivchik.web.dto.PathElement(f.name, f.id) FROM Folder f WHERE f.user.id = " + userId + " AND ");
-        for (int i = 0; i < pathes.size(); i++) {
-            if (i == 0) {
-                sb.append(" f.path = '" + pathes.get(i) + "'");
-            } else {
-                sb.append(" OR f.path = '" + pathes.get(i) + "'");
-            }
-        }
-        return entityManager.createQuery(sb.toString(), PathElement.class).getResultList();
+        return entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.PathElement(f.name, f.id) FROM Folder f WHERE f.user.id =:userId AND f.path in (:pathes)")
+                .setParameter("userId", userId)
+                .setParameter("pathes", pathes)
+                .getResultList();
     }
 }

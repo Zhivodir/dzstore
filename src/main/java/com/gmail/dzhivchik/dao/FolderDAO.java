@@ -10,7 +10,7 @@ import java.util.List;
 public interface FolderDAO {
     Folder save(Folder folder);
     Folder isFolder(String name, boolean inbin, User user, Folder parentFolder);
-    Folder[] deleteGroup(int[] checked_folders_id);
+    void deleteGroup(List<Integer> checkedFoldersId);
 
     Folder getReferenceFolder(int id);
     Folder getFolder(int id);
@@ -23,11 +23,11 @@ public interface FolderDAO {
     List<Content> getBinList(int userId);
     List<Content> getSharedList(int userId, Integer targetFolder);
     List<Content> getSearchList(int userId, String whatSearch);
-    List<Folder> getListFoldersById(int[] listOfId);
+    List<Folder> getListFoldersById(List<Integer> listOfId);
 
-    void changeStar(int[] checked_folders_id, boolean stateOfStar);
+    void changeStar(List<Integer> checkedFoldersId, boolean stateOfStar);
     void renameFolder(int userId, int fileId, String newName);
     void changeShare(List<Folder> targets);
-    void changeInBin(int[] checked_folders_id, boolean stateOfInBinStatus);
-    void moveTo(int[] checked_folders_id, Folder target);
+    void changeInBin(List<Integer> checkedFoldersId, boolean stateOfInBinStatus);
+    void moveTo(List<Integer> checkedFoldersId, Folder target);
 }

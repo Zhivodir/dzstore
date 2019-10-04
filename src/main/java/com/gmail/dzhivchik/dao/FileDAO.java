@@ -17,16 +17,14 @@ public interface FileDAO {
     List<Content> getStarredList(int userId);
     List<Content> getSharedList(int userId, Integer targetFolder);
     List<Content> getSearchList(int userId, String whatSearch);
-    //need full file's info
-    List<File> getListFilesById(int[] listOfId);
-    List<File> getAllList(User user);
+    List<File> getListFilesById(List<Integer> listOfId);
 
     long getMemoryBusySize(int userId);
     File isFile(String name, boolean inbin, User user, Folder parentFolder);
-    File[] deleteGroup(int[] checked_files_id);
+    void deleteGroup(List<Integer> checkedFilesId);
     void renameFile(int userId, int folderId, String newName);
-    void changeStar(int[] checked_files_id, boolean stateOfStar);
+    void changeStar(List<Integer> checkedFilesId, boolean stateOfStar);
     void changeShare(List<File> targets);
-    void changeInBin(int[] checked_files_id, boolean stateOfInBinStatus);
-    void moveTo(int[] checked_files_id, Folder target);
+    void changeInBin(List<Integer> checkedFilesId, boolean stateOfInBinStatus);
+    void moveTo(List<Integer> checkedFilesId, Folder target);
 }

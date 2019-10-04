@@ -6,9 +6,11 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Repository
@@ -44,28 +46,22 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public List<User> getUsersById(int[] cancel_share_for_users) {
-        StringBuilder sb = new StringBuilder();
-        for (int j = 0; j < cancel_share_for_users.length; j++) {
-            sb.append("u.id = '" + cancel_share_for_users[j] + "' ");
-            if (j != cancel_share_for_users.length - 1) {
-                sb.append("OR ");
-            }
+    public List<User> getUsersById(int[] cancelShareForUsers) {
+        if (cancelShareForUsers == null || cancelShareForUsers.length == 0) {
+            return new ArrayList<User>();
         }
-        return entityManager.createQuery("SELECT u FROM User u WHERE " + sb.toString(), User.class)
+
+        List<Integer> list = Arrays.stream(cancelShareForUsers).boxed().collect(Collectors.toList());
+        return entityManager.createQuery("SELECT u FROM User u WHERE u.id in (:list)", User.class)
+                .setParameter("list", list)
                 .getResultList();
     }
 
     @Override
-    public List<User> getUsersByEmail(String[] cancel_share_for_users) {
-        StringBuilder sb = new StringBuilder();
-        for (int j = 0; j < cancel_share_for_users.length; j++) {
-            sb.append("u.email = '" + cancel_share_for_users[j] + "' ");
-            if (j != cancel_share_for_users.length - 1) {
-                sb.append("OR ");
-            }
-        }
-        return entityManager.createQuery("SELECT u FROM User u WHERE " + sb.toString(), User.class)
+    public List<User> getUsersByEmail(String[] cancelShareForUsers) {
+        List<String> list = Stream.of(cancelShareForUsers).collect(Collectors.toList());
+        return entityManager.createQuery("SELECT u FROM User u WHERE u.email in (:list)", User.class)
+                .setParameter("list", list)
                 .getResultList();
     }
 
@@ -81,43 +77,21 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public List<User> getShareReceivers(String shareFor) {
-        return entityManager.createQuery(preparationShareRequest(shareFor), User.class).getResultList();
-    }
-
-
-    public String preparationShareRequest(String shareFor) {
         String[] tempListForShare = shareFor.split(",");
-        List<String> forEmail = new ArrayList<>();
-        List<String> forLogin = new ArrayList<>();
+        List<String> emails = new ArrayList<>();
+        List<String> logins = new ArrayList<>();
         for (String receiver : tempListForShare) {
             receiver = receiver.trim();
             if (receiver.contains("@")) {
-                forEmail.add(receiver);
+                emails.add(receiver);
             } else {
-                forLogin.add(receiver);
+                logins.add(receiver);
             }
         }
-        StringBuilder sb = new StringBuilder();
-        sb.append("SELECT u FROM User u WHERE ");
-        if (forEmail.size() != 0) {
-            for (int i = 0; i < forEmail.size(); i++) {
-                sb.append("u.email = '" + forEmail.get(i) + "' ");
-                if (i != forEmail.size() - 1) {
-                    sb.append("OR ");
-                }
-            }
-        }
-        if (forLogin.size() != 0) {
-            if (forEmail.size() != 0) {
-                sb.append("OR ");
-            }
-            for (int j = 0; j < forLogin.size(); j++) {
-                sb.append("u.login = '" + forLogin.get(j) + "' ");
-                if (j != forLogin.size() - 1) {
-                    sb.append("OR ");
-                }
-            }
-        }
-        return sb.toString();
+
+        return entityManager.createQuery("SELECT u FROM User u WHERE u.login in (:logins) AND u.email in (:emails)", User.class)
+                .setParameter("logins", logins)
+                .setParameter("emails", emails)
+                .getResultList();
     }
 }
