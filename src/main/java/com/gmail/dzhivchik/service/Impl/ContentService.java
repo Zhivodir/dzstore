@@ -138,8 +138,8 @@ public class ContentService {
     }
 
     @Transactional
-    public List<File> getListFilesById(List<Integer> checked_files_id) {
-        return fileDAO.getListFilesById(checked_files_id);
+    public List<File> getListFilesById(List<Integer> checkedFilesId) {
+        return fileDAO.getListFilesById(checkedFilesId);
     }
 
     @Transactional
@@ -211,7 +211,7 @@ public class ContentService {
     }
 
     @Transactional
-    public void shareForCheckedUsers(List<File> checked_files, List<Folder> checked_folders, String shareFor, boolean shareInFolder) {
+    public void shareForCheckedUsers(List<File> checkedFiles, List<Folder> checkedFolders, String shareFor, boolean shareInFolder) {
         List<User> receivers = userDAO.getShareReceivers(shareFor);
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -222,40 +222,40 @@ public class ContentService {
             }
         }
 
-        if (checked_files != null) {
-            for (File file : checked_files) {
+        if (checkedFiles != null) {
+            for (File file : checkedFiles) {
                 file.addToShareFor(receivers);
                 file.setShareInFolder(shareInFolder);
             }
-            fileDAO.changeShare(checked_files);
+            fileDAO.changeShare(checkedFiles);
         }
 
-        if (checked_folders != null) {
-            for (Folder folder : checked_folders) {
+        if (checkedFolders != null) {
+            for (Folder folder : checkedFolders) {
                 folder.addToShareFor(receivers);
                 folder.setShareInFolder(shareInFolder);
                 shareForCheckedUsers(folder.getFiles(), folder.getFolders(), shareFor, true);
             }
-            folderDAO.changeShare(checked_folders);
+            folderDAO.changeShare(checkedFolders);
         }
     }
 
     @Transactional
-    public void cancelShareForCheckedUsers(List<File> checked_files, List<Folder> checked_folders, String[] cancel_share_for_users) {
-        List<User> receivers = userDAO.getUsersByEmail(cancel_share_for_users);
+    public void cancelShareForCheckedUsers(List<File> checkedFiles, List<Folder> checkedFolders, String[] cancelShareForUsers) {
+        List<User> receivers = userDAO.getUsersByEmail(cancelShareForUsers);
 
-        if (checked_files != null) {
-            for (File file : checked_files) {
+        if (checkedFiles != null) {
+            for (File file : checkedFiles) {
                 file.removeFromShareFor(receivers);
             }
-            fileDAO.changeShare(checked_files);
+            fileDAO.changeShare(checkedFiles);
         }
 
-        if (checked_folders != null) {
-            for (Folder folder : checked_folders) {
+        if (checkedFolders != null) {
+            for (Folder folder : checkedFolders) {
                 folder.removeFromShareFor(receivers);
             }
-            folderDAO.changeShare(checked_folders);
+            folderDAO.changeShare(checkedFolders);
         }
     }
 
@@ -293,7 +293,7 @@ public class ContentService {
 
         if (checkedFoldersId != null) {
             List<Folder> ListOfAddFolders = getListFolderById(checkedFoldersId);
-            addSharedFolderToMyStore(ListOfAddFolders, currentUser, null, null);
+            addSharedFolderToMyStore(ListOfAddFolders, currentUser, null);
         }
     }
 
@@ -334,17 +334,17 @@ public class ContentService {
         }
     }
 
-    private void addSharedFolderToMyStore(List<Folder> listOfAddFolders, User user, Folder shareFolder, Folder addFolder) {
+    private void addSharedFolderToMyStore(List<Folder> listOfAddFolders, User user, Folder addFolder) {
         for (Folder folder : listOfAddFolders) {
             folderDAO.save(new Folder(folder.getName(), user, addFolder, false, false, false, folder.getPath()));
-            Folder tf = folderDAO.getFolder(user, folder.getName(), addFolder);
+            Folder intoFolder = folderDAO.getFolder(user, folder.getName(), addFolder);
 
             if (folder.getNestedFilesQuantity() != 0) {
-                addSharedFileToMyStore(folder.getFiles(), user, folder, tf);
+                addSharedFileToMyStore(folder.getFiles(), user, folder, intoFolder);
             }
 
             if (folder.getNestedFoldersQuantity() != 0) {
-                addSharedFolderToMyStore(folder.getFolders(), user, folder, tf);
+                addSharedFolderToMyStore(folder.getFolders(), user, intoFolder);
             }
         }
     }
