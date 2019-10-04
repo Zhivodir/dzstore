@@ -63,16 +63,14 @@ public class FileDAOImpl implements FileDAO {
     }
 
     @Override
-    public File[] deleteGroup(List<Integer> checkedFilesId) {
-        File[] files = new File[checkedFilesId.size()];
-        int num = 0;
+    public void deleteGroup(List<Integer> checkedFilesId) {
         for (Integer id : checkedFilesId) {
-            File file = entityManager.find(File.class, id);
-            files[num] = file;
-            entityManager.remove(file);
-            num++;
+            entityManager.remove(getReferenceFile(id));
         }
-        return files;
+    }
+
+    public File getReferenceFile(int id) {
+        return entityManager.getReference(File.class, id);
     }
 
     @Override

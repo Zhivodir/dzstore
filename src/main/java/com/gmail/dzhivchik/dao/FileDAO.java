@@ -21,7 +21,7 @@ public interface FileDAO {
 
     long getMemoryBusySize(int userId);
     File isFile(String name, boolean inbin, User user, Folder parentFolder);
-    File[] deleteGroup(List<Integer> checkedFilesId);
+    void deleteGroup(List<Integer> checkedFilesId);
     void renameFile(int userId, int folderId, String newName);
     void changeStar(List<Integer> checkedFilesId, boolean stateOfStar);
     void changeShare(List<File> targets);

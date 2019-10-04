@@ -10,7 +10,7 @@ import java.util.List;
 public interface FolderDAO {
     Folder save(Folder folder);
     Folder isFolder(String name, boolean inbin, User user, Folder parentFolder);
-    Folder[] deleteGroup(List<Integer> checkedFoldersId);
+    void deleteGroup(List<Integer> checkedFoldersId);
 
     Folder getReferenceFolder(int id);
     Folder getFolder(int id);
