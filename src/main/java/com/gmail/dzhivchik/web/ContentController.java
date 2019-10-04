@@ -6,7 +6,6 @@ import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.service.Impl.ContentService;
 import com.gmail.dzhivchik.service.UserService;
 import com.gmail.dzhivchik.web.dto.ChangesInAccessForUsers;
-import com.gmail.dzhivchik.web.dto.PathElement;
 import com.gmail.dzhivchik.web.dto.SelectedContent;
 import com.gmail.dzhivchik.web.dto.datatables.DataTablesRequest;
 import com.gmail.dzhivchik.web.dto.datatables.DataTablesResponse;
@@ -14,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -38,7 +35,6 @@ public class ContentController {
 
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
     public @ResponseBody String upload(@RequestParam(value = "file", required = false) MultipartFile file,
-                                       @RequestParam(value = "structure", required = false) String structure,
                                        @RequestParam Integer currentFolderID) {
         contentService.uploadFile(file, currentFolderID);
         return String.valueOf(getBusySpace());
@@ -53,12 +49,11 @@ public class ContentController {
     }
 
     @RequestMapping(value = "/download", method = RequestMethod.POST)
-    public String actionsAboveCheckedFiles(@RequestParam(value = "selectedFiles", required = false) int[] checked_files_id,
-                                           @RequestParam(value = "selectedFolders", required = false) int[] checked_folders_id,
+    public String actionsAboveCheckedFiles(@ModelAttribute SelectedContent selectedContent,
                                            @RequestParam String typeOfView,
                                            @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID,
                                            final RedirectAttributes redirectAttributes) {
-        contentService.downloadContent(checked_files_id, checked_folders_id);
+        contentService.download(selectedContent.getSelectedFiles(), selectedContent.getSelectedFolders());
         redirectAttributes.addFlashAttribute("currentFolderID", currentFolderID);
         if (typeOfView.equals("index")) {
             return "redirect:/";

@@ -12,7 +12,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -64,10 +63,10 @@ public class FileDAOImpl implements FileDAO {
     }
 
     @Override
-    public File[] deleteGroup(int[] checked_files_id) {
-        File[] files = new File[checked_files_id.length];
+    public File[] deleteGroup(List<Integer> checkedFilesId) {
+        File[] files = new File[checkedFilesId.size()];
         int num = 0;
-        for (Integer id : checked_files_id) {
+        for (Integer id : checkedFilesId) {
             File file = entityManager.find(File.class, id);
             files[num] = file;
             entityManager.remove(file);
@@ -137,23 +136,17 @@ public class FileDAOImpl implements FileDAO {
 
 
     @Override
-    public List<File> getListFilesById(int[] listOfId) {
-        if (listOfId == null || listOfId.length == 0) {
-            return new ArrayList<File>();
-        }
-
-        List<Integer> list = Arrays.stream(listOfId).boxed().collect(Collectors.toList());
+    public List<File> getListFilesById(List<Integer> listOfId) {
         return entityManager.createQuery("SELECT f FROM File f WHERE f.id in (:list)", File.class)
-                .setParameter("list", list)
+                .setParameter("list", listOfId)
                 .getResultList();
     }
 
     @Override
-    public void changeStar(int[] checked_files_id, boolean stateOfStar) {
-        List<Integer> list = Arrays.stream(checked_files_id).boxed().collect(Collectors.toList());
+    public void changeStar(List<Integer> checkedFilesId, boolean stateOfStar) {
         entityManager.createQuery("UPDATE File f SET f.starred = :stateOfStar WHERE f.id in (:list)")
                 .setParameter("stateOfStar", stateOfStar)
-                .setParameter("list", list)
+                .setParameter("list", checkedFilesId)
                 .executeUpdate();
     }
 
@@ -182,20 +175,18 @@ public class FileDAOImpl implements FileDAO {
     }
 
     @Override
-    public void changeInBin(int[] checked_files_id, boolean stateOfInBinStatus) {
-        List<Integer> list = Arrays.stream(checked_files_id).boxed().collect(Collectors.toList());
+    public void changeInBin(List<Integer> checkedFilesId, boolean stateOfInBinStatus) {
         entityManager.createQuery("UPDATE File f SET f.inbin = :stateOfInBinStatus WHERE f.id in (:list)")
                 .setParameter("stateOfInBinStatus", stateOfInBinStatus)
-                .setParameter("list", list)
+                .setParameter("list", checkedFilesId)
                 .executeUpdate();
     }
 
     @Override
-    public void moveTo(int[] checked_files_id, Folder target) {
-        List<Integer> list = Arrays.stream(checked_files_id).boxed().collect(Collectors.toList());
+    public void moveTo(List<Integer> checkedFilesId, Folder target) {
         entityManager.createQuery("UPDATE File f SET f.parentFolder = :target WHERE f.id in (:list)")
                 .setParameter("target", target)
-                .setParameter("list", list)
+                .setParameter("list", checkedFilesId)
                 .executeUpdate();
     }
 
@@ -204,6 +195,6 @@ public class FileDAOImpl implements FileDAO {
         Object sum = entityManager.createQuery("SELECT sum(f.size) FROM File f WHERE f.user.id = :userId")
                 .setParameter("userId", userId)
                 .getSingleResult();
-        return sum != null ? (Long) sum: 0;
+        return sum != null ? (Long) sum : 0;
     }
 }

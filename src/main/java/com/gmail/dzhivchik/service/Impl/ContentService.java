@@ -107,15 +107,15 @@ public class ContentService {
     }
 
     @Transactional
-    public void downloadContent(int[] checked_files_id, int[] checked_folders_id) {
+    public void download(List<Integer> checkedFilesId, List<Integer> checkedFoldersId) {
         List<File> listCheckedFiles = new ArrayList<>();
-        if (checked_files_id != null) {
-            listCheckedFiles = getListFilesById(checked_files_id);
+        if (checkedFilesId != null) {
+            listCheckedFiles = getListFilesById(checkedFilesId);
         }
 
         List<Folder> listCheckedFolder = new ArrayList<>();
-        if (checked_folders_id != null) {
-            listCheckedFolder = getListFolderById(checked_folders_id);
+        if (checkedFoldersId != null) {
+            listCheckedFolder = getListFolderById(checkedFoldersId);
         }
         downloadContent(listCheckedFiles, listCheckedFolder);
     }
@@ -128,47 +128,47 @@ public class ContentService {
     }
 
     @Transactional
-    public void deleteCheckedContent(int[] checked_files_id, int[] checked_folders_id) {
-        if (checked_files_id != null) {
-            fileDAO.deleteGroup(checked_files_id);
+    public void deleteCheckedContent(List<Integer> checkedFilesId, List<Integer> checkedFoldersId) {
+        if (checkedFilesId != null) {
+            fileDAO.deleteGroup(checkedFilesId);
         }
-        if (checked_folders_id != null) {
-            folderDAO.deleteGroup(checked_folders_id);
+        if (checkedFoldersId != null) {
+            folderDAO.deleteGroup(checkedFoldersId);
         }
     }
 
     @Transactional
-    public List<File> getListFilesById(int[] checked_files_id) {
+    public List<File> getListFilesById(List<Integer> checked_files_id) {
         return fileDAO.getListFilesById(checked_files_id);
     }
 
     @Transactional
-    public List<Folder> getListFolderById(int[] checked_folders_id) {
-        return folderDAO.getListFoldersById(checked_folders_id);
+    public List<Folder> getListFolderById(List<Integer> checkedFoldersId) {
+        return folderDAO.getListFoldersById(checkedFoldersId);
     }
 
     @Transactional
-    public void changeStar(int[] checked_files_id, int[] checked_folders_id, boolean stateOfStar) {
-        if (checked_files_id != null) {
-            fileDAO.changeStar(checked_files_id, stateOfStar);
+    public void changeStar(List<Integer> checkedFilesId, List<Integer> checkedFoldersId, boolean stateOfStar) {
+        if (checkedFilesId != null) {
+            fileDAO.changeStar(checkedFilesId, stateOfStar);
         }
-        if (checked_folders_id != null) {
-            folderDAO.changeStar(checked_folders_id, stateOfStar);
-        }
-    }
-
-    @Transactional
-    public void removeInBin(int[] checked_files_id, int[] checked_folders_id, boolean stateOfInBinStatus) {
-        if (checked_files_id != null) {
-            fileDAO.changeInBin(checked_files_id, stateOfInBinStatus);
-        }
-        if (checked_folders_id != null) {
-            folderDAO.changeInBin(checked_folders_id, stateOfInBinStatus);
+        if (checkedFoldersId != null) {
+            folderDAO.changeStar(checkedFoldersId, stateOfStar);
         }
     }
 
     @Transactional
-    public void makeCopy(int[] selectedFiles) {
+    public void removeInBin(List<Integer> checkedFilesId, List<Integer> checkedFoldersId, boolean stateOfInBinStatus) {
+        if (checkedFilesId != null) {
+            fileDAO.changeInBin(checkedFilesId, stateOfInBinStatus);
+        }
+        if (checkedFoldersId != null) {
+            folderDAO.changeInBin(checkedFoldersId, stateOfInBinStatus);
+        }
+    }
+
+    @Transactional
+    public void makeCopy(List<Integer> selectedFiles) {
         List<File> copyContent = fileDAO.getListFilesById(selectedFiles);
         copyContent.stream().forEach(file -> fileDAO.save(File.makeCopy(file)));
     }
@@ -260,13 +260,13 @@ public class ContentService {
     }
 
     @Transactional
-    public void removeFromShareWithMe(int[] checked_files_id, int[] checked_folders_id, User user) {
+    public void removeFromShareWithMe(List<Integer> checkedFilesId, List<Integer> checkedFoldersId, User user) {
         List<User> receivers = new ArrayList<>();
         receivers.add(user);
 
         List<File> targetsFiles = null;
-        if (checked_files_id != null) {
-            targetsFiles = fileDAO.getListFilesById(checked_files_id);
+        if (checkedFilesId != null) {
+            targetsFiles = fileDAO.getListFilesById(checkedFilesId);
             for (File file : targetsFiles) {
                 file.removeFromShareFor(receivers);
             }
@@ -274,8 +274,8 @@ public class ContentService {
         }
 
         List<Folder> targetsFolder = null;
-        if (checked_folders_id != null) {
-            targetsFolder = folderDAO.getListFoldersById(checked_folders_id);
+        if (checkedFoldersId != null) {
+            targetsFolder = folderDAO.getListFoldersById(checkedFoldersId);
             for (Folder folder : targetsFolder) {
                 folder.removeFromShareFor(receivers);
             }
@@ -284,27 +284,27 @@ public class ContentService {
     }
 
     @Transactional
-    public void addToMe(int[] checked_files_id, int[] checked_folders_id) {
+    public void addToMe(List<Integer> checkedFilesId, List<Integer> checkedFoldersId) {
         User currentUser = getCurrentUser();
-        if (checked_files_id != null) {
-            List<File> listOfAddFiles = getListFilesById(checked_files_id);
+        if (checkedFilesId != null) {
+            List<File> listOfAddFiles = getListFilesById(checkedFilesId);
             addSharedFileToMyStore(listOfAddFiles, currentUser, null, null);
         }
 
-        if (checked_folders_id != null) {
-            List<Folder> ListOfAddFolders = getListFolderById(checked_folders_id);
+        if (checkedFoldersId != null) {
+            List<Folder> ListOfAddFolders = getListFolderById(checkedFoldersId);
             addSharedFolderToMyStore(ListOfAddFolders, currentUser, null, null);
         }
     }
 
     @Transactional
-    public void moveToFolder(int[] checked_files_id, int[] checked_folders_id, int move_to) {
+    public void moveToFolder(List<Integer> checkedFilesId, List<Integer> checkedFoldersId, int move_to) {
         Folder target = move_to == -1 ? null : getFolder(move_to);
-        if (checked_files_id != null) {
-            fileDAO.moveTo(checked_files_id, target);
+        if (checkedFilesId != null) {
+            fileDAO.moveTo(checkedFilesId, target);
         }
-        if (checked_folders_id != null) {
-            folderDAO.moveTo(checked_folders_id, target);
+        if (checkedFoldersId != null) {
+            folderDAO.moveTo(checkedFoldersId, target);
         }
     }
 
@@ -349,13 +349,13 @@ public class ContentService {
         }
     }
 
-    public List[] getContentById(int[] checked_files_id, int[] checked_folders_id) {
+    public List[] getContentById(List<Integer> checkedFilesId, List<Integer> checkedFoldersId) {
         List[] content = new List[2];
-        if (checked_files_id != null) {
-            content[0] = getListFilesById(checked_files_id);
+        if (checkedFilesId != null) {
+            content[0] = getListFilesById(checkedFilesId);
         }
-        if (checked_folders_id != null) {
-            content[1] = getListFolderById(checked_folders_id);
+        if (checkedFoldersId != null) {
+            content[1] = getListFolderById(checkedFoldersId);
         }
         return content;
     }

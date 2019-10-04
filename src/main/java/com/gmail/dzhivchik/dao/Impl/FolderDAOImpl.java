@@ -98,10 +98,10 @@ public class FolderDAOImpl implements FolderDAO {
     }
 
     @Override
-    public Folder[] deleteGroup(int[] checked_folders_id) {
-        Folder[] folders = new Folder[checked_folders_id.length];
+    public Folder[] deleteGroup(List<Integer> checkedFoldersId) {
+        Folder[] folders = new Folder[checkedFoldersId.size()];
         int num = 0;
-        for (Integer id : checked_folders_id) {
+        for (Integer id : checkedFoldersId) {
             Folder folder = entityManager.find(Folder.class, id);
             folders[num] = folder;
             entityManager.remove(folder);
@@ -111,23 +111,21 @@ public class FolderDAOImpl implements FolderDAO {
     }
 
     @Override
-    public List<Folder> getListFoldersById(int[] listOfId) {
-        if (listOfId == null || listOfId.length == 0) {
+    public List<Folder> getListFoldersById(List<Integer> listOfId) {
+        if (listOfId == null || listOfId.size() == 0) {
             return new ArrayList<Folder>();
         }
 
-        List<Integer> list = Arrays.stream(listOfId).boxed().collect(Collectors.toList());
         return entityManager.createQuery("SELECT f FROM Folder f WHERE f.id in (:list)", Folder.class)
-                .setParameter("list", list)
+                .setParameter("list", listOfId)
                 .getResultList();
     }
 
     @Override
-    public void changeStar(int[] checked_folders_id, boolean stateOfStar) {
-        List<Integer> list = Arrays.stream(checked_folders_id).boxed().collect(Collectors.toList());
+    public void changeStar(List<Integer> checkedFoldersId, boolean stateOfStar) {
         entityManager.createQuery("UPDATE Folder f SET f.starred = :stateOfStar WHERE f.id in (:list)")
                 .setParameter("stateOfStar", stateOfStar)
-                .setParameter("list", list)
+                .setParameter("list", checkedFoldersId)
                 .executeUpdate();
     }
 
@@ -189,11 +187,10 @@ public class FolderDAOImpl implements FolderDAO {
     }
 
     @Override
-    public void changeInBin(int[] checked_folders_id, boolean stateOfInBinStatus) {
-        List<Integer> list = Arrays.stream(checked_folders_id).boxed().collect(Collectors.toList());
+    public void changeInBin(List<Integer> checkedFoldersId, boolean stateOfInBinStatus) {
         entityManager.createQuery("UPDATE Folder f SET f.inbin = :stateOfInBinStatus WHERE f.id in (:list)")
                 .setParameter("stateOfInBinStatus", stateOfInBinStatus)
-                .setParameter("list", list)
+                .setParameter("list", checkedFoldersId)
                 .executeUpdate();
     }
 
@@ -206,11 +203,10 @@ public class FolderDAOImpl implements FolderDAO {
     }
 
     @Override
-    public void moveTo(int[] checked_folders_id, Folder target) {
-        List<Integer> list = Arrays.stream(checked_folders_id).boxed().collect(Collectors.toList());
+    public void moveTo(List<Integer> checkedFoldersId, Folder target) {
         entityManager.createQuery("UPDATE Folder f SET f.parentFolder = :target WHERE f.id in (:list)")
                 .setParameter("target", target)
-                .setParameter("list", list)
+                .setParameter("list", checkedFoldersId)
                 .executeUpdate();
     }
 
