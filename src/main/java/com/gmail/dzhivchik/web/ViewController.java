@@ -33,7 +33,6 @@ public class ViewController {
     public String onIndex(HttpServletRequest request, HttpServletResponse response,
                           @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID) {
         viewHelper.prepareView(request, response, localeResolver, PageType.MYDISK, getSecurityUser());
-
         request.setAttribute("parentsFolderID", null);
         request.setAttribute("currentFolderID", currentFolderID);
         return "index_commons";
@@ -53,8 +52,7 @@ public class ViewController {
     }
 
     private DataTablesResponse<Content> getAllCurrentFolderContent(int userId, int currentFolderId, DataTablesRequest dtRequest) {
-        Folder currentFolder = currentFolderId == -1 ? null : contentService.getFolder(currentFolderId);
-        List<Content> data = contentService.getContent(userId, currentFolder);
+        List<Content> data = contentService.getContent(userId, currentFolderId);
         return formDataTablesResponse(data, dtRequest);
     }
 
