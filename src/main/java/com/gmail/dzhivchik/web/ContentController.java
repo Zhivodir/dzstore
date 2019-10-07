@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.*;
 
@@ -37,28 +36,20 @@ public class ContentController {
     public @ResponseBody String upload(@RequestParam(value = "file", required = false) MultipartFile file,
                                        @RequestParam Integer currentFolderID) {
         contentService.uploadFile(file, currentFolderID);
-        return String.valueOf(getBusySpace());
+        return getBusySpace();
     }
 
     @RequestMapping(value = "/uploadFolder", method = RequestMethod.POST)
     public @ResponseBody String uploadFolder(@RequestParam(value = "files", required = false) MultipartFile[] files,
-                                       @RequestParam(value = "structure", required = false) String structure,
-                                       @RequestParam Integer currentFolderID) {
+                                             @RequestParam(value = "structure", required = false) String structure,
+                                             @RequestParam Integer currentFolderID) {
         contentService.uploadFolder(files, structure, currentFolderID);
-        return String.valueOf(getBusySpace());
+        return getBusySpace();
     }
 
     @RequestMapping(value = "/download", method = RequestMethod.POST)
-    public String actionsAboveCheckedFiles(@ModelAttribute SelectedContent selectedContent,
-                                           @RequestParam String typeOfView,
-                                           @RequestParam(value = "currentFolderID", required = false) Integer currentFolderID,
-                                           final RedirectAttributes redirectAttributes) {
+    public void actionsAboveCheckedFiles(@ModelAttribute SelectedContent selectedContent) {
         contentService.download(selectedContent.getSelectedFiles(), selectedContent.getSelectedFolders());
-        redirectAttributes.addFlashAttribute("currentFolderID", currentFolderID);
-        if (typeOfView.equals("index")) {
-            return "redirect:/";
-        }
-        return "redirect:/" + typeOfView;
     }
 
     @RequestMapping(value = "/createFolder", method = RequestMethod.POST)
@@ -70,8 +61,7 @@ public class ContentController {
             parentFolder = contentService.getFolder(currentFolderId);
             path = parentFolder.getPath() != null ? parentFolder.getPath() + "/" + parentFolder.getName() : parentFolder.getName();
         }
-        Folder folder = new Folder(newFolderName, user, parentFolder, false, false, false, path);
-        contentService.createFolder(folder);
+        contentService.createFolder(new Folder(newFolderName, user, parentFolder, path));
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -117,7 +107,7 @@ public class ContentController {
     @RequestMapping(value = "/deleteContent", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
     public @ResponseBody String deleteContent(@ModelAttribute SelectedContent selectedContent) {
         contentService.deleteCheckedContent(selectedContent.getSelectedFiles(), selectedContent.getSelectedFolders());
-        return String.valueOf(getBusySpace());
+        return getBusySpace();
     }
 
     @RequestMapping(value = "/changeStarState", method = RequestMethod.POST)
@@ -146,18 +136,18 @@ public class ContentController {
     @RequestMapping(value = "/makeCopy", method = RequestMethod.POST)
     public @ResponseBody String makeCopy(@ModelAttribute SelectedContent selectedContent) {
         contentService.makeCopy(selectedContent.getSelectedFiles());
-        return String.valueOf(getBusySpace());
+        return getBusySpace();
     }
 
     @RequestMapping(value = "/addToMe", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
     public @ResponseBody String addToMe(@ModelAttribute SelectedContent selectedContent) {
         contentService.addToMe(selectedContent.getSelectedFiles(), selectedContent.getSelectedFolders());
-        return String.valueOf(getBusySpace());
+        return getBusySpace();
     }
 
     @RequestMapping(value = "/getUsersWithAccess/{contentType}/{contentId}", method = RequestMethod.POST)
     public @ResponseBody DataTablesResponse<User> loadListOfAccount(@RequestBody DataTablesRequest dtRequest,
-                                               @PathVariable("contentType") String contentType, @PathVariable("contentId") int contentId) {
+                                                                    @PathVariable("contentType") String contentType, @PathVariable("contentId") int contentId) {
         List<User> users = new ArrayList<>();
 
         if (("folder").equals(contentType) && contentId != -1) {
@@ -184,7 +174,7 @@ public class ContentController {
         tlsSender.send("This is Subject", "TLS: This is text!", "support@dzstore.com", "");
     }
 
-    private long getBusySpace() {
-        return contentService.getSizeBusyMemory(getSecurityUser().getId());
+    private String getBusySpace() {
+        return String.valueOf(contentService.getSizeBusyMemory(getSecurityUser().getId()));
     }
 }
