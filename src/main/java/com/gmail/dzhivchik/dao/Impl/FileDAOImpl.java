@@ -135,6 +135,7 @@ public class FileDAOImpl implements FileDAO {
 
     @Override
     public List<File> getListFilesById(List<Integer> listOfId) {
+        if(listOfId.size() == 0) return new ArrayList<>();
         return entityManager.createQuery("SELECT f FROM File f WHERE f.id in (:list)", File.class)
                 .setParameter("list", listOfId)
                 .getResultList();

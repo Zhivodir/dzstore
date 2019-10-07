@@ -121,9 +121,10 @@ public class ContentService {
     }
 
     @Transactional(readOnly = true)
-    public List<Content> getContent(int userId, Folder parentFolder) {
-        List<Content> content = folderDAO.getList(userId, parentFolder);
-        content.addAll(fileDAO.getList(userId, parentFolder));
+    public List<Content> getContent(int userId, int currentFolderId) {
+        Folder currentFolder = currentFolderId == -1 ? null : getReferenceFolder(currentFolderId);
+        List<Content> content = folderDAO.getList(userId, currentFolder);
+        content.addAll(fileDAO.getList(userId, currentFolder));
         return content;
     }
 

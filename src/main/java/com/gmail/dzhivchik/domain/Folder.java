@@ -69,6 +69,16 @@ public class Folder {
         this.path = path;
     }
 
+    public Folder(@NotBlank String name, User user, Folder parentFolder, String path) {
+        this.name = name;
+        this.user = user;
+        this.parentFolder = parentFolder;
+        this.path = path;
+        this.starred = false;
+        this.inbin = false;
+        this.shareInFolder = false;
+    }
+
     public void addToShareFor(List<User> forAdd){
         for(User newUser : forAdd){
             if(!shareFor.contains(newUser)){
