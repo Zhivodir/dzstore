@@ -48,8 +48,9 @@ public class ContentController {
     }
 
     @RequestMapping(value = "/download", method = RequestMethod.POST)
-    public void actionsAboveCheckedFiles(@ModelAttribute SelectedContent selectedContent) {
+    public ResponseEntity actionsAboveCheckedFiles(@ModelAttribute SelectedContent selectedContent) {
         contentService.download(selectedContent.getSelectedFiles(), selectedContent.getSelectedFolders());
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/createFolder", method = RequestMethod.POST)
