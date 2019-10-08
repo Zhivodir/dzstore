@@ -8,7 +8,7 @@
 
 <section class="content">
     <div>
-        <form id="content_form" action="/download" method="post">
+        <form id="content_form" method="post">
             <input type="hidden" name="currentFolderID" value="${currentFolderID}">
             <input type="hidden" name="typeOfView" value="${typeOfView}">
             <table id="myTable" class="table table-striped record_table" cellspacing="0" width="100%">
