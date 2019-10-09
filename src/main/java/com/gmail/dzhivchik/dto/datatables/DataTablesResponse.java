@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.gmail.dzhivchik.web.dto.datatables;
+package com.gmail.dzhivchik.dto.datatables;
 
 import java.util.Collections;
 import java.util.List;

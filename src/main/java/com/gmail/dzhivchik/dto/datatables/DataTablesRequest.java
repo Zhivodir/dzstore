@@ -15,7 +15,7 @@
  */
 // https://github.com/eveoh/datatables-java
 
-package com.gmail.dzhivchik.web.dto.datatables;
+package com.gmail.dzhivchik.dto.datatables;
 
 import lombok.ToString;
 

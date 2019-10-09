@@ -1,18 +1,16 @@
 package com.gmail.dzhivchik.dao.Impl;
 
 import com.gmail.dzhivchik.dao.FolderDAO;
-import com.gmail.dzhivchik.domain.File;
 import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
-import com.gmail.dzhivchik.web.dto.Content;
-import com.gmail.dzhivchik.web.dto.PathElement;
+import com.gmail.dzhivchik.dto.Content;
+import com.gmail.dzhivchik.dto.PathElement;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,10 +55,10 @@ public class FolderDAOImpl implements FolderDAO {
     public List<Content> getList(int userId, Folder parentFolder) {
         Query query;
         if (parentFolder == null) {
-            query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(c.id, c.name, c.user.login, c.starred, c.shareInFolder, c.inbin) FROM Folder c " +
+            query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.dto.Content(c.id, c.name, c.user.login, c.starred, c.shareInFolder, c.inbin) FROM Folder c " +
                     "WHERE c.user.id = :userId AND c.parentFolder IS NULL AND c.inbin <> 1", Content.class);
         } else {
-            query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(c.id, c.name, c.user.login, c.starred, c.shareInFolder, c.inbin) FROM Folder c " +
+            query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.dto.Content(c.id, c.name, c.user.login, c.starred, c.shareInFolder, c.inbin) FROM Folder c " +
                     "WHERE c.user.id = :userId AND c.parentFolder = :parent AND c.inbin <> 1", Content.class);
             query.setParameter("parent", parentFolder);
         }
@@ -125,11 +123,11 @@ public class FolderDAOImpl implements FolderDAO {
 
     @Override
     public List<Content> getStarredList(int userId) {
-        Query query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.user.login, f.starred, f.shareInFolder, f.inbin) FROM Folder f " +
+        Query query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.dto.Content(f.id, f.name, f.user.login, f.starred, f.shareInFolder, f.inbin) FROM Folder f " +
                 "WHERE f.user.id = :userId AND f.starred = 1  AND f.inbin <> 1", Content.class);
         query.setParameter("userId", userId);
 
-        Query query2 = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.user.login, f.starred, f.shareInFolder, f.inbin) FROM Folder f " +
+        Query query2 = entityManager.createQuery("SELECT new com.gmail.dzhivchik.dto.Content(f.id, f.name, f.user.login, f.starred, f.shareInFolder, f.inbin) FROM Folder f " +
                 "INNER JOIN f.shareFor user " +
                 "WHERE f.user.id = :userId AND f.starred = 1 AND f.inbin <> 1", Content.class);
         query2.setParameter("userId", userId);
@@ -143,11 +141,11 @@ public class FolderDAOImpl implements FolderDAO {
     public List<Content> getSharedList(int userId, Integer targetFolder) {
         Query query;
         if (targetFolder == null) {
-            query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.user.login, f.starred, f.shareInFolder, f.inbin) FROM Folder f " +
+            query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.dto.Content(f.id, f.name, f.user.login, f.starred, f.shareInFolder, f.inbin) FROM Folder f " +
                     "INNER JOIN f.shareFor user " +
                     "WHERE user.id = :userId AND f.inbin <> 1 AND f.shareInFolder = false", Content.class);
         } else {
-            query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.user.login, f.starred, f.shareInFolder, f.inbin) FROM Folder f " +
+            query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.dto.Content(f.id, f.name, f.user.login, f.starred, f.shareInFolder, f.inbin) FROM Folder f " +
                     "INNER JOIN f.shareFor user " +
                     "WHERE user.id = :userId AND f.inbin <> 1 AND f.shareInFolder = true AND f.parentFolder.id = :targetFolder", Content.class);
             query.setParameter("targetFolder", targetFolder);
@@ -157,7 +155,7 @@ public class FolderDAOImpl implements FolderDAO {
 
     @Override
     public List<Content> getSearchList(int userId, String whatSearch) {
-        return entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.user.login, f.starred, f.shareInFolder, f.inbin) FROM Folder f " +
+        return entityManager.createQuery("SELECT new com.gmail.dzhivchik.dto.Content(f.id, f.name, f.user.login, f.starred, f.shareInFolder, f.inbin) FROM Folder f " +
                 "WHERE f.user.id = :userId AND UPPER(f.name) LIKE :whatSearch  AND f.inbin <> 1", Content.class)
                 .setParameter("userId", userId)
                 .setParameter("whatSearch", "%" + whatSearch.toUpperCase() + "%")
@@ -190,7 +188,7 @@ public class FolderDAOImpl implements FolderDAO {
 
     @Override
     public List<Content> getBinList(int userId) {
-        return entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.user.login, f.starred, f.shareInFolder, f.inbin) FROM Folder f " +
+        return entityManager.createQuery("SELECT new com.gmail.dzhivchik.dto.Content(f.id, f.name, f.user.login, f.starred, f.shareInFolder, f.inbin) FROM Folder f " +
                 "WHERE f.user.id = :userId AND f.inbin = 1", Content.class)
                 .setParameter("userId", userId)
                 .getResultList();
@@ -206,7 +204,7 @@ public class FolderDAOImpl implements FolderDAO {
 
     @Override
     public List<PathElement> getPathElements(List<String> pathes, int userId) {
-        return entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.PathElement(f.name, f.id) FROM Folder f WHERE f.user.id =:userId AND f.path in (:pathes)")
+        return entityManager.createQuery("SELECT new com.gmail.dzhivchik.dto.PathElement(f.name, f.id) FROM Folder f WHERE f.user.id =:userId AND f.path in (:pathes)")
                 .setParameter("userId", userId)
                 .setParameter("pathes", pathes)
                 .getResultList();

@@ -1,12 +1,11 @@
 package com.gmail.dzhivchik.web;
 
-import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.enums.PageType;
+import com.gmail.dzhivchik.dto.Content;
+import com.gmail.dzhivchik.dto.datatables.DataTablesRequest;
+import com.gmail.dzhivchik.dto.datatables.DataTablesResponse;
 import com.gmail.dzhivchik.service.Impl.ContentService;
 import com.gmail.dzhivchik.service.ViewControllerHelper;
-import com.gmail.dzhivchik.web.dto.Content;
-import com.gmail.dzhivchik.web.dto.datatables.DataTablesRequest;
-import com.gmail.dzhivchik.web.dto.datatables.DataTablesResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

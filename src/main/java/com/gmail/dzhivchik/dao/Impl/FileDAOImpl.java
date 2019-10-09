@@ -4,14 +4,13 @@ import com.gmail.dzhivchik.dao.FileDAO;
 import com.gmail.dzhivchik.domain.File;
 import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
-import com.gmail.dzhivchik.web.dto.Content;
+import com.gmail.dzhivchik.dto.Content;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -77,11 +76,11 @@ public class FileDAOImpl implements FileDAO {
     public List<Content> getList(int userId, Folder parentFolder) {
         Query query;
         if (parentFolder == null) {
-            query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
+            query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
                     "WHERE f.user.id = :userId AND f.parentFolder.id IS NULL AND f.inbin <> 1", Content.class);
         } else {
             Integer parent_id = parentFolder.getId();
-            query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
+            query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
                     "WHERE f.user.id = :userId AND f.parentFolder.id = :parent_id AND f.inbin <> 1", Content.class)
                     .setParameter("parent_id", parent_id);
         }
@@ -90,11 +89,11 @@ public class FileDAOImpl implements FileDAO {
 
     @Override
     public List<Content> getStarredList(int userId) {
-        Query query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
+        Query query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
                 "WHERE f.user.id = :userId AND f.starred = 1 AND f.inbin <> 1", Content.class)
                 .setParameter("userId", userId);
 
-        Query query2 = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
+        Query query2 = entityManager.createQuery("SELECT new com.gmail.dzhivchik.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
                 "INNER JOIN f.shareFor user " +
                 "WHERE f.user.id = :userId AND f.inbin <> 1 AND f.starred = 1", Content.class)
                 .setParameter("userId", userId);
@@ -109,11 +108,11 @@ public class FileDAOImpl implements FileDAO {
     public List<Content> getSharedList(int userId, Integer targetFolder) {
         Query query;
         if (targetFolder == null) {
-            query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
+            query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
                     "INNER JOIN f.shareFor user " +
                     "WHERE user.id = :userId AND f.inbin <> 1 AND f.shareInFolder = false", Content.class);
         } else {
-            query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
+            query = entityManager.createQuery("SELECT new com.gmail.dzhivchik.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
                     "INNER JOIN f.shareFor user " +
                     "WHERE user.id = :userId AND f.inbin <> 1 AND f.shareInFolder = true AND f.parentFolder.id = :targetFolder", Content.class);
             query.setParameter("targetFolder", targetFolder);
@@ -125,7 +124,7 @@ public class FileDAOImpl implements FileDAO {
 
     @Override
     public List<Content> getSearchList(int userId, String whatSearch) {
-        return entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
+        return entityManager.createQuery("SELECT new com.gmail.dzhivchik.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
                 "WHERE f.user.id = :userId AND UPPER(f.name) LIKE :whatSearch AND f.inbin <> 1", Content.class)
                 .setParameter("userId", userId)
                 .setParameter("whatSearch", "%" + whatSearch.toUpperCase() + "%")
@@ -167,7 +166,7 @@ public class FileDAOImpl implements FileDAO {
     }
 
     public List<Content> getBinList(int userId) {
-        return entityManager.createQuery("SELECT new com.gmail.dzhivchik.web.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
+        return entityManager.createQuery("SELECT new com.gmail.dzhivchik.dto.Content(f.id, f.name, f.size, f.user.login, f.type, f.starred, f.shareInFolder, f.inbin) FROM File f " +
                 "WHERE f.user.id = :userId AND f.inbin = 1", Content.class)
                 .setParameter("userId", userId)
                 .getResultList();

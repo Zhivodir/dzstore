@@ -1,4 +1,4 @@
-package com.gmail.dzhivchik.web.dto;
+package com.gmail.dzhivchik.dto;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Getter;

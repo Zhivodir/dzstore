@@ -7,8 +7,8 @@ import com.gmail.dzhivchik.dao.UserDAO;
 import com.gmail.dzhivchik.domain.File;
 import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
-import com.gmail.dzhivchik.web.dto.Content;
-import com.gmail.dzhivchik.web.dto.PathElement;
+import com.gmail.dzhivchik.dto.Content;
+import com.gmail.dzhivchik.dto.PathElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -19,14 +19,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.security.SecureRandom;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import static com.gmail.dzhivchik.config.TempContentConfig.*;
 import static com.gmail.dzhivchik.utils.MemoryUtils.GBYTE;
-import static com.gmail.dzhivchik.config.TempContentConfig.BUFFER_SIZE;
-import static com.gmail.dzhivchik.config.TempContentConfig.SYMBOL_FOR_ARCHIEVE_NAME;
-import static com.gmail.dzhivchik.config.TempContentConfig.isExceedMaximumFileSize;
 import static com.gmail.dzhivchik.utils.SpringSecurityUtil.getSecurityUser;
 
 

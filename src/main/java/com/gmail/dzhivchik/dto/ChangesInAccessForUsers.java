@@ -1,4 +1,4 @@
-package com.gmail.dzhivchik.web.dto;
+package com.gmail.dzhivchik.dto;
 
 import lombok.Getter;
 import lombok.Setter;

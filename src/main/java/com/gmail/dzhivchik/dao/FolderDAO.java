@@ -2,8 +2,8 @@ package com.gmail.dzhivchik.dao;
 
 import com.gmail.dzhivchik.domain.Folder;
 import com.gmail.dzhivchik.domain.User;
-import com.gmail.dzhivchik.web.dto.Content;
-import com.gmail.dzhivchik.web.dto.PathElement;
+import com.gmail.dzhivchik.dto.Content;
+import com.gmail.dzhivchik.dto.PathElement;
 
 import java.util.List;
 
