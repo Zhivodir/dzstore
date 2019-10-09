@@ -99,10 +99,18 @@ function showUsersTableStateInfo(hasUsersWithAccess) {
 }
 
 function formatSize(length) {
-    var i = 0, type = ['б', 'Кб', 'Мб', 'Гб', 'Тб', 'Пб'];
+    var i = 0, type = ['б', 'Кб', 'Мб', 'Гб'];
     while ((length / 1000 | 0) && i < type.length - 1) {
         length /= 1024;
         i++;
     }
-    return length.toFixed(2) + ' ' + type[i];
+    var numberInString = (length + "");
+    var indexOfDecimalPoint = numberInString.indexOf('.');
+
+    if(indexOfDecimalPoint != -1 && numberInString.charAt(indexOfDecimalPoint + 1) != 0) {
+        return length.toFixed(1) + ' ' + type[i];
+    } else {
+        return length.toFixed(0) + ' ' + type[i];
+    }
+
 }
