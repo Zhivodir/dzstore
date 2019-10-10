@@ -96,19 +96,19 @@
                     </a>
                     <ul class="dropdown-menu lang_menu">
                         <li>
-                            <a href="/settings/${typeOfView}/UA">
+                            <a href="/settings/UA">
                                 <img src="img/lang/UA.png" class="lang-icon">
                                 <s:message code="language.UA"/>
                             </a>
                         </li>
                         <li>
-                            <a href="/settings/${typeOfView}/EN">
+                            <a href="/settings/EN">
                                 <img src="img/lang/EN.png" class="lang-icon">
                                 <s:message code="language.EN"/>
                             </a>
                         </li>
                         <li>
-                            <a href="/settings/${typeOfView}/RU">
+                            <a href="/settings/RU">
                                 <img src="img/lang/RU.png" class="lang-icon">
                                 <s:message code="language.RU"/>
                             </a>

@@ -18,8 +18,8 @@ public class SettingsController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/{typeOfView}/{language}", method = RequestMethod.GET)
-    public String createNewUser(@PathVariable("typeOfView") String typeOfView, @PathVariable("language") Language language) {
+    @RequestMapping(value = "/{language}", method = RequestMethod.GET)
+    public String createNewUser(@PathVariable("language") Language language) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.get(login);
         user.setLanguage(language);
