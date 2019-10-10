@@ -3,6 +3,7 @@ package com.gmail.dzhivchik.dao.Impl;
 import com.gmail.dzhivchik.dao.UserDAO;
 import com.gmail.dzhivchik.domain.User;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -25,6 +26,7 @@ public class UserDAOImpl implements UserDAO {
 
 
     @Override
+    @Transactional
     public User save(User user) {
         if (user.getId() == null) {
             entityManager.persist(user);

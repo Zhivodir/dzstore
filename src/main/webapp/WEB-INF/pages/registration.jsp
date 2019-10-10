@@ -82,7 +82,7 @@
                 </div>
                 <!-- /.col -->
                 <div class="col-xs-6">
-                    <button type="submit" class="btn btn-primary btn-block btn-flat">
+                    <button type="button" id="createUserButton" class="btn btn-primary btn-block btn-flat" onclick="createUser()">
                         <s:message code="registration.button.register"/></button>
                 </div>
                 <!-- /.col -->
@@ -112,16 +112,16 @@
         });
     });
 
-    $('#createUser').submit(function (e) {
-        e.preventDefault();
+    function createUser() {
         $("#emailError").prop("hidden", $("#mail").val().search(emailPattern) == 0);
         $("#pswdError").prop("hidden", $("#password").val().length > 6);
         $("#loginError").prop("hidden", $("#login").val().length > 0);
         var hiddenAlertsQuantity = $(".alert-danger:hidden").length;
+
         if(hiddenAlertsQuantity == 3) {
             $('#createUser').submit();
         }
-    });
+    }
 
     $(document).ready(function () {
         $("input.form-control").focusout(function () {
