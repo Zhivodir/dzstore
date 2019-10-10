@@ -46,7 +46,7 @@
                 <span class="glyphicon glyphicon-user form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback">
-                <input type="password" class="form-control" id="inputPassword" name="j_password" required value="123"
+                <input type="password" class="form-control" id="inputPassword" name="j_password" required value="1234567"
                        placeholder="<s:message code="login.placeholder.password"/>">
                 <span class="glyphicon glyphicon-lock form-control-feedback"></span>
             </div>
