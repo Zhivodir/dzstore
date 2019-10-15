@@ -2,14 +2,21 @@ $(document).ready(function () {
     var menu = $('#contextMenu');//get the menu
     var contentTable = $("#myTable tbody");
 
-    contentTable.on('contextmenu', function (e) {
+    contentTable.on('contextmenu', ".choise_field", function (e) {
+        // var clickedRow = $(this);
         e.preventDefault();
         var countContentRow = contentTable.find(".choise_field").length;
 
         if (countContentRow == 0) return;
-
         var allOfSelected = contentTable.find(".selected");
-        var countOfSelected = contentTable.length;
+
+        // if (!clickedRow.hasClass("selected")){
+        //     contentTable.find(".selected").removeClass("selected");
+        //     clickedRow.addClass("selected");
+        // }
+        // allOfSelected = contentTable.find(".selected");
+
+        var countOfSelected = allOfSelected.length;
         var countOfSelectedWithStar = allOfSelected.find(".glyphicon-star").length;
         var countOfSelectedForShare = allOfSelected.find(".glyphicon-eye-open").length;
 
@@ -31,7 +38,7 @@ $(document).ready(function () {
             $(".li_starred").attr("hidden", !isAmongSelectedContentNotStarred());
             $(".li_removestar").attr("hidden", isSelectedContent() && !isAmongSelectedContentStarred());
             $(".li_addtome").attr("hidden", $("input[name='typeOfView']").val() != "shared");
-            $(".li_makeCopy").attr("hidden", createSelectedFilesMassiv().length == 0 && createSelectedFoldersMassiv().length > 0);
+            $(".li_makeCopy").attr("hidden", createSelectedFilesMassiv().length == 0 || createSelectedFoldersMassiv().length > 0);
             $(".li_moveTo").attr("hidden", !isSelectedContent());
         }
 

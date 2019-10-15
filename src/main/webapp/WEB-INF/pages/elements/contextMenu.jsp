@@ -6,17 +6,14 @@
             code="contextmenu.remove"/></a></li>
     <li class="li_download general"><a href="#" class="contextHref" onclick="downloadContent()"><s:message
             code="contextmenu.download"/></a></li>
-    <li class="divider general"></li>
     <li class="li_starred general"><a href="#" class="contextHref" onclick="changeStarState(true)"><s:message
             code="contextmenu.add.star"/></a></li>
     <li class="li_removestar general"><a href="#" class="contextHref" onclick="changeStarState(false)"><s:message
             code="contextmenu.remove.star"/></a></li>
-    <li class="divider general"></li>
     <li class="li_rename general"><a class="contextHref" href="#" data-toggle="modal"
                                      data-target="#modalForRename"><s:message code="contextmenu.rename"/></a></li>
     <li class="li_share general"><a class="contextHref" href="#" data-toggle="modal"
                                     data-target="#modalForShare"><s:message code="contextmenu.share"/></a></li>
-    <li class="divider general"></li>
     <li class="li_addtome general"><a class="contextHref" href="" onclick="addToMe()"><s:message
             code="contextmenu.add.to.me"/></a></li>
     <li class="li_moveTo general"><a class="contextHref" href="#" data-toggle="modal" onclick="initStartingPath()"
