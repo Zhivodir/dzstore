@@ -2,14 +2,7 @@ function datatableOpts(url, columns) {
     return {
         serverSide: true,
         select: true,
-        ajax: {
-            url: url,
-            type: 'POST',
-            contentType: 'application/json; charset=utf-8',
-            data: function (d) {
-                return JSON.stringify(d);
-            }
-        },
+        ajax: datatablesAjax(url),
         columns: columns,
         bFilter: false,
         ordering: false,
@@ -23,6 +16,7 @@ function datatableOpts(url, columns) {
             }
         },
         drawCallback:function( settings, json){
+            // table.row(':eq(2)').select();
             changeRootOfPath();
             showBusySpace();
         }
@@ -35,14 +29,7 @@ function datatableOpts2(url, columns) {
             style: 'single',
             selector: 'tr.choise_folder'
         },
-        ajax: {
-            url: url,
-            type: 'POST',
-            contentType: 'application/json; charset=utf-8',
-            data: function (d) {
-                return JSON.stringify(d);
-            }
-        },
+        ajax: datatablesAjax(url),
         columns: columns,
         bFilter: false,
         ordering: false,
@@ -61,14 +48,13 @@ function datatableOpts2(url, columns) {
 
 function datatableOpts3(url, columns) {
     return {
-        ajax: {
-            url: url,
-            type: 'POST',
-            contentType: 'application/json; charset=utf-8',
-            data: function (d) {
-                return JSON.stringify(d);
-            }
-        },
+        ajax: datatablesAjax(url),
+        columns: columns,
+        bFilter: false,
+        ordering: false,
+        order: [[0, 'asc']],
+        paging: false,
+        bInfo: false,
         createdRow: function (row, data, index) {
             $(row).addClass('shareUserRow');
         },
@@ -78,13 +64,18 @@ function datatableOpts3(url, columns) {
             $("#sharedForUsersTable thead").remove();
             var hasUsersWithAccess = $("#sharedForUsersTable").find(".shareUserRow").length > 0;
             showUsersTableStateInfo(hasUsersWithAccess);
-        },
-        columns: columns,
-        bFilter: false,
-        ordering: false,
-        order: [[0, 'asc']],
-        paging: false,
-        bInfo: false
+        }
+    }
+}
+
+function datatablesAjax(url){
+    return {
+        url: url,
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        data: function (d) {
+            return JSON.stringify(d);
+        }
     }
 }
 
@@ -112,5 +103,4 @@ function formatSize(length) {
     } else {
         return length.toFixed(0) + ' ' + type[i];
     }
-
 }

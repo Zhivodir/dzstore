@@ -84,11 +84,12 @@ public class File implements Serializable {
         this.shareInFolder = false;
     }
 
-    public static File makeCopy(File file){
+    public static File makeCopy(File file, User user){
+        Folder parentFolder = file.getUser().getId() == user.getId() ? file.parentFolder : null;
         int indexOfPointDelimiter = file.name.lastIndexOf(".");
         String name = file.name.substring(0,indexOfPointDelimiter);
         String extension = file.name.substring(indexOfPointDelimiter);
-        return new File(name + "_copy" + extension, file.size, file.type, file.user, file.parentFolder, false, false,
+        return new File(name + "_copy" + extension, file.size, file.type, user, parentFolder, false, false,
                 file.data, false);
     }
 

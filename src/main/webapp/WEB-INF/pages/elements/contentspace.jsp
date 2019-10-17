@@ -42,11 +42,12 @@
 <script src="js/utils/sb-datatables.js"></script>
 
 <script type="text/javascript">
-    currentFolderId = ${currentFolderID != null ? currentFolderID : -1};
-    typeOfView = '${typeOfView}';
-    targetContent = getUrlForDataTables(typeOfView);
-    busySpace = ${busySpace};
-    availableSpace = ${availableSpace};
+    var currentFolderId = ${currentFolderID != null ? currentFolderID : -1};
+    var typeOfView = '${typeOfView}';
+    var targetContent = getUrlForDataTables(typeOfView);
+    var busySpace = ${busySpace};
+    var availableSpace = ${availableSpace};
+    var selectedRows = [];
 
     $(document).ready(function () {
         showBusySpace();

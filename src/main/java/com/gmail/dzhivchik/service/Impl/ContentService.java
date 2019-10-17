@@ -166,9 +166,9 @@ public class ContentService {
     }
 
     @Transactional
-    public void makeCopy(List<Integer> selectedFiles) {
+    public void makeCopy(List<Integer> selectedFiles, User user) {
         List<File> copyContent = fileDAO.getListFilesById(selectedFiles);
-        copyContent.stream().forEach(file -> fileDAO.save(File.makeCopy(file)));
+        copyContent.stream().forEach(file -> fileDAO.save(File.makeCopy(file, user)));
     }
 
     @Transactional

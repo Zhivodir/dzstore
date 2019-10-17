@@ -136,7 +136,8 @@ public class ContentController {
 
     @RequestMapping(value = "/makeCopy", method = RequestMethod.POST)
     public @ResponseBody String makeCopy(@ModelAttribute SelectedContent selectedContent) {
-        contentService.makeCopy(selectedContent.getSelectedFiles());
+        User user = userService.getReferenceUser(getSecurityUser().getId());
+        contentService.makeCopy(selectedContent.getSelectedFiles(), user);
         return getBusySpace();
     }
 
