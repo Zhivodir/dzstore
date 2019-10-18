@@ -2,7 +2,6 @@ package com.gmail.dzhivchik.dao;
 
 import com.gmail.dzhivchik.domain.File;
 import com.gmail.dzhivchik.domain.Folder;
-import com.gmail.dzhivchik.domain.User;
 import com.gmail.dzhivchik.dto.Content;
 
 import java.util.List;
@@ -20,7 +19,7 @@ public interface FileDAO {
     List<File> getListFilesById(List<Integer> listOfId);
 
     long getMemoryBusySize(int userId);
-    File isFile(String name, boolean inbin, User user, Folder parentFolder);
+    File isFile(File file);
     void deleteGroup(List<Integer> checkedFilesId);
     void renameFile(int userId, int folderId, String newName);
     void changeStar(List<Integer> checkedFilesId, boolean stateOfStar);

@@ -29,7 +29,7 @@ public class FileDAOImpl implements FileDAO {
 
     @Override
     public void save(File file) {
-        File searchFile = isFile(file.getName(), file.isInbin(), file.getUser(), file.getParentFolder());
+        File searchFile = isFile(file);
         if (searchFile != null) {
             entityManager.createQuery("UPDATE File f SET f.size = :size, f.inbin = :inbin WHERE f.id = :id")
                     .setParameter("size", file.getSize())
@@ -41,19 +41,19 @@ public class FileDAOImpl implements FileDAO {
         }
     }
 
-    public File isFile(String name, boolean inbin, User user, Folder parentFolder) {
+    public File isFile(File file) {
         Query query;
-        if (parentFolder == null) {
+        if (file.getParentFolder() == null) {
             query = entityManager.createQuery("SELECT f FROM File f WHERE f.name = :name " +
                     "AND f.inbin = :inbin AND f.user = :user AND f.parentFolder IS NULL", File.class);
         } else {
             query = entityManager.createQuery("SELECT f FROM File f WHERE f.name = :name " +
                     "AND f.inbin = :inbin AND f.user = :user AND f.parentFolder = :parentFolder", File.class)
-                    .setParameter("parentFolder", parentFolder);
+                    .setParameter("parentFolder", file.getParentFolder());
         }
-        List<File> resultList = query.setParameter("name", name)
-                .setParameter("inbin", inbin)
-                .setParameter("user", user)
+        List<File> resultList = query.setParameter("name", file.getName())
+                .setParameter("inbin", file.isInbin())
+                .setParameter("user", file.getUser())
                 .getResultList();
         if (resultList.size() != 0) {
             return resultList.get(0);
