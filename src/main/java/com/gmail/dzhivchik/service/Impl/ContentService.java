@@ -48,7 +48,6 @@ public class ContentService {
         return folderDAO.save(folder);
     }
 
-    @Transactional
     public Folder getFolder(int id) {
         return folderDAO.getFolder(id);
     }
@@ -57,7 +56,6 @@ public class ContentService {
         return folderDAO.getReferenceFolder(id);
     }
 
-    @Transactional
     public File getFile(Integer id) {
         return fileDAO.getFile(id);
     }
@@ -135,12 +133,10 @@ public class ContentService {
         }
     }
 
-    @Transactional
     public List<File> getListFilesById(List<Integer> checkedFilesId) {
         return fileDAO.getListFilesById(checkedFilesId);
     }
 
-    @Transactional
     public List<Folder> getListFolderById(List<Integer> checkedFoldersId) {
         return folderDAO.getListFoldersById(checkedFoldersId);
     }

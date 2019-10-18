@@ -3,7 +3,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 
-
 <link rel="stylesheet" href="/datatables/DataTables-1.10.16/css/dataTables.bootstrap.min.css">
 
 <section class="content">

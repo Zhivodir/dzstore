@@ -6,6 +6,10 @@
     background: lightgrey !important;
 }
 
+#currentFolderPath {
+    margin-bottom: 0px !important;
+}
+
 .levelPath {
     padding: 6px;
     text-decoration: none;

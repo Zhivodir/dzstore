@@ -4,7 +4,7 @@
 
 <section class="content-header">
     <div class="pull-left">
-        <ol class="breadcrumb currentFolderPath">
+        <ol class="breadcrumb currentFolderPath" id="currentFolderPath">
             <li id="pathRoot">
                 <span class="pathElement levelPath" data-current-folder-id="-1"></span>
             </li>
