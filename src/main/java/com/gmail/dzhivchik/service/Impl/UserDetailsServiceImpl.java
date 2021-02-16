@@ -30,6 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // указываем роли для этого пользователя
         Set<GrantedAuthority> roles = new HashSet();
         roles.add(new SimpleGrantedAuthority(user.getRole().toString()));
+        System.out.println("test");
 
         return new SpringSecurityUser(user.getId(), user.getLogin(), user.getPassword(), roles, user.getLanguage(), user.getEmail());
     }
